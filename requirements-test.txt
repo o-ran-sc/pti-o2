@@ -1,0 +1,8 @@
+pylint
+mypy
+requests
+
+pytest
+pytest-icdiff
+
+tenacity

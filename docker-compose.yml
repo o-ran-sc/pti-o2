@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+
+  redis_pubsub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: o2imsdms-image
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DB_HOST=postgres
+      - DB_PASSWORD=o2ims123
+      - REDIS_HOST=redis
+      - PYTHONDONTWRITEBYTECODE=1
+    volumes:
+      - ./src:/src
+      - ./tests:/tests
+    entrypoint:
+      - python
+      - /src/o2ims/entrypoints/redis_eventconsumer.py
+
+  api:
+    image: o2imsdms-image
+    depends_on:
+      - redis_pubsub
+    environment:
+      - DB_HOST=postgres
+      - DB_PASSWORD=o2ims123
+      - API_HOST=api
+      - REDIS_HOST=redis
+      - PYTHONDONTWRITEBYTECODE=1
+      - FLASK_APP=o2ims/entrypoints/flask_application.py
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./src:/src
+      - ./tests:/tests
+    entrypoint:
+      - flask
+      - run
+      - --host=0.0.0.0
+      - --port=80
+    ports:
+      - "5005:80"
+
+  postgres:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER=o2ims
+      - POSTGRES_PASSWORD=o2ims123
+    ports:
+      - "54321:5432"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "63791:6379"

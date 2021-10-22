@@ -1,0 +1,59 @@
+---
+project: 'inf_pti_o2'
+project_creation_date: '2021-10-14'
+project_category: ''
+lifecycle_state: 'Incubation'
+project_lead: &inf_ptl
+    name: 'Jackie Huang'
+    email: 'jackie.huang@windriver.com'
+    company: 'Wind River'
+    id: 'jackiehjm'
+    timezone: 'Asia/Shanghai'
+primary_contact: *inf_ptl
+issue_tracking:
+    type: 'jira'
+    url: 'https://jira.o-ran-sc.org/projects/INF'
+    key: 'INF'
+mailing_list:
+    type: 'groups.io'
+    url: 'https://lists.o-ran-sc.org/g/main'
+    tag: '<[inf]>'
+realtime_discussion: ''
+meetings:
+    - type: 'zoom'
+      agenda: 'https://wiki.o-ran-sc.org/display/IN/INF+project+meetings'
+      url: 'https://wiki.o-ran-sc.org/display/IN/INF+project+meetings'
+      server: 'n/a'
+      channel: 'n/a'
+      repeats: 'bi-weekly'
+      time: 'Tuesday, 12:00 UTC'
+repositories:
+    - 'pti/o2'
+committers:
+    - name: 'Bin Yang'
+      email: 'bin.yang@windriver.com'
+      company: 'Wind River'
+      id: biny993
+      timezone: 'Asia/Shanghai'
+    - name: 'Litao Gao'
+      email: 'litao.gao@windriver.com'
+      company: 'Wind River'
+      id: 'gaolitaowrs'
+      timezone: 'Asia/Shanghai'
+    - name: 'Xiaohua Zhang'
+      email: 'zhangxiaohua@chinamobile.com'
+      company: 'China Mobile'
+      id: 'Xiaohua626'
+      timezone: 'Asia/Shanghai'
+    - name: 'Jackie Huang'
+      email: 'jackie.huang@windriver.com'
+      company: 'Wind River'
+      id: 'jackiehjm'
+      timezone: 'Asia/Shanghai'
+tsc:
+    # yamllint disable rule:line-length
+    approval: 'https://wiki.o-ran-sc.org/display/TOC#ORANSCTechnicalOversightCommittee(TOC)-20210929'
+    changes:
+        - type: ''
+          name: ''
+          link: ''

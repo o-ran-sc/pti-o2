@@ -1,7 +1,5 @@
-
-        [gerrit]
-        host=gerrit.o-ran-sc.org
-        port=29418
-        project=pti/o2
-        defaultbranch=master
-        
+[gerrit]
+host=gerrit.o-ran-sc.org
+port=29418
+project=pti/o2
+defaultbranch=master

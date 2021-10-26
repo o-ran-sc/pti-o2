@@ -14,8 +14,9 @@
 
 import abc
 from typing import Set
-from o2ims.adapter import orm
+# from o2ims.adapter import orm
 from o2ims.domain import ocloud
+
 
 class OcloudRepository(abc.ABC):
     def __init__(self):
@@ -30,7 +31,7 @@ class OcloudRepository(abc.ABC):
         if ocloud:
             self.seen.add(ocloud)
         return ocloud
-    
+
     def update(self, ocloud: ocloud.Ocloud):
         self._update(ocloud)
 
@@ -60,7 +61,8 @@ class OcloudSqlAlchemyRepository(OcloudRepository):
         # self.session.add_all(ocloud.deploymentManagers)
 
     def _get(self, ocloudid) -> ocloud.Ocloud:
-        return self.session.query(ocloud.Ocloud).filter_by(oCloudId=ocloudid).first()
+        return self.session.query(ocloud.Ocloud).filter_by(
+            oCloudId=ocloudid).first()
 
     def _update(self, ocloud: ocloud.Ocloud):
         self.session.add(ocloud)
@@ -70,8 +72,10 @@ class OcloudSqlAlchemyRepository(OcloudRepository):
     #     if dmslist:
     #         self._update_dms_list(dmslist)
     #     if updatefields:
-    #         self.session.query(ocloud.Ocloud).filter_by(oCloudId=ocloudid).update(updatefields)
+    #         self.session.query(ocloud.Ocloud).filter_by(
+    # oCloudId=ocloudid).update(updatefields)
 
     # def _update_dms_list(self, dms_list: list):
     #     for dms in dms_list or []:
-    #         self.session.query(ocloud.DeploymentManager).filter_by(deploymentManagerId=dms.deploymentManagerId).update(dms)
+    #         self.session.query(ocloud.DeploymentManager).filter_by(
+    # deploymentManagerId=dms.deploymentManagerId).update(dms)

@@ -15,7 +15,8 @@
 import inspect
 from typing import Callable
 from o2ims.adapter import orm, redis_eventpublisher
-from o2ims.adapter.notifications import AbstractNotifications, SmoO2Notifications
+from o2ims.adapter.notifications import AbstractNotifications,\
+    SmoO2Notifications
 
 from o2ims.service import handlers, messagebus, unit_of_work
 
@@ -33,7 +34,8 @@ def bootstrap(
     if start_orm:
         orm.start_o2ims_mappers()
 
-    dependencies = {"uow": uow, "notifications": notifications, "publish": publish}
+    dependencies = {"uow": uow, "notifications": notifications,
+                    "publish": publish}
     injected_event_handlers = {
         event_type: [
             inject_dependencies(handler, dependencies)

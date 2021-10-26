@@ -12,18 +12,26 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from datetime import datetime
-from flask import Flask, jsonify, request
-from o2ims.domain import commands
-from o2ims.service.handlers import InvalidResourceType
-from o2ims import bootstrap, config
-from o2ims.views import ocloud_view
+import abc
+# from typing import Optional, List, Set
+from typing import List
+from o2ims.domain import stx_object as ocloudModel
 
-app = Flask(__name__)
-bus = bootstrap.bootstrap()
-apibase = config.get_o2ims_api_base()
 
-@app.route(apibase, methods=["GET"])
-def oclouds():
-    result = ocloud_view.oclouds(bus.uow)
-    return jsonify(result), 200
+class BaseClient(abc.ABC):
+    def __init__(self):
+        pass
+
+    def list(self) -> List[ocloudModel.StxGenericModel]:
+        return self._list()
+
+    def get(self, id) -> ocloudModel.StxGenericModel:
+        return self._get(id)
+
+    @abc.abstractmethod
+    def _get(self, id) -> ocloudModel.StxGenericModel:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _list(self):
+        raise NotImplementedError

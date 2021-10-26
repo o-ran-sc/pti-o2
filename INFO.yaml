@@ -33,7 +33,7 @@ committers:
     - name: 'Bin Yang'
       email: 'bin.yang@windriver.com'
       company: 'Wind River'
-      id: biny993
+      id: 'biny993'
       timezone: 'Asia/Shanghai'
     - name: 'Litao Gao'
       email: 'litao.gao@windriver.com'

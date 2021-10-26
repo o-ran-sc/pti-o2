@@ -1,7 +1,9 @@
 # pylint: disable=too-few-public-methods
 import abc
-import smtplib
 from o2ims import config
+
+
+SMO_O2_ENDPOINT = config.get_smo_o2endpoint()
 
 
 class AbstractNotifications(abc.ABC):
@@ -9,8 +11,6 @@ class AbstractNotifications(abc.ABC):
     def send(self, message):
         raise NotImplementedError
 
-
-SMO_O2_ENDPOINT = config.get_smo_o2endpoint()
 
 class SmoO2Notifications(AbstractNotifications):
     def __init__(self, smoO2Endpoint=SMO_O2_ENDPOINT):

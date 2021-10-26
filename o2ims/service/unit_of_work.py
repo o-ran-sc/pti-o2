@@ -19,7 +19,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
-
 from o2ims import config
 from o2ims.adapter import ocloud_repository
 
@@ -27,7 +26,7 @@ from o2ims.adapter import ocloud_repository
 class AbstractUnitOfWork(abc.ABC):
     oclouds: ocloud_repository.OcloudRepository
 
-    def __enter__(self) -> AbstractUnitOfWork:
+    def __enter__(self):
         return self
 
     def __exit__(self, *args):
@@ -64,7 +63,8 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
 
     def __enter__(self):
         self.session = self.session_factory()  # type: Session
-        self.oclouds = ocloud_repository.OcloudSqlAlchemyRepository(self.session)
+        self.oclouds = ocloud_repository\
+            .OcloudSqlAlchemyRepository(self.session)
         return super().__enter__()
 
     def __exit__(self, *args):

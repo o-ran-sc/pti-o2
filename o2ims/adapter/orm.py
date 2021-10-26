@@ -18,15 +18,15 @@ from sqlalchemy import (
     Table,
     MetaData,
     Column,
-    Integer,
+    # Integer,
     String,
-    Date,
+    # Date,
     ForeignKey,
-    event,
+    # event,
 )
 
 from sqlalchemy.orm import mapper, relationship
-from sqlalchemy.sql.expression import true
+# from sqlalchemy.sql.expression import true
 
 from o2ims.domain import ocloud as ocloudModel
 
@@ -86,8 +86,8 @@ def start_o2ims_mappers():
     dm_mapper = mapper(ocloudModel.DeploymentManager, deploymentmanager)
     resourcepool_mapper = mapper(ocloudModel.ResourcePool, resourcepool)
     resourcetype_mapper = mapper(ocloudModel.ResourceType, resourcetype)
-    resource_mapper = mapper(ocloudModel.Resource, resource)
-    ocloud_mapper = mapper(
+    # resource_mapper = mapper(ocloudModel.Resource, resource)
+    mapper(
         ocloudModel.Ocloud,
         ocloud,
         properties={

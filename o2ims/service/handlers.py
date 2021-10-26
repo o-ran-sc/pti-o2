@@ -14,12 +14,15 @@
 
 # pylint: disable=unused-argument
 from __future__ import annotations
-from dataclasses import asdict
-from typing import List, Dict, Callable, Type, TYPE_CHECKING
-from o2ims.domain import commands, events, ocloud
+# from dataclasses import asdict
+from typing import List, Dict, Callable, Type
+# TYPE_CHECKING
+from o2ims.domain import commands, events
+# ocloud
 
-if TYPE_CHECKING:
-    from . import unit_of_work
+# if TYPE_CHECKING:
+#     from . import unit_of_work
+
 
 class InvalidResourceType(Exception):
     pass
@@ -27,6 +30,7 @@ class InvalidResourceType(Exception):
 
 EVENT_HANDLERS = {
 }  # type: Dict[Type[events.Event], List[Callable]]
+
 
 COMMAND_HANDLERS = {
 }  # type: Dict[Type[commands.Command], Callable]

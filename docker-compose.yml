@@ -15,6 +15,9 @@ services:
       - DB_PASSWORD=o2ims123
       - REDIS_HOST=redis
       - PYTHONDONTWRITEBYTECODE=1
+      - OS_AUTH_URL=${OS_AUTH_URL}
+      - OS_USERNAME=${OS_USERNAME}
+      - OS_PASSWORD=${OS_PASSWORD}
     volumes:
       - ./o2ims:/o2ims
       - ./o2dms:/o2dms
@@ -37,9 +40,9 @@ services:
       - FLASK_APP=/o2ims/entrypoints/flask_application.py
       - FLASK_DEBUG=1
       - PYTHONUNBUFFERED=1
-      - STX_AUTH_URL=http://192.168.204.1:5000/v3
-      - STX_USERNAME=admin
-      - STX_PASSWORD=password1
+      - OS_AUTH_URL=${OS_AUTH_URL}
+      - OS_USERNAME=${OS_USERNAME}
+      - OS_PASSWORD=${OS_PASSWORD}
     volumes:
       - ./o2ims:/o2ims
       - ./o2dms:/o2dms

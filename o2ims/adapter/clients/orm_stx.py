@@ -17,7 +17,7 @@ import logging
 
 from sqlalchemy import (
     Table,
-    MetaData,
+    # MetaData,
     Column,
     # Integer,
     String,
@@ -31,17 +31,19 @@ from sqlalchemy.orm import mapper
 # from sqlalchemy.sql.expression import true
 
 from o2ims.domain import stx_object as ocloudModel
+from o2ims.adapter.orm import metadata
 
 logger = logging.getLogger(__name__)
 
-metadata = MetaData()
+# metadata = MetaData()
 
 stxobject = Table(
     "stxcache",
     metadata,
     Column("id", String(255), primary_key=True),
     Column("name", String(255)),
-    Column("lastupdate", DateTime),
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
     Column("content", String(255))
 )
 

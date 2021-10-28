@@ -26,6 +26,7 @@ from o2ims.domain import stx_object as ocloudModel
 
 # pytestmark = pytest.mark.usefixtures("mappers")
 
+
 class FakeStxSaClientImp(object):
     def __init__(self):
         super().__init__()

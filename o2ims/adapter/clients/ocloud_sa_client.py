@@ -25,6 +25,7 @@ from cgtsclient.client import get_client
 import logging
 logger = logging.getLogger(__name__)
 
+
 class StxSaOcloudClient(BaseClient):
     def __init__(self, driver=None):
         super().__init__()
@@ -66,18 +67,20 @@ class StxSaDmsClient(BaseClient):
     def _list(self):
         return self.driver.getK8sList()
 
+
 class StxPserverClient(BaseClient):
     def __init__(self):
         super().__init__()
         self.driver = StxSaClientImp()
-    
+
     def _get(self, id) -> ocloudModel.StxGenericModel:
         return self.driver.getPserver(id)
-    
+
     def _list(self) -> List[ocloudModel.StxGenericModel]:
         return self.driver.getPserverList()
 
 # internal driver which implement client call to Stx Standalone instance
+
 
 class StxSaClientImp(object):
     def __init__(self, stx_client=None):
@@ -91,17 +94,18 @@ class StxSaClientImp(object):
 
     def getInstanceInfo(self) -> ocloudModel.StxGenericModel:
         systems = self.stxclient.isystem.list()
-        logger.debug("systems:"+str(systems[0].to_dict()))
+        logger.debug("systems:" + str(systems[0].to_dict()))
         return ocloudModel.StxGenericModel(systems[0]) if systems else None
 
     def getPserverList(self) -> List[ocloudModel.StxGenericModel]:
         hosts = self.stxclient.ihost.list()
-        logger.debug("host 1:"+ str(hosts[0].to_dict()))
-        return [ocloudModel.StxGenericModel(self._hostconverter(host)) for host in hosts if host]
+        logger.debug("host 1:" + str(hosts[0].to_dict()))
+        return [ocloudModel.StxGenericModel(self._hostconverter(host))
+                for host in hosts if host]
 
     def getPserver(self, id) -> ocloudModel.StxGenericModel:
         host = self.stxclient.ihost.get(id)
-        logger.debug("host:"+ str(host.to_dict()))
+        logger.debug("host:" + str(host.to_dict()))
         return ocloudModel.StxGenericModel(self._hostconverter(host))
 
     def getK8sList(self) -> List[ocloudModel.StxGenericModel]:

@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 import abc
-from typing import Set
+from typing import List, Set
 # from o2ims.adapter import orm
 from o2ims.domain import ocloud
 
@@ -31,6 +31,9 @@ class OcloudRepository(abc.ABC):
         if ocloud:
             self.seen.add(ocloud)
         return ocloud
+
+    def list(self) -> List[ocloud.Ocloud]:
+        return self._list()
 
     def update(self, ocloud: ocloud.Ocloud):
         self._update(ocloud)
@@ -64,18 +67,8 @@ class OcloudSqlAlchemyRepository(OcloudRepository):
         return self.session.query(ocloud.Ocloud).filter_by(
             oCloudId=ocloudid).first()
 
+    def _list(self) -> List[ocloud.Ocloud]:
+        return self.session.query()
+
     def _update(self, ocloud: ocloud.Ocloud):
         self.session.add(ocloud)
-
-    # def _update_fields(self, ocloudid: str, updatefields: dict):
-    #     dmslist = updatefields.pop("deploymentManagers", None)
-    #     if dmslist:
-    #         self._update_dms_list(dmslist)
-    #     if updatefields:
-    #         self.session.query(ocloud.Ocloud).filter_by(
-    # oCloudId=ocloudid).update(updatefields)
-
-    # def _update_dms_list(self, dms_list: list):
-    #     for dms in dms_list or []:
-    #         self.session.query(ocloud.DeploymentManager).filter_by(
-    # deploymentManagerId=dms.deploymentManagerId).update(dms)

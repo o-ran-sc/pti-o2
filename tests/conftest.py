@@ -14,6 +14,7 @@ from tenacity import retry, stop_after_delay
 from o2ims.adapter.orm import metadata, start_o2ims_mappers
 from o2ims.adapter.clients.orm_stx import start_o2ims_stx_mappers
 from o2ims import config
+from o2ims.domain import stx_object as ocloudModel
 
 
 @pytest.fixture
@@ -36,9 +37,6 @@ def mappers():
     yield
     clear_mappers()
 
-@pytest.fixture
-def fake_stx_client():
-    pass
 
 @retry(stop=stop_after_delay(10))
 def wait_for_postgres_to_come_up(engine):

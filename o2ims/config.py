@@ -13,6 +13,8 @@
 #  limitations under the License.
 
 import os
+import sys
+import logging
 
 
 def get_postgres_uri():
@@ -46,8 +48,36 @@ def get_smo_o2endpoint():
 
 
 def get_stx_access_info():
-    authurl = os.environ.get("STX_AUTH_URL", "http://192.168.204.1:5000/v3")
-    username = os.environ.get("STX_USERNAME", "admin")
-    pswd = os.environ.get("STX_PASSWORD", "passwd1")
-    stx_access_info = (authurl, username, pswd)
-    return stx_access_info
+    # authurl = os.environ.get("STX_AUTH_URL", "http://192.168.204.1:5000/v3")
+    # username = os.environ.get("STX_USERNAME", "admin")
+    # pswd = os.environ.get("STX_PASSWORD", "passwd1")
+    # stx_access_info = (authurl, username, pswd)
+    try:
+        client_args = dict(
+            auth_url=os.environ.get('OS_AUTH_URL',
+                                    "http://192.168.204.1:5000/v3"),
+            username=os.environ.get('OS_USERNAME', "admin"),
+            api_key=os.environ.get('OS_PASSWORD', "fakepasswd1"),
+            project_name=os.environ.get('OS_PROJECT_NAME', "admin"),
+        )
+        # dc_client_args = dict(
+        #     auth_url=os.environ['OS_AUTH_URL'],
+        #     username=os.environ['OS_USERNAME'],
+        #     api_key=os.environ['OS_PASSWORD'],
+        #     project_name=os.environ['OS_PROJECT_NAME'],
+        #     user_domain_name=os.environ['OS_USER_DOMAIN_NAME'],
+        #     project_domain_name=os.environ['OS_PROJECT_NAME'],
+        #     project_domain_id=os.environ['OS_PROJECT_DOMAIN_ID']
+        # )
+    except KeyError:
+        logging.error('Please source your RC file before execution, '
+                      'e.g.: `source ~/downloads/admin-rc.sh`')
+        sys.exit(1)
+
+    os_client_args = {}
+    for key, val in client_args.items():
+        os_client_args['os_{key}'.format(key=key)] = val
+    os_client_args['os_password'] = os_client_args.pop('os_api_key')
+    os_client_args['os_region_name'] = 'RegionOne'
+    os_client_args['api_version'] = 1
+    return os_client_args

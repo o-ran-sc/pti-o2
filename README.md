@@ -7,7 +7,6 @@ docker-compose build
 
 ## Running the tests
 
-Prerequisite: in case of testing against real ocloud, download openrc file from ocloud dashboard, e.g. admin_openrc.sh
 
 ```sh
 source ./admin_openrc.sh
@@ -16,6 +15,15 @@ export |grep OS_USERNAME
 export |grep OS_PASSWORD
 docker-compose up -d
 docker-compose run --rm --no-deps --entrypoint=pytest api /tests/unit /tests/integration
+```
+
+## Running the tests with a O-Cloud
+
+Prerequisite: in case of testing against real ocloud, download openrc file from ocloud dashboard, e.g. 
+
+```sh
+admin_openrc.sh
+docker-compose run --rm --no-deps --entrypoint=pytest api /tests/unit /tests/integration-ocloud
 
 ```
 

@@ -13,8 +13,12 @@
 #  limitations under the License.
 
 # from dataclasses import dataclass
-import datetime
+# import datetime
 import json
+
+
+class MismatchedModel(Exception):
+    pass
 
 
 class StxGenericModel:
@@ -26,12 +30,14 @@ class StxGenericModel:
             self.createtime = api_response.created_at
             self.name = api_response.name
 
-    # def __init__(self, id: str, name: str,
-    #              lastupdate: datetime, content: str) -> None:
-    #     self.id = id
-    #     self.name = name
-    #     self.lastupdate = lastupdate
-    #     self.content = content
+    def is_outdated(self, newmodel) -> bool:
+        return self.updatetime < newmodel.updatetime
 
-    def isChanged(self, updatetime: datetime) -> bool:
-        return True if self.updatetime > updatetime else False
+    def update_by(self, newmodel) -> None:
+        if self.id != newmodel.id:
+            raise MismatchedModel("Mismatched model")
+        self.name = newmodel.name
+
+        self.content = newmodel.content
+        self.createtime = newmodel.createtime
+        self.updatetime = newmodel.updatetime

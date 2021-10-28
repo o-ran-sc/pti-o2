@@ -14,12 +14,16 @@
 
 # client talking to Stx standalone
 
-from service.client.base_client import BaseClient
+from o2ims.service.client.base_client import BaseClient
 from typing import List
 # Optional,  Set
 from o2ims.domain import stx_object as ocloudModel
 from o2ims import config
 
+# from dcmanagerclient.api import client
+from cgtsclient.client import get_client
+import logging
+logger = logging.getLogger(__name__)
 
 class StxSaOcloudClient(BaseClient):
     def __init__(self):
@@ -71,21 +75,19 @@ class StxSaDmsClient(BaseClient):
 
 
 class StxSaClientImp(object):
-    def __init__(self, access_info=None) -> None:
+    def __init__(self, stx_client=None):
         super().__init__()
-        self.access_info = access_info
-        if self.access_info is None:
-            self.access_info = config.get_stx_access_info()
-        # self.auth = auth = v3.Password(
-        #     auth_url="http://example.com:5000/v3", username="admin",
-        #     password="password", project_name="admin",
-        #     user_domain_id="default", project_domain_id="default")
-        # self.session = sess = session.Session(auth=auth)
-        # # self.keystone = ksclient.Client(session=sess)
-        # self.stx = stxclient.Client(session=sess)
+        self.stxclient = stx_client if stx_client else self.getStxClient()
+
+    def getStxClient():
+        os_client_args = config.get_stx_access_info()
+        config_client = get_client(**os_client_args)
+        return config_client
 
     def getInstanceInfo(self) -> ocloudModel.StxGenericModel:
-        raise NotImplementedError
+        systems = self.stxclient.isystem.list()
+        # print("systems:"+str(systems[0].to_dict()))
+        return ocloudModel.StxGenericModel(systems[0]) if systems else None
 
     def getK8sList(self) -> List[ocloudModel.StxGenericModel]:
         raise NotImplementedError

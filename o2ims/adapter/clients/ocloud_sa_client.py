@@ -26,9 +26,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 class StxSaOcloudClient(BaseClient):
-    def __init__(self):
+    def __init__(self, driver=None):
         super().__init__()
-        self.driver = StxSaClientImp()
+        self.driver = driver if driver else StxSaClientImp()
 
     # def list(self) -> List[ocloudModel.StxGenericModel]:
     #     return self._list()
@@ -37,7 +37,7 @@ class StxSaOcloudClient(BaseClient):
     #     return self._get(id)
 
     def _get(self, id) -> ocloudModel.StxGenericModel:
-        raise self.driver.getInstanceInfo()
+        return self.driver.getInstanceInfo()
 
     def _list(self):
         return [self.driver.getInstanceInfo()]

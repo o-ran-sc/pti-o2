@@ -18,12 +18,13 @@ import json
 
 
 class StxGenericModel:
-    def __init__(self, api_response: dict) -> None:
-        self.id = api_response.uuid
-        self.content = json.dumps(api_response.to_dict())
-        self.updatetime = api_response.updated_at
-        self.createtime = api_response.created_at
-        self.name = api_response.name
+    def __init__(self, api_response: dict=None) -> None:
+        if api_response:
+            self.id = api_response.uuid
+            self.content = json.dumps(api_response.to_dict())
+            self.updatetime = api_response.updated_at
+            self.createtime = api_response.created_at
+            self.name = api_response.name
 
     # def __init__(self, id: str, name: str,
     #              lastupdate: datetime, content: str) -> None:

@@ -62,3 +62,28 @@ def test_get_pserver(real_stx_aio_client):
     host2 = stxSaClientImp.getPserver(host1.id)
     assert host1 != host2
     assert host1.id == host2.id
+
+def test_get_k8s_list(real_stx_aio_client):
+    stxSaClientImp = StxSaClientImp(real_stx_aio_client)
+    assert stxSaClientImp is not None
+    k8slist = stxSaClientImp.getK8sList()
+    assert k8slist is not None
+    assert len(k8slist) > 0
+    k8s1 = k8slist[0]
+    k8s2 = stxSaClientImp.getK8sDetail(k8s1.name)
+    assert k8s1 != k8s2
+    assert k8s1.name == k8s2.name
+    assert k8s1.id == k8s2.id
+
+def test_get_cpu_list(real_stx_aio_client):
+    stxSaClientImp = StxSaClientImp(real_stx_aio_client)
+    assert stxSaClientImp is not None
+    hostlist = stxSaClientImp.getPserverList()
+    assert len(hostlist) > 0
+
+    cpulist = stxSaClientImp.getCpuList(hostlist[0].id)
+    assert len(cpulist) > 0
+    cpu1 = cpulist[0]
+    cpu2 = stxSaClientImp.getCpu(cpu1.id)
+    assert cpu1 != cpu2
+    assert cpu1.id == cpu2.id

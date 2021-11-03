@@ -41,3 +41,12 @@ class StxGenericModel:
         self.content = newmodel.content
         self.createtime = newmodel.createtime
         self.updatetime = newmodel.updatetime
+
+
+class StxK8sClusterModel(StxGenericModel):
+    def __init__(self, api_response: dict = None) -> None:
+        super().__init__(api_response=api_response)
+
+    def is_outdated(self, newmodel) -> bool:
+        # never outdated since lack of such evidence
+        return False

@@ -25,6 +25,8 @@ Prerequisite: in case of testing against real ocloud, download openrc file from 
 admin_openrc.sh
 docker-compose run --rm --no-deps --entrypoint=pytest api /tests/unit /tests/integration-ocloud
 
+docker-compose run --rm --no-deps --entrypoint=pytest api /tests/integration-ocloud --log-level=DEBUG --log-file=/test
+s/debug.log
 ```
 
 ## Tear down containers

@@ -19,11 +19,12 @@ from flask import Flask, jsonify
 # from o2ims.service.handlers import InvalidResourceType
 from o2ims import bootstrap, config
 from o2ims.views import ocloud_view
+from o2ims.service.watcher.executor import start_watchers
 
 app = Flask(__name__)
 bus = bootstrap.bootstrap()
 apibase = config.get_o2ims_api_base()
-
+start_watchers()
 
 @app.route(apibase, methods=["GET"])
 def oclouds():

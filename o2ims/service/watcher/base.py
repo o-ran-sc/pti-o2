@@ -26,11 +26,17 @@ class BaseWatcher(object):
         super().__init__()
         self._client = client
 
+    def targetname(self) -> str:
+        return self._targetname()
+
     def probe(self):
         self._probe()
 
     def _probe(self):
-        pass
+        raise NotImplementedError
+
+    def _targetname(self):
+        raise NotImplementedError
 
 
 class OcloudWather(BaseWatcher):
@@ -38,6 +44,9 @@ class OcloudWather(BaseWatcher):
                  repo: OcloudRepository) -> None:
         super().__init__(ocloud_client)
         self._repo = repo
+
+    def _targetname(self):
+        return "ocloud"
 
     def _probe(self):
         ocloudmodel = self._client.get(None)
@@ -58,11 +67,25 @@ class OcloudWather(BaseWatcher):
                 self._repo.update(localmodel)
 
 
-class ResourcePoolWatcher(object):
+class DmsWatcher(BaseWatcher):
+    def __init__(self, client: BaseClient) -> None:
+        super().__init__(client)
+
+    def _targetname(self):
+        return "dms"
+
+
+class ResourcePoolWatcher(BaseWatcher):
     def __init__(self) -> None:
         super().__init__()
 
+    def _targetname(self):
+        return "ocloud"
 
-class ResourceWatcher(object):
+
+class ResourceWatcher(BaseWatcher):
     def __init__(self) -> None:
         super().__init__()
+
+    def _targetname(self):
+        return "resource"

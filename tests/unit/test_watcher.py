@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import time
 from datetime import datetime
 import json
 from typing import List
@@ -20,9 +21,11 @@ import pytest
 from o2ims.domain import ocloud
 from o2ims import config
 import uuid
-from o2ims.service.watcher.base import OcloudWather
+from o2ims.service.watcher.base import BaseWatcher, OcloudWather
 from o2ims.domain import stx_object as ocloudModel
 from o2ims.adapter.ocloud_repository import OcloudRepository
+from o2ims.service.watcher import worker
+from o2ims.service.watcher.executor import start_watchers
 
 class FakeOcloudClient(BaseClient):
     def __init__(self):
@@ -69,3 +72,41 @@ def test_probe_new_ocloud():
     ocloudwatcher.probe()
     assert len(fakeRepo.oclouds) == 1
     assert fakeRepo.oclouds[0].name == "stx1"
+
+def test_default_worker():
+
+    class FakeOCloudWatcher(BaseWatcher):
+        def __init__(self, client: BaseClient,
+                     repo: OcloudRepository) -> None:
+            super().__init__(client)
+            self.fakeOcloudWatcherCounter = 0
+            self._client = client
+            self._repo = repo
+
+        def _targetname(self):
+            return "fakeocloudwatcher"
+        
+        def _probe(self):
+            self.fakeOcloudWatcherCounter += 1
+            # hacking to stop the blocking sched task
+            if self.fakeOcloudWatcherCounter > 2:
+                worker.defaultworker.stop()
+
+
+    fakeRepo = FakeOcloudRepo()
+    fakeClient = FakeOcloudClient()
+    fakewatcher = FakeOCloudWatcher(fakeClient, fakeRepo)
+
+    worker.defaultworker.set_interval(1)
+    worker.defaultworker.add_watcher(fakewatcher)
+    assert fakewatcher.fakeOcloudWatcherCounter == 0
+
+    count1 = fakewatcher.fakeOcloudWatcherCounter
+    worker.defaultworker.start()
+    time.sleep(20)
+    assert fakewatcher.fakeOcloudWatcherCounter > count1
+
+    # assumed hacking: probe has stopped the sched task
+    count3 = fakewatcher.fakeOcloudWatcherCounter
+    time.sleep(3)
+    assert fakewatcher.fakeOcloudWatcherCounter == count3

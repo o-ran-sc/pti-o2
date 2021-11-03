@@ -14,6 +14,7 @@
 
 # client talking to Stx standalone
 
+import uuid
 from o2ims.service.client.base_client import BaseClient
 from typing import List
 # Optional,  Set
@@ -61,8 +62,8 @@ class StxSaDmsClient(BaseClient):
         super().__init__()
         self.driver = StxSaClientImp()
 
-    def _get(self, id) -> ocloudModel.StxGenericModel:
-        return self.driver.getK8sDetail(id)
+    def _get(self, name) -> ocloudModel.StxGenericModel:
+        return self.driver.getK8sDetail(name)
 
     def _list(self):
         return self.driver.getK8sList()
@@ -78,6 +79,19 @@ class StxPserverClient(BaseClient):
 
     def _list(self) -> List[ocloudModel.StxGenericModel]:
         return self.driver.getPserverList()
+
+
+class StxCpuClient(BaseClient):
+    def __init__(self, pserver_id):
+        super().__init__()
+        self._pserver_id = pserver_id
+        self.driver = StxSaClientImp()
+
+    def _get(self, id) -> ocloudModel.StxGenericModel:
+        return self.driver.getCpu(id)
+
+    def _list(self) -> List[ocloudModel.StxGenericModel]:
+        return self.driver.getCpuList(self._pserver_id)
 
 # internal driver which implement client call to Stx Standalone instance
 
@@ -109,12 +123,56 @@ class StxSaClientImp(object):
         return ocloudModel.StxGenericModel(self._hostconverter(host))
 
     def getK8sList(self) -> List[ocloudModel.StxGenericModel]:
-        raise NotImplementedError
+        k8sclusters = self.stxclient.kube_cluster.list()
+        logger.debug("k8sresources:" + str(k8sclusters[0].to_dict()))
 
-    def getK8sDetail(self, id) -> ocloudModel.StxGenericModel:
-        raise NotImplementedError
+        return [ocloudModel.StxGenericModel(self._k8sconverter(k8sres))
+                for k8sres in k8sclusters if k8sres]
+
+    def getK8sDetail(self, name) -> ocloudModel.StxGenericModel:
+        k8scluster = self.stxclient.kube_cluster.get(name)
+        logger.debug("k8sresource:" + str(k8scluster.to_dict()))
+        return ocloudModel.StxGenericModel(self._k8sconverter(k8scluster))
+
+    def getCpuList(self, hostid) -> List[ocloudModel.StxGenericModel]:
+        cpulist = self.stxclient.icpu.list(hostid)
+        return [ocloudModel.StxGenericModel(self._cpuconverter(cpures))
+                for cpures in cpulist if cpures]
+
+    def getCpu(self, id) -> ocloudModel.StxGenericModel:
+        cpuinfo = self.stxclient.icpu.get(id)
+        return ocloudModel.StxGenericModel(self._cpuconverter(cpuinfo))
+
+    def _getIsystems(self):
+        return self.stxclient.isystem.list()
+
+    def _getIsystem(self, id=None):
+        if id:
+            return self.stxclient.isystem.get(id)
+        else:
+            isystems = self.stxclient.isystem.list()
+            if len(isystems) != 1 and not id:
+                raise Exception('No system uuid was provided and '
+                                'more than one system exists in the account.')
+            return isystems[0]
 
     @staticmethod
     def _hostconverter(host):
         setattr(host, "name", host.hostname)
+        return host
+
+    @staticmethod
+    def _cpuconverter(cpu):
+        setattr(cpu, "name", "core-"+str(cpu.core))
+        return cpu
+
+    @staticmethod
+    def _k8sconverter(host):
+        setattr(host, "name", host.cluster_name)
+        setattr(host, "uuid",
+                uuid.uuid3(uuid.NAMESPACE_URL, host.cluster_name))
+        setattr(host, 'updated_at', None)
+        setattr(host, 'created_at', None)
+        logger.debug("k8s cluster name/uuid:" +
+                     host.name + "/" + str(host.uuid))
         return host

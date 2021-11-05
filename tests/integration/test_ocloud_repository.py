@@ -12,37 +12,48 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import pytest
+import uuid
+# import pytest
+
+from o2ims.domain import resource_type as rt
 from o2ims.adapter import ocloud_repository as repository
 from o2ims.domain import ocloud
 from o2ims import config
-import uuid
 
-pytestmark = pytest.mark.usefixtures("mappers")
+# pytestmark = pytest.mark.usefixtures("mappers")
 
 
 def setup_ocloud():
     ocloudid1 = str(uuid.uuid4())
-    ocloud1 = ocloud.Ocloud(ocloudid1, "ocloud1", config.get_api_url(), "ocloud 1 for integration test", 1)
+    ocloud1 = ocloud.Ocloud(
+        ocloudid1, "ocloud1", config.get_api_url(),
+        "ocloud 1 for integration test", 1)
     return ocloud1
+
 
 def setup_ocloud_and_save(sqlite_session_factory):
     session = sqlite_session_factory()
     repo = repository.OcloudSqlAlchemyRepository(session)
     ocloudid1 = str(uuid.uuid4())
-    ocloud1 = ocloud.Ocloud(ocloudid1, "ocloud1", config.get_api_url(), "ocloud for integration test", 1)
+    ocloud1 = ocloud.Ocloud(
+        ocloudid1, "ocloud1", config.get_api_url(),
+        "ocloud for integration test", 1)
     repo.add(ocloud1)
     assert repo.get(ocloudid1) == ocloud1
     session.flush()
     return ocloud1
 
+
 def test_add_ocloud(sqlite_session_factory):
     session = sqlite_session_factory()
     repo = repository.OcloudSqlAlchemyRepository(session)
     ocloudid1 = str(uuid.uuid4())
-    ocloud1 = ocloud.Ocloud(ocloudid1, "ocloud1", config.get_api_url(), "ocloud for integration test", 1)
+    ocloud1 = ocloud.Ocloud(
+        ocloudid1, "ocloud1", config.get_api_url(),
+        "ocloud for integration test", 1)
     repo.add(ocloud1)
     assert repo.get(ocloudid1) == ocloud1
+
 
 def test_get_ocloud(sqlite_session_factory):
     ocloud1 = setup_ocloud_and_save(sqlite_session_factory)
@@ -50,6 +61,7 @@ def test_get_ocloud(sqlite_session_factory):
     repo = repository.OcloudSqlAlchemyRepository(session)
     ocloud2 = repo.get(ocloud1.oCloudId)
     assert ocloud2 != ocloud1 and ocloud2.oCloudId == ocloud1.oCloudId
+
 
 def test_add_ocloud_with_dms(sqlite_session_factory):
     session = sqlite_session_factory()
@@ -81,7 +93,8 @@ def test_update_ocloud_with_dms(sqlite_session_factory):
         dmsid, "k8s1", ocloud1.oCloudId, config.get_api_url()+"/k8s1")
     ocloud1.addDeploymentManager(dms)
     repo.update(ocloud1)
-    # repo.update(ocloud1.oCloudId, {"deploymentManagers": ocloud1.deploymentManagers})
+    # repo.update(ocloud1.oCloudId, {"deploymentManagers":
+    # ocloud1.deploymentManagers})
     session.flush()
 
     # seperate session to confirm ocloud is updated into repo
@@ -91,3 +104,39 @@ def test_update_ocloud_with_dms(sqlite_session_factory):
     assert ocloud2 is not None
     assert ocloud2 != ocloud1 and ocloud2.oCloudId == ocloud1.oCloudId
     assert len(ocloud2.deploymentManagers) == 1
+
+
+def test_add_resource_type(sqlite_session_factory):
+    session = sqlite_session_factory()
+    repo = repository.ResouceTypeSqlAlchemyRepository(session)
+    ocloud1_id = str(uuid.uuid4())
+    resource_type_id1 = str(uuid.uuid4())
+    resource_type1 = ocloud.ResourceType(
+        resource_type_id1, "resourcetype1", rt.ResourceTypeEnum.PSERVER,
+        ocloud1_id)
+    repo.add(resource_type1)
+    assert repo.get(resource_type_id1) == resource_type1
+
+
+def test_add_resource_pool(sqlite_session_factory):
+    session = sqlite_session_factory()
+    repo = repository.ResourcePoolSqlAlchemyRepository(session)
+    ocloud1_id = str(uuid.uuid4())
+    resource_pool_id1 = str(uuid.uuid4())
+    resource_pool1 = ocloud.ResourcePool(
+        resource_pool_id1, "resourcepool1", config.get_api_url(),
+        ocloud1_id)
+    repo.add(resource_pool1)
+    assert repo.get(resource_pool_id1) == resource_pool1
+
+
+def test_add_resource(sqlite_session_factory):
+    session = sqlite_session_factory()
+    repo = repository.ResourceSqlAlchemyRepository(session)
+    resource_id1 = str(uuid.uuid4())
+    resource_type_id1 = str(uuid.uuid4())
+    resource_pool_id1 = str(uuid.uuid4())
+    resource1 = ocloud.Resource(
+        resource_id1, resource_type_id1, resource_pool_id1)
+    repo.add(resource1)
+    assert repo.get(resource_id1) == resource1

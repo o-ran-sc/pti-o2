@@ -25,8 +25,8 @@ class OcloudRepository(abc.ABC):
         self._add(ocloud)
         self.seen.add(ocloud)
 
-    def get(self, ocloudid) -> ocloud.Ocloud:
-        ocloud = self._get(ocloudid)
+    def get(self, ocloud_id) -> ocloud.Ocloud:
+        ocloud = self._get(ocloud_id)
         if ocloud:
             self.seen.add(ocloud)
         return ocloud
@@ -45,9 +45,108 @@ class OcloudRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _get(self, ocloudid) -> ocloud.Ocloud:
+    def _get(self, ocloud_id) -> ocloud.Ocloud:
         raise NotImplementedError
 
     @abc.abstractmethod
     def _update(self, ocloud: ocloud.Ocloud):
+        raise NotImplementedError
+
+
+class ResourceTypeRepository(abc.ABC):
+    def __init__(self):
+        self.seen = set()  # type: Set[ocloud.ResourceType]
+
+    def add(self, resource_type: ocloud.ResourceType):
+        self._add(resource_type)
+        self.seen.add(resource_type)
+
+    def get(self, resource_type_id) -> ocloud.ResourceType:
+        resource_type = self._get(resource_type_id)
+        if resource_type:
+            self.seen.add(resource_type)
+        return resource_type
+
+    def list(self) -> List[ocloud.ResourceType]:
+        return self._list()
+
+    def update(self, resource_type: ocloud.ResourceType):
+        self._update(resource_type)
+
+    @abc.abstractmethod
+    def _add(self, resource_type: ocloud.ResourceType):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _get(self, resource_type_id) -> ocloud.ResourceType:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _update(self, resource_type: ocloud.ResourceType):
+        raise NotImplementedError
+
+
+class ResourcePoolRepository(abc.ABC):
+    def __init__(self):
+        self.seen = set()  # type: Set[ocloud.ResourcePool]
+
+    def add(self, resource_pool: ocloud.ResourcePool):
+        self._add(resource_pool)
+        self.seen.add(resource_pool)
+
+    def get(self, resource_pool_id) -> ocloud.ResourcePool:
+        resource_pool = self._get(resource_pool_id)
+        if resource_pool:
+            self.seen.add(resource_pool)
+        return resource_pool
+
+    def list(self) -> List[ocloud.ResourcePool]:
+        return self._list()
+
+    def update(self, resource_pool: ocloud.ResourcePool):
+        self._update(resource_pool)
+
+    @abc.abstractmethod
+    def _add(self, resource_pool: ocloud.ResourcePool):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _get(self, resource_pool_id) -> ocloud.ResourcePool:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _update(self, resource_pool: ocloud.ResourcePool):
+        raise NotImplementedError
+
+
+class ResourceRepository(abc.ABC):
+    def __init__(self):
+        self.seen = set()  # type: Set[ocloud.Resource]
+
+    def add(self, resource: ocloud.Resource):
+        self._add(resource)
+        self.seen.add(resource)
+
+    def get(self, resource_id) -> ocloud.Resource:
+        resource = self._get(resource_id)
+        if resource:
+            self.seen.add(resource)
+        return resource
+
+    def list(self) -> List[ocloud.Resource]:
+        return self._list()
+
+    def update(self, resource: ocloud.Resource):
+        self._update(resource)
+
+    @abc.abstractmethod
+    def _add(self, resource: ocloud.Resource):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _get(self, resource_id) -> ocloud.Resource:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _update(self, resource: ocloud.Resource):
         raise NotImplementedError

@@ -6,6 +6,7 @@ tox
 
 pytest
 pytest-icdiff
+mock
 
 tenacity
 

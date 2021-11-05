@@ -13,19 +13,14 @@
 #  limitations under the License.
 
 # from datetime import datetime
-from flask import Flask, jsonify
+from flask import Flask
 # request
 # from o2ims.domain import commands
 # from o2ims.service.handlers import InvalidResourceType
-from o2ims import bootstrap, config
-from o2ims.views import ocloud_view
+from o2ims import bootstrap
+from o2ims.views.ocloud_route import configure_routes
+
 
 app = Flask(__name__)
 bus = bootstrap.bootstrap()
-apibase = config.get_o2ims_api_base()
-
-
-@app.route(apibase, methods=["GET"])
-def oclouds():
-    result = ocloud_view.oclouds(bus.uow)
-    return jsonify(result), 200
+configure_routes(app, bus)

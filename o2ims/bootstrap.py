@@ -34,8 +34,11 @@ def bootstrap(
         notifications = SmoO2Notifications()
 
     if start_orm:
-        orm.start_o2ims_mappers()
         orm_stx.start_o2ims_stx_mappers(uow)
+        with uow:
+            # get default engine if uow is by default
+            engine = uow.session.get_bind()
+            orm.start_o2ims_mappers(engine)
 
     dependencies = {"uow": uow, "notifications": notifications,
                     "publish": publish}

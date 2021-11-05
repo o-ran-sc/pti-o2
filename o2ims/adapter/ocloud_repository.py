@@ -72,3 +72,60 @@ class OcloudSqlAlchemyRepository(OcloudRepository):
 
     def _update(self, ocloud: ocloud.Ocloud):
         self.session.add(ocloud)
+
+
+class ResouceTypeSqlAlchemyRepository(OcloudRepository):
+    def __init__(self, session):
+        super().__init__()
+        self.session = session
+
+    def _add(self, resourceType: ocloud.ResourceType):
+        self.session.add(resourceType)
+
+    def _get(self, resourceId) -> ocloud.ResourceType:
+        return self.session.query(ocloud.ResourceType).filter_by(
+            resourceId=resourceId).first()
+
+    def _list(self) -> List[ocloud.ResourceType]:
+        return self.session.query()
+
+    def _update(self, resourceType: ocloud.ResourceType):
+        self.session.add(resourceType)
+
+
+class ResourcePoolSqlAlchemyRepository(OcloudRepository):
+    def __init__(self, session):
+        super().__init__()
+        self.session = session
+
+    def _add(self, resourcePool: ocloud.ResourcePool):
+        self.session.add(resourcePool)
+
+    def _get(self, resourcePollId) -> ocloud.ResourcePool:
+        return self.session.query(ocloud.ResourcePool).filter_by(
+            oCloudId=resourcePollId).first()
+
+    def _list(self) -> List[ocloud.ResourcePool]:
+        return self.session.query()
+
+    def _update(self, resourcePool: ocloud.ResourcePool):
+        self.session.add(resourcePool)
+
+
+class ResourceSqlAlchemyRepository(OcloudRepository):
+    def __init__(self, session):
+        super().__init__()
+        self.session = session
+
+    def _add(self, resource: ocloud.Resource):
+        self.session.add(resource)
+
+    def _get(self, resourceId) -> ocloud.Resource:
+        return self.session.query(ocloud.Resource).filter_by(
+            oCloudId=resourceId).first()
+
+    def _list(self) -> List[ocloud.Resource]:
+        return self.session.query()
+
+    def _update(self, resource: ocloud.Resource):
+        self.session.add(resource)

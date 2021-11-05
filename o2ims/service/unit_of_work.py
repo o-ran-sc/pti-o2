@@ -48,12 +48,13 @@ class AbstractUnitOfWork(abc.ABC):
     def rollback(self):
         raise NotImplementedError
 
+engine = create_engine(
+    config.get_postgres_uri(),
+    isolation_level="REPEATABLE READ",
+)
 
 DEFAULT_SESSION_FACTORY = sessionmaker(
-    bind=create_engine(
-        config.get_postgres_uri(),
-        isolation_level="REPEATABLE READ",
-    )
+    bind=engine
 )
 
 
@@ -65,6 +66,12 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
         self.session = self.session_factory()  # type: Session
         self.oclouds = ocloud_repository\
             .OcloudSqlAlchemyRepository(self.session)
+        self.resource_types = ocloud_repository\
+            .ResouceTypeSqlAlchemyRepository(self.session)
+        self.resource_pools = ocloud_repository\
+            .ResourcePoolSqlAlchemyRepository(self.session)
+        self.resources = ocloud_repository\
+            .ResourceSqlAlchemyRepository(self.session)
         return super().__enter__()
 
     def __exit__(self, *args):

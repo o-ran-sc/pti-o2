@@ -19,11 +19,13 @@ from o2ims.adapter.notifications import AbstractNotifications,\
     SmoO2Notifications
 
 from o2ims.service import handlers, messagebus, unit_of_work
+from o2ims.adapter.unit_of_work import SqlAlchemyUnitOfWork
+from o2ims.adapter.clients import orm_stx
 
 
 def bootstrap(
     start_orm: bool = True,
-    uow: unit_of_work.AbstractUnitOfWork = unit_of_work.SqlAlchemyUnitOfWork(),
+    uow: unit_of_work.AbstractUnitOfWork = SqlAlchemyUnitOfWork(),
     notifications: AbstractNotifications = None,
     publish: Callable = redis_eventpublisher.publish,
 ) -> messagebus.MessageBus:
@@ -33,6 +35,7 @@ def bootstrap(
 
     if start_orm:
         orm.start_o2ims_mappers()
+        orm_stx.start_o2ims_stx_mappers(uow)
 
     dependencies = {"uow": uow, "notifications": notifications,
                     "publish": publish}

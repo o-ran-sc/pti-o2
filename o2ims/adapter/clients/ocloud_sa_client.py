@@ -20,6 +20,7 @@ from typing import List
 # Optional,  Set
 from o2ims.domain import stx_object as ocloudModel
 from o2ims import config
+from o2ims.domain.resource_type import ResourceTypeEnum
 
 # from dcmanagerclient.api import client
 from cgtsclient.client import get_client
@@ -101,7 +102,7 @@ class StxSaClientImp(object):
         super().__init__()
         self.stxclient = stx_client if stx_client else self.getStxClient()
 
-    def getStxClient():
+    def getStxClient(self):
         os_client_args = config.get_stx_access_info()
         config_client = get_client(**os_client_args)
         return config_client
@@ -109,39 +110,55 @@ class StxSaClientImp(object):
     def getInstanceInfo(self) -> ocloudModel.StxGenericModel:
         systems = self.stxclient.isystem.list()
         logger.debug("systems:" + str(systems[0].to_dict()))
-        return ocloudModel.StxGenericModel(systems[0]) if systems else None
+        return ocloudModel.StxGenericModel(
+            ResourceTypeEnum.OCLOUD, systems[0]) if systems else None
 
     def getPserverList(self) -> List[ocloudModel.StxGenericModel]:
         hosts = self.stxclient.ihost.list()
         logger.debug("host 1:" + str(hosts[0].to_dict()))
-        return [ocloudModel.StxGenericModel(self._hostconverter(host))
+        return [ocloudModel.StxGenericModel(
+            ResourceTypeEnum.PSERVER, self._hostconverter(host))
                 for host in hosts if host]
 
     def getPserver(self, id) -> ocloudModel.StxGenericModel:
         host = self.stxclient.ihost.get(id)
         logger.debug("host:" + str(host.to_dict()))
-        return ocloudModel.StxGenericModel(self._hostconverter(host))
+        return ocloudModel.StxGenericModel(
+            ResourceTypeEnum.PSERVER, self._hostconverter(host))
 
     def getK8sList(self) -> List[ocloudModel.StxGenericModel]:
         k8sclusters = self.stxclient.kube_cluster.list()
-        logger.debug("k8sresources:" + str(k8sclusters[0].to_dict()))
-
-        return [ocloudModel.StxGenericModel(self._k8sconverter(k8sres))
-                for k8sres in k8sclusters if k8sres]
+        logger.debug("k8sresources[0]:" + str(k8sclusters[0].to_dict()))
+        return [ocloudModel.StxGenericModel(
+            ResourceTypeEnum.DMS,
+            self._k8sconverter(k8sres), self._k8shasher(k8sres))
+            for k8sres in k8sclusters if k8sres]
 
     def getK8sDetail(self, name) -> ocloudModel.StxGenericModel:
-        k8scluster = self.stxclient.kube_cluster.get(name)
+        if not name:
+            k8sclusters = self.stxclient.kube_cluster.list()
+            # logger.debug("k8sresources[0]:" + str(k8sclusters[0].to_dict()))
+            k8scluster = k8sclusters.pop()
+        else:
+            k8scluster = self.stxclient.kube_cluster.get(name)
+
+        if not k8scluster:
+            return None
         logger.debug("k8sresource:" + str(k8scluster.to_dict()))
-        return ocloudModel.StxGenericModel(self._k8sconverter(k8scluster))
+        return ocloudModel.StxGenericModel(
+            ResourceTypeEnum.DMS,
+            self._k8sconverter(k8scluster), self._k8shasher(k8scluster))
 
     def getCpuList(self, hostid) -> List[ocloudModel.StxGenericModel]:
         cpulist = self.stxclient.icpu.list(hostid)
-        return [ocloudModel.StxGenericModel(self._cpuconverter(cpures))
-                for cpures in cpulist if cpures]
+        return [ocloudModel.StxGenericModel(
+            ResourceTypeEnum.OCLOUD,
+            self._cpuconverter(cpures)) for cpures in cpulist if cpures]
 
     def getCpu(self, id) -> ocloudModel.StxGenericModel:
         cpuinfo = self.stxclient.icpu.get(id)
-        return ocloudModel.StxGenericModel(self._cpuconverter(cpuinfo))
+        return ocloudModel.StxGenericModel(
+            ResourceTypeEnum.OCLOUD, self._cpuconverter(cpuinfo))
 
     def _getIsystems(self):
         return self.stxclient.isystem.list()
@@ -167,12 +184,17 @@ class StxSaClientImp(object):
         return cpu
 
     @staticmethod
-    def _k8sconverter(host):
-        setattr(host, "name", host.cluster_name)
-        setattr(host, "uuid",
-                uuid.uuid3(uuid.NAMESPACE_URL, host.cluster_name))
-        setattr(host, 'updated_at', None)
-        setattr(host, 'created_at', None)
+    def _k8sconverter(cluster):
+        setattr(cluster, "name", cluster.cluster_name)
+        setattr(cluster, "uuid",
+                uuid.uuid3(uuid.NAMESPACE_URL, cluster.cluster_name))
+        setattr(cluster, 'updated_at', None)
+        setattr(cluster, 'created_at', None)
         logger.debug("k8s cluster name/uuid:" +
-                     host.name + "/" + str(host.uuid))
-        return host
+                     cluster.name + "/" + str(cluster.uuid))
+        return cluster
+
+    @staticmethod
+    def _k8shasher(cluster):
+        return str(hash((cluster.cluster_name,
+                         cluster.cluster_api_endpoint, cluster.admin_user)))

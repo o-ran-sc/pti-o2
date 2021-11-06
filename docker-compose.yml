@@ -56,6 +56,31 @@ services:
     ports:
       - "5005:80"
 
+  watcher:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: o2imsdms-image
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DB_HOST=postgres
+      - DB_PASSWORD=o2ims123
+      - REDIS_HOST=redis
+      - PYTHONDONTWRITEBYTECODE=1
+      - OS_AUTH_URL=${OS_AUTH_URL}
+      - OS_USERNAME=${OS_USERNAME}
+      - OS_PASSWORD=${OS_PASSWORD}
+    volumes:
+      - ./o2ims:/o2ims
+      - ./o2dms:/o2dms
+      - ./o2common:/o2common
+      - ./tests:/tests
+    entrypoint:
+      - /bin/sh
+      - /o2ims/entrypoints/o2ims-watcher-entry.sh
+
   postgres:
     image: postgres:9.6
     environment:

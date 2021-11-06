@@ -2,6 +2,9 @@ from enum import Enum
 
 
 class ResourceTypeEnum(Enum):
-    PSERVER = 1
-    PSERVER_CPU = 2
-    PSERVER_RAM = 3
+    OCLOUD = 1,
+    RESOURCE_POOL = 2,
+    DMS = 3,
+    PSERVER = 11
+    PSERVER_CPU = 12
+    PSERVER_RAM = 13

@@ -17,37 +17,50 @@ import logging
 
 from sqlalchemy import (
     Table,
-    # MetaData,
+    MetaData,
     Column,
-    # Integer,
+    Integer,
     String,
     # Date,
     DateTime,
+    # engine,
     # ForeignKey,
     # event,
+    Enum
 )
 
 from sqlalchemy.orm import mapper
+# from sqlalchemy.sql.sqltypes import Integer
 # from sqlalchemy.sql.expression import true
 
 from o2ims.domain import stx_object as ocloudModel
-from o2ims.adapter.orm import metadata
+# from o2ims.adapter.orm import metadata
+from o2ims.service.unit_of_work import AbstractUnitOfWork
+from o2ims.adapter.unit_of_work import SqlAlchemyUnitOfWork
+from o2ims.domain.resource_type import ResourceTypeEnum
 
 logger = logging.getLogger(__name__)
 
-# metadata = MetaData()
+metadata = MetaData()
 
 stxobject = Table(
     "stxcache",
     metadata,
     Column("id", String(255), primary_key=True),
+    Column("type", Enum(ResourceTypeEnum)),
     Column("name", String(255)),
     Column("updatetime", DateTime),
     Column("createtime", DateTime),
-    Column("content", String(255))
+    Column("hash", String(255)),
+    Column("content", String)
 )
 
 
-def start_o2ims_stx_mappers():
+def start_o2ims_stx_mappers(uow: AbstractUnitOfWork = SqlAlchemyUnitOfWork()):
     logger.info("Starting O2 IMS Stx mappers")
     mapper(ocloudModel.StxGenericModel, stxobject)
+
+    with uow:
+        engine1 = uow.session.get_bind()
+        metadata.create_all(engine1)
+        uow.commit()

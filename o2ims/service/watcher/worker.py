@@ -46,7 +46,7 @@ class PollWorker(object):
                 logger.debug("about to probe:"+w)
                 self.watchers[w].probe()
             except Exception as ex:
-                logger.warning(ex.message)
+                logger.warning("Worker:" + w + " raises exception:" + str(ex))
                 continue
         self.schedinstance.enter(self.schedinterval, 1, self._repeat)
 
@@ -59,6 +59,3 @@ class PollWorker(object):
 
     def stop(self):
         self._stopped = True
-
-
-defaultworker = PollWorker()

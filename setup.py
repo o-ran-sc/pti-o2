@@ -9,8 +9,8 @@ setup(
     description="Represent O2 IMS and O2 DMS",
     install_requires=[
         'httplib2',
-        # 'distributedcloud-client',
-        # 'cgtsclient',
+        'distributedcloud-client',
+        'cgtsclient',
         'babel',  # Required by distributedcloud-client
         'PrettyTable<0.8,>=0.7.2',  # Required by distributedcloud-client
     ]

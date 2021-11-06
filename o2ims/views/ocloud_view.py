@@ -15,7 +15,7 @@
 from o2ims.service import unit_of_work
 
 
-def ocloud_one(ocloudid: str, uow: unit_of_work.SqlAlchemyUnitOfWork):
+def ocloud_one(ocloudid: str, uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         results = uow.session.execute(
             """
@@ -26,7 +26,7 @@ def ocloud_one(ocloudid: str, uow: unit_of_work.SqlAlchemyUnitOfWork):
     return dict(results[0]) if len(results) > 0 else None
 
 
-def oclouds(uow: unit_of_work.SqlAlchemyUnitOfWork):
+def oclouds(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         results = uow.session.execute(
             """

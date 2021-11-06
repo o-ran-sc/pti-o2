@@ -13,8 +13,12 @@
 #  limitations under the License.
 
 # from dataclasses import dataclass
-# import datetime
+import datetime
 import json
+
+from o2ims.domain.resource_type import ResourceTypeEnum
+import logging
+logger = logging.getLogger(__name__)
 
 
 class MismatchedModel(Exception):
@@ -22,31 +26,31 @@ class MismatchedModel(Exception):
 
 
 class StxGenericModel:
-    def __init__(self, api_response: dict = None) -> None:
+    def __init__(self, type: ResourceTypeEnum,
+                 api_response: dict = None, content_hash=None) -> None:
         if api_response:
             self.id = api_response.uuid
-            self.content = json.dumps(api_response.to_dict())
-            self.updatetime = api_response.updated_at
-            self.createtime = api_response.created_at
+            self.type = type
+            self.updatetime = datetime.datetime.strptime(
+                api_response.updated_at.split('.')[0], "%Y-%m-%dT%H:%M:%S") \
+                if api_response.updated_at else None
+            self.createtime = datetime.datetime.strptime(
+                api_response.created_at.split('.')[0], "%Y-%m-%dT%H:%M:%S") \
+                if api_response.created_at else None
             self.name = api_response.name
+            self.hash = content_hash if content_hash \
+                else str(hash((self.id, self.updatetime)))
+            self.content = json.dumps(api_response.to_dict())
 
     def is_outdated(self, newmodel) -> bool:
-        return self.updatetime < newmodel.updatetime
+        # return self.updatetime < newmodel.updatetime
+        # logger.warning("hash1: " + self.hash + " vs hash2: " + newmodel.hash)
+        return self.hash != newmodel.hash
 
     def update_by(self, newmodel) -> None:
         if self.id != newmodel.id:
             raise MismatchedModel("Mismatched model")
         self.name = newmodel.name
-
-        self.content = newmodel.content
         self.createtime = newmodel.createtime
         self.updatetime = newmodel.updatetime
-
-
-class StxK8sClusterModel(StxGenericModel):
-    def __init__(self, api_response: dict = None) -> None:
-        super().__init__(api_response=api_response)
-
-    def is_outdated(self, newmodel) -> bool:
-        # never outdated since lack of such evidence
-        return False
+        self.content = newmodel.content

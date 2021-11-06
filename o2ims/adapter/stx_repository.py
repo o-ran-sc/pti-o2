@@ -14,26 +14,26 @@
 
 from typing import List
 # from o2ims.adapter import orm
-from o2ims.domain import ocloud
-from o2ims.domain.ocloud_repo import OcloudRepository
+from o2ims.domain.stx_object import StxGenericModel
+from o2ims.domain.stx_repo import StxObjectRepository
+from o2ims.domain.resource_type import ResourceTypeEnum
 
 
-class OcloudSqlAlchemyRepository(OcloudRepository):
+class StxObjectSqlAlchemyRepository(StxObjectRepository):
     def __init__(self, session):
         super().__init__()
         self.session = session
 
-    def _add(self, ocloud: ocloud.Ocloud):
-        self.session.add(ocloud)
-        # self.session.add_all(ocloud.deploymentManagers)
+    def _add(self, stx_obj: StxGenericModel):
+        self.session.add(stx_obj)
 
-    def _get(self, ocloudid) -> ocloud.Ocloud:
-        return self.session.query(ocloud.Ocloud).filter_by(
-            oCloudId=ocloudid).first()
+    def _get(self, stx_obj_id) -> StxGenericModel:
+        return self.session.query(StxGenericModel).filter_by(
+            id=stx_obj_id).first()
 
-    def _list(self) -> List[ocloud.Ocloud]:
-        return self.session.query(ocloud.Ocloud).order_by(
-            ocloud.Ocloud.name).all()
+    def _list(self, type: ResourceTypeEnum) -> List[StxGenericModel]:
+        return self.session.query(StxGenericModel).filter_by(
+            type=type).order_by(StxGenericModel.updatetime.desc()).all()
 
-    def _update(self, ocloud: ocloud.Ocloud):
-        self.session.add(ocloud)
+    def _update(self, stx_obj: StxGenericModel):
+        self.session.add(stx_obj)

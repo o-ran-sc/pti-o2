@@ -23,6 +23,7 @@ import uuid
 import json
 from o2ims.adapter.clients.ocloud_sa_client import StxSaOcloudClient
 from o2ims.domain import stx_object as ocloudModel
+from o2ims.domain.resource_type import ResourceTypeEnum
 
 # pytestmark = pytest.mark.usefixtures("mappers")
 
@@ -32,7 +33,7 @@ class FakeStxSaClientImp(object):
         super().__init__()
 
     def getInstanceInfo(self) -> ocloudModel.StxGenericModel:
-        model = ocloudModel.StxGenericModel()
+        model = ocloudModel.StxGenericModel(ResourceTypeEnum.OCLOUD)
         model.id = uuid.uuid4()
         model.name = "stx1"
         model.updatetime = datetime.now

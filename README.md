@@ -1,5 +1,15 @@
 ## Building containers
 
+To accommodate the git repo access issue, the cgts-client and distributed client are
+cloned into temp before docker building
+
+```sh
+mkdir -p temp
+cd temp
+git clone https://opendev.org/starlingx/config.git
+git clone https://opendev.org/starlingx/distcloud-client.git
+cd -
+```
 
 ```sh
 docker-compose build

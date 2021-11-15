@@ -81,5 +81,5 @@ class WatcherTree(object):
             return
 
         for res in resources:
-            for node in self.children:
-                node.probe(res, childdepth)
+            for targetname in self.children.keys():
+                self.children[targetname].probe(res, childdepth)

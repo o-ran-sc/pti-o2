@@ -24,8 +24,8 @@ services:
       - ./o2common:/o2common
       - ./tests:/tests
     entrypoint:
-      - python
-      - /o2ims/entrypoints/redis_eventconsumer.py
+      - /bin/sh
+      - /o2ims/entrypoints/o2ims-redis-entry.sh
 
   api:
     image: o2imsdms-image

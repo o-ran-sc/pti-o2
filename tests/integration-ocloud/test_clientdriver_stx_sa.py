@@ -81,7 +81,7 @@ def test_get_cpu_list(real_stx_aio_client):
     hostlist = stxSaClientImp.getPserverList()
     assert len(hostlist) > 0
 
-    cpulist = stxSaClientImp.getCpuList(hostlist[0].id)
+    cpulist = stxSaClientImp.getCpuList(hostid=hostlist[0].id)
     assert len(cpulist) > 0
     cpu1 = cpulist[0]
     cpu2 = stxSaClientImp.getCpu(cpu1.id)

@@ -21,12 +21,13 @@ from o2ims.service.client.base_client import BaseClient
 from o2ims.domain import ocloud
 from o2ims import config
 import uuid
-from o2ims.service.watcher.base import BaseWatcher, OcloudWatcher
+from o2ims.service.watcher.base import BaseWatcher, WatcherTree
 from o2ims.domain import stx_object as ocloudModel
 from o2ims.adapter.ocloud_repository import OcloudRepository
 from o2ims.domain.stx_repo import StxObjectRepository
 from o2ims.service.watcher import worker
 from o2ims.service.unit_of_work import AbstractUnitOfWork
+from o2ims.service.watcher.ocloud_watcher import OcloudWatcher
 
 
 class FakeOcloudClient(BaseClient):
@@ -132,7 +133,7 @@ def test_watchers_worker():
     class FakeOCloudWatcher(BaseWatcher):
         def __init__(self, client: BaseClient,
                      repo: OcloudRepository) -> None:
-            super().__init__(client)
+            super().__init__(client, None)
             self.fakeOcloudWatcherCounter = 0
             self._client = client
             self._repo = repo
@@ -140,11 +141,13 @@ def test_watchers_worker():
         def _targetname(self):
             return "fakeocloudwatcher"
 
-        def _probe(self):
+        def _probe(self, parent: object=None):
+            # import pdb; pdb.set_trace()
             self.fakeOcloudWatcherCounter += 1
             # hacking to stop the blocking sched task
             if self.fakeOcloudWatcherCounter > 2:
                 testedworker.stop()
+            return []
 
 
     # fakeRepo = FakeOcloudRepo()
@@ -153,8 +156,10 @@ def test_watchers_worker():
     fakeClient = FakeOcloudClient()
     fakewatcher = FakeOCloudWatcher(fakeClient, fakeuow)
 
+    root = WatcherTree(fakewatcher)
+
     testedworker.set_interval(1)
-    testedworker.add_watcher(fakewatcher)
+    testedworker.add_watcher(root)
     assert fakewatcher.fakeOcloudWatcherCounter == 0
 
     count1 = fakewatcher.fakeOcloudWatcherCounter

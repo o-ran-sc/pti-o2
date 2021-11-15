@@ -15,11 +15,20 @@
 import cotyledon
 
 from o2ims.service.watcher.worker import PollWorker
-from o2ims.service.watcher.base import OcloudWatcher
-from o2ims.service.watcher.base import DmsWatcher
-# from o2ims.service.client.base_client import BaseClient
+from o2ims.service.watcher.ocloud_watcher import OcloudWatcher
+from o2ims.service.watcher.ocloud_watcher import DmsWatcher
+from o2ims.service.watcher.resourcepool_watcher import ResourcePoolWatcher
 from o2ims.adapter.clients.ocloud_sa_client import StxSaDmsClient
 from o2ims.adapter.clients.ocloud_sa_client import StxSaOcloudClient
+from o2ims.adapter.clients.ocloud_sa_client import StxSaResourcePoolClient
+
+from o2ims.service.watcher.pserver_watcher import PServerWatcher
+from o2ims.adapter.clients.ocloud_sa_client import StxPserverClient
+
+from o2ims.service.watcher.pserver_cpu_watcher import PServerCpuWatcher
+from o2ims.adapter.clients.ocloud_sa_client import StxCpuClient
+
+from o2ims.service.watcher.base import WatcherTree
 
 from o2ims import bootstrap
 # from o2ims import config
@@ -37,16 +46,24 @@ class WatcherService(cotyledon.Service):
         self.args = args
         self.bus = bootstrap.bootstrap()
         self.worker = PollWorker()
-        # self.stxrepo = self.bus.uow.stxobjects
-        # tbd: 1 client per resource pool
-        # self.client = StxSaOcloudClient()
 
     def run(self):
         try:
-            self.worker.add_watcher(OcloudWatcher(StxSaOcloudClient(),
+            root = WatcherTree(OcloudWatcher(
+                StxSaOcloudClient(), self.bus.uow))
+            root.addchild(
+                DmsWatcher(StxSaDmsClient(), self.bus.uow))
+
+            child_respool = root.addchild(
+                ResourcePoolWatcher(StxSaResourcePoolClient(),
                                     self.bus.uow))
-            self.worker.add_watcher(DmsWatcher(StxSaDmsClient(),
-                                    self.bus.uow))
+            child_pserver = child_respool.addchild(
+                PServerWatcher(StxPserverClient(), self.bus.uow))
+            child_pserver.addchild(
+                PServerCpuWatcher(StxCpuClient(), self.bus.uow))
+
+            self.worker.add_watcher(root)
+
             self.worker.start()
         except Exception as ex:
             logger.warning("WorkerService Exception:" + str(ex))

@@ -14,7 +14,7 @@
 
 import time
 import sched
-from o2ims.service.watcher.base import BaseWatcher
+from o2ims.service.watcher.base import WatcherTree
 
 import logging
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class PollWorker(object):
     def __init__(self, interval=10) -> None:
         super().__init__()
-        self.watchers = {}
+        self.watchers = []
         self.schedinstance = sched.scheduler(time.time, time.sleep)
         self.schedinterval = interval
         self._stopped = True
@@ -34,19 +34,19 @@ class PollWorker(object):
         else:
             raise Exception("Invalid interval:" + interval)
 
-    def add_watcher(self, watcher: BaseWatcher):
-        self.watchers[watcher.targetname()] = watcher
+    def add_watcher(self, watcher: WatcherTree):
+        self.watchers.append(watcher)
 
     def _repeat(self):
         logger.debug("_repeat started")
         if self._stopped:
             return
-        for w in self.watchers.keys():
+        for w in self.watchers:
             try:
-                logger.debug("about to probe:"+w)
-                self.watchers[w].probe()
+                # logger.debug("about to probe:"+w)
+                w.probe(None)
             except Exception as ex:
-                logger.warning("Worker:" + w + " raises exception:" + str(ex))
+                logger.warning("Worker raises exception:" + str(ex))
                 continue
         self.schedinstance.enter(self.schedinterval, 1, self._repeat)
 

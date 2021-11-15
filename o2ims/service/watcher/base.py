@@ -12,7 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from o2ims.domain.resource_type import ResourceTypeEnum
 from o2ims.service.client.base_client import BaseClient
 from o2ims.domain.stx_object import StxGenericModel
 from o2ims.service.unit_of_work import AbstractUnitOfWork
@@ -21,142 +20,66 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class InvalidOcloudState(Exception):
-    pass
-
-
 class BaseWatcher(object):
-    def __init__(self, client: BaseClient) -> None:
+    def __init__(self, client: BaseClient,
+                 uow: AbstractUnitOfWork) -> None:
         super().__init__()
         self._client = client
+        self._uow = uow
 
     def targetname(self) -> str:
         return self._targetname()
 
-    def probe(self):
-        self._probe()
+    def probe(self, parent: object = None):
+        return self._probe(parent)
 
-    def _probe(self):
+    def _probe(self, parent: object = None):
         raise NotImplementedError
 
     def _targetname(self):
         raise NotImplementedError
-
-
-class OcloudWatcher(BaseWatcher):
-    def __init__(self, ocloud_client: BaseClient,
-                 uow: AbstractUnitOfWork) -> None:
-        super().__init__(ocloud_client)
-        self._uow = uow
-
-    def _targetname(self):
-        return "ocloud"
-
-    def _probe(self):
-        ocloudmodel = self._client.get(None)
-        if ocloudmodel:
-            self._compare_and_update(ocloudmodel)
-
-    def _compare_and_update(self, ocloudmodel: StxGenericModel) -> bool:
-        with self._uow:
-            # localmodel = self._uow.stxobjects.get(str(ocloudmodel.id))
-            oclouds = self._uow.stxobjects.list(ResourceTypeEnum.OCLOUD)
-            if len(oclouds) > 1:
-                raise InvalidOcloudState("More than 1 ocloud is found")
-            if len(oclouds) == 0:
-                logger.info("add ocloud:" + ocloudmodel.name
-                            + " update_at: " + str(ocloudmodel.updatetime)
-                            + " id: " + str(ocloudmodel.id)
-                            + " hash: " + str(ocloudmodel.hash))
-                self._uow.stxobjects.add(ocloudmodel)
-            else:
-                localmodel = oclouds.pop()
-                if localmodel.is_outdated(ocloudmodel):
-                    logger.info("update ocloud:" + ocloudmodel.name
-                                + " update_at: " + str(ocloudmodel.updatetime)
-                                + " id: " + str(ocloudmodel.id)
-                                + " hash: " + str(ocloudmodel.hash))
-                    localmodel.update_by(ocloudmodel)
-                    self._uow.stxobjects.update(localmodel)
-            self._uow.commit()
-
-
-class DmsWatcher(BaseWatcher):
-    def __init__(self, client: BaseClient,
-                 uow: AbstractUnitOfWork) -> None:
-        super().__init__(client)
-        self._uow = uow
-
-    def _targetname(self):
-        return "dms"
-
-    def _probe(self):
-        ocloudmodel = self._client.get(None)
-        if ocloudmodel:
-            self._compare_and_update(ocloudmodel)
 
     def _compare_and_update(self, newmodel: StxGenericModel) -> bool:
         with self._uow:
             # localmodel = self._uow.stxobjects.get(ocloudmodel.id)
             localmodel = self._uow.stxobjects.get(str(newmodel.id))
             if not localmodel:
-                logger.info("add dms:" + newmodel.name)
+                logger.info("add entry:" + newmodel.name)
                 self._uow.stxobjects.add(newmodel)
             elif localmodel.is_outdated(newmodel):
-                logger.info("update dms:" + newmodel.name)
+                logger.info("update entry:" + newmodel.name)
                 localmodel.update_by(newmodel)
-                self._uow.stxobjects.update(newmodel)
+                self._uow.stxobjects.update(localmodel)
             self._uow.commit()
 
 
-class ResourcePoolWatcher(BaseWatcher):
-    def __init__(self, client: BaseClient,
-                 uow: AbstractUnitOfWork) -> None:
+# node to organize watchers in tree hierachy
+class WatcherTree(object):
+    def __init__(self, watcher: BaseWatcher) -> None:
         super().__init__()
-        self._uow = uow
+        self.watcher = watcher
+        self.children = {}
 
-    def _targetname(self):
-        return "resourcepool"
+    def addchild(self, watcher: BaseWatcher) -> object:
+        child = WatcherTree(watcher)
+        self.children[watcher.targetname()] = child
+        return child
 
-    def _probe(self):
-        ocloudmodel = self._client.get(None)
-        if ocloudmodel:
-            logger.info("detect ocloudmodel:" + ocloudmodel.name)
-            self._compare_and_update(ocloudmodel)
+    def removechild(self, targetname: str) -> object:
+        return self.children.pop(targetname)
 
-    def _compare_and_update(self, newmodel: StxGenericModel) -> bool:
-        with self._uow:
-            # localmodel = self._uow.stxobjects.get(ocloudmodel.id)
-            localmodel = self._uow.stxobjects.get(str(newmodel.id))
-            if not localmodel:
-                self._uow.stxobjects.add(newmodel)
-            elif localmodel.is_outdated(newmodel):
-                localmodel.update_by(newmodel)
-                self._uow.stxobjects.update(newmodel)
-            self._uow.commit()
+    # probe all resources by parent, depth = 0 for indefinite recursive
+    def probe(self, parentresource=None, depth: int = 0):
+        logger.debug("probe resources with watcher: "
+                     + self.watcher.targetname())
+        childdepth = depth - 1 if depth > 0 else 0
+        resources = self.watcher.probe(parentresource)
+        logger.debug("probe returns " + str(len(resources)) + "resources")
 
+        if depth == 1:
+            # stop recursive
+            return
 
-class ResourceWatcher(BaseWatcher):
-    def __init__(self, client: BaseClient,
-                 uow: AbstractUnitOfWork) -> None:
-        super().__init__()
-        self._uow = uow
-
-    def _targetname(self):
-        return "resource"
-
-    def _probe(self):
-        ocloudmodel = self._client.get(None)
-        if ocloudmodel:
-            self._compare_and_update(ocloudmodel)
-
-    def _compare_and_update(self, newmodel: StxGenericModel) -> bool:
-        with self._uow:
-            # localmodel = self._repo.get(ocloudmodel.id)
-            localmodel = self._uow.stxobjects.get(str(newmodel.id))
-            if not localmodel:
-                self._uow.stxobjects.add(newmodel)
-            elif localmodel.is_outdated(newmodel):
-                localmodel.update_by(newmodel)
-                self._uow.stxobjects.update(newmodel)
-            self._uow.commit()
+        for res in resources:
+            for node in self.children:
+                node.probe(res, childdepth)

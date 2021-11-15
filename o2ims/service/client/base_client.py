@@ -22,8 +22,8 @@ class BaseClient(abc.ABC):
     def __init__(self):
         pass
 
-    def list(self) -> List[ocloudModel.StxGenericModel]:
-        return self._list()
+    def list(self, **filters) -> List[ocloudModel.StxGenericModel]:
+        return self._list(filters)
 
     def get(self, id) -> ocloudModel.StxGenericModel:
         return self._get(id)
@@ -33,5 +33,5 @@ class BaseClient(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _list(self):
+    def _list(self, **filters):
         raise NotImplementedError

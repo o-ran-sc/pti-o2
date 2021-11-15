@@ -23,7 +23,7 @@ class BaseClient(abc.ABC):
         pass
 
     def list(self, **filters) -> List[ocloudModel.StxGenericModel]:
-        return self._list(filters)
+        return self._list(**filters)
 
     def get(self, id) -> ocloudModel.StxGenericModel:
         return self._get(id)

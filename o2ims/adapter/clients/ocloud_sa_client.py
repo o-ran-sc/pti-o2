@@ -61,7 +61,7 @@ class StxSaDmsClient(BaseClient):
         return self.driver.getK8sDetail(name)
 
     def _list(self, **filters):
-        return self.driver.getK8sList(filters)
+        return self.driver.getK8sList(**filters)
 
 
 class StxPserverClient(BaseClient):
@@ -73,7 +73,7 @@ class StxPserverClient(BaseClient):
         return self.driver.getPserver(id)
 
     def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
-        return self.driver.getPserverList(filters)
+        return self.driver.getPserverList(**filters)
 
 
 class StxCpuClient(BaseClient):
@@ -86,7 +86,7 @@ class StxCpuClient(BaseClient):
         return self.driver.getCpu(id)
 
     def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
-        return self.driver.getCpuList(filters)
+        return self.driver.getCpuList(**filters)
 
 # internal driver which implement client call to Stx Standalone instance
 
@@ -148,13 +148,13 @@ class StxSaClientImp(object):
         hostid = filters.get("hostid", None)
         cpulist = self.stxclient.icpu.list(hostid)
         return [ocloudModel.StxGenericModel(
-            ResourceTypeEnum.OCLOUD,
+            ResourceTypeEnum.PSERVER_CPU,
             self._cpuconverter(cpures)) for cpures in cpulist if cpures]
 
     def getCpu(self, id) -> ocloudModel.StxGenericModel:
         cpuinfo = self.stxclient.icpu.get(id)
         return ocloudModel.StxGenericModel(
-            ResourceTypeEnum.OCLOUD, self._cpuconverter(cpuinfo))
+            ResourceTypeEnum.PSERVER_CPU, self._cpuconverter(cpuinfo))
 
     def _getIsystems(self):
         return self.stxclient.isystem.list()

@@ -16,8 +16,8 @@ from o2ims.service.client.base_client import BaseClient
 from o2ims.service.unit_of_work import AbstractUnitOfWork
 from o2ims.service.watcher.resource_watcher import ResourceWatcher
 
-import logging
-logger = logging.getLogger(__name__)
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
 
 class PServerCpuWatcher(ResourceWatcher):

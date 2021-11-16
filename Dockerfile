@@ -35,6 +35,8 @@ COPY setup.py /src/
 
 RUN pip install -e /src
 
+COPY configs/ /etc/o2/
+
 COPY tests/ /tests/
 
 RUN apt-get install -y procps vim

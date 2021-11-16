@@ -14,14 +14,14 @@
 
 # pylint: disable=broad-except, attribute-defined-outside-init
 from __future__ import annotations
-import logging
 from typing import Callable, Dict, List, Union, Type, TYPE_CHECKING
 from o2ims.domain import commands, events
 
 if TYPE_CHECKING:
     from . import unit_of_work
 
-logger = logging.getLogger(__name__)
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
 Message = Union[commands.Command, events.Event]
 

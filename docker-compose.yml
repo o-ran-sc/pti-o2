@@ -18,14 +18,16 @@ services:
       - OS_AUTH_URL=${OS_AUTH_URL}
       - OS_USERNAME=${OS_USERNAME}
       - OS_PASSWORD=${OS_PASSWORD}
+      - LOGGING_CONFIG_LEVEL=DEBUG
     volumes:
+      - ./configs:/configs
       - ./o2ims:/o2ims
       - ./o2dms:/o2dms
       - ./o2common:/o2common
       - ./tests:/tests
     entrypoint:
       - /bin/sh
-      - /o2ims/entrypoints/o2ims-redis-entry.sh
+      - /tests/o2ims-redis-entry.sh
 
   api:
     image: o2imsdms-image
@@ -43,7 +45,9 @@ services:
       - OS_AUTH_URL=${OS_AUTH_URL}
       - OS_USERNAME=${OS_USERNAME}
       - OS_PASSWORD=${OS_PASSWORD}
+      - LOGGING_CONFIG_LEVEL=DEBUG
     volumes:
+      - ./configs:/configs
       - ./o2ims:/o2ims
       - ./o2dms:/o2dms
       - ./o2common:/o2common
@@ -72,14 +76,16 @@ services:
       - OS_AUTH_URL=${OS_AUTH_URL}
       - OS_USERNAME=${OS_USERNAME}
       - OS_PASSWORD=${OS_PASSWORD}
+      - LOGGING_CONFIG_LEVEL=DEBUG
     volumes:
+      - ./configs:/configs
       - ./o2ims:/o2ims
       - ./o2dms:/o2dms
       - ./o2common:/o2common
       - ./tests:/tests
     entrypoint:
       - /bin/sh
-      - /o2ims/entrypoints/o2ims-watcher-entry.sh
+      - /tests/o2ims-watcher-entry.sh
 
   postgres:
     image: postgres:9.6

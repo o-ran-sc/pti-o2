@@ -12,8 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import logging
-
 from sqlalchemy import (
     Table,
     MetaData,
@@ -30,7 +28,8 @@ from sqlalchemy.orm import mapper, relationship
 
 from o2ims.domain import ocloud as ocloudModel
 
-logger = logging.getLogger(__name__)
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
 metadata = MetaData()
 

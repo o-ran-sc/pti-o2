@@ -16,8 +16,8 @@ from o2ims.service.client.base_client import BaseClient
 from o2ims.domain.stx_object import StxGenericModel
 from o2ims.service.unit_of_work import AbstractUnitOfWork
 
-import logging
-logger = logging.getLogger(__name__)
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
 
 class BaseWatcher(object):

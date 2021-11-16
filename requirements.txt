@@ -3,6 +3,8 @@ sqlalchemy
 redis
 psycopg2-binary
 cotyledon
+PyYAML>=5.4.1
+ruamel.yaml>=0.17.1
 
 Cython>=3.0a1
 

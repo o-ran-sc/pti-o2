@@ -24,8 +24,9 @@ from o2ims.domain.resource_type import ResourceTypeEnum
 
 # from dcmanagerclient.api import client
 from cgtsclient.client import get_client
-import logging
-logger = logging.getLogger(__name__)
+
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
 
 class StxSaOcloudClient(BaseClient):

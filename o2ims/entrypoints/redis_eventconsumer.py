@@ -13,13 +13,13 @@
 #  limitations under the License.
 
 import json
-import logging
 import redis
 
 from o2ims import bootstrap, config
 from o2ims.domain import commands
 
-logger = logging.getLogger(__name__)
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
 r = redis.Redis(**config.get_redis_host_and_port())
 

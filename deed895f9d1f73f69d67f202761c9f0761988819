@@ -22,6 +22,30 @@
       },
       "revId": "deed895f9d1f73f69d67f202761c9f0761988819",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "caa3ae30_58a678bb",
+        "filename": "o2ims/adapter/ocloud_repository.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2021-11-16T03:17:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2401761_f90ba7b1",
+      "range": {
+        "startLine": 42,
+        "startChar": 38,
+        "endLine": 42,
+        "endChar": 54
+      },
+      "revId": "deed895f9d1f73f69d67f202761c9f0761988819",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

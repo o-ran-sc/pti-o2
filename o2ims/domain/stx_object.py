@@ -15,6 +15,7 @@
 # from dataclasses import dataclass
 import datetime
 import json
+from o2ims.domain.base import AgRoot
 
 from o2ims.domain.resource_type import ResourceTypeEnum
 from o2common.helper import o2logging
@@ -25,7 +26,7 @@ class MismatchedModel(Exception):
     pass
 
 
-class StxGenericModel:
+class StxGenericModel(AgRoot):
     def __init__(self, type: ResourceTypeEnum,
                  api_response: dict = None, content_hash=None) -> None:
         if api_response:

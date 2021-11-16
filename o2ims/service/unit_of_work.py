@@ -16,12 +16,16 @@
 from __future__ import annotations
 import abc
 
-from o2ims.domain.ocloud_repo import OcloudRepository
+from o2ims.domain.ocloud_repo import OcloudRepository,\
+    ResourcePoolRepository, ResourceRepository, ResourceTypeRepository
 from o2ims.domain.stx_repo import StxObjectRepository
 
 
 class AbstractUnitOfWork(abc.ABC):
     oclouds: OcloudRepository
+    resource_types: ResourceTypeRepository
+    resource_pools: ResourcePoolRepository
+    resources: ResourceRepository
     stxobjects: StxObjectRepository
 
     def __enter__(self):
@@ -34,9 +38,21 @@ class AbstractUnitOfWork(abc.ABC):
         self._commit()
 
     def collect_new_events(self):
-        for ocloud in self.oclouds.seen:
-            while ocloud.events:
-                yield ocloud.events.pop(0)
+        for entry in self.oclouds.seen:
+            while entry.events:
+                yield entry.events.pop(0)
+        for entry in self.resource_pools.seen:
+            while entry.events:
+                yield entry.events.pop(0)
+        for entry in self.resources.seen:
+            while entry.events:
+                yield entry.events.pop(0)
+        for entry in self.resource_types.seen:
+            while entry.events:
+                yield entry.events.pop(0)
+        for entry in self.stxobjects.seen:
+            while entry.events:
+                yield entry.events.pop(0)
 
     @abc.abstractmethod
     def _commit(self):

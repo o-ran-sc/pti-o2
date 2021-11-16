@@ -36,6 +36,7 @@ class OcloudRepository(abc.ABC):
 
     def update(self, ocloud: ocloud.Ocloud):
         self._update(ocloud)
+        self.seen.add(ocloud)
 
     # def update_fields(self, ocloudid: str, updatefields: dict):
     #     self._update(ocloudid, updatefields)
@@ -72,6 +73,7 @@ class ResourceTypeRepository(abc.ABC):
 
     def update(self, resource_type: ocloud.ResourceType):
         self._update(resource_type)
+        self.seen.add(resource_type)
 
     @abc.abstractmethod
     def _add(self, resource_type: ocloud.ResourceType):
@@ -105,6 +107,7 @@ class ResourcePoolRepository(abc.ABC):
 
     def update(self, resource_pool: ocloud.ResourcePool):
         self._update(resource_pool)
+        self.seen.add(resource_pool)
 
     @abc.abstractmethod
     def _add(self, resource_pool: ocloud.ResourcePool):
@@ -138,6 +141,7 @@ class ResourceRepository(abc.ABC):
 
     def update(self, resource: ocloud.Resource):
         self._update(resource)
+        self.seen.add(resource)
 
     @abc.abstractmethod
     def _add(self, resource: ocloud.Resource):

@@ -13,6 +13,8 @@
 #  limitations under the License.
 
 from __future__ import annotations
+
+from o2ims.domain.base import AgRoot
 # from dataclasses import dataclass
 # from datetime import date
 # from typing import Optional, List, Set
@@ -20,7 +22,7 @@ from .resource_type import ResourceTypeEnum
 # from uuid import UUID
 
 
-class Subscription:
+class Subscription(AgRoot):
     def __init__(self, id: str, callback: str, consumersubid: list = [],
                  filter: list = []) -> None:
         self.subscriptionId = id
@@ -45,7 +47,7 @@ class DeploymentManager:
         self.extensions = []
 
 
-class ResourcePool:
+class ResourcePool(AgRoot):
     def __init__(self, id: str, name: str, location: str,
                  ocloudid: str, gLocationId: str = '',
                  description: str = '') -> None:
@@ -58,7 +60,7 @@ class ResourcePool:
         self.extensions = []
 
 
-class ResourceType:
+class ResourceType(AgRoot):
     def __init__(self, typeid: str, name: str, typeEnum: ResourceTypeEnum,
                  ocloudid: str, vender: str = '', model: str = '',
                  version: str = '',
@@ -74,7 +76,7 @@ class ResourceType:
         self.extensions = []
 
 
-class Resource:
+class Resource(AgRoot):
     def __init__(self, resourceId: str, resourceTypeId: str,
                  resourcePoolId: str, oCloudId: str = '',
                  parentId: str = '', elements: list = [],
@@ -89,11 +91,11 @@ class Resource:
         self.extensions = []
 
 
-class Ocloud:
+class Ocloud(AgRoot):
     def __init__(self, ocloudid: str, name: str, imsendpoint: str,
                  globalcloudId: str = '',
                  description: str = '', version_number: int = 0) -> None:
-
+        super().__init__()
         self.oCloudId = ocloudid
         self.globalcloudId = globalcloudId
         self.version_number = version_number
@@ -104,7 +106,7 @@ class Ocloud:
         self.deploymentManagers = []
         self.resourceTypes = []
         self.extensions = []
-        self.events = []
+        # self.events = []
 
     def addDeploymentManager(self,
                              deploymentManager: DeploymentManager):

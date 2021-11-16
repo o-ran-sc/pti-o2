@@ -37,6 +37,7 @@ class StxObjectRepository(abc.ABC):
 
     def update(self, stx_obj: StxGenericModel):
         self._update(stx_obj)
+        self.seen.add(stx_obj)
 
     # def update_fields(self, stx_obj_id: str, updatefields: dict):
     #     self._update(stx_obj_id, updatefields)

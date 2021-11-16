@@ -16,8 +16,8 @@ from o2ims.service.client.base_client import BaseClient
 from o2ims.service.unit_of_work import AbstractUnitOfWork
 from o2ims.service.watcher.base import BaseWatcher
 
-import logging
-logger = logging.getLogger(__name__)
+from o2common.helper import logger
+logger = logger.get_logger(__name__)
 
 
 class ResourcePoolWatcher(BaseWatcher):

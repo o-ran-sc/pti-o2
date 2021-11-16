@@ -34,8 +34,8 @@ from o2ims import bootstrap
 # from o2ims import config
 # import redis
 
-import logging
-logger = logging.getLogger(__name__)
+from o2common.helper import logger
+logger = logger.get_logger(__name__)
 
 # r = redis.Redis(**config.get_redis_host_and_port())
 

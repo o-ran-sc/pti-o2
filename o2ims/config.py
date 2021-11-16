@@ -14,7 +14,9 @@
 
 import os
 import sys
-import logging
+
+from o2common.helper import logger
+logger = logger.get_logger(__name__)
 
 
 def get_postgres_uri():
@@ -70,8 +72,8 @@ def get_stx_access_info():
         #     project_domain_id=os.environ['OS_PROJECT_DOMAIN_ID']
         # )
     except KeyError:
-        logging.error('Please source your RC file before execution, '
-                      'e.g.: `source ~/downloads/admin-rc.sh`')
+        logger.error('Please source your RC file before execution, '
+                     'e.g.: `source ~/downloads/admin-rc.sh`')
         sys.exit(1)
 
     os_client_args = {}

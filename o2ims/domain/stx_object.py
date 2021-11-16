@@ -17,8 +17,8 @@ import datetime
 import json
 
 from o2ims.domain.resource_type import ResourceTypeEnum
-import logging
-logger = logging.getLogger(__name__)
+from o2common.helper import logger
+logger = logger.get_logger(__name__)
 
 
 class MismatchedModel(Exception):

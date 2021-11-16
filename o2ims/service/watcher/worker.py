@@ -16,8 +16,8 @@ import time
 import sched
 from o2ims.service.watcher.base import WatcherTree
 
-import logging
-logger = logging.getLogger(__name__)
+from o2common.helper import logger
+logger = logger.get_logger(__name__)
 
 
 class PollWorker(object):

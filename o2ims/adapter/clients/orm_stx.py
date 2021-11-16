@@ -13,8 +13,6 @@
 #  limitations under the License.
 
 # from datetime import datetime
-import logging
-
 from sqlalchemy import (
     Table,
     MetaData,
@@ -39,7 +37,8 @@ from o2ims.service.unit_of_work import AbstractUnitOfWork
 from o2ims.adapter.unit_of_work import SqlAlchemyUnitOfWork
 from o2ims.domain.resource_type import ResourceTypeEnum
 
-logger = logging.getLogger(__name__)
+from o2common.helper import logger
+logger = logger.get_logger(__name__)
 
 metadata = MetaData()
 

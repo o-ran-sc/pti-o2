@@ -28,6 +28,8 @@ COPY o2dms/ /src/o2dms/
 COPY o2common/ /src/o2common/
 COPY setup.py /src/
 
+COPY configs/ /etc/o2/
+
 # RUN pip install -e /src
 
 COPY tests/ /tests/

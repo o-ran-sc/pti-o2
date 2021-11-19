@@ -12,5 +12,5 @@ Cython>=3.0a1
 httplib2
 babel
 PrettyTable<0.8,>=0.7.2
-# -e git+https://opendev.org/starlingx/distcloud-client.git@master#egg=distributedcloud-client&subdirectory=distributedcloud-client
-# -e git+https://opendev.org/starlingx/config.git@master#egg=cgtsclient&subdirectory=sysinv/cgts-client/cgts-client#
+
+retry

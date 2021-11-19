@@ -1,0 +1,131 @@
+# Copyright (C) 2021 Wind River Systems, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: o2api
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: o2api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: o2api
+  template:
+    metadata:
+      labels:
+        app: o2api
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.o2ims.imagePullSecrets }}
+{{- if .Values.o2ims.affinity }}
+      affinity:
+{{ toYaml .Values.o2ims.affinity | indent 8 }}
+{{- end }}
+      containers:
+        - name: postgres
+          image: postgres:9.6
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: o2ims123
+            - name: POSTGRES_USER
+              value: o2ims
+          command: ["/bin/bash", "/opt/postgres_start.sh"]
+          volumeMounts:
+            - name: scripts
+              mountPath: /opt
+        - name: o2api
+          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
+          ports:
+            - containerPort: 80
+          env:
+            - name: API_HOST
+              value: api
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PASSWORD
+              value: o2ims123
+            - name: FLASK_APP
+              value: /root/o2/o2ims/entrypoints/flask_application.py
+            - name: FLASK_DEBUG
+              value: "1"
+            - name: LOGGING_CONFIG_LEVEL
+              value: DEBUG
+            - name: OS_AUTH_URL
+            - name: OS_PASSWORD
+            - name: OS_USERNAME
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: REDIS_HOST
+              value: redis
+          command: ["/bin/bash", "/opt/o2api_start.sh"]
+          volumeMounts:
+            - name: scripts
+              mountPath: /opt
+        - name: redis
+          image: redis:alpine
+          ports:
+            - containerPort: 6379
+        - name: watcher
+          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
+          command: ["/bin/bash", "/opt/o2watcher_start.sh"]
+          env:
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PASSWORD
+              value: o2ims123
+            - name: LOGGING_CONFIG_LEVEL
+              value: DEBUG
+            - name: OS_AUTH_URL
+            - name: OS_PASSWORD
+            - name: OS_USERNAME
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: REDIS_HOST
+              value: redis
+          volumeMounts:
+            - name: scripts
+              mountPath: /opt
+        - name: o2pubsub
+          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
+          command: ["/bin/bash", "/opt/o2pubsub_start.sh"]
+          env:
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PASSWORD
+              value: o2ims123
+            - name: LOGGING_CONFIG_LEVEL
+              value: DEBUG
+            - name: OS_AUTH_URL
+            - name: OS_PASSWORD
+            - name: OS_USERNAME
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: REDIS_HOST
+              value: redis
+          volumeMounts:
+            - name: scripts
+              mountPath: /opt
+      volumes:
+        - name: scripts
+          configMap:
+            name: {{ .Chart.Name }}-scripts-configmap
+---

@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.localtest
-    image: o2imsdms-image
+    image: o2imsdms
     depends_on:
       - postgres
       - redis
@@ -30,7 +30,7 @@ services:
       - /tests/o2ims-redis-entry.sh
 
   api:
-    image: o2imsdms-image
+    image: o2imsdms
     depends_on:
       - redis_pubsub
     environment:
@@ -64,10 +64,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.localtest
-    image: o2imsdms-image
+    image: o2imsdms
     depends_on:
-      - postgres
-      - redis
+      - redis_pubsub
     environment:
       - DB_HOST=postgres
       - DB_PASSWORD=o2ims123

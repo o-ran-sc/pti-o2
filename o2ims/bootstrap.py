@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from retry import retry
 import inspect
 from typing import Callable
 from o2ims.adapter import orm, redis_eventpublisher
@@ -21,6 +22,16 @@ from o2ims.adapter.notifications import AbstractNotifications,\
 from o2ims.service import handlers, messagebus, unit_of_work
 from o2ims.adapter.unit_of_work import SqlAlchemyUnitOfWork
 from o2ims.adapter.clients import orm_stx
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
+
+
+@retry(tries=100, delay=2, backoff=1)
+def wait_for_db_ready(engine):
+    # wait for db up
+    logger.info("Wait for DB ready ...")
+    engine.connect()
+    logger.info("DB is ready")
 
 
 def bootstrap(
@@ -34,11 +45,13 @@ def bootstrap(
         notifications = SmoO2Notifications()
 
     if start_orm:
-        orm_stx.start_o2ims_stx_mappers(uow)
         with uow:
             # get default engine if uow is by default
             engine = uow.session.get_bind()
+            wait_for_db_ready(engine)
             orm.start_o2ims_mappers(engine)
+
+        orm_stx.start_o2ims_stx_mappers(uow)
 
     dependencies = {"uow": uow, "notifications": notifications,
                     "publish": publish}

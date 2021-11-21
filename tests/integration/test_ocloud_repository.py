@@ -140,3 +140,25 @@ def test_add_resource(sqlite_session_factory):
         resource_id1, resource_type_id1, resource_pool_id1)
     repo.add(resource1)
     assert repo.get(resource_id1) == resource1
+
+
+def test_add_deployment_manager(sqlite_session_factory):
+    session = sqlite_session_factory()
+    repo = repository.DeploymentManagerSqlAlchemyRepository(session)
+    ocloud_id1 = str(uuid.uuid4())
+    deployment_manager_id1 = str(uuid.uuid4())
+    deployment_manager1 = ocloud.DeploymentManager(
+        deployment_manager_id1, "k8s1", ocloud_id1,
+        config.get_api_url()+"/k8s1")
+    repo.add(deployment_manager1)
+    assert repo.get(deployment_manager_id1) == deployment_manager1
+
+
+def test_add_subscription(sqlite_session_factory):
+    session = sqlite_session_factory()
+    repo = repository.SubscriptionSqlAlchemyRepository(session)
+    subscription_id1 = str(uuid.uuid4())
+    subscription1 = ocloud.Subscription(
+        subscription_id1, "https://callback/uri/write/here")
+    repo.add(subscription1)
+    assert repo.get(subscription_id1) == subscription1

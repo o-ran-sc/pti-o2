@@ -75,6 +75,24 @@ def test_new_resource():
     assert resource_id1 is not None and resource1.resourceId == resource_id1
 
 
+def test_new_deployment_manager():
+    ocloud_id1 = str(uuid.uuid4())
+    deployment_manager_id1 = str(uuid.uuid4())
+    deployment_manager1 = ocloud.DeploymentManager(
+        deployment_manager_id1, "k8s1", ocloud_id1,
+        config.get_api_url()+"/k8s1")
+    assert deployment_manager_id1 is not None and deployment_manager1.\
+        deploymentManagerId == deployment_manager_id1
+
+
+def test_new_subscription():
+    subscription_id1 = str(uuid.uuid4())
+    subscription1 = ocloud.Subscription(
+        subscription_id1, "https://callback/uri/write/here")
+    assert subscription_id1 is not None and\
+        subscription1.subscriptionId == subscription_id1
+
+
 def test_view_olcouds(mock_uow):
     session, uow = mock_uow
 
@@ -201,6 +219,74 @@ def test_view_resource_one(mock_uow):
     assert str(resource_res.get("resourceId")) == resource_id1
 
 
+def test_view_deployment_managers(mock_uow):
+    session, uow = mock_uow
+
+    deployment_manager_id1 = str(uuid.uuid4())
+    session.return_value.execute.return_value = [{
+        "deploymentManagerId": deployment_manager_id1,
+    }]
+
+    deployment_manager_list = ocloud_view.deployment_managers(uow)
+    assert str(deployment_manager_list[0].get(
+        "deploymentManagerId")) == deployment_manager_id1
+
+
+def test_view_deployment_manager_one(mock_uow):
+    session, uow = mock_uow
+
+    deployment_manager_id1 = str(uuid.uuid4())
+    session.return_value.execute.return_value.first.return_value = None
+
+    # Query return None
+    deployment_manager_res = ocloud_view.deployment_manager_one(
+        deployment_manager_id1, uow)
+    assert deployment_manager_res is None
+
+    session.return_value.execute.return_value.first.return_value = {
+        "deploymentManagerId": deployment_manager_id1,
+    }
+
+    deployment_manager_res = ocloud_view.deployment_manager_one(
+        deployment_manager_id1, uow)
+    assert str(deployment_manager_res.get(
+        "deploymentManagerId")) == deployment_manager_id1
+
+
+def test_view_subscriptions(mock_uow):
+    session, uow = mock_uow
+
+    subscription_id1 = str(uuid.uuid4())
+    session.return_value.execute.return_value = [{
+        "subscriptionId": subscription_id1,
+    }]
+
+    deployment_manager_list = ocloud_view.subscriptions(uow)
+    assert str(deployment_manager_list[0].get(
+        "subscriptionId")) == subscription_id1
+
+
+def test_view_subscription_one(mock_uow):
+    session, uow = mock_uow
+
+    subscription_id1 = str(uuid.uuid4())
+    session.return_value.execute.return_value.first.return_value = None
+
+    # Query return None
+    deployment_manager_res = ocloud_view.subscription_one(
+        subscription_id1, uow)
+    assert deployment_manager_res is None
+
+    session.return_value.execute.return_value.first.return_value = {
+        "deploymentManagerId": subscription_id1,
+    }
+
+    deployment_manager_res = ocloud_view.subscription_one(
+        subscription_id1, uow)
+    assert str(deployment_manager_res.get(
+        "deploymentManagerId")) == subscription_id1
+
+
 def test_flask_get_list(mock_flask_uow):
     session, client = mock_flask_uow
     session.return_value.execute.return_value = []
@@ -208,7 +294,7 @@ def test_flask_get_list(mock_flask_uow):
 
     # Get list and return empty list
     ##########################
-    resp = client.get(apibase)
+    resp = client.get(apibase+"/")
     assert resp.get_data() == b'[]\n'
 
     resp = client.get(apibase+"/resourceTypes")
@@ -230,24 +316,28 @@ def test_flask_get_one(mock_flask_uow):
     session.return_value.execute.return_value.first.return_value = None
     apibase = config.get_o2ims_api_base()
 
-    # Get one and return nothing
+    # Get one and return 404
     ###########################
     resource_type_id1 = str(uuid.uuid4())
     resp = client.get(apibase+"/resourceTypes/"+resource_type_id1)
-    assert resp.get_data() == b''
+    assert resp.status_code == 404
 
     resource_pool_id1 = str(uuid.uuid4())
     resp = client.get(apibase+"/resourcePools/"+resource_pool_id1)
-    assert resp.get_data() == b''
+    assert resp.status_code == 404
 
     resource_id1 = str(uuid.uuid4())
     resp = client.get(apibase+"/resourcePools/" +
                       resource_pool_id1+"/resources/"+resource_id1)
-    assert resp.get_data() == b''
+    assert resp.status_code == 404
 
     deployment_manager_id1 = str(uuid.uuid4())
     resp = client.get(apibase+"/deploymentManagers/"+deployment_manager_id1)
-    assert resp.get_data() == b''
+    assert resp.status_code == 404
+
+    subscription_id1 = str(uuid.uuid4())
+    resp = client.get(apibase+"/subscriptions/"+subscription_id1)
+    assert resp.status_code == 404
 
 
 def test_flask_not_allowed(mock_flask_uow):
@@ -338,6 +428,29 @@ def test_flask_not_allowed(mock_flask_uow):
 
     deployment_manager_id1 = str(uuid.uuid4())
     uri = apibase + "/deploymentManagers/" + deployment_manager_id1
+    resp = client.post(uri)
+    assert resp.status == '405 METHOD NOT ALLOWED'
+    resp = client.put(uri)
+    assert resp.status == '405 METHOD NOT ALLOWED'
+    resp = client.patch(uri)
+    assert resp.status == '405 METHOD NOT ALLOWED'
+    resp = client.delete(uri)
+    assert resp.status == '405 METHOD NOT ALLOWED'
+
+    # Testing subscriptions not support method
+    ##########################
+    uri = apibase + "/subscriptions"
+    resp = client.post(uri)
+    assert resp.status == '405 METHOD NOT ALLOWED'
+    resp = client.put(uri)
+    assert resp.status == '405 METHOD NOT ALLOWED'
+    resp = client.patch(uri)
+    assert resp.status == '405 METHOD NOT ALLOWED'
+    resp = client.delete(uri)
+    assert resp.status == '405 METHOD NOT ALLOWED'
+
+    subscription_id1 = str(uuid.uuid4())
+    uri = apibase + "/subscriptions/" + subscription_id1
     resp = client.post(uri)
     assert resp.status == '405 METHOD NOT ALLOWED'
     resp = client.put(uri)

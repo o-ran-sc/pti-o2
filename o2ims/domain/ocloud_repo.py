@@ -154,3 +154,69 @@ class ResourceRepository(abc.ABC):
     @abc.abstractmethod
     def _update(self, resource: ocloud.Resource):
         raise NotImplementedError
+
+
+class DeploymentManagerRepository(abc.ABC):
+    def __init__(self):
+        self.seen = set()  # type: Set[ocloud.DeploymentManager]
+
+    def add(self, deployment_manager: ocloud.DeploymentManager):
+        self._add(deployment_manager)
+        self.seen.add(deployment_manager)
+
+    def get(self, deployment_manager_id) -> ocloud.DeploymentManager:
+        deployment_manager = self._get(deployment_manager_id)
+        if deployment_manager:
+            self.seen.add(deployment_manager)
+        return deployment_manager
+
+    def list(self) -> List[ocloud.DeploymentManager]:
+        return self._list()
+
+    def update(self, deployment_manager: ocloud.DeploymentManager):
+        self._update(deployment_manager)
+
+    @abc.abstractmethod
+    def _add(self, deployment_manager: ocloud.DeploymentManager):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _get(self, deployment_manager_id) -> ocloud.DeploymentManager:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _update(self, deployment_manager: ocloud.DeploymentManager):
+        raise NotImplementedError
+
+
+class SubscriptionRepository(abc.ABC):
+    def __init__(self):
+        self.seen = set()  # type: Set[ocloud.Subscription]
+
+    def add(self, subscription: ocloud.Subscription):
+        self._add(subscription)
+        self.seen.add(subscription)
+
+    def get(self, subscription_id) -> ocloud.Subscription:
+        subscription = self._get(subscription_id)
+        if subscription:
+            self.seen.add(subscription)
+        return subscription
+
+    def list(self) -> List[ocloud.Subscription]:
+        return self._list()
+
+    def update(self, subscription: ocloud.Subscription):
+        self._update(subscription)
+
+    @abc.abstractmethod
+    def _add(self, subscription: ocloud.Subscription):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _get(self, subscription_id) -> ocloud.Subscription:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _update(self, subscription: ocloud.Subscription):
+        raise NotImplementedError

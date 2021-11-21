@@ -12,15 +12,22 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# from datetime import datetime
 from flask import Flask
-# request
-# from o2ims.domain import commands
-# from o2ims.service.handlers import InvalidResourceType
+from flask_restx import Api
+
 from o2ims import bootstrap
-from o2ims.views.ocloud_route import configure_routes
+# from o2ims import config
+# from o2ims.views.ocloud_route import configure_routes
+from o2ims.views.ocloud_route import configure_namespace
 
 
+# apibase = config.get_o2ims_api_base()
 app = Flask(__name__)
+api = Api(app, version='1.0.0',
+          title='O-Cloud Infrastructure Management Services',
+          description='''Swagger OpenAPI document for 
+          O-Cloud Infrastructure Management Services''',
+          )
 bus = bootstrap.bootstrap()
-configure_routes(app, bus)
+# configure_routes(app, bus)
+configure_namespace(api, bus)

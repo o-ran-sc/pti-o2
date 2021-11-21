@@ -16,7 +16,8 @@ from typing import List
 # from o2ims.adapter import orm
 from o2ims.domain import ocloud
 from o2ims.domain.ocloud_repo import OcloudRepository, ResourceTypeRepository,\
-    ResourcePoolRepository, ResourceRepository
+    ResourcePoolRepository, ResourceRepository, DeploymentManagerRepository,\
+    SubscriptionRepository
 
 
 class OcloudSqlAlchemyRepository(OcloudRepository):
@@ -95,3 +96,41 @@ class ResourceSqlAlchemyRepository(ResourceRepository):
 
     def _update(self, resource: ocloud.Resource):
         self.session.add(resource)
+
+
+class DeploymentManagerSqlAlchemyRepository(DeploymentManagerRepository):
+    def __init__(self, session):
+        super().__init__()
+        self.session = session
+
+    def _add(self, deployment_manager: ocloud.DeploymentManager):
+        self.session.add(deployment_manager)
+
+    def _get(self, deployment_manager_id) -> ocloud.DeploymentManager:
+        return self.session.query(ocloud.DeploymentManager).filter_by(
+            deploymentManagerId=deployment_manager_id).first()
+
+    def _list(self) -> List[ocloud.DeploymentManager]:
+        return self.session.query()
+
+    def _update(self, deployment_manager: ocloud.DeploymentManager):
+        self.session.add(deployment_manager)
+
+
+class SubscriptionSqlAlchemyRepository(SubscriptionRepository):
+    def __init__(self, session):
+        super().__init__()
+        self.session = session
+
+    def _add(self, subscription: ocloud.Subscription):
+        self.session.add(subscription)
+
+    def _get(self, subscription_id) -> ocloud.Subscription:
+        return self.session.query(ocloud.Subscription).filter_by(
+            subscriptionId=subscription_id).first()
+
+    def _list(self) -> List[ocloud.Subscription]:
+        return self.session.query()
+
+    def _update(self, subscription: ocloud.Subscription):
+        self.session.add(subscription)

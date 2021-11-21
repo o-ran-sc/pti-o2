@@ -14,8 +14,8 @@
 
 from sqlalchemy import select
 
-from o2ims.adapter.orm import ocloud, resource, \
-    resourcetype, resourcepool, deploymentmanager
+from o2ims.adapter.orm import ocloud, resource, resourcetype, \
+    resourcepool, deploymentmanager, subscription
 from o2ims.adapter import unit_of_work
 # from o2ims.domain.ocloud import Ocloud
 
@@ -165,5 +165,20 @@ def deployment_manager_one(deploymentManagerId: str,
         # )
         res = uow.session.execute(select(deploymentmanager).where(
             deploymentmanager.c.deploymentManagerId == deploymentManagerId))
+        first = res.first()
+    return None if first is None else dict(first)
+
+
+def subscriptions(uow: unit_of_work.SqlAlchemyUnitOfWork):
+    with uow:
+        res = uow.session.execute(select(subscription))
+    return [dict(r) for r in res]
+
+
+def subscription_one(subscriptionId: str,
+                     uow: unit_of_work.SqlAlchemyUnitOfWork):
+    with uow:
+        res = uow.session.execute(select(subscription).where(
+            subscription.c.subscriptionId == subscriptionId))
         first = res.first()
     return None if first is None else dict(first)

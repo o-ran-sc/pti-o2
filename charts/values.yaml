@@ -35,3 +35,9 @@ o2ims:
     repository: registry.local:9001/admin/o2imsdms
     tag: 0.1.1
     pullPolicy: IfNotPresent
+  logginglevel: "WARNING"
+
+ocloud:
+  OS_AUTH_URL: ""
+  OS_USERNAME: ""
+  OS_PASSWORD: ""

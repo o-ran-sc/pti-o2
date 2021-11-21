@@ -64,9 +64,9 @@ spec:
             - name: FLASK_APP
               value: /root/o2/o2ims/entrypoints/flask_application.py
             - name: FLASK_DEBUG
-              value: "1"
+              value: {{ .Values.o2ims.logginglevel }}
             - name: LOGGING_CONFIG_LEVEL
-              value: DEBUG
+              value: {{ .Values.o2ims.logginglevel }}
             - name: OS_AUTH_URL
             - name: OS_PASSWORD
             - name: OS_USERNAME
@@ -93,10 +93,13 @@ spec:
             - name: DB_PASSWORD
               value: o2ims123
             - name: LOGGING_CONFIG_LEVEL
-              value: DEBUG
+              value: {{ .Values.o2ims.logginglevel }}
             - name: OS_AUTH_URL
+              value: {{ .Values.ocloud.OS_AUTH_URL }}
             - name: OS_PASSWORD
+              value: {{ .Values.ocloud.OS_PASSWORD }}
             - name: OS_USERNAME
+              value: {{ .Values.ocloud.OS_USERNAME }}
             - name: PYTHONDONTWRITEBYTECODE
               value: "1"
             - name: REDIS_HOST
@@ -113,10 +116,13 @@ spec:
             - name: DB_PASSWORD
               value: o2ims123
             - name: LOGGING_CONFIG_LEVEL
-              value: DEBUG
+              value: {{ .Values.o2ims.logginglevel }}
             - name: OS_AUTH_URL
+              value: {{ .Values.ocloud.OS_AUTH_URL }}
             - name: OS_PASSWORD
+              value: {{ .Values.ocloud.OS_PASSWORD }}
             - name: OS_USERNAME
+              value: {{ .Values.ocloud.OS_USERNAME }}
             - name: PYTHONDONTWRITEBYTECODE
               value: "1"
             - name: REDIS_HOST

@@ -8,6 +8,7 @@ import pytest
 import redis
 import requests
 from flask import Flask
+from flask_restx import Api
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, clear_mappers
 from tenacity import retry, stop_after_delay
@@ -17,7 +18,8 @@ from o2ims import config
 from o2ims.adapter.orm import metadata, start_o2ims_mappers
 from o2ims.adapter.clients.orm_stx import start_o2ims_stx_mappers
 from o2ims.adapter import unit_of_work
-from o2ims.views.ocloud_route import configure_routes
+# from o2ims.views.ocloud_route import configure_routes
+from o2ims.views.ocloud_route import configure_namespace
 from o2ims.bootstrap import bootstrap
 
 
@@ -33,8 +35,10 @@ def mock_flask_uow(mock_uow):
     session, uow = mock_uow
     app = Flask(__name__)
     # app.config["TESTING"] = True
+    api = Api(app)
     bus = bootstrap(False, uow)
-    configure_routes(app, bus)
+    # configure_routes(app, bus)
+    configure_namespace(api, bus)
     client = app.test_client()
     return session, client
 
@@ -70,8 +74,10 @@ def sqlite_uow(sqlite_session_factory):
 def sqlite_flask_uow(sqlite_uow):
     app = Flask(__name__)
     # app.config["TESTING"] = True
+    api = Api(app)
     bus = bootstrap(False, sqlite_uow)
-    configure_routes(app, bus)
+    # configure_routes(app, bus)
+    configure_namespace(api, bus)
     yield app.test_client()
 
 
@@ -128,8 +134,10 @@ def postgres_uow(postgres_session_factory):
 @pytest.fixture
 def postgres_flask_uow(postgres_uow):
     app = Flask(__name__)
+    api = Api(app)
     bus = bootstrap(False, postgres_uow)
-    configure_routes(app, bus)
+    # configure_routes(app, bus)
+    configure_namespace(api, bus)
     yield app.test_client()
 
 

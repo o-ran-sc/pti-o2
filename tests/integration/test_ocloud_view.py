@@ -159,3 +159,74 @@ def test_view_resource_one(sqlite_uow):
 
     resource_res = ocloud_view.resource_one(resource_id1, uow)
     assert str(resource_res.get("resourceId")) == resource_id1
+
+
+def test_view_deployment_managers(sqlite_uow):
+    ocloud_id1 = str(uuid.uuid4())
+    deployment_manager_id1 = str(uuid.uuid4())
+    deployment_manager1 = ocloud.DeploymentManager(
+        deployment_manager_id1, "k8s1", ocloud_id1,
+        config.get_api_url()+"/k8s1")
+    with sqlite_uow as uow:
+        uow.oclouds.add(deployment_manager1)
+        uow.commit()
+
+    deployment_manager_list = ocloud_view.deployment_managers(uow)
+    assert str(deployment_manager_list[0].get(
+        "deploymentManagerId")) == deployment_manager_id1
+
+
+def test_view_deployment_manager_one(sqlite_uow):
+    ocloud_id1 = str(uuid.uuid4())
+    deployment_manager_id1 = str(uuid.uuid4())
+    deployment_manager1 = ocloud.DeploymentManager(
+        deployment_manager_id1, "k8s1", ocloud_id1,
+        config.get_api_url()+"/k8s1")
+
+    # Query return None
+    deployment_manager_res = ocloud_view.deployment_manager_one(
+        deployment_manager_id1, sqlite_uow)
+    assert deployment_manager_res is None
+
+    with sqlite_uow as uow:
+        uow.oclouds.add(deployment_manager1)
+        uow.commit()
+
+    deployment_manager_res = ocloud_view.deployment_manager_one(
+        deployment_manager_id1, sqlite_uow)
+    assert str(deployment_manager_res.get(
+        "deploymentManagerId")) == deployment_manager_id1
+
+
+def test_view_subscriptions(mock_uow):
+    session, uow = mock_uow
+
+    subscription_id1 = str(uuid.uuid4())
+    session.return_value.execute.return_value = [{
+        "subscriptionId": subscription_id1,
+    }]
+
+    deployment_manager_list = ocloud_view.subscriptions(uow)
+    assert str(deployment_manager_list[0].get(
+        "subscriptionId")) == subscription_id1
+
+
+def test_view_subscription_one(mock_uow):
+    session, uow = mock_uow
+
+    subscription_id1 = str(uuid.uuid4())
+    session.return_value.execute.return_value.first.return_value = None
+
+    # Query return None
+    deployment_manager_res = ocloud_view.subscription_one(
+        subscription_id1, uow)
+    assert deployment_manager_res is None
+
+    session.return_value.execute.return_value.first.return_value = {
+        "deploymentManagerId": subscription_id1,
+    }
+
+    deployment_manager_res = ocloud_view.subscription_one(
+        subscription_id1, uow)
+    assert str(deployment_manager_res.get(
+        "deploymentManagerId")) == subscription_id1

@@ -23,8 +23,8 @@ from .resource_type import ResourceTypeEnum
 
 
 class Subscription(AgRoot):
-    def __init__(self, id: str, callback: str, consumersubid: list = [],
-                 filter: list = []) -> None:
+    def __init__(self, id: str, callback: str, consumersubid: str = '',
+                 filter: str = '') -> None:
         self.subscriptionId = id
         self.callback = callback
         self.consumerSubscriptionId = consumersubid

@@ -19,11 +19,12 @@ metadata:
   name: o2api
   namespace: {{ .Values.global.namespace }}
 spec:
-  #clusterIP: None
+  type: NodePort
   ports:
   - name: o2api
     port: 5005
-    targetPort: 5005
+    targetPort: 80
+    nodePort: 30205
     protocol: TCP
   selector:
     app: o2api

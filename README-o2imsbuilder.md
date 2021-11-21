@@ -53,7 +53,24 @@ sudo docker tag o2imsdms:latest registry.local:9001/admin/o2imsdms:0.1.1
 sudo docker image push registry.local:9001/admin/o2imsdms:0.1.1
 
 cd /home/sysadmin/share/o2
-helm install o2imstest charts
+
+cat <<EOF>ocloud-override.yaml
+o2ims:
+  imagePullSecrets: admin-orano2-registry-secret
+  image:
+    repository: registry.local:9001/admin/o2imsdms
+    tag: 0.1.1
+    pullPolicy: IfNotPresent
+  logginglevel: "DEBUG"
+
+ocloud:
+  OS_AUTH_URL: "your ocloud keystone endpoint, e.g. http://1.2.3.4:5000/v3"
+  OS_USERNAME: "admin"
+  OS_PASSWORD: "YourPassword"
+EOF
+
+helm install o2imstest charts/ -f ocloud-override.yaml
+
 kubectl -n ${NAMESPACE} get pods
 
 

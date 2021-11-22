@@ -12,11 +12,14 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from flask import jsonify
+# from operator import sub
+import uuid
+# from re import sub
 from flask_restx import Resource
 
 from o2ims import config
 from o2ims.views import ocloud_view
+from o2ims.domain.ocloud import Subscription
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
     ResourcePoolDTO, ResourceDTO, DeploymentManagerDTO, SubscriptionDTO
 
@@ -27,8 +30,13 @@ apibase = config.get_o2ims_api_base()
 # ----------  OClouds ---------- #
 api_ocloud = OcloudDTO.api
 
+parser_ocloud = api_ocloud.parser()
+parser_ocloud.add_argument('oCloudId', type=str,
+                           help='Some param', location='args')
+
 
 @api_ocloud.route("/")
+@api_ocloud.response(404, 'oCloud not found')
 class OcloudsListRouter(Resource):
     """Ocloud get endpoint
     O2 interface ocloud endpoint
@@ -37,7 +45,17 @@ class OcloudsListRouter(Resource):
     ocloud_get = OcloudDTO.ocloud_list
 
     @api_ocloud.marshal_list_with(ocloud_get)
+    @api_ocloud.marshal_with(ocloud_get)
+    @api_ocloud.expect(parser_ocloud)
     def get(self):
+        args = parser_ocloud.parse_args()
+        oCloudId = args['oCloudId']
+        if oCloudId is not None:
+            res = ocloud_view.ocloud_one(oCloudId, uow)
+            if res is not None:
+                return res
+            api_rt.abort(
+                404, "oCloud {} doesn't exist".format(oCloudId))
         return ocloud_view.oclouds(uow)
 
 
@@ -110,6 +128,7 @@ class ResourcePoolGetRouter(Resource):
     model = ResourcePoolDTO.resource_pool_get
 
     @api_rp.doc('Get resource pool')
+    @api_rp.marshal_with(model)
     def get(self, resourcePoolID):
         result = ocloud_view.resource_pool_one(resourcePoolID, uow)
         if result is not None:
@@ -142,6 +161,7 @@ class ResourceGetRouter(Resource):
     model = ResourceDTO.resource_get
 
     @api_res.doc('Get resource')
+    @api_res.marshal_with(model)
     def get(self, resourcePoolID, resourceID):
         result = ocloud_view.resource_one(resourceID, uow)
         if result is not None:
@@ -171,6 +191,7 @@ class DeploymentManagerGetRouter(Resource):
     model = DeploymentManagerDTO.deployment_manager_get
 
     @api_dm.doc('Get deployment manager')
+    @api_dm.marshal_with(model)
     def get(self, deploymentManagerID):
         result = ocloud_view.deployment_manager_one(
             deploymentManagerID, uow)
@@ -188,20 +209,36 @@ api_sub = SubscriptionDTO.api
 class SubscriptionsListRouter(Resource):
 
     model = SubscriptionDTO.subscription_get
+    expect = SubscriptionDTO.subscription
+    post_resp = SubscriptionDTO.subscription_post_resp
 
+    @api_sub.doc('List subscriptions')
     @api_sub.marshal_list_with(model)
     def get(self):
         return ocloud_view.subscriptions(uow)
+
+    @api_sub.doc('Create a subscription')
+    @api_sub.expect(expect)
+    @api_sub.marshal_with(post_resp, code=201)
+    def post(self):
+        data = api_sub.payload
+        sub_uuid = str(uuid.uuid4())
+        subscription = Subscription(
+            sub_uuid, data['callback'], data['consumerSubscriptionId'],
+            data['filter'])
+        ocloud_view.subscription_create(subscription, uow)
+        return {"subscriptionId": sub_uuid}, 201
 
 
 @api_sub.route("/subscriptions/<subscriptionID>")
 @api_sub.param('subscriptionID', 'ID of the subscription')
 @api_sub.response(404, 'Subscription not found')
-class SubscriptionGetRouter(Resource):
+class SubscriptionGetDelRouter(Resource):
 
     model = DeploymentManagerDTO.deployment_manager_get
 
     @api_sub.doc('Get subscription by ID')
+    @api_sub.marshal_with(model)
     def get(self, subscriptionID):
         result = ocloud_view.subscription_one(
             subscriptionID, uow)
@@ -209,6 +246,14 @@ class SubscriptionGetRouter(Resource):
             return result
         api_sub.abort(404, "Subscription {} doesn't exist".format(
             subscriptionID))
+
+    @api_sub.doc('Delete subscription by ID')
+    @api_sub.response(204, 'Subscription deleted')
+    def delete(self, subscriptionID):
+        with uow:
+            uow.subscriptions.delete(subscriptionID)
+            uow.commit()
+        return '', 204
 
 
 def configure_namespace(app, bus):
@@ -223,114 +268,3 @@ def configure_namespace(app, bus):
     # Set global uow
     global uow
     uow = bus.uow
-
-
-def configure_routes(app, bus):
-
-    # ----------  OClouds ---------- #
-    @app.route(apibase, methods=["GET"])
-    def oclouds():
-        result = ocloud_view.oclouds(bus.uow)
-        return jsonify(result), 200
-
-    # ----------  ResourceTypes ---------- #
-
-    @app.route(apibase + "/resourceTypes", methods=["GET"])
-    def resource_types():
-        result = ocloud_view.resource_types(bus.uow)
-        return jsonify(result), 200
-
-    @app.route(apibase + "/resourceTypes", methods=["POST", "PUT", "PATCH",
-                                                    "DELETE"])
-    def resource_types_not_allow():
-        return "Method Not Allowed", 405
-
-    @app.route(apibase + "/resourceTypes/<resourceTypeID>", methods=["GET"])
-    def resource_types_one(resourceTypeID):
-        result = ocloud_view.resource_type_one(resourceTypeID, bus.uow)
-        if result is None:
-            return "", 200
-        return jsonify(result), 200
-
-    @app.route(apibase + "/resourceTypes/<resourceTypeID>",
-               methods=["POST", "PUT", "PATCH", "DELETE"])
-    def resource_types_one_not_allow(resourceTypeID):
-        return "Method Not Allowed", 405
-
-    # ----------  ResourcePools ---------- #
-
-    @app.route(apibase + "/resourcePools", methods=["GET"])
-    def resource_pools():
-        result = ocloud_view.resource_pools(bus.uow)
-        return jsonify(result), 200
-
-    @app.route(apibase + "/resourcePools", methods=["POST", "PUT", "PATCH",
-                                                    "DELETE"])
-    def resource_pools_not_allow():
-        return "Method Not Allowed", 405
-
-    @app.route(apibase + "/resourcePools/<resourcePoolID>", methods=["GET"])
-    def resource_pools_one(resourcePoolID):
-        result = ocloud_view.resource_pool_one(resourcePoolID, bus.uow)
-        if result is None:
-            return "", 200
-        return jsonify(result), 200
-
-    @app.route(apibase + "/resourcePools/<resourcePoolID>",
-               methods=["POST", "PUT", "PATCH", "DELETE"])
-    def resource_pools_one_not_allow(resourcePoolID):
-        return "Method Not Allowed", 405
-
-    # ----------  Resources ---------- #
-
-    @app.route(apibase + "/resourcePools/<resourcePoolID>/resources",
-               methods=["GET"])
-    def resources(resourcePoolID):
-        result = ocloud_view.resources(resourcePoolID, bus.uow)
-        return jsonify(result), 200
-
-    @app.route(apibase + "/resourcePools/<resourcePoolID>/resources",
-               methods=["POST", "PUT", "PATCH", "DELETE"])
-    def resource_not_allow(resourcePoolID):
-        return "Method Not Allowed", 405
-
-    @app.route(apibase +
-               "/resourcePools/<resourcePoolID>/resources/<resourceID>",
-               methods=["GET"])
-    def resources_one(resourcePoolID, resourceID):
-        result = ocloud_view.resource_one(resourceID, bus.uow)
-        if result is None:
-            return "", 200
-        return jsonify(result), 200
-
-    @app.route(apibase +
-               "/resourcePools/<resourcePoolID>/resources/<resourceID>",
-               methods=["POST", "PUT", "PATCH", "DELETE"])
-    def resource_one_not_allow(resourcePoolID, resourceID):
-        return "Method Not Allowed", 405
-
-    # ----------  DeploymentManagers ---------- #
-
-    @app.route(apibase + "/deploymentManagers", methods=["GET"])
-    def deployment_managers():
-        result = ocloud_view.deployment_managers(bus.uow)
-        return jsonify(result), 200
-
-    @app.route(apibase + "/deploymentManagers",
-               methods=["POST", "PUT", "PATCH", "DELETE"])
-    def deployment_managers_not_allow():
-        return "Method Not Allowed", 405
-
-    @app.route(apibase + "/deploymentManagers/<deploymentManagerID>",
-               methods=["GET"])
-    def deployment_manager_one(deploymentManagerID):
-        result = ocloud_view.deployment_manager_one(
-            deploymentManagerID, bus.uow)
-        if result is None:
-            return "", 200
-        return jsonify(result), 200
-
-    @app.route(apibase + "/deploymentManagers/<deploymentManagerID>",
-               methods=["POST", "PUT", "PATCH", "DELETE"])
-    def deployment_manager_one_not_allow(deploymentManagerID):
-        return "Method Not Allowed", 405

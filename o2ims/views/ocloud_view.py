@@ -17,30 +17,17 @@ from sqlalchemy import select
 from o2ims.adapter.orm import ocloud, resource, resourcetype, \
     resourcepool, deploymentmanager, subscription
 from o2ims.adapter import unit_of_work
-# from o2ims.domain.ocloud import Ocloud
+from o2ims.domain.ocloud import Subscription
 
 
 def oclouds(uow: unit_of_work.SqlAlchemyUnitOfWork):
     with uow:
-        # res = uow.session.execute(
-        #     """
-        #     SELECT "oCloudId", "name" FROM ocloud
-        #     """,
-        # )
-
         res = uow.session.execute(select(ocloud))
     return [dict(r) for r in res]
 
 
 def ocloud_one(ocloudid: str, uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        # res = uow.session.execute(
-        #     """
-        #     SELECT "oCloudId", "name" FROM ocloud
-        #     WHERE "oCloudId" = :oCloudId
-        #     """,
-        #     dict(oCloudId=ocloudid),
-        # )
         res = uow.session.execute(
             select(ocloud).where(ocloud.c.oCloudId == ocloudid))
         first = res.first()
@@ -49,11 +36,6 @@ def ocloud_one(ocloudid: str, uow: unit_of_work.AbstractUnitOfWork):
 
 def resource_types(uow: unit_of_work.SqlAlchemyUnitOfWork):
     with uow:
-        # res = uow.session.execute(
-        #     """
-        #     SELECT "resourceTypeId", "oCloudId", "name" FROM resourcetype
-        #     """,
-        # )
         res = uow.session.execute(select(resourcetype))
     return [dict(r) for r in res]
 
@@ -61,13 +43,6 @@ def resource_types(uow: unit_of_work.SqlAlchemyUnitOfWork):
 def resource_type_one(resourceTypeId: str,
                       uow: unit_of_work.SqlAlchemyUnitOfWork):
     with uow:
-        # res = uow.session.execute(
-        #     """
-        #     SELECT "resourceTypeId", "oCloudId", "name"
-        #     FROM resourcetype WHERE "resourceTypeId" = :resourceTypeId
-        #     """,
-        #     dict(resourceTypeId=resourceTypeId),
-        # )
         res = uow.session.execute(select(resourcetype).where(
             resourcetype.c.resourceTypeId == resourceTypeId))
         first = res.first()
@@ -76,12 +51,6 @@ def resource_type_one(resourceTypeId: str,
 
 def resource_pools(uow: unit_of_work.SqlAlchemyUnitOfWork):
     with uow:
-        # res = uow.session.execute(
-        #     """
-        #     SELECT "resourcePoolId", "oCloudId", "location", "name"
-        #     FROM resourcepool
-        #     """,
-        # )
         res = uow.session.execute(select(resourcepool))
     return [dict(r) for r in res]
 
@@ -89,14 +58,6 @@ def resource_pools(uow: unit_of_work.SqlAlchemyUnitOfWork):
 def resource_pool_one(resourcePoolId: str,
                       uow: unit_of_work.SqlAlchemyUnitOfWork):
     with uow:
-        # res = uow.session.execute(
-        #     """
-        #     SELECT "resourcePoolId", "oCloudId", "location", "name"
-        #     FROM resourcepool
-        #     WHERE "resourcePoolId" = :resourcePoolId
-        #     """,
-        #     dict(resourcePoolId=resourcePoolId),
-        # )
         res = uow.session.execute(select(resourcepool).where(
             resourcepool.c.resourcePoolId == resourcePoolId))
         first = res.first()
@@ -105,15 +66,6 @@ def resource_pool_one(resourcePoolId: str,
 
 def resources(resourcePoolId: str, uow: unit_of_work.SqlAlchemyUnitOfWork):
     with uow:
-        # res = uow.session.execute(
-        #     """
-        #     SELECT "resourceId", "parentId", "resourceTypeId",
-        #           "resourcePoolId", "oCloudId"
-        #     FROM resource
-        #     WHERE "resourcePoolId" = :resourcePoolId
-        #     """,
-        #     dict(resourcePoolId=resourcePoolId),
-        # )
         res = uow.session.execute(select(resource).where(
             resource.c.resourcePoolId == resourcePoolId))
     return [dict(r) for r in res]
@@ -121,17 +73,12 @@ def resources(resourcePoolId: str, uow: unit_of_work.SqlAlchemyUnitOfWork):
 
 def resource_one(resourceId: str, uow: unit_of_work.SqlAlchemyUnitOfWork):
     with uow:
-        # res = uow.session.execute(
-        #     """
-        #     SELECT "resourceId", "parentId", "resourceTypeId",
-        #           "resourcePoolId", "oCloudId"
-        #     FROM resource
-        #     WHERE "resourceId" = :resourceId
-        #     """,
-        #     # AND "resourcePoolId" = :resourcePoolId
-        #     # dict(resourcePoolId=resourcePoolId,
-        #     dict(resourceId=resourceId),
-        # )
+        # topq = uow.session.query(resource).filter(
+        #     resource.c.resourceId == resourceId).cte('cte', recursive=True)
+        # bootomq = uow.session.query(resource).join(
+        #     topq, resource.c.parentId == topq.c.resourceId)
+        # res = uow.session.query(topq.union(bootomq))
+        # print(res)
         res = uow.session.execute(select(resource).where(
             resource.c.resourceId == resourceId))
         first = res.first()
@@ -140,13 +87,6 @@ def resource_one(resourceId: str, uow: unit_of_work.SqlAlchemyUnitOfWork):
 
 def deployment_managers(uow: unit_of_work.SqlAlchemyUnitOfWork):
     with uow:
-        # res = uow.session.execute(
-        #     """
-        #     SELECT "deploymentManagerId", "oCloudId",
-        #           "deploymentManagementServiceEndpoint", "name"
-        #     FROM deploymentmanager
-        #     """,
-        # )
         res = uow.session.execute(select(deploymentmanager))
     return [dict(r) for r in res]
 
@@ -154,15 +94,6 @@ def deployment_managers(uow: unit_of_work.SqlAlchemyUnitOfWork):
 def deployment_manager_one(deploymentManagerId: str,
                            uow: unit_of_work.SqlAlchemyUnitOfWork):
     with uow:
-        # res = uow.session.execute(
-        #     """
-        #     SELECT "deploymentManagerId", "oCloudId",
-        #           "deploymentManagementServiceEndpoint", "name"
-        #     FROM deploymentmanager
-        #     WHERE "deploymentManagerId" = :deploymentManagerId
-        #     """,
-        #     dict(deploymentManagerId=deploymentManagerId),
-        # )
         res = uow.session.execute(select(deploymentmanager).where(
             deploymentmanager.c.deploymentManagerId == deploymentManagerId))
         first = res.first()
@@ -182,3 +113,18 @@ def subscription_one(subscriptionId: str,
             subscription.c.subscriptionId == subscriptionId))
         first = res.first()
     return None if first is None else dict(first)
+
+
+def subscription_create(subscription: Subscription,
+                        uow: unit_of_work.SqlAlchemyUnitOfWork):
+    with uow:
+        uow.subscriptions.add(subscription)
+        uow.commit()
+
+
+def subscription_delete(subscriptionId: str,
+                        uow: unit_of_work.SqlAlchemyUnitOfWork):
+    with uow:
+        uow.subscriptions.delete(subscriptionId)
+        uow.commit()
+    return True

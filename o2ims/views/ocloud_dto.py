@@ -20,7 +20,7 @@ class OcloudDTO:
     api = Namespace("Ocloud", description='Ocloud related operations.')
 
     ocloud_list = api.model(
-        "List Ocloud object",
+        "OcloudList",
         {
             'oCloudId': fields.String(required=True),
             'globalCloudId': fields.String,
@@ -37,7 +37,7 @@ class ResourceTypeDTO:
         "ResourceType", description='Resource type related operations.')
 
     resource_type_get = api.model(
-        "Get ResourceType object",
+        "ResourceTypeGet",
         {
             'resourceTypeId': fields.String(required=True,
                                             description='Resource type ID'),
@@ -55,7 +55,7 @@ class ResourcePoolDTO:
         "ResourcePool", description='Resource pool related operations.')
 
     resource_pool_get = api.model(
-        "Get ResourcePool object",
+        "ResourcePoolGet",
         {
             'resourcePoolId': fields.String(required=True,
                                             description='Resource pool ID'),
@@ -72,7 +72,7 @@ class ResourceDTO:
     api = Namespace("Resource", description='Resource related operations.')
 
     resource_list = api.model(
-        "List Resource object",
+        "ResourceList",
         {
             'resourceId': fields.String(required=True,
                                         description='Resource ID'),
@@ -84,7 +84,7 @@ class ResourceDTO:
     )
 
     resource_get = api.model(
-        "Get Resource object",
+        "ResourceGet",
         {
             'resourceId': fields.String(required=True,
                                         description='Resource ID'),
@@ -102,7 +102,7 @@ class DeploymentManagerDTO:
                     description='Deployment manager related operations.')
 
     deployment_manager_get = api.model(
-        "Get DeploymentManager object",
+        "DeploymentManagerGet",
         {
             'deploymentManagerId': fields.String(
                 required=True,
@@ -123,12 +123,30 @@ class SubscriptionDTO:
         "Subscription", description='Subscription related operations.')
 
     subscription_get = api.model(
-        "Get Subscription object",
+        "SubscriptionGet",
         {
             'subscriptionId': fields.String(required=True,
                                             description='Subscription ID'),
             'callback': fields.String,
             'consumerSubscriptionId': fields.String,
             'filter': fields.String,
+        }
+    )
+
+    subscription = api.model(
+        "SubscriptionCreate",
+        {
+            'callback': fields.String(
+                required=True, description='Subscription callback address'),
+            'consumerSubscriptionId': fields.String,
+            'filter': fields.String,
+        }
+    )
+
+    subscription_post_resp = api.model(
+        "SubscriptionCreatedResp",
+        {
+            'subscriptionId': fields.String(required=True,
+                                            description='Subscription ID'),
         }
     )

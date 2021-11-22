@@ -16,6 +16,9 @@
 # from datetime import date
 # from typing import Optional
 from dataclasses import dataclass
+# from datetime import datetime
+# from o2ims.domain.resource_type import ResourceTypeEnum
+from o2ims.domain.stx_object import StxGenericModel
 
 
 class Command:
@@ -23,5 +26,35 @@ class Command:
 
 
 @dataclass
-class UpdateDms(Command):
-    ref: str
+class UpdateStxObject(Command):
+    data: StxGenericModel
+
+
+@dataclass
+class UpdateOCloud(UpdateStxObject):
+    pass
+
+
+@dataclass
+class UpdateDms(UpdateStxObject):
+    pass
+
+
+@dataclass
+class UpdateResourcePool(UpdateStxObject):
+    pass
+
+
+@dataclass
+class UpdateResource(UpdateStxObject):
+    pass
+
+
+@dataclass
+class UpdatePserverCpu(UpdateStxObject):
+    pass
+
+
+@dataclass
+class UpdatePserver(UpdateStxObject):
+    pass

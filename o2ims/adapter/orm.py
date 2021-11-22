@@ -19,6 +19,7 @@ from sqlalchemy import (
     # Integer,
     String,
     # Date,
+    DateTime,
     ForeignKey,
     # engine,
     # event,
@@ -36,6 +37,10 @@ metadata = MetaData()
 ocloud = Table(
     "ocloud",
     metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+
     Column("oCloudId", String(255), primary_key=True),
     Column("globalcloudId", String(255)),
     Column("name", String(255)),
@@ -47,6 +52,10 @@ ocloud = Table(
 resourcetype = Table(
     "resourcetype",
     metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+
     Column("resourceTypeId", String(255), primary_key=True),
     Column("oCloudId", ForeignKey("ocloud.oCloudId")),
     Column("name", String(255)),
@@ -60,6 +69,10 @@ resourcetype = Table(
 resourcepool = Table(
     "resourcepool",
     metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+
     Column("resourcePoolId", String(255), primary_key=True),
     Column("oCloudId", ForeignKey("ocloud.oCloudId")),
     Column("globalLocationId", String(255)),
@@ -73,6 +86,10 @@ resourcepool = Table(
 resource = Table(
     "resource",
     metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+
     Column("resourceId", String(255), primary_key=True),
     Column("resourceTypeId", ForeignKey("resourcetype.resourceTypeId")),
     Column("resourcePoolId", ForeignKey("resourcepool.resourcePoolId")),
@@ -86,6 +103,10 @@ resource = Table(
 deploymentmanager = Table(
     "deploymentmanager",
     metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+
     Column("deploymentManagerId", String(255), primary_key=True),
     Column("oCloudId", ForeignKey("ocloud.oCloudId")),
     Column("name", String(255)),
@@ -100,6 +121,10 @@ deploymentmanager = Table(
 subscription = Table(
     "subscription",
     metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+
     Column("subscriptionId", String(255), primary_key=True),
     Column("callback", String(255)),
     Column("consumerSubscriptionId", String(255)),

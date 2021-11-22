@@ -16,6 +16,7 @@ import time
 from datetime import datetime
 import json
 from typing import List
+from o2ims.service import handlers
 from o2ims.domain.resource_type import ResourceTypeEnum
 from o2ims.service.client.base_client import BaseClient
 from o2ims.domain import ocloud
@@ -28,7 +29,9 @@ from o2ims.domain.stx_repo import StxObjectRepository
 from o2ims.service.watcher import worker
 from o2ims.service.unit_of_work import AbstractUnitOfWork
 from o2ims.service.watcher.ocloud_watcher import OcloudWatcher
-
+from o2ims.service import messagebus
+from o2ims import bootstrap
+from o2ims.domain import commands
 
 class FakeOcloudClient(BaseClient):
     def __init__(self):
@@ -116,15 +119,37 @@ class FakeUnitOfWork(AbstractUnitOfWork):
         pass
         # self.session.rollback()
 
+    def collect_new_events(self):
+        yield
+        # return super().collect_new_events()
+
+
+def create_fake_bus(uow):
+    def update_ocloud(
+        cmd: commands.UpdateOCloud,
+        uow: AbstractUnitOfWork):
+        return
+
+    fakeuow = FakeUnitOfWork()
+    handlers.EVENT_HANDLERS = {}
+    handlers.COMMAND_HANDLERS = {
+        commands.UpdateOCloud: update_ocloud,
+    }
+    bus = bootstrap.bootstrap(False, fakeuow)
+    return bus
+
 
 def test_probe_new_ocloud():
-    # fakeRepo = FakeOcloudRepo()
     fakeuow = FakeUnitOfWork()
+    bus = create_fake_bus(fakeuow)
     fakeClient = FakeOcloudClient()
-    ocloudwatcher = OcloudWatcher(fakeClient, fakeuow)
-    ocloudwatcher.probe()
-    assert len(fakeuow.stxobjects.oclouds) == 1
-    assert fakeuow.stxobjects.oclouds[0].name == "stx1"
+    ocloudwatcher = OcloudWatcher(fakeClient, bus)
+    cmds = ocloudwatcher.probe()
+    assert cmds is not None
+    assert len(cmds) == 1
+    assert cmds[0].data.name == "stx1"
+    # assert len(fakeuow.stxobjects.oclouds) == 1
+    # assert fakeuow.stxobjects.oclouds[0].name == "stx1"
 
 
 def test_watchers_worker():
@@ -132,11 +157,11 @@ def test_watchers_worker():
 
     class FakeOCloudWatcher(BaseWatcher):
         def __init__(self, client: BaseClient,
-                     repo: OcloudRepository) -> None:
+                     bus: messagebus) -> None:
             super().__init__(client, None)
             self.fakeOcloudWatcherCounter = 0
             self._client = client
-            self._repo = repo
+            self._bus = bus
 
         def _targetname(self):
             return "fakeocloudwatcher"
@@ -152,9 +177,10 @@ def test_watchers_worker():
 
     # fakeRepo = FakeOcloudRepo()
     fakeuow = FakeUnitOfWork()
+    bus = create_fake_bus(fakeuow)
 
     fakeClient = FakeOcloudClient()
-    fakewatcher = FakeOCloudWatcher(fakeClient, fakeuow)
+    fakewatcher = FakeOCloudWatcher(fakeClient, bus)
 
     root = WatcherTree(fakewatcher)
 

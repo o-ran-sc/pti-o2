@@ -12,10 +12,15 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from datetime import datetime
 from typing import List
 from .events import Event
 
 
 class AgRoot:
     def __init__(self) -> None:
+        self.hash = ""
+        # self.id = ""
+        self.updatetime = datetime.now()
+        self.createtime = datetime.now()
         self.events = []  # type: List[Event]

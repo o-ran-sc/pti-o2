@@ -12,45 +12,58 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+# from logging import exception
+# from cgtsclient import exc
 from o2ims.service.client.base_client import BaseClient
-from o2ims.domain.stx_object import StxGenericModel
-from o2ims.service.unit_of_work import AbstractUnitOfWork
-
+# from o2ims.domain.stx_object import StxGenericModel
+# from o2ims.service.unit_of_work import AbstractUnitOfWork
+from o2ims.domain import commands
+from o2ims.service.messagebus import MessageBus
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
 
 class BaseWatcher(object):
     def __init__(self, client: BaseClient,
-                 uow: AbstractUnitOfWork) -> None:
+                 bus: MessageBus) -> None:
         super().__init__()
         self._client = client
-        self._uow = uow
+        self._bus = bus
+        # self._uow = bus.uow
 
     def targetname(self) -> str:
         return self._targetname()
 
-    def probe(self, parent: object = None):
-        return self._probe(parent)
+    def probe(self, parent: commands.UpdateStxObject = None):
+        try:
+            cmds = self._probe(parent.data if parent else None)
+            for cmd in cmds:
+                self._bus.handle(cmd)
 
-    def _probe(self, parent: object = None):
+            # return self._probe(parent)
+            return cmds
+        except Exception as ex:
+            logger.warning("Failed to probe resource due to: " + str(ex))
+            return []
+
+    def _probe(self, parent: object = None) -> commands.UpdateStxObject:
         raise NotImplementedError
 
     def _targetname(self):
         raise NotImplementedError
 
-    def _compare_and_update(self, newmodel: StxGenericModel) -> bool:
-        with self._uow:
-            # localmodel = self._uow.stxobjects.get(ocloudmodel.id)
-            localmodel = self._uow.stxobjects.get(str(newmodel.id))
-            if not localmodel:
-                logger.info("add entry:" + newmodel.name)
-                self._uow.stxobjects.add(newmodel)
-            elif localmodel.is_outdated(newmodel):
-                logger.info("update entry:" + newmodel.name)
-                localmodel.update_by(newmodel)
-                self._uow.stxobjects.update(localmodel)
-            self._uow.commit()
+    # def _compare_and_update(self, newmodel: StxGenericModel) -> bool:
+    #     with self._uow:
+    #         # localmodel = self._uow.stxobjects.get(ocloudmodel.id)
+    #         localmodel = self._uow.stxobjects.get(str(newmodel.id))
+    #         if not localmodel:
+    #             logger.info("add entry:" + newmodel.name)
+    #             self._uow.stxobjects.add(newmodel)
+    #         elif localmodel.is_outdated(newmodel):
+    #             logger.info("update entry:" + newmodel.name)
+    #             localmodel.update_by(newmodel)
+    #             self._uow.stxobjects.update(localmodel)
+    #         self._uow.commit()
 
 
 # node to organize watchers in tree hierachy
@@ -74,7 +87,7 @@ class WatcherTree(object):
                      + self.watcher.targetname())
         childdepth = depth - 1 if depth > 0 else 0
         resources = self.watcher.probe(parentresource)
-        logger.debug("probe returns " + str(len(resources)) + "resources")
+        logger.debug("probe returns " + str(len(resources)) + " resources")
 
         if depth == 1:
             # stop recursive

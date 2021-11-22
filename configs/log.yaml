@@ -26,11 +26,11 @@ loggers:
       propagate: False
     o2ims:
       handlers: [console_handler, file_handler]
-      level: "WARNING"
+      level: "DEBUG"
       propagate: False
     o2dms:
       handlers: [console_handler, file_handler]
-      level: "WARNING"
+      level: "DEBUG"
       propagate: False
 handlers:
     console_handler:

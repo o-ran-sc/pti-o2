@@ -18,7 +18,7 @@ from __future__ import annotations
 from typing import List, Dict, Callable, Type
 # TYPE_CHECKING
 from o2ims.domain import commands, events
-# ocloud
+from o2ims.service.auditor import ocloud_handler
 
 # if TYPE_CHECKING:
 #     from . import unit_of_work
@@ -33,4 +33,5 @@ EVENT_HANDLERS = {
 
 
 COMMAND_HANDLERS = {
+    commands.UpdateOCloud: ocloud_handler.update_ocloud,
 }  # type: Dict[Type[commands.Command], Callable]

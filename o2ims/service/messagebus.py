@@ -41,7 +41,9 @@ class MessageBus:
         self.queue = [message]
         while self.queue:
             message = self.queue.pop(0)
-            if isinstance(message, events.Event):
+            if not message:
+                continue
+            elif isinstance(message, events.Event):
                 self.handle_event(message)
             elif isinstance(message, commands.Command):
                 self.handle_command(message)
@@ -65,6 +67,6 @@ class MessageBus:
             handler = self.command_handlers[type(command)]
             handler(command)
             self.queue.extend(self.uow.collect_new_events())
-        except Exception:
+        except Exception as ex:
             logger.exception("Exception handling command %s", command)
-            raise
+            raise ex

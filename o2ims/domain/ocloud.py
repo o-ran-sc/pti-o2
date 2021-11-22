@@ -26,6 +26,7 @@ class Subscription(AgRoot):
     def __init__(self, id: str, callback: str, consumersubid: str = '',
                  filter: str = '') -> None:
         self.subscriptionId = id
+        self.version_number = 0
         self.callback = callback
         self.consumerSubscriptionId = consumersubid
         self.filter = filter
@@ -37,6 +38,7 @@ class DeploymentManager:
                  supportedLocations: str = '', capabilities: str = '',
                  capacity: str = '') -> None:
         self.deploymentManagerId = id
+        self.version_number = 0
         self.oCloudId = ocloudid
         self.name = name
         self.description = description
@@ -52,6 +54,7 @@ class ResourcePool(AgRoot):
                  ocloudid: str, gLocationId: str = '',
                  description: str = '') -> None:
         self.resourcePoolId = id
+        self.version_number = 0
         self.oCloudId = ocloudid
         self.globalLocationId = gLocationId
         self.name = name
@@ -82,6 +85,7 @@ class Resource(AgRoot):
                  parentId: str = '', elements: list = [],
                  description: str = '') -> None:
         self.resourceId = resourceId
+        self.version_number = 0
         self.oCloudId = oCloudId
         self.resourceTypeId = resourceTypeId
         self.resourcePoolId = resourcePoolId

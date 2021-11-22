@@ -27,12 +27,10 @@ from sqlalchemy import (
     Enum
 )
 
-from sqlalchemy.orm import mapper
-# from sqlalchemy.sql.sqltypes import Integer
-# from sqlalchemy.sql.expression import true
+# from sqlalchemy.orm import mapper
 
-from o2ims.domain import stx_object as ocloudModel
-# from o2ims.adapter.orm import metadata
+# from o2ims.domain import stx_object as ocloudModel
+
 from o2ims.service.unit_of_work import AbstractUnitOfWork
 from o2ims.adapter.unit_of_work import SqlAlchemyUnitOfWork
 from o2ims.domain.resource_type import ResourceTypeEnum
@@ -56,10 +54,11 @@ stxobject = Table(
 
 
 def start_o2ims_stx_mappers(uow: AbstractUnitOfWork = SqlAlchemyUnitOfWork()):
-    logger.info("Starting O2 IMS Stx mappers")
-    mapper(ocloudModel.StxGenericModel, stxobject)
+    return
+    # logger.info("Starting O2 IMS Stx mappers")
+    # mapper(ocloudModel.StxGenericModel, stxobject)
 
-    with uow:
-        engine1 = uow.session.get_bind()
-        metadata.create_all(engine1)
-        uow.commit()
+    # with uow:
+    #     engine1 = uow.session.get_bind()
+    #     metadata.create_all(engine1)
+    #     uow.commit()

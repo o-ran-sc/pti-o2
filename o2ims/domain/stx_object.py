@@ -17,13 +17,9 @@ import datetime
 import json
 from o2ims.domain.base import AgRoot
 
-from o2ims.domain.resource_type import ResourceTypeEnum
+from o2ims.domain.resource_type import ResourceTypeEnum, MismatchedModel
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
-
-
-class MismatchedModel(Exception):
-    pass
 
 
 class StxGenericModel(AgRoot):

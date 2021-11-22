@@ -50,17 +50,17 @@ class WatcherService(cotyledon.Service):
     def run(self):
         try:
             root = WatcherTree(OcloudWatcher(
-                StxSaOcloudClient(), self.bus.uow))
+                StxSaOcloudClient(), self.bus))
             root.addchild(
-                DmsWatcher(StxSaDmsClient(), self.bus.uow))
+                DmsWatcher(StxSaDmsClient(), self.bus))
 
             child_respool = root.addchild(
                 ResourcePoolWatcher(StxSaResourcePoolClient(),
-                                    self.bus.uow))
+                                    self.bus))
             child_pserver = child_respool.addchild(
-                PServerWatcher(StxPserverClient(), self.bus.uow))
+                PServerWatcher(StxPserverClient(), self.bus))
             child_pserver.addchild(
-                PServerCpuWatcher(StxCpuClient(), self.bus.uow))
+                PServerCpuWatcher(StxCpuClient(), self.bus))
 
             self.worker.add_watcher(root)
 

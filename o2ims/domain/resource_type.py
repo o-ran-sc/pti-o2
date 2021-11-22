@@ -8,3 +8,11 @@ class ResourceTypeEnum(Enum):
     PSERVER = 11
     PSERVER_CPU = 12
     PSERVER_RAM = 13
+
+
+class InvalidOcloudState(Exception):
+    pass
+
+
+class MismatchedModel(Exception):
+    pass

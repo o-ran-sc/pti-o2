@@ -209,6 +209,9 @@ class SubscriptionRepository(abc.ABC):
     def update(self, subscription: ocloud.Subscription):
         self._update(subscription)
 
+    def delete(self, subscription_id):
+        self._delete(subscription_id)
+
     @abc.abstractmethod
     def _add(self, subscription: ocloud.Subscription):
         raise NotImplementedError
@@ -219,4 +222,8 @@ class SubscriptionRepository(abc.ABC):
 
     @abc.abstractmethod
     def _update(self, subscription: ocloud.Subscription):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _delete(self, subscription_id):
         raise NotImplementedError

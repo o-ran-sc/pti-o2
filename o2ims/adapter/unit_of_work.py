@@ -48,6 +48,8 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
             .ResourceSqlAlchemyRepository(self.session)
         self.deployment_managers = ocloud_repository\
             .DeploymentManagerSqlAlchemyRepository(self.session)
+        self.subscriptions = ocloud_repository\
+            .SubscriptionSqlAlchemyRepository(self.session)
         self.stxobjects = StxObjectSqlAlchemyRepository(self.session)
         return super().__enter__()
 

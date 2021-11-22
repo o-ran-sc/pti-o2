@@ -95,6 +95,7 @@ class Resource(AgRoot):
         self.resourceTypeId = resourceTypeId
         self.resourcePoolId = resourcePoolId
         self.parentId = parentId
+        self.path = str()
         self.elements = elements
         self.description = description
         self.extensions = []

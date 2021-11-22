@@ -134,3 +134,7 @@ class SubscriptionSqlAlchemyRepository(SubscriptionRepository):
 
     def _update(self, subscription: ocloud.Subscription):
         self.session.add(subscription)
+
+    def _delete(self, subscription_id):
+        self.session.query(ocloud.Subscription).filter_by(
+            subscriptionId=subscription_id).delete()

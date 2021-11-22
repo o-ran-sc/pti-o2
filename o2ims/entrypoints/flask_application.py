@@ -17,7 +17,6 @@ from flask_restx import Api
 
 from o2ims import bootstrap
 # from o2ims import config
-# from o2ims.views.ocloud_route import configure_routes
 from o2ims.views.ocloud_route import configure_namespace
 
 
@@ -29,5 +28,4 @@ api = Api(app, version='1.0.0',
           O-Cloud Infrastructure Management Services',
           )
 bus = bootstrap.bootstrap()
-# configure_routes(app, bus)
 configure_namespace(api, bus)

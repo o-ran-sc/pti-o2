@@ -261,8 +261,8 @@ def test_view_subscriptions(mock_uow):
         "subscriptionId": subscription_id1,
     }]
 
-    deployment_manager_list = ocloud_view.subscriptions(uow)
-    assert str(deployment_manager_list[0].get(
+    subscription_list = ocloud_view.subscriptions(uow)
+    assert str(subscription_list[0].get(
         "subscriptionId")) == subscription_id1
 
 
@@ -273,18 +273,18 @@ def test_view_subscription_one(mock_uow):
     session.return_value.execute.return_value.first.return_value = None
 
     # Query return None
-    deployment_manager_res = ocloud_view.subscription_one(
+    subscription_res = ocloud_view.subscription_one(
         subscription_id1, uow)
-    assert deployment_manager_res is None
+    assert subscription_res is None
 
     session.return_value.execute.return_value.first.return_value = {
-        "deploymentManagerId": subscription_id1,
+        "subscriptionId": subscription_id1,
     }
 
-    deployment_manager_res = ocloud_view.subscription_one(
+    subscription_res = ocloud_view.subscription_one(
         subscription_id1, uow)
-    assert str(deployment_manager_res.get(
-        "deploymentManagerId")) == subscription_id1
+    assert str(subscription_res.get(
+        "subscriptionId")) == subscription_id1
 
 
 def test_flask_get_list(mock_flask_uow):
@@ -294,9 +294,6 @@ def test_flask_get_list(mock_flask_uow):
 
     # Get list and return empty list
     ##########################
-    resp = client.get(apibase+"/")
-    assert resp.get_data() == b'[]\n'
-
     resp = client.get(apibase+"/resourceTypes")
     assert resp.get_data() == b'[]\n'
 
@@ -318,6 +315,9 @@ def test_flask_get_one(mock_flask_uow):
 
     # Get one and return 404
     ###########################
+    resp = client.get(apibase+"/")
+    assert resp.status_code == 404
+
     resource_type_id1 = str(uuid.uuid4())
     resp = client.get(apibase+"/resourceTypes/"+resource_type_id1)
     assert resp.status_code == 404
@@ -440,8 +440,6 @@ def test_flask_not_allowed(mock_flask_uow):
     # Testing subscriptions not support method
     ##########################
     uri = apibase + "/subscriptions"
-    resp = client.post(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
     resp = client.put(uri)
     assert resp.status == '405 METHOD NOT ALLOWED'
     resp = client.patch(uri)
@@ -456,6 +454,4 @@ def test_flask_not_allowed(mock_flask_uow):
     resp = client.put(uri)
     assert resp.status == '405 METHOD NOT ALLOWED'
     resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.delete(uri)
     assert resp.status == '405 METHOD NOT ALLOWED'

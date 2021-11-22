@@ -66,8 +66,7 @@ def test_view_resource_types(sqlite_uow):
         resource_type_id1, "resourcetype1", rt.ResourceTypeEnum.PSERVER,
         ocloud1.oCloudId)
     with sqlite_uow as uow:
-        # uow.session.execute()
-        uow.oclouds.add(resource_type1)
+        uow.resource_types.add(resource_type1)
         uow.commit()
 
     resource_type_list = ocloud_view.resource_types(uow)
@@ -88,7 +87,7 @@ def test_view_resource_type_one(sqlite_uow):
     assert resource_type_res is None
 
     with sqlite_uow as uow:
-        uow.oclouds.add(resource_type1)
+        uow.resource_types.add(resource_type1)
         uow.commit()
     resource_type_res = ocloud_view.resource_type_one(resource_type_id1, uow)
     assert str(resource_type_res.get("resourceTypeId")) == resource_type_id1
@@ -101,7 +100,7 @@ def test_view_resource_pools(sqlite_uow):
         resource_pool_id1, "resourcepool1", config.get_api_url(),
         ocloud1.oCloudId)
     with sqlite_uow as uow:
-        uow.oclouds.add(resource_pool1)
+        uow.resource_pools.add(resource_pool1)
         uow.commit()
 
     resource_pool_list = ocloud_view.resource_pools(uow)
@@ -122,7 +121,7 @@ def test_view_resource_pool_one(sqlite_uow):
     assert resource_pool_res is None
 
     with sqlite_uow as uow:
-        uow.oclouds.add(resource_pool1)
+        uow.resource_pools.add(resource_pool1)
         uow.commit()
     resource_pool_res = ocloud_view.resource_pool_one(resource_pool_id1, uow)
     assert str(resource_pool_res.get("resourcePoolId")) == resource_pool_id1
@@ -135,7 +134,7 @@ def test_view_resources(sqlite_uow):
     resource1 = ocloud.Resource(
         resource_id1, resource_type_id1, resource_pool_id1)
     with sqlite_uow as uow:
-        uow.oclouds.add(resource1)
+        uow.resources.add(resource1)
         uow.commit()
 
     resource_list = ocloud_view.resources(resource_pool_id1, uow)
@@ -154,7 +153,7 @@ def test_view_resource_one(sqlite_uow):
     assert resource_res is None
 
     with sqlite_uow as uow:
-        uow.oclouds.add(resource1)
+        uow.resources.add(resource1)
         uow.commit()
 
     resource_res = ocloud_view.resource_one(resource_id1, uow)
@@ -168,7 +167,7 @@ def test_view_deployment_managers(sqlite_uow):
         deployment_manager_id1, "k8s1", ocloud_id1,
         config.get_api_url()+"/k8s1")
     with sqlite_uow as uow:
-        uow.oclouds.add(deployment_manager1)
+        uow.deployment_managers.add(deployment_manager1)
         uow.commit()
 
     deployment_manager_list = ocloud_view.deployment_managers(uow)
@@ -189,7 +188,7 @@ def test_view_deployment_manager_one(sqlite_uow):
     assert deployment_manager_res is None
 
     with sqlite_uow as uow:
-        uow.oclouds.add(deployment_manager1)
+        uow.deployment_managers.add(deployment_manager1)
         uow.commit()
 
     deployment_manager_res = ocloud_view.deployment_manager_one(
@@ -198,35 +197,60 @@ def test_view_deployment_manager_one(sqlite_uow):
         "deploymentManagerId")) == deployment_manager_id1
 
 
-def test_view_subscriptions(mock_uow):
-    session, uow = mock_uow
+def test_view_subscriptions(sqlite_uow):
 
     subscription_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value = [{
-        "subscriptionId": subscription_id1,
-    }]
+    subscription1 = ocloud.Subscription(
+        subscription_id1, "https://callback/uri/write/here")
+    with sqlite_uow as uow:
+        uow.subscriptions.add(subscription1)
+        uow.commit()
 
-    deployment_manager_list = ocloud_view.subscriptions(uow)
-    assert str(deployment_manager_list[0].get(
+    subscription_list = ocloud_view.subscriptions(uow)
+    assert str(subscription_list[0].get(
         "subscriptionId")) == subscription_id1
 
 
-def test_view_subscription_one(mock_uow):
-    session, uow = mock_uow
+def test_view_subscription_one(sqlite_uow):
 
     subscription_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value.first.return_value = None
+    subscription1 = ocloud.Subscription(
+        subscription_id1, "https://callback/uri/write/here")
 
     # Query return None
-    deployment_manager_res = ocloud_view.subscription_one(
-        subscription_id1, uow)
-    assert deployment_manager_res is None
+    subscription_res = ocloud_view.subscription_one(
+        subscription_id1, sqlite_uow)
+    assert subscription_res is None
 
-    session.return_value.execute.return_value.first.return_value = {
-        "deploymentManagerId": subscription_id1,
-    }
+    with sqlite_uow as uow:
+        uow.subscriptions.add(subscription1)
+        uow.commit()
 
-    deployment_manager_res = ocloud_view.subscription_one(
-        subscription_id1, uow)
-    assert str(deployment_manager_res.get(
-        "deploymentManagerId")) == subscription_id1
+    subscription_res = ocloud_view.subscription_one(
+        subscription_id1, sqlite_uow)
+    assert str(subscription_res.get(
+        "subscriptionId")) == subscription_id1
+
+
+def test_view_subscription_delete(sqlite_uow):
+
+    subscription_id1 = str(uuid.uuid4())
+    subscription1 = ocloud.Subscription(
+        subscription_id1, "https://callback/uri/write/here")
+
+    with sqlite_uow as uow:
+        uow.subscriptions.add(subscription1)
+        uow.commit()
+
+    subscription_res = ocloud_view.subscription_one(
+        subscription_id1, sqlite_uow)
+    assert str(subscription_res.get(
+        "subscriptionId")) == subscription_id1
+
+    with sqlite_uow as uow:
+        uow.subscriptions.delete(subscription_id1)
+        uow.commit()
+
+    subscription_res = ocloud_view.subscription_one(
+        subscription_id1, sqlite_uow)
+    assert subscription_res is None

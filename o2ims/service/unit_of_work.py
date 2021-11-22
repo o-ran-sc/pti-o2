@@ -17,7 +17,8 @@ from __future__ import annotations
 import abc
 
 from o2ims.domain.ocloud_repo import OcloudRepository,\
-    ResourcePoolRepository, ResourceRepository, ResourceTypeRepository
+    ResourcePoolRepository, ResourceRepository, ResourceTypeRepository,\
+    DeploymentManagerRepository
 from o2ims.domain.stx_repo import StxObjectRepository
 
 
@@ -26,6 +27,7 @@ class AbstractUnitOfWork(abc.ABC):
     resource_types: ResourceTypeRepository
     resource_pools: ResourcePoolRepository
     resources: ResourceRepository
+    deployment_managers: DeploymentManagerRepository
     stxobjects: StxObjectRepository
 
     def __enter__(self):
@@ -50,7 +52,10 @@ class AbstractUnitOfWork(abc.ABC):
         for entry in self.resource_types.seen:
             while entry.events:
                 yield entry.events.pop(0)
-        for entry in self.stxobjects.seen:
+        # for entry in self.stxobjects.seen:
+        #     while entry.events:
+        #         yield entry.events.pop(0)
+        for entry in self.deployment_managers.seen:
             while entry.events:
                 yield entry.events.pop(0)
 

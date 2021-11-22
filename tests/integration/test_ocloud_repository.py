@@ -63,47 +63,47 @@ def test_get_ocloud(sqlite_session_factory):
     assert ocloud2 != ocloud1 and ocloud2.oCloudId == ocloud1.oCloudId
 
 
-def test_add_ocloud_with_dms(sqlite_session_factory):
-    session = sqlite_session_factory()
-    repo = repository.OcloudSqlAlchemyRepository(session)
-    ocloud1 = setup_ocloud()
-    dmsid = str(uuid.uuid4())
-    dms = ocloud.DeploymentManager(
-        dmsid, "k8s1", ocloud1.oCloudId, config.get_api_url()+"/k8s1")
-    ocloud1.addDeploymentManager(dms)
-    repo.add(ocloud1)
-    session.flush()
-    # seperate session to confirm ocloud is updated into repo
-    session2 = sqlite_session_factory()
-    repo2 = repository.OcloudSqlAlchemyRepository(session2)
-    ocloud2 = repo2.get(ocloud1.oCloudId)
-    assert ocloud2 is not None
-    assert ocloud2 != ocloud1 and ocloud2.oCloudId == ocloud1.oCloudId
-    assert len(ocloud2.deploymentManagers) == 1
+# def test_add_ocloud_with_dms(sqlite_session_factory):
+#     session = sqlite_session_factory()
+#     repo = repository.OcloudSqlAlchemyRepository(session)
+#     ocloud1 = setup_ocloud()
+#     dmsid = str(uuid.uuid4())
+#     dms = ocloud.DeploymentManager(
+#         dmsid, "k8s1", ocloud1.oCloudId, config.get_api_url()+"/k8s1")
+#     ocloud1.addDeploymentManager(dms)
+#     repo.add(ocloud1)
+#     session.flush()
+#     # seperate session to confirm ocloud is updated into repo
+#     session2 = sqlite_session_factory()
+#     repo2 = repository.OcloudSqlAlchemyRepository(session2)
+#     ocloud2 = repo2.get(ocloud1.oCloudId)
+#     assert ocloud2 is not None
+#     assert ocloud2 != ocloud1 and ocloud2.oCloudId == ocloud1.oCloudId
+#     assert len(ocloud2.deploymentManagers) == 1
 
 
-def test_update_ocloud_with_dms(sqlite_session_factory):
-    session = sqlite_session_factory()
-    repo = repository.OcloudSqlAlchemyRepository(session)
-    ocloud1 = setup_ocloud()
-    repo.add(ocloud1)
-    session.flush()
-    dmsid = str(uuid.uuid4())
-    dms = ocloud.DeploymentManager(
-        dmsid, "k8s1", ocloud1.oCloudId, config.get_api_url()+"/k8s1")
-    ocloud1.addDeploymentManager(dms)
-    repo.update(ocloud1)
-    # repo.update(ocloud1.oCloudId, {"deploymentManagers":
-    # ocloud1.deploymentManagers})
-    session.flush()
+# def test_update_ocloud_with_dms(sqlite_session_factory):
+#     session = sqlite_session_factory()
+#     repo = repository.OcloudSqlAlchemyRepository(session)
+#     ocloud1 = setup_ocloud()
+#     repo.add(ocloud1)
+#     session.flush()
+#     dmsid = str(uuid.uuid4())
+#     dms = ocloud.DeploymentManager(
+#         dmsid, "k8s1", ocloud1.oCloudId, config.get_api_url()+"/k8s1")
+#     ocloud1.addDeploymentManager(dms)
+#     repo.update(ocloud1)
+#     # repo.update(ocloud1.oCloudId, {"deploymentManagers":
+#     # ocloud1.deploymentManagers})
+#     session.flush()
 
-    # seperate session to confirm ocloud is updated into repo
-    session2 = sqlite_session_factory()
-    repo2 = repository.OcloudSqlAlchemyRepository(session2)
-    ocloud2 = repo2.get(ocloud1.oCloudId)
-    assert ocloud2 is not None
-    assert ocloud2 != ocloud1 and ocloud2.oCloudId == ocloud1.oCloudId
-    assert len(ocloud2.deploymentManagers) == 1
+#     # seperate session to confirm ocloud is updated into repo
+#     session2 = sqlite_session_factory()
+#     repo2 = repository.OcloudSqlAlchemyRepository(session2)
+#     ocloud2 = repo2.get(ocloud1.oCloudId)
+#     assert ocloud2 is not None
+#     assert ocloud2 != ocloud1 and ocloud2.oCloudId == ocloud1.oCloudId
+#     assert len(ocloud2.deploymentManagers) == 1
 
 
 def test_add_resource_type(sqlite_session_factory):

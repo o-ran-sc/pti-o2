@@ -26,7 +26,7 @@ class StxGenericModel(AgRoot):
     def __init__(self, type: ResourceTypeEnum,
                  api_response: dict = None, content_hash=None) -> None:
         if api_response:
-            self.id = api_response.uuid
+            self.id = str(api_response.uuid)
             self.type = type
             self.updatetime = datetime.datetime.strptime(
                 api_response.updated_at.split('.')[0], "%Y-%m-%dT%H:%M:%S") \

@@ -12,11 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import json
+# import json
 import redis
 
 from o2ims import bootstrap, config
-from o2ims.domain import commands
+# from o2ims.domain import commands
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -36,9 +36,9 @@ def main():
 
 def handle_dms_changed(m, bus):
     logger.info("handling %s", m)
-    data = json.loads(m["data"])
-    cmd = commands.UpdateDms(ref=data["dmsid"])
-    bus.handle(cmd)
+    # data = json.loads(m["data"])
+    # cmd = commands.UpdateDms(ref=data["dmsid"])
+    # bus.handle(cmd)
 
 
 if __name__ == "__main__":

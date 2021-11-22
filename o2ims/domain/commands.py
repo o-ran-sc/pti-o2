@@ -37,24 +37,24 @@ class UpdateOCloud(UpdateStxObject):
 
 @dataclass
 class UpdateDms(UpdateStxObject):
-    pass
+    parentid: str
 
 
 @dataclass
 class UpdateResourcePool(UpdateStxObject):
-    pass
+    parentid: str
 
 
 @dataclass
 class UpdateResource(UpdateStxObject):
+    parentid: str
+
+
+@dataclass
+class UpdatePserverCpu(UpdateResource):
     pass
 
 
 @dataclass
-class UpdatePserverCpu(UpdateStxObject):
-    pass
-
-
-@dataclass
-class UpdatePserver(UpdateStxObject):
+class UpdatePserver(UpdateResource):
     pass

@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from o2ims.domain.stx_object import StxGenericModel
 from o2ims.service.client.base_client import BaseClient
 # from o2ims.service.unit_of_work import AbstractUnitOfWork
 from o2ims.service.watcher.base import BaseWatcher
@@ -30,11 +31,12 @@ class ResourcePoolWatcher(BaseWatcher):
     def _targetname(self):
         return "resourcepool"
 
-    def _probe(self, parent: object = None):
-        ocloudid = parent.id if parent else None
+    def _probe(self, parent: StxGenericModel):
+        ocloudid = parent.id
         newmodels = self._client.list(ocloudid=ocloudid)
         # for newmodel in newmodels:
         #     logger.info("detect ocloudmodel:" + newmodel.name)
         #     super()._compare_and_update(newmodel)
         # return newmodels
-        return [commands.UpdateResourcePool(m) for m in newmodels]
+        return [commands.UpdateResourcePool(data=m, parentid=ocloudid)
+                for m in newmodels]

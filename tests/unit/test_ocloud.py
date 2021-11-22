@@ -34,16 +34,16 @@ def test_new_ocloud():
     assert ocloudid1 is not None and ocloud1.oCloudId == ocloudid1
 
 
-def test_add_ocloud_with_dms():
-    ocloud1 = setup_ocloud()
-    dmsid = str(uuid.uuid4())
-    dms = ocloud.DeploymentManager(
-        dmsid, "k8s1", ocloud1.oCloudId, config.get_api_url()+"/k8s1")
-    ocloud1.addDeploymentManager(dms)
-    ocloud1.addDeploymentManager(dms)
-    assert len(ocloud1.deploymentManagers) == 1
-    # repo.update(ocloud1.oCloudId, {
-    #             "deploymentManagers": ocloud1.deploymentManagers})
+# def test_add_ocloud_with_dms():
+#     ocloud1 = setup_ocloud()
+#     dmsid = str(uuid.uuid4())
+#     dms = ocloud.DeploymentManager(
+#         dmsid, "k8s1", ocloud1.oCloudId, config.get_api_url()+"/k8s1")
+#     ocloud1.addDeploymentManager(dms)
+#     ocloud1.addDeploymentManager(dms)
+#     assert len(ocloud1.deploymentManagers) == 1
+#     # repo.update(ocloud1.oCloudId, {
+#     #             "deploymentManagers": ocloud1.deploymentManagers})
 
 
 def test_new_resource_type():

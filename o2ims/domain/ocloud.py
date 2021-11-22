@@ -25,6 +25,7 @@ from .resource_type import ResourceTypeEnum
 class Subscription(AgRoot):
     def __init__(self, id: str, callback: str, consumersubid: str = '',
                  filter: str = '') -> None:
+        super().__init__()
         self.subscriptionId = id
         self.version_number = 0
         self.callback = callback
@@ -32,11 +33,12 @@ class Subscription(AgRoot):
         self.filter = filter
 
 
-class DeploymentManager:
+class DeploymentManager(AgRoot):
     def __init__(self, id: str, name: str, ocloudid: str,
                  dmsendpoint: str, description: str = '',
                  supportedLocations: str = '', capabilities: str = '',
                  capacity: str = '') -> None:
+        super().__init__()
         self.deploymentManagerId = id
         self.version_number = 0
         self.oCloudId = ocloudid
@@ -53,6 +55,7 @@ class ResourcePool(AgRoot):
     def __init__(self, id: str, name: str, location: str,
                  ocloudid: str, gLocationId: str = '',
                  description: str = '') -> None:
+        super().__init__()
         self.resourcePoolId = id
         self.version_number = 0
         self.oCloudId = ocloudid
@@ -68,6 +71,7 @@ class ResourceType(AgRoot):
                  ocloudid: str, vender: str = '', model: str = '',
                  version: str = '',
                  description: str = '') -> None:
+        super().__init__()
         self.resourceTypeId = typeid
         self.oCloudId = ocloudid
         self.resourceTypeEnum = typeEnum.value
@@ -84,6 +88,7 @@ class Resource(AgRoot):
                  resourcePoolId: str, oCloudId: str = '',
                  parentId: str = '', elements: list = [],
                  description: str = '') -> None:
+        super().__init__()
         self.resourceId = resourceId
         self.version_number = 0
         self.oCloudId = oCloudId
@@ -112,14 +117,14 @@ class Ocloud(AgRoot):
         self.extensions = []
         # self.events = []
 
-    def addDeploymentManager(self,
-                             deploymentManager: DeploymentManager):
+    # def addDeploymentManager(self,
+    #                          deploymentManager: DeploymentManager):
 
-        deploymentManager.oCloudId = self.oCloudId
-        old = filter(
-            lambda x: x.deploymentManagerId ==
-            deploymentManager.deploymentManagerId,
-            self.deploymentManagers)
-        for o in old or []:
-            self.deploymentManagers.remove(o)
-        self.deploymentManagers.append(deploymentManager)
+    #     deploymentManager.oCloudId = self.oCloudId
+    #     old = filter(
+    #         lambda x: x.deploymentManagerId ==
+    #         deploymentManager.deploymentManagerId,
+    #         self.deploymentManagers)
+    #     for o in old or []:
+    #         self.deploymentManagers.remove(o)
+    #     self.deploymentManagers.append(deploymentManager)

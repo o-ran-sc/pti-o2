@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from o2ims.domain.stx_object import StxGenericModel
 from o2ims.service.client.base_client import BaseClient
 # from o2ims.service.unit_of_work import AbstractUnitOfWork
 from o2ims.service.watcher.resource_watcher import ResourceWatcher
@@ -30,10 +31,11 @@ class PServerCpuWatcher(ResourceWatcher):
     def _targetname(self):
         return "pserver_cpu"
 
-    def _probe(self, parent: object = None):
-        hostid = parent.id if parent else None
+    def _probe(self, parent: StxGenericModel):
+        hostid = parent.id
         newmodels = self._client.list(hostid=hostid)
         # for newmodel in newmodels:
         #     super()._compare_and_update(newmodel)
         # return newmodels
-        return [commands.UpdatePserverCpu(m) for m in newmodels]
+        return [commands.UpdatePserverCpu(data=m, parentid=hostid)
+                for m in newmodels]

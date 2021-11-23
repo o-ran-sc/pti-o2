@@ -12,13 +12,14 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-#!/bin/bash
+# pylint: disable=too-few-public-methods
+from dataclasses import dataclass
 
-# pull latest code to debug
-cd /root/
-git clone "https://gerrit.o-ran-sc.org/r/pti/o2"
-pip install -e /root/o2
 
-python /root/o2/o2app/entrypoints/redis_eventconsumer.py
+class Event:
+    pass
 
-sleep infinity
+
+@dataclass
+class OcloudUpdated(Event):
+    oCloudId: str

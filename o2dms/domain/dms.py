@@ -12,23 +12,20 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from flask import Flask
-from flask_restx import Api
+from __future__ import annotations
 
-from o2ims import bootstrap
-# from o2ims import config
-from o2ims.views.ocloud_route import configure_namespace
-from o2dms.views import dms_route
+from o2ims.domain.base import AgRoot
 
 
-# apibase = config.get_o2ims_api_base()
-app = Flask(__name__)
-api = Api(app, version='1.0.0',
-          title='O-Cloud Infrastructure Management Services',
-          description='Swagger OpenAPI document for \
-          O-Cloud Infrastructure Management Services',
-          )
-bus = bootstrap.bootstrap()
-configure_namespace(api, bus)
-
-dms_route.configure_namespace(api, bus)
+class NfDeploymentDesc(AgRoot):
+    def __init__(self, id: str, name: str, dmsId: str, description: str = '',
+                 inputParams: str = '', outputParams: str = '',) -> None:
+        super().__init__()
+        self.id = id
+        self.version_number = 0
+        self.dmsId = dmsId
+        self.name = name
+        self.description = description
+        self.inputParams = inputParams
+        self.outputParams = outputParams
+        self.extensions = []

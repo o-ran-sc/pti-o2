@@ -12,13 +12,20 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-#!/bin/bash
+import json
+from dataclasses import asdict
+import redis
 
-# pull latest code to debug
-cd /root/
-git clone "https://gerrit.o-ran-sc.org/r/pti/o2"
-pip install -e /root/o2
+from o2ims import config
+from o2ims.domain import events
 
-python /root/o2/o2app/entrypoints/redis_eventconsumer.py
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
-sleep infinity
+
+r = redis.Redis(**config.get_redis_host_and_port())
+
+
+def publish(channel, event: events.Event):
+    logger.info("publishing: channel=%s, event=%s", channel, event)
+    r.publish(channel, json.dumps(asdict(event)))

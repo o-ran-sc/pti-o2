@@ -19,6 +19,6 @@ cd /root/
 git clone "https://gerrit.o-ran-sc.org/r/pti/o2"
 pip install -e /root/o2
 
-python /root/o2/o2ims/entrypoints/resource_watcher.py
+python /root/o2/o2app/entrypoints/resource_watcher.py
 
 sleep infinity

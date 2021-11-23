@@ -111,6 +111,7 @@ deploymentmanager = Table(
     Column("updatetime", DateTime),
     Column("createtime", DateTime),
     Column("hash", String(255)),
+    Column("version_number", Integer),
 
     Column("deploymentManagerId", String(255), primary_key=True),
     Column("oCloudId", ForeignKey("ocloud.oCloudId")),

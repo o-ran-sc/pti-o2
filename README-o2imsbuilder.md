@@ -94,6 +94,7 @@ kubectl -n ${NAMESPACE} get pods
 ### test api endpoint
 
 ```sh
+curl -k http(s)://<Node IP>:30205
 curl -k http(s)://<Node IP>:30205/o2ims_infrastructureInventory/v1
 ```
 
@@ -116,7 +117,7 @@ kubectl -n ${NAMESPACE} exec -it o2api-<xxx> -c postgres -- bash
 
         \d
 
-        select * from stxcache;
+        select * from ocloud;
 
         \q
 

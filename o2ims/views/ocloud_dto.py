@@ -12,12 +12,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from flask_restx import Namespace, fields
+from flask_restx import fields
+
+from o2ims.views import api
 
 
 class OcloudDTO:
-
-    api = Namespace("Ocloud", description='Ocloud related operations.')
 
     ocloud = api.model(
         "OcloudList",
@@ -32,9 +32,6 @@ class OcloudDTO:
 
 
 class ResourceTypeDTO:
-
-    api = Namespace(
-        "ResourceType", description='Resource type related operations.')
 
     resource_type_get = api.model(
         "ResourceTypeGet",
@@ -51,9 +48,6 @@ class ResourceTypeDTO:
 
 class ResourcePoolDTO:
 
-    api = Namespace(
-        "ResourcePool", description='Resource pool related operations.')
-
     resource_pool_get = api.model(
         "ResourcePoolGet",
         {
@@ -68,8 +62,6 @@ class ResourcePoolDTO:
 
 
 class ResourceDTO:
-
-    api = Namespace("Resource", description='Resource related operations.')
 
     resource_list = api.model(
         "ResourceList",
@@ -98,9 +90,6 @@ class ResourceDTO:
 
 class DeploymentManagerDTO:
 
-    api = Namespace("DeploymentManager",
-                    description='Deployment manager related operations.')
-
     deployment_manager_get = api.model(
         "DeploymentManagerGet",
         {
@@ -118,9 +107,6 @@ class DeploymentManagerDTO:
 
 
 class SubscriptionDTO:
-
-    api = Namespace(
-        "Subscription", description='Subscription related operations.')
 
     subscription_get = api.model(
         "SubscriptionGet",

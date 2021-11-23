@@ -23,10 +23,11 @@ from o2dms.views import dms_route
 
 # apibase = config.get_o2ims_api_base()
 app = Flask(__name__)
+app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
 api = Api(app, version='1.0.0',
-          title='O-Cloud Infrastructure Management Services',
+          title='O-Cloud O2 Interface Application',
           description='Swagger OpenAPI document for \
-          O-Cloud Infrastructure Management Services',
+          O-Cloud O2 interface application',
           )
 bus = bootstrap.bootstrap()
 configure_namespace(api, bus)

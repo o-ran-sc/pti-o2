@@ -16,19 +16,13 @@
 from __future__ import annotations
 import abc
 
-from o2ims.domain.ocloud_repo import OcloudRepository,\
-    ResourcePoolRepository, ResourceRepository, ResourceTypeRepository,\
-    DeploymentManagerRepository
-from o2ims.domain.stx_repo import StxObjectRepository
-
 
 class AbstractUnitOfWork(abc.ABC):
-    oclouds: OcloudRepository
-    resource_types: ResourceTypeRepository
-    resource_pools: ResourcePoolRepository
-    resources: ResourceRepository
-    deployment_managers: DeploymentManagerRepository
-    stxobjects: StxObjectRepository
+    # oclouds: OcloudRepository
+    # resource_types: ResourceTypeRepository
+    # resource_pools: ResourcePoolRepository
+    # resources: ResourceRepository
+    # deployment_managers: DeploymentManagerRepository
 
     def __enter__(self):
         return self

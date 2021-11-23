@@ -14,7 +14,7 @@
 
 from multiprocessing.queues import Queue
 import pytest
-from o2ims.entrypoints.resource_watcher import start_watchers
+from o2app.entrypoints.resource_watcher import start_watchers
 from multiprocessing import Process
 from multiprocessing import Pipe
 # pipe = Pipe()

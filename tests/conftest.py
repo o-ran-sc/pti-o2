@@ -14,12 +14,15 @@ from sqlalchemy.orm import sessionmaker, clear_mappers
 from tenacity import retry, stop_after_delay
 from unittest.mock import MagicMock
 
-from o2ims import config
+from o2common.config import config
+
 from o2ims.adapter.orm import metadata, start_o2ims_mappers
-from o2ims.adapter.clients.orm_stx import start_o2ims_stx_mappers
-from o2ims.adapter import unit_of_work
+# from o2ims.adapter.clients.orm_stx import start_o2ims_stx_mappers
+
+from o2app.adapter import unit_of_work
 from o2ims.views.ocloud_route import configure_namespace
-from o2ims.bootstrap import bootstrap
+
+from o2app.bootstrap import bootstrap
 
 
 @pytest.fixture
@@ -81,7 +84,7 @@ def sqlite_flask_uow(sqlite_uow):
 @pytest.fixture
 def mappers():
     start_o2ims_mappers()
-    start_o2ims_stx_mappers()
+    # start_o2ims_stx_mappers()
     yield
     clear_mappers()
 

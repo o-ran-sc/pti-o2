@@ -16,8 +16,8 @@ import cotyledon
 
 from o2app import bootstrap
 from o2common.service.watcher.base import WatcherTree
+from o2common.service.watcher.worker import PollWorker
 
-from o2ims.service.watcher.worker import PollWorker
 from o2ims.service.watcher.ocloud_watcher import OcloudWatcher
 from o2ims.service.watcher.ocloud_watcher import DmsWatcher
 from o2ims.service.watcher.resourcepool_watcher import ResourcePoolWatcher

@@ -19,10 +19,7 @@ from dataclasses import dataclass
 # from datetime import datetime
 # from o2ims.domain.resource_type import ResourceTypeEnum
 from o2ims.domain.stx_object import StxGenericModel
-
-
-class Command:
-    pass
+from o2common.domain.commands import Command
 
 
 @dataclass

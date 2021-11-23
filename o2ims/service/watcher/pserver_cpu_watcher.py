@@ -13,11 +13,11 @@
 #  limitations under the License.
 
 from o2ims.domain.stx_object import StxGenericModel
-from o2ims.service.client.base_client import BaseClient
-# from o2ims.service.unit_of_work import AbstractUnitOfWork
+from o2common.service.client.base_client import BaseClient
+# from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.service.watcher.resource_watcher import ResourceWatcher
 from o2ims.domain import commands
-from o2ims.service.messagebus import MessageBus
+from o2common.service.messagebus import MessageBus
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)

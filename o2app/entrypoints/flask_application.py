@@ -16,14 +16,13 @@ from flask import Flask
 from flask_restx import Api
 
 from o2app import bootstrap
-# from o2ims import config
-# from o2ims.views.ocloud_route import configure_routes
 from o2ims.views import ocloud_route as ims_route
 from o2dms.views import dms_route
 
 
 # apibase = config.get_o2ims_api_base()
 app = Flask(__name__)
+app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
 api = Api(app, version='1.0.0',
           title='O-Cloud O2 Services',
           description='Swagger OpenAPI document for \

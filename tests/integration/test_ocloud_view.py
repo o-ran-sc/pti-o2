@@ -15,7 +15,7 @@
 import uuid
 import pytest
 
-from o2ims import config
+from o2common.config import config
 from o2ims.views import ocloud_view
 from o2ims.domain import ocloud
 from o2ims.domain import resource_type as rt

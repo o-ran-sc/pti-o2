@@ -14,22 +14,21 @@
 
 import abc
 # from typing import Optional, List, Set
-from typing import List
-from o2ims.domain import stx_object as ocloudModel
+# from typing import List
 
 
 class BaseClient(abc.ABC):
     def __init__(self):
         pass
 
-    def list(self, **filters) -> List[ocloudModel.StxGenericModel]:
+    def list(self, **filters):
         return self._list(**filters)
 
-    def get(self, id) -> ocloudModel.StxGenericModel:
+    def get(self, id):
         return self._get(id)
 
     @abc.abstractmethod
-    def _get(self, id) -> ocloudModel.StxGenericModel:
+    def _get(self, id):
         raise NotImplementedError
 
     @abc.abstractmethod

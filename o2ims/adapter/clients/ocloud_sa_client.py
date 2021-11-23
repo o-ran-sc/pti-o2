@@ -15,11 +15,11 @@
 # client talking to Stx standalone
 
 import uuid
-from o2ims.service.client.base_client import BaseClient
+from o2common.service.client.base_client import BaseClient
 from typing import List
 # Optional,  Set
 from o2ims.domain import stx_object as ocloudModel
-from o2ims import config
+from o2common.config import config
 from o2ims.domain.resource_type import ResourceTypeEnum
 
 # from dcmanagerclient.api import client

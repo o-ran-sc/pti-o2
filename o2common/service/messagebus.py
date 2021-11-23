@@ -15,7 +15,7 @@
 # pylint: disable=broad-except, attribute-defined-outside-init
 from __future__ import annotations
 from typing import Callable, Dict, List, Union, Type, TYPE_CHECKING
-from o2ims.domain import commands, events
+from o2common.domain import commands, events
 
 if TYPE_CHECKING:
     from . import unit_of_work

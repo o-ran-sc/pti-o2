@@ -20,8 +20,9 @@ from o2common.adapter.notifications import AbstractNotifications,\
     SmoO2Notifications
 from o2common.adapter import redis_eventpublisher
 from o2common.service import unit_of_work
+from o2common.service import messagebus
 
-from o2app.service import handlers, messagebus
+from o2app.service import handlers
 from o2app.adapter.unit_of_work import SqlAlchemyUnitOfWork
 
 from o2ims.adapter import orm as o2ims_orm

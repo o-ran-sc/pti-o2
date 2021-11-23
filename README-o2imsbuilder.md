@@ -49,8 +49,8 @@ exit
 ### Push O2 service images to local registry (with auth user admin)
 
 ```sh
-sudo docker tag o2imsdms:latest registry.local:9001/admin/o2imsdms:0.1.1
-sudo docker image push registry.local:9001/admin/o2imsdms:0.1.1
+sudo docker tag o2imsdms:latest registry.local:9001/admin/o2imsdms:0.1.4
+sudo docker image push registry.local:9001/admin/o2imsdms:0.1.4
 
 ```
 
@@ -67,7 +67,7 @@ o2ims:
   imagePullSecrets: admin-orano2-registry-secret
   image:
     repository: registry.local:9001/admin/o2imsdms
-    tag: 0.1.1
+    tag: 0.1.4
     pullPolicy: IfNotPresent
   logginglevel: "DEBUG"
 

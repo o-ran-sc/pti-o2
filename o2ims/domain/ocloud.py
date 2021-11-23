@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 
-from o2ims.domain.base import AgRoot
+from o2common.domain.base import AgRoot
 # from dataclasses import dataclass
 # from datetime import date
 # from typing import Optional, List, Set

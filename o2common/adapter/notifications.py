@@ -1,6 +1,6 @@
 # pylint: disable=too-few-public-methods
 import abc
-from o2ims import config
+from o2common.config import config
 
 
 SMO_O2_ENDPOINT = config.get_smo_o2endpoint()

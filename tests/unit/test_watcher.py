@@ -16,22 +16,25 @@ import time
 from datetime import datetime
 import json
 from typing import List
-from o2ims.service import handlers
-from o2ims.domain.resource_type import ResourceTypeEnum
-from o2ims.service.client.base_client import BaseClient
-from o2ims.domain import ocloud
-from o2ims import config
+# from o2common.config import config
 import uuid
-from o2ims.service.watcher.base import BaseWatcher, WatcherTree
+from o2common.service.watcher.base import BaseWatcher, WatcherTree
+from o2common.service.watcher import worker
+from o2common.service.unit_of_work import AbstractUnitOfWork
+from o2common.service import messagebus
+
+from o2ims.domain.resource_type import ResourceTypeEnum
 from o2ims.domain import stx_object as ocloudModel
 from o2ims.adapter.ocloud_repository import OcloudRepository
 from o2ims.domain.stx_repo import StxObjectRepository
-from o2ims.service.watcher import worker
-from o2ims.service.unit_of_work import AbstractUnitOfWork
 from o2ims.service.watcher.ocloud_watcher import OcloudWatcher
-from o2ims.service import messagebus
-from o2ims import bootstrap
 from o2ims.domain import commands
+from o2common.service.client.base_client import BaseClient
+from o2ims.domain import ocloud
+
+from o2app.service import handlers
+from o2app import bootstrap
+
 
 class FakeOcloudClient(BaseClient):
     def __init__(self):

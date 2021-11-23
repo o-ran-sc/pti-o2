@@ -14,10 +14,8 @@
 
 import sys
 import pytest
-from o2ims.adapter import ocloud_repository as repository
-from o2ims.domain import ocloud
-from o2ims import config
-import uuid
+
+from o2common.config import config
 from o2ims.adapter.clients.ocloud_sa_client import StxSaClientImp
 from cgtsclient.client import get_client
 

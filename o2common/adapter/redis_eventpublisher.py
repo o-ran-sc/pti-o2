@@ -16,8 +16,8 @@ import json
 from dataclasses import asdict
 import redis
 
-from o2ims import config
-from o2ims.domain import events
+from o2common.config import config
+from o2common.domain import events
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)

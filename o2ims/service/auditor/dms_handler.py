@@ -20,10 +20,10 @@ from o2ims.domain.stx_object import StxGenericModel
 # from typing import List, Dict, Callable, Type
 # TYPE_CHECKING
 from o2ims.domain import commands
-from o2ims.service.unit_of_work import AbstractUnitOfWork
+from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.domain.resource_type import MismatchedModel
 from o2ims.domain.ocloud import DeploymentManager
-from o2ims import config
+from o2common.config import config
 # if TYPE_CHECKING:
 #     from . import unit_of_work
 

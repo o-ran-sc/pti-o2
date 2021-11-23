@@ -13,48 +13,8 @@
 #  limitations under the License.
 
 # pylint: disable=too-few-public-methods
-# from datetime import date
-# from typing import Optional
-from dataclasses import dataclass
-# from datetime import datetime
-# from o2ims.domain.resource_type import ResourceTypeEnum
-from o2ims.domain.stx_object import StxGenericModel
+# from dataclasses import dataclass
 
 
 class Command:
-    pass
-
-
-@dataclass
-class UpdateStxObject(Command):
-    data: StxGenericModel
-
-
-@dataclass
-class UpdateOCloud(UpdateStxObject):
-    pass
-
-
-@dataclass
-class UpdateDms(UpdateStxObject):
-    parentid: str
-
-
-@dataclass
-class UpdateResourcePool(UpdateStxObject):
-    parentid: str
-
-
-@dataclass
-class UpdateResource(UpdateStxObject):
-    parentid: str
-
-
-@dataclass
-class UpdatePserverCpu(UpdateResource):
-    pass
-
-
-@dataclass
-class UpdatePserver(UpdateResource):
     pass

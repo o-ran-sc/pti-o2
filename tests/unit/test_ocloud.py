@@ -17,7 +17,7 @@ import uuid
 from o2ims.domain import ocloud
 from o2ims.domain import resource_type as rt
 from o2ims.views import ocloud_view
-from o2ims import config
+from o2common.config import config
 
 
 def setup_ocloud():

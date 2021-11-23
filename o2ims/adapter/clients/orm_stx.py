@@ -31,8 +31,8 @@ from sqlalchemy import (
 
 # from o2ims.domain import stx_object as ocloudModel
 
-from o2ims.service.unit_of_work import AbstractUnitOfWork
-from o2ims.adapter.unit_of_work import SqlAlchemyUnitOfWork
+from o2common.service.unit_of_work import AbstractUnitOfWork
+# from o2ims.adapter.unit_of_work import SqlAlchemyUnitOfWork
 from o2ims.domain.resource_type import ResourceTypeEnum
 
 from o2common.helper import o2logging
@@ -53,7 +53,7 @@ stxobject = Table(
 )
 
 
-def start_o2ims_stx_mappers(uow: AbstractUnitOfWork = SqlAlchemyUnitOfWork()):
+def start_o2ims_stx_mappers(uow: AbstractUnitOfWork):
     return
     # logger.info("Starting O2 IMS Stx mappers")
     # mapper(ocloudModel.StxGenericModel, stxobject)

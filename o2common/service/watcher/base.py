@@ -14,11 +14,9 @@
 
 # from logging import exception
 # from cgtsclient import exc
-from o2ims.service.client.base_client import BaseClient
-# from o2ims.domain.stx_object import StxGenericModel
-# from o2ims.service.unit_of_work import AbstractUnitOfWork
-from o2ims.domain import commands
-from o2ims.service.messagebus import MessageBus
+from o2common.service.client.base_client import BaseClient
+from o2common.domain import commands
+from o2common.service.messagebus import MessageBus
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -34,7 +32,7 @@ class BaseWatcher(object):
     def targetname(self) -> str:
         return self._targetname()
 
-    def probe(self, parent: commands.UpdateStxObject = None):
+    def probe(self, parent: commands.Command = None):
         try:
             cmds = self._probe(parent.data if parent else None)
             for cmd in cmds:
@@ -46,7 +44,7 @@ class BaseWatcher(object):
             logger.warning("Failed to probe resource due to: " + str(ex))
             return []
 
-    def _probe(self, parent: object = None) -> commands.UpdateStxObject:
+    def _probe(self, parent: object = None) -> commands.Command:
         raise NotImplementedError
 
     def _targetname(self):

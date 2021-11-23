@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 
-from o2ims.domain.base import AgRoot
+from o2common.domain.base import AgRoot
 
 
 class NfDeploymentDesc(AgRoot):

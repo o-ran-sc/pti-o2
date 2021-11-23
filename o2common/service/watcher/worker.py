@@ -14,7 +14,7 @@
 
 import time
 import sched
-from o2ims.service.watcher.base import WatcherTree
+from o2common.service.watcher.base import WatcherTree
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)

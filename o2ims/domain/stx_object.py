@@ -15,7 +15,7 @@
 # from dataclasses import dataclass
 import datetime
 import json
-from o2ims.domain.base import AgRoot
+from o2common.domain.base import AgRoot
 
 from o2ims.domain.resource_type import ResourceTypeEnum, MismatchedModel
 from o2common.helper import o2logging

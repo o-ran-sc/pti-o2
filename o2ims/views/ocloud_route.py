@@ -16,7 +16,7 @@ import uuid
 from flask_restx import Resource
 
 from o2ims.views import ocloud_view, api
-from o2ims import config
+from o2common.config import config
 from o2ims.domain.ocloud import Subscription
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
     ResourcePoolDTO, ResourceDTO, DeploymentManagerDTO, SubscriptionDTO

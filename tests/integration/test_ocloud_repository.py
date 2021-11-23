@@ -18,7 +18,7 @@ import pytest
 from o2ims.domain import resource_type as rt
 from o2ims.adapter import ocloud_repository as repository
 from o2ims.domain import ocloud
-from o2ims import config
+from o2common.config import config
 
 pytestmark = pytest.mark.usefixtures("mappers")
 

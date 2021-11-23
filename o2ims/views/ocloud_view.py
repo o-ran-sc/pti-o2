@@ -16,11 +16,11 @@ from sqlalchemy import select
 
 from o2ims.adapter.orm import ocloud, resource, resourcetype, \
     resourcepool, deploymentmanager, subscription
-from o2ims.adapter import unit_of_work
+from o2common.service import unit_of_work
 from o2ims.domain.ocloud import Subscription
 
 
-def oclouds(uow: unit_of_work.SqlAlchemyUnitOfWork):
+def oclouds(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         res = uow.session.execute(select(ocloud))
     return [dict(r) for r in res]
@@ -34,14 +34,14 @@ def ocloud_one(ocloudid: str, uow: unit_of_work.AbstractUnitOfWork):
     return None if first is None else dict(first)
 
 
-def resource_types(uow: unit_of_work.SqlAlchemyUnitOfWork):
+def resource_types(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         res = uow.session.execute(select(resourcetype))
     return [dict(r) for r in res]
 
 
 def resource_type_one(resourceTypeId: str,
-                      uow: unit_of_work.SqlAlchemyUnitOfWork):
+                      uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         res = uow.session.execute(select(resourcetype).where(
             resourcetype.c.resourceTypeId == resourceTypeId))
@@ -49,14 +49,14 @@ def resource_type_one(resourceTypeId: str,
     return None if first is None else dict(first)
 
 
-def resource_pools(uow: unit_of_work.SqlAlchemyUnitOfWork):
+def resource_pools(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         res = uow.session.execute(select(resourcepool))
     return [dict(r) for r in res]
 
 
 def resource_pool_one(resourcePoolId: str,
-                      uow: unit_of_work.SqlAlchemyUnitOfWork):
+                      uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         res = uow.session.execute(select(resourcepool).where(
             resourcepool.c.resourcePoolId == resourcePoolId))
@@ -64,14 +64,14 @@ def resource_pool_one(resourcePoolId: str,
     return None if first is None else dict(first)
 
 
-def resources(resourcePoolId: str, uow: unit_of_work.SqlAlchemyUnitOfWork):
+def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         res = uow.session.execute(select(resource).where(
             resource.c.resourcePoolId == resourcePoolId))
     return [dict(r) for r in res]
 
 
-def resource_one(resourceId: str, uow: unit_of_work.SqlAlchemyUnitOfWork):
+def resource_one(resourceId: str, uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         # topq = uow.session.query(resource).filter(
         #     resource.c.resourceId == resourceId).cte('cte', recursive=True)
@@ -85,14 +85,14 @@ def resource_one(resourceId: str, uow: unit_of_work.SqlAlchemyUnitOfWork):
     return None if first is None else dict(first)
 
 
-def deployment_managers(uow: unit_of_work.SqlAlchemyUnitOfWork):
+def deployment_managers(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         res = uow.session.execute(select(deploymentmanager))
     return [dict(r) for r in res]
 
 
 def deployment_manager_one(deploymentManagerId: str,
-                           uow: unit_of_work.SqlAlchemyUnitOfWork):
+                           uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         res = uow.session.execute(select(deploymentmanager).where(
             deploymentmanager.c.deploymentManagerId == deploymentManagerId))
@@ -100,14 +100,14 @@ def deployment_manager_one(deploymentManagerId: str,
     return None if first is None else dict(first)
 
 
-def subscriptions(uow: unit_of_work.SqlAlchemyUnitOfWork):
+def subscriptions(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         res = uow.session.execute(select(subscription))
     return [dict(r) for r in res]
 
 
 def subscription_one(subscriptionId: str,
-                     uow: unit_of_work.SqlAlchemyUnitOfWork):
+                     uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         res = uow.session.execute(select(subscription).where(
             subscription.c.subscriptionId == subscriptionId))
@@ -116,14 +116,14 @@ def subscription_one(subscriptionId: str,
 
 
 def subscription_create(subscription: Subscription,
-                        uow: unit_of_work.SqlAlchemyUnitOfWork):
+                        uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         uow.subscriptions.add(subscription)
         uow.commit()
 
 
 def subscription_delete(subscriptionId: str,
-                        uow: unit_of_work.SqlAlchemyUnitOfWork):
+                        uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         uow.subscriptions.delete(subscriptionId)
         uow.commit()

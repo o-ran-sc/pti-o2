@@ -19,6 +19,7 @@ from o2ims import bootstrap
 # from o2ims import config
 # from o2ims.views.ocloud_route import configure_routes
 from o2ims.views.ocloud_route import configure_namespace
+from o2dms.views import dms_route
 
 
 # apibase = config.get_o2ims_api_base()
@@ -31,3 +32,5 @@ api = Api(app, version='1.0.0',
 bus = bootstrap.bootstrap()
 # configure_routes(app, bus)
 configure_namespace(api, bus)
+
+dms_route.configure_namespace(api, bus)

@@ -110,6 +110,7 @@ class ResourcePoolGetRouter(Resource):
     model = ResourcePoolDTO.resource_pool_get
 
     @api_rp.doc('Get resource pool')
+    @api_rp.marshal_with(model)
     def get(self, resourcePoolID):
         result = ocloud_view.resource_pool_one(resourcePoolID, uow)
         if result is not None:
@@ -142,6 +143,7 @@ class ResourceGetRouter(Resource):
     model = ResourceDTO.resource_get
 
     @api_res.doc('Get resource')
+    @api_res.marshal_with(model)
     def get(self, resourcePoolID, resourceID):
         result = ocloud_view.resource_one(resourceID, uow)
         if result is not None:
@@ -171,6 +173,7 @@ class DeploymentManagerGetRouter(Resource):
     model = DeploymentManagerDTO.deployment_manager_get
 
     @api_dm.doc('Get deployment manager')
+    @api_dm.marshal_with(model)
     def get(self, deploymentManagerID):
         result = ocloud_view.deployment_manager_one(
             deploymentManagerID, uow)
@@ -202,6 +205,7 @@ class SubscriptionGetRouter(Resource):
     model = DeploymentManagerDTO.deployment_manager_get
 
     @api_sub.doc('Get subscription by ID')
+    @api_sub.marshal_with(model)
     def get(self, subscriptionID):
         result = ocloud_view.subscription_one(
             subscriptionID, uow)

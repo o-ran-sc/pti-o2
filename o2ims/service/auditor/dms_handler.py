@@ -76,7 +76,8 @@ def is_outdated(ocloud: DeploymentManager, stxobj: StxGenericModel):
 
 
 def create_by(stxobj: StxGenericModel, parentid: str) -> DeploymentManager:
-    dmsendpoint = config.get_api_url() + config.get_o2dms_api_base(stxobj.id)
+    dmsendpoint = config.get_api_url() +\
+                  config.get_o2dms_api_base() + "/" + stxobj.id
     description = "A DMS"
     ocloudid = parentid
     supportedLocations = ''

@@ -33,6 +33,24 @@
       "message": "ocloud api should be a \u0027get detail\u0027 operation, not a \u0027list\u0027 operation",
       "revId": "0e868deb05305e826bc799399f14915eeb613e06",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a720e4f5_9fc10ed0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2021-11-23T02:31:35Z",
+      "side": 1,
+      "message": "It is a \u0027list\u0027 operation, but when you give an \u0027oCloudId\u0027 query parameter, you will get one oCloud detail.\nDo you mean the URL \"/o2ims_infrastructureInventory/v1/\" of the oCloud only supports getting one specific oCloud?\n\n------------------------------\nThe one IMS only has one oCloud, I got your ideas.",
+      "parentUuid": "2592ca44_df088b95",
+      "revId": "0e868deb05305e826bc799399f14915eeb613e06",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

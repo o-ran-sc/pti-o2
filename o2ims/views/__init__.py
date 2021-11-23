@@ -14,6 +14,5 @@
 
 from flask_restx import Namespace
 
-api = Namespace("O2IMS Inventory v1",
-                description='The Inventory version1 of '
-                'O2 Infrastructure Management Services')
+api = Namespace("O2IMS_Inventory",
+                description='IMS Inventory related operations.')

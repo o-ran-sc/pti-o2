@@ -37,7 +37,7 @@ class OcloudsListRouter(Resource):
 
     @api.marshal_with(ocloud_get)
     def get(self):
-        res = ocloud_view.oclouds(uow)
+        res = ocloud_view.oclouds(bus.uow)
         if len(res) > 0:
             return res[0]
         api.abort(
@@ -52,23 +52,7 @@ class ResourceTypesListRouter(Resource):
 
     @api.marshal_list_with(model)
     def get(self):
-        return ocloud_view.resource_types(uow)
-
-    # @api.doc(response={405: 'Method Not Allowed'})
-    # def post(self):
-    #     api.abort(405)
-
-    # @api.doc(response={405: 'Method Not Allowed'})
-    # def put(self):
-    #     api.abort(405)
-
-    # @api.doc(response={405: 'Method Not Allowed'})
-    # def patch(self):
-    #     api.abort(405)
-
-    # @api.doc(response={405: 'Method Not Allowed'})
-    # def delete(self):
-    #     api.abort(405)
+        return ocloud_view.resource_types(bus.uow)
 
 
 @api.route("/resourceTypes/<resourceTypeID>")
@@ -81,7 +65,7 @@ class ResourceTypeGetRouter(Resource):
     @api.doc('Get resource type')
     @api.marshal_with(model)
     def get(self, resourceTypeID):
-        result = ocloud_view.resource_type_one(resourceTypeID, uow)
+        result = ocloud_view.resource_type_one(resourceTypeID, bus.uow)
         if result is not None:
             return result
         api.abort(
@@ -96,7 +80,7 @@ class ResourcePoolsListRouter(Resource):
 
     @api.marshal_list_with(model)
     def get(self):
-        return ocloud_view.resource_pools(uow)
+        return ocloud_view.resource_pools(bus.uow)
 
 
 @api.route("/resourcePools/<resourcePoolID>")
@@ -109,7 +93,7 @@ class ResourcePoolGetRouter(Resource):
     @api.doc('Get resource pool')
     @api.marshal_with(model)
     def get(self, resourcePoolID):
-        result = ocloud_view.resource_pool_one(resourcePoolID, uow)
+        result = ocloud_view.resource_pool_one(resourcePoolID, bus.uow)
         if result is not None:
             return result
         api.abort(
@@ -125,7 +109,7 @@ class ResourcesListRouter(Resource):
 
     @api.marshal_list_with(model)
     def get(self, resourcePoolID):
-        return ocloud_view.resources(resourcePoolID, uow)
+        return ocloud_view.resources(resourcePoolID, bus.uow)
 
 
 @api.route("/resourcePools/<resourcePoolID>/resources/<resourceID>")
@@ -139,7 +123,7 @@ class ResourceGetRouter(Resource):
     @api.doc('Get resource')
     @api.marshal_with(model)
     def get(self, resourcePoolID, resourceID):
-        result = ocloud_view.resource_one(resourceID, uow)
+        result = ocloud_view.resource_one(resourceID, bus.uow)
         if result is not None:
             return result
         api.abort(404, "Resource {} doesn't exist".format(resourceID))
@@ -153,7 +137,7 @@ class DeploymentManagersListRouter(Resource):
 
     @api.marshal_list_with(model)
     def get(self):
-        return ocloud_view.deployment_managers(uow)
+        return ocloud_view.deployment_managers(bus.uow)
 
 
 @api.route("/deploymentManagers/<deploymentManagerID>")
@@ -167,7 +151,7 @@ class DeploymentManagerGetRouter(Resource):
     @api.marshal_with(model)
     def get(self, deploymentManagerID):
         result = ocloud_view.deployment_manager_one(
-            deploymentManagerID, uow)
+            deploymentManagerID, bus.uow)
         if result is not None:
             return result
         api.abort(404, "Deployment manager {} doesn't exist".format(
@@ -185,7 +169,7 @@ class SubscriptionsListRouter(Resource):
     @api.doc('List subscriptions')
     @api.marshal_list_with(model)
     def get(self):
-        return ocloud_view.subscriptions(uow)
+        return ocloud_view.subscriptions(bus.uow)
 
     @api.doc('Create a subscription')
     @api.expect(expect)
@@ -196,7 +180,7 @@ class SubscriptionsListRouter(Resource):
         subscription = Subscription(
             sub_uuid, data['callback'], data['consumerSubscriptionId'],
             data['filter'])
-        ocloud_view.subscription_create(subscription, uow)
+        ocloud_view.subscription_create(subscription, bus.uow)
         return {"subscriptionId": sub_uuid}, 201
 
 
@@ -205,13 +189,13 @@ class SubscriptionsListRouter(Resource):
 @api.response(404, 'Subscription not found')
 class SubscriptionGetDelRouter(Resource):
 
-    model = DeploymentManagerDTO.deployment_manager_get
+    model = SubscriptionDTO.subscription_get
 
     @api.doc('Get subscription by ID')
     @api.marshal_with(model)
     def get(self, subscriptionID):
         result = ocloud_view.subscription_one(
-            subscriptionID, uow)
+            subscriptionID, bus.uow)
         if result is not None:
             return result
         api.abort(404, "Subscription {} doesn't exist".format(
@@ -220,17 +204,17 @@ class SubscriptionGetDelRouter(Resource):
     @api.doc('Delete subscription by ID')
     @api.response(204, 'Subscription deleted')
     def delete(self, subscriptionID):
-        with uow:
-            uow.subscriptions.delete(subscriptionID)
-            uow.commit()
+        with bus.uow:
+            bus.uow.subscriptions.delete(subscriptionID)
+            bus.uow.commit()
         return '', 204
 
 
-def configure_namespace(app, bus):
+def configure_namespace(app, bus_new):
+
+    # Set global bus for resource
+    global bus
+    bus = bus_new
 
     api_v1 = api
     app.add_namespace(api_v1, path=apibase)
-
-    # Set global uow
-    global uow
-    uow = bus.uow

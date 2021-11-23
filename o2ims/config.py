@@ -33,12 +33,16 @@ def get_api_url():
     return f"http://{host}:{port}"
 
 
+def get_root_api_base():
+    return "/"
+
+
 def get_o2ims_api_base():
-    return '/o2ims_infrastructureInventory/v1'
+    return get_root_api_base() + 'o2ims_infrastructureInventory/v1'
 
 
-def get_o2dms_api_base(dmsid: str):
-    return "/" + dmsid + '/o2dms/v1'
+def get_o2dms_api_base():
+    return get_root_api_base() + "o2dms/v1"
 
 
 def get_redis_host_and_port():

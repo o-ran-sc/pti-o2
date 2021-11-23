@@ -15,20 +15,21 @@
 from flask import Flask
 from flask_restx import Api
 
-from o2ims import bootstrap
+from o2app import bootstrap
 # from o2ims import config
-from o2ims.views.ocloud_route import configure_namespace
+# from o2ims.views.ocloud_route import configure_routes
+from o2ims.views import ocloud_route as ims_route
 from o2dms.views import dms_route
 
 
 # apibase = config.get_o2ims_api_base()
 app = Flask(__name__)
 api = Api(app, version='1.0.0',
-          title='O-Cloud Infrastructure Management Services',
+          title='O-Cloud O2 Services',
           description='Swagger OpenAPI document for \
-          O-Cloud Infrastructure Management Services',
+          O-Cloud O2 Services',
           )
 bus = bootstrap.bootstrap()
-configure_namespace(api, bus)
 
+ims_route.configure_namespace(api, bus)
 dms_route.configure_namespace(api, bus)

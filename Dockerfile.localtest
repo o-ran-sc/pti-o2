@@ -26,6 +26,7 @@ RUN mkdir -p /src
 COPY o2ims/ /src/o2ims/
 COPY o2dms/ /src/o2dms/
 COPY o2common/ /src/o2common/
+COPY o2app/ /src/o2app/
 COPY setup.py /src/
 
 COPY configs/ /etc/o2/

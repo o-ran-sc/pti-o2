@@ -24,10 +24,11 @@ services:
       - ./o2ims:/o2ims
       - ./o2dms:/o2dms
       - ./o2common:/o2common
+      - ./o2app:/o2app
       - ./tests:/tests
     entrypoint:
       - /bin/sh
-      - /tests/o2ims-redis-entry.sh
+      - /tests/o2app-redis-entry.sh
 
   api:
     image: o2imsdms
@@ -39,7 +40,7 @@ services:
       - API_HOST=api
       - REDIS_HOST=redis
       - PYTHONDONTWRITEBYTECODE=1
-      - FLASK_APP=/o2ims/entrypoints/flask_application.py
+      - FLASK_APP=/o2app/entrypoints/flask_application.py
       - FLASK_DEBUG=1
       - PYTHONUNBUFFERED=1
       - OS_AUTH_URL=${OS_AUTH_URL}
@@ -51,12 +52,11 @@ services:
       - ./o2ims:/o2ims
       - ./o2dms:/o2dms
       - ./o2common:/o2common
+      - ./o2app:/o2app
       - ./tests:/tests
     entrypoint:
-      - flask
-      - run
-      - --host=0.0.0.0
-      - --port=80
+      - /bin/sh
+      - /tests/o2app-api-entry.sh
     ports:
       - "5005:80"
 
@@ -81,10 +81,11 @@ services:
       - ./o2ims:/o2ims
       - ./o2dms:/o2dms
       - ./o2common:/o2common
+      - ./o2app:/o2app
       - ./tests:/tests
     entrypoint:
       - /bin/sh
-      - /tests/o2ims-watcher-entry.sh
+      - /tests/o2app-watcher-entry.sh
 
   postgres:
     image: postgres:9.6

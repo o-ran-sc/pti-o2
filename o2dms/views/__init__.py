@@ -11,3 +11,8 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
+from flask_restx import Namespace
+
+api_dms_lcm_v1 = Namespace(
+    "O2DMS_LCM", description='DMS LCM related operations.')

@@ -20,7 +20,7 @@ from o2ims.views import api
 class OcloudDTO:
 
     ocloud = api.model(
-        "OcloudList",
+        "OcloudDto",
         {
             'oCloudId': fields.String(required=True),
             'globalCloudId': fields.String,
@@ -34,7 +34,7 @@ class OcloudDTO:
 class ResourceTypeDTO:
 
     resource_type_get = api.model(
-        "ResourceTypeGet",
+        "ResourceTypeGetDto",
         {
             'resourceTypeId': fields.String(required=True,
                                             description='Resource type ID'),
@@ -49,7 +49,7 @@ class ResourceTypeDTO:
 class ResourcePoolDTO:
 
     resource_pool_get = api.model(
-        "ResourcePoolGet",
+        "ResourcePoolGetDto",
         {
             'resourcePoolId': fields.String(required=True,
                                             description='Resource pool ID'),
@@ -64,7 +64,7 @@ class ResourcePoolDTO:
 class ResourceDTO:
 
     resource_list = api.model(
-        "ResourceList",
+        "ResourceListDto",
         {
             'resourceId': fields.String(required=True,
                                         description='Resource ID'),
@@ -76,7 +76,7 @@ class ResourceDTO:
     )
 
     resource_get = api.model(
-        "ResourceGet",
+        "ResourceGetDto",
         {
             'resourceId': fields.String(required=True,
                                         description='Resource ID'),
@@ -91,7 +91,7 @@ class ResourceDTO:
 class DeploymentManagerDTO:
 
     deployment_manager_get = api.model(
-        "DeploymentManagerGet",
+        "DeploymentManagerGetDto",
         {
             'deploymentManagerId': fields.String(
                 required=True,
@@ -109,7 +109,7 @@ class DeploymentManagerDTO:
 class SubscriptionDTO:
 
     subscription_get = api.model(
-        "SubscriptionGet",
+        "SubscriptionGetDto",
         {
             'subscriptionId': fields.String(required=True,
                                             description='Subscription ID'),
@@ -120,7 +120,7 @@ class SubscriptionDTO:
     )
 
     subscription = api.model(
-        "SubscriptionCreate",
+        "SubscriptionCreateDto",
         {
             'callback': fields.String(
                 required=True, description='Subscription callback address'),
@@ -130,7 +130,7 @@ class SubscriptionDTO:
     )
 
     subscription_post_resp = api.model(
-        "SubscriptionCreatedResp",
+        "SubscriptionCreatedRespDto",
         {
             'subscriptionId': fields.String(required=True,
                                             description='Subscription ID'),

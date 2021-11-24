@@ -45,9 +45,8 @@ nfDeploymentDesc = Table(
     Column("deploymentManagerId", String(255)),
     Column("name", String(255)),
     Column("description", String(255)),
-    Column("supportedLocations", String(255)),
-    Column("capabilities", String(255)),
-    Column("capacity", String(255)),
+    Column("inputParams", String(255)),
+    Column("outputParams", String(255)),
     # Column("extensions", String(1024))
 )
 

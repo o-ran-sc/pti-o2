@@ -34,8 +34,11 @@ class NfDeploymentDescRepository(abc.ABC):
     def list(self) -> List[dms.NfDeploymentDesc]:
         return self._list()
 
-    def update(self, nfdeployment_descriptor: dms.NfDeploymentDesc):
-        self._update(nfdeployment_descriptor)
+    def update(self, id, **kwargs):
+        self._update(id, **kwargs)
+
+    def delete(self, nfdeployment_descriptor_id):
+        self._delete(nfdeployment_descriptor_id)
 
     @abc.abstractmethod
     def _add(self, nfdeployment_descriptor: dms.NfDeploymentDesc):
@@ -47,4 +50,8 @@ class NfDeploymentDescRepository(abc.ABC):
 
     @abc.abstractmethod
     def _update(self, nfdeployment_descriptor: dms.NfDeploymentDesc):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _delete(self, nfdeployment_descriptor_id):
         raise NotImplementedError

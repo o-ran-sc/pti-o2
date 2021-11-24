@@ -23,9 +23,9 @@ class NfDeploymentDesc(AgRoot):
         super().__init__()
         self.id = id
         self.version_number = 0
-        self.dmsId = dmsId
+        self.deploymentManagerId = dmsId
         self.name = name
         self.description = description
         self.inputParams = inputParams
         self.outputParams = outputParams
-        self.extensions = []
+        # self.extensions = []

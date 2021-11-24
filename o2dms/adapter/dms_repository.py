@@ -28,10 +28,16 @@ class NfDeploymentDescSqlAlchemyRepository(dms_repo
 
     def _get(self, nfdeployment_desc_id) -> dms.NfDeploymentDesc:
         return self.session.query(dms.NfDeploymentDesc).filter_by(
-            nfDeploymentDescId=nfdeployment_desc_id).first()
+            id=nfdeployment_desc_id).first()
 
     def _list(self) -> List[dms.NfDeploymentDesc]:
         return self.session.query()
 
-    def _update(self, nfdeployment_desc: dms.NfDeploymentDesc):
-        self.session.add(nfdeployment_desc)
+    def _update(self, nfdeployment_desc_id, **kwargs):
+        self.session.query(dms.NfDeploymentDesc).filter_by(
+            id=nfdeployment_desc_id).update(**kwargs)
+
+    def _delete(self, nfdeployment_desc_id):
+        self.session.query(dms.NfDeploymentDesc).filter_by(
+            id=nfdeployment_desc_id
+        ).delete()

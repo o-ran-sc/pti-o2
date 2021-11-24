@@ -52,6 +52,10 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
             .DeploymentManagerSqlAlchemyRepository(self.session)
         self.nfdeployment_descs = dms_repository\
             .NfDeploymentDescSqlAlchemyRepository(self.session)
+        self.nfdeployments = dms_repository\
+            .NfDeploymentSqlAlchemyRepository(self.session)
+        self.ocloudvresources = dms_repository\
+            .NfOCloudVResourceSqlAlchemyRepository(self.session)
         return super().__enter__()
 
     def __exit__(self, *args):
@@ -81,5 +85,11 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
             while entry.events:
                 yield entry.events.pop(0)
         for entry in self.nfdeployment_descs.seen:
+            while entry.events:
+                yield entry.events.pop(0)
+        for entry in self.nfdeployments.seen:
+            while entry.events:
+                yield entry.events.pop(0)
+        for entry in self.ocloudvresources.seen:
             while entry.events:
                 yield entry.events.pop(0)

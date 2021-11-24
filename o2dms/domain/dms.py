@@ -29,3 +29,34 @@ class NfDeploymentDesc(AgRoot):
         self.inputParams = inputParams
         self.outputParams = outputParams
         # self.extensions = []
+
+
+class NfDeployment(AgRoot):
+    def __init__(self, id: str, name: str, dmsId: str, description: str = '',
+                 descriptorId: str = '', parentId: str = '',) -> None:
+        super().__init__()
+        self.id = id
+        self.version_number = 0
+        self.deploymentManagerId = dmsId
+        self.name = name
+        self.description = description
+        self.descriptorId = descriptorId
+        self.parentDeploymentId = parentId
+        self.status = 0
+
+
+class NfOCloudVResource(AgRoot):
+    def __init__(self, id: str, name: str, dmsId: str, description: str = '',
+                 descriptorId: str = '', nfDeploymentId: str = '',
+                 vresourceType: int = 0,) -> None:
+        super().__init__()
+        self.id = id
+        self.version_number = 0
+        self.deploymentManagerId = dmsId
+        self.name = name
+        self.description = description
+        self.descriptorId = descriptorId
+        self.nfDeploymentId = nfDeploymentId
+        self.vresourceType = vresourceType
+        self.status = 0
+        self.metadata = []

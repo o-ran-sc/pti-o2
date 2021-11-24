@@ -50,11 +50,49 @@ nfDeploymentDesc = Table(
     # Column("extensions", String(1024))
 )
 
+nfDeployment = Table(
+    "nfDeployment",
+    metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+    Column("version_number", Integer),
+
+    Column("id", String(255), primary_key=True),
+    Column("deploymentManagerId", String(255)),
+    Column("name", String(255)),
+    Column("description", String(255)),
+    Column("descriptorId", String(255)),
+    Column("parentDeploymentId", String(255)),
+    Column("status", Integer)
+)
+
+nfOCloudVResource = Table(
+    "nfOcloudVRes",
+    metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+    Column("version_number", Integer),
+
+    Column("id", String(255), primary_key=True),
+    Column("deploymentManagerId", String(255)),
+    Column("name", String(255)),
+    Column("description", String(255)),
+    Column("descriptorId", String(255)),
+    Column("vresourceType", String(255)),
+    Column("status", Integer),
+    Column("metadata", String(2048)),
+    Column("nfDeploymentId", String(255))
+)
+
 
 def start_o2dms_mappers(engine=None):
     logger.info("Starting O2 DMS mappers")
 
     mapper(dmsModel.NfDeploymentDesc, nfDeploymentDesc)
+    mapper(dmsModel.NfDeployment, nfDeployment)
+    mapper(dmsModel.NfOCloudVResource, nfOCloudVResource)
 
     if engine is not None:
         metadata.create_all(engine)

@@ -33,7 +33,7 @@ class DmsDTO:
 
 
 class DmsLcmNfDeploymentDescriptorDTO:
-    dmslcm_NfDeploymentDescriptor_get = api_dms_lcm_v1.model(
+    NfDeploymentDescriptor_get = api_dms_lcm_v1.model(
         "NfDeploymentDescriptorGetDto",
         {
             'id': fields.String(
@@ -65,11 +65,72 @@ class DmsLcmNfDeploymentDescriptorDTO:
     )
 
     NfDeploymentDescriptor_update = api_dms_lcm_v1.model(
-        "NfDeploymentDescriptorCreateDto",
+        "NfDeploymentDescriptorUpdateDto",
         {
             'name': fields.String,
             'description': fields.String,
             'inputParams': fields.String,
             'outputParams': fields.String
+        }
+    )
+
+
+class DmsLcmNfDeploymentDTO:
+    NfDeployment_get = api_dms_lcm_v1.model(
+        "NfDeploymentGetDto",
+        {
+            'id': fields.String(
+                required=True,
+                description='NfDeployment ID'),
+            'name': fields.String,
+            'description': fields.String,
+            'descriptorId': fields.String,
+            'parentDeploymentId': fields.String,
+            'status': fields.Integer
+        }
+    )
+
+    NfDeployment_create = api_dms_lcm_v1.model(
+        "NfDeploymentCreateDto",
+        {
+            'name': fields.String,
+            'description': fields.String,
+            'descriptorId': fields.String,
+            'parentDeploymentId': fields.String
+        }
+    )
+
+    NfDeployment_create_post_resp = api_dms_lcm_v1.model(
+        "NfDeploymentCreateRespDto",
+        {
+            'id': fields.String(
+                required=True, description='NfDeployment ID'),
+        }
+    )
+
+    NfDeployment_update = api_dms_lcm_v1.model(
+        "NfDeploymentUpdateDto",
+        {
+            'name': fields.String,
+            'description': fields.String,
+            'descriptorId': fields.String,
+            'parentDeploymentId': fields.String
+        }
+    )
+
+
+class DmsLcmNfOCloudVResourceDTO:
+    NfOCloudVResource_get = api_dms_lcm_v1.model(
+        "NfOCloudVResourceGetDto",
+        {
+            'id': fields.String(
+                required=True,
+                description='NfOCloudVResource ID'),
+            'name': fields.String,
+            'description': fields.String,
+            'descriptorId': fields.String,
+            'vresourceType': fields.String,
+            'status': fields.Integer,
+            'metadata': fields.String
         }
     )

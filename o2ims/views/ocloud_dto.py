@@ -14,12 +14,12 @@
 
 from flask_restx import fields
 
-from o2ims.views import api
+from o2ims.views import api_ims_inventory_v1
 
 
 class OcloudDTO:
 
-    ocloud = api.model(
+    ocloud = api_ims_inventory_v1.model(
         "OcloudDto",
         {
             'oCloudId': fields.String(required=True),
@@ -33,7 +33,7 @@ class OcloudDTO:
 
 class ResourceTypeDTO:
 
-    resource_type_get = api.model(
+    resource_type_get = api_ims_inventory_v1.model(
         "ResourceTypeGetDto",
         {
             'resourceTypeId': fields.String(required=True,
@@ -48,7 +48,7 @@ class ResourceTypeDTO:
 
 class ResourcePoolDTO:
 
-    resource_pool_get = api.model(
+    resource_pool_get = api_ims_inventory_v1.model(
         "ResourcePoolGetDto",
         {
             'resourcePoolId': fields.String(required=True,
@@ -63,7 +63,7 @@ class ResourcePoolDTO:
 
 class ResourceDTO:
 
-    resource_list = api.model(
+    resource_list = api_ims_inventory_v1.model(
         "ResourceListDto",
         {
             'resourceId': fields.String(required=True,
@@ -75,7 +75,7 @@ class ResourceDTO:
         }
     )
 
-    resource_get = api.model(
+    resource_get = api_ims_inventory_v1.model(
         "ResourceGetDto",
         {
             'resourceId': fields.String(required=True,
@@ -90,7 +90,7 @@ class ResourceDTO:
 
 class DeploymentManagerDTO:
 
-    deployment_manager_get = api.model(
+    deployment_manager_get = api_ims_inventory_v1.model(
         "DeploymentManagerGetDto",
         {
             'deploymentManagerId': fields.String(
@@ -108,7 +108,7 @@ class DeploymentManagerDTO:
 
 class SubscriptionDTO:
 
-    subscription_get = api.model(
+    subscription_get = api_ims_inventory_v1.model(
         "SubscriptionGetDto",
         {
             'subscriptionId': fields.String(required=True,
@@ -119,7 +119,7 @@ class SubscriptionDTO:
         }
     )
 
-    subscription = api.model(
+    subscription = api_ims_inventory_v1.model(
         "SubscriptionCreateDto",
         {
             'callback': fields.String(
@@ -129,7 +129,7 @@ class SubscriptionDTO:
         }
     )
 
-    subscription_post_resp = api.model(
+    subscription_post_resp = api_ims_inventory_v1.model(
         "SubscriptionCreatedRespDto",
         {
             'subscriptionId': fields.String(required=True,

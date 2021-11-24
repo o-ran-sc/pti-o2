@@ -36,12 +36,11 @@ def mock_uow():
 def mock_flask_uow(mock_uow):
     session, uow = mock_uow
     app = Flask(__name__)
-    # app.config["TESTING"] = True
+    app.config["TESTING"] = True
     api = Api(app)
     bus = bootstrap(False, uow)
     configure_namespace(api, bus)
-    client = app.test_client()
-    return session, client
+    return session, app
 
 
 @pytest.fixture
@@ -74,11 +73,11 @@ def sqlite_uow(sqlite_session_factory):
 @pytest.fixture
 def sqlite_flask_uow(sqlite_uow):
     app = Flask(__name__)
-    # app.config["TESTING"] = True
+    app.config["TESTING"] = True
     api = Api(app)
     bus = bootstrap(False, sqlite_uow)
     configure_namespace(api, bus)
-    yield app.test_client()
+    yield sqlite_uow, app
 
 
 @pytest.fixture
@@ -134,10 +133,11 @@ def postgres_uow(postgres_session_factory):
 @pytest.fixture
 def postgres_flask_uow(postgres_uow):
     app = Flask(__name__)
+    app.config["TESTING"] = True
     api = Api(app)
     bus = bootstrap(False, postgres_uow)
     configure_namespace(api, bus)
-    yield app.test_client()
+    yield postgres_uow, app
 
 
 @pytest.fixture

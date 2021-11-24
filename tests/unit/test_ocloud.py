@@ -288,170 +288,207 @@ def test_view_subscription_one(mock_uow):
 
 
 def test_flask_get_list(mock_flask_uow):
-    session, client = mock_flask_uow
+    session, app = mock_flask_uow
     session.return_value.execute.return_value = []
     apibase = config.get_o2ims_api_base()
 
-    # Get list and return empty list
-    ##########################
-    resp = client.get(apibase+"/resourceTypes")
-    assert resp.get_data() == b'[]\n'
+    with app.test_client() as client:
+        # Get list and return empty list
+        ##########################
+        resp = client.get(apibase+"/resourceTypes")
+        assert resp.get_data() == b'[]\n'
 
-    resp = client.get(apibase+"/resourcePools")
-    assert resp.get_data() == b'[]\n'
+        resp = client.get(apibase+"/resourcePools")
+        assert resp.get_data() == b'[]\n'
 
-    resource_pool_id1 = str(uuid.uuid4())
-    resp = client.get(apibase+"/resourcePools/"+resource_pool_id1+"/resources")
-    assert resp.get_data() == b'[]\n'
+        resource_pool_id1 = str(uuid.uuid4())
+        resp = client.get(apibase+"/resourcePools/" +
+                          resource_pool_id1+"/resources")
+        assert resp.get_data() == b'[]\n'
 
-    resp = client.get(apibase+"/deploymentManagers")
-    assert resp.get_data() == b'[]\n'
+        resp = client.get(apibase+"/deploymentManagers")
+        assert resp.get_data() == b'[]\n'
+
+        resp = client.get(apibase+"/subscriptions")
+        assert resp.get_data() == b'[]\n'
 
 
 def test_flask_get_one(mock_flask_uow):
-    session, client = mock_flask_uow
+    session, app = mock_flask_uow
     session.return_value.execute.return_value.first.return_value = None
     apibase = config.get_o2ims_api_base()
 
-    # Get one and return 404
-    ###########################
-    resp = client.get(apibase+"/")
-    assert resp.status_code == 404
+    with app.test_client() as client:
+        # Get one and return 404
+        ###########################
+        resp = client.get(apibase+"/")
+        assert resp.status_code == 404
 
-    resource_type_id1 = str(uuid.uuid4())
-    resp = client.get(apibase+"/resourceTypes/"+resource_type_id1)
-    assert resp.status_code == 404
+        resource_type_id1 = str(uuid.uuid4())
+        resp = client.get(apibase+"/resourceTypes/"+resource_type_id1)
+        assert resp.status_code == 404
 
-    resource_pool_id1 = str(uuid.uuid4())
-    resp = client.get(apibase+"/resourcePools/"+resource_pool_id1)
-    assert resp.status_code == 404
+        resource_pool_id1 = str(uuid.uuid4())
+        resp = client.get(apibase+"/resourcePools/"+resource_pool_id1)
+        assert resp.status_code == 404
 
-    resource_id1 = str(uuid.uuid4())
-    resp = client.get(apibase+"/resourcePools/" +
-                      resource_pool_id1+"/resources/"+resource_id1)
-    assert resp.status_code == 404
+        resource_id1 = str(uuid.uuid4())
+        resp = client.get(apibase+"/resourcePools/" +
+                          resource_pool_id1+"/resources/"+resource_id1)
+        assert resp.status_code == 404
 
-    deployment_manager_id1 = str(uuid.uuid4())
-    resp = client.get(apibase+"/deploymentManagers/"+deployment_manager_id1)
-    assert resp.status_code == 404
+        deployment_manager_id1 = str(uuid.uuid4())
+        resp = client.get(apibase+"/deploymentManagers/" +
+                          deployment_manager_id1)
+        assert resp.status_code == 404
 
-    subscription_id1 = str(uuid.uuid4())
-    resp = client.get(apibase+"/subscriptions/"+subscription_id1)
-    assert resp.status_code == 404
+        subscription_id1 = str(uuid.uuid4())
+        resp = client.get(apibase+"/subscriptions/"+subscription_id1)
+        assert resp.status_code == 404
+
+
+def test_flask_post(mock_flask_uow):
+    session, app = mock_flask_uow
+    apibase = config.get_o2ims_api_base()
+
+    with app.test_client() as client:
+        session.return_value.execute.return_value = []
+
+        sub_callback = 'http://subscription/callback/url'
+        resp = client.post(apibase+'/subscriptions', json={
+            'callback': sub_callback,
+            'consumerSubscriptionId': 'consumerSubId1',
+            'filter': 'empty'
+        })
+        assert resp.status_code == 201
+        assert 'subscriptionId' in resp.get_json()
+
+
+def test_flask_delete(mock_flask_uow):
+    session, app = mock_flask_uow
+    apibase = config.get_o2ims_api_base()
+
+    with app.test_client() as client:
+        session.return_value.execute.return_value.first.return_value = {}
+
+        subscription_id1 = str(uuid.uuid4())
+        resp = client.delete(apibase+"/subscriptions/"+subscription_id1)
+        assert resp.status_code == 204
 
 
 def test_flask_not_allowed(mock_flask_uow):
-    _, client = mock_flask_uow
+    _, app = mock_flask_uow
     apibase = config.get_o2ims_api_base()
 
-    # Testing resource type not support method
-    ##########################
-    uri = apibase + "/resourceTypes"
-    resp = client.post(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.put(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.delete(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
+    with app.test_client() as client:
+        # Testing resource type not support method
+        ##########################
+        uri = apibase + "/resourceTypes"
+        resp = client.post(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.put(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.patch(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.delete(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
 
-    resource_type_id1 = str(uuid.uuid4())
-    uri = apibase + "/resourceTypes/" + resource_type_id1
-    resp = client.post(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.put(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.delete(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
+        resource_type_id1 = str(uuid.uuid4())
+        uri = apibase + "/resourceTypes/" + resource_type_id1
+        resp = client.post(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.put(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.patch(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.delete(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
 
-    # Testing resource pool not support method
-    ##########################
-    uri = apibase + "/resourcePools"
-    resp = client.post(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.put(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.delete(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
+        # Testing resource pool not support method
+        ##########################
+        uri = apibase + "/resourcePools"
+        resp = client.post(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.put(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.patch(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.delete(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
 
-    resource_pool_id1 = str(uuid.uuid4())
-    uri = apibase + "/resourcePools/" + resource_pool_id1
-    resp = client.post(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.put(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.delete(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
+        resource_pool_id1 = str(uuid.uuid4())
+        uri = apibase + "/resourcePools/" + resource_pool_id1
+        resp = client.post(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.put(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.patch(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.delete(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
 
-    # Testing resource not support method
-    ##########################
-    uri = apibase + "/resourcePools/" + resource_pool_id1 + "/resources"
-    resp = client.post(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.put(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.delete(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
+        # Testing resource not support method
+        ##########################
+        uri = apibase + "/resourcePools/" + resource_pool_id1 + "/resources"
+        resp = client.post(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.put(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.patch(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.delete(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
 
-    resource_id1 = str(uuid.uuid4())
-    uri = apibase + "/resourcePools/" + \
-        resource_pool_id1 + "/resources/" + resource_id1
-    resp = client.post(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.put(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.delete(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
+        resource_id1 = str(uuid.uuid4())
+        uri = apibase + "/resourcePools/" + \
+            resource_pool_id1 + "/resources/" + resource_id1
+        resp = client.post(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.put(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.patch(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.delete(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
 
-    # Testing deployment managers not support method
-    ##########################
-    uri = apibase + "/deploymentManagers"
-    resp = client.post(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.put(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.delete(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
+        # Testing deployment managers not support method
+        ##########################
+        uri = apibase + "/deploymentManagers"
+        resp = client.post(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.put(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.patch(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.delete(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
 
-    deployment_manager_id1 = str(uuid.uuid4())
-    uri = apibase + "/deploymentManagers/" + deployment_manager_id1
-    resp = client.post(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.put(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.delete(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
+        deployment_manager_id1 = str(uuid.uuid4())
+        uri = apibase + "/deploymentManagers/" + deployment_manager_id1
+        resp = client.post(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.put(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.patch(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.delete(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
 
-    # Testing subscriptions not support method
-    ##########################
-    uri = apibase + "/subscriptions"
-    resp = client.put(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.delete(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
+        # Testing subscriptions not support method
+        ##########################
+        uri = apibase + "/subscriptions"
+        resp = client.put(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.patch(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.delete(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
 
-    subscription_id1 = str(uuid.uuid4())
-    uri = apibase + "/subscriptions/" + subscription_id1
-    resp = client.post(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.put(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
-    resp = client.patch(uri)
-    assert resp.status == '405 METHOD NOT ALLOWED'
+        subscription_id1 = str(uuid.uuid4())
+        uri = apibase + "/subscriptions/" + subscription_id1
+        resp = client.post(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.put(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.patch(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'

@@ -23,6 +23,7 @@ class AbstractUnitOfWork(abc.ABC):
     # resource_pools: ResourcePoolRepository
     # resources: ResourceRepository
     # deployment_managers: DeploymentManagerRepository
+    # nfdeployment_descs: object
 
     def __enter__(self):
         return self

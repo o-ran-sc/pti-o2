@@ -16,6 +16,24 @@
       "message": "Adjust API",
       "revId": "19ee63847f8eb032009e63634b90eb594f3c0408",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "81c2f4f9_aa66c11b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2021-11-24T08:13:17Z",
+      "side": 1,
+      "message": "\u003e Adjust API",
+      "parentUuid": "df2128a5_89fa3c5f",
+      "revId": "19ee63847f8eb032009e63634b90eb594f3c0408",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

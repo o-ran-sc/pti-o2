@@ -12,16 +12,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from flask_restx import Namespace, fields
+from flask_restx import fields
+from o2dms.views import api_dms_lcm_v1
 
 
 class DmsDTO:
-
-    api = Namespace("O2DMS",
-                    description='DMS related operations.')
-
-    dms_get = api.model(
-        "Get DMS information",
+    dms_get = api_dms_lcm_v1.model(
+        "DmsGetDto",
         {
             'deploymentManagerId': fields.String(
                 required=True,
@@ -36,12 +33,8 @@ class DmsDTO:
 
 
 class DmsLcmNfDeploymentDescriptorDTO:
-
-    api = Namespace("O2DMS_LCM_NfDeploymentDescriptor",
-                    description='DMS LCM NfDeploymentDescritpor operations.')
-
-    dmslcm_NfDeploymentDescriptor_get = api.model(
-        "Get NfDeploymentDescriptor information",
+    dmslcm_NfDeploymentDescriptor_get = api_dms_lcm_v1.model(
+        "NfDeploymentDescriptorGetDto",
         {
             'id': fields.String(
                 required=True,

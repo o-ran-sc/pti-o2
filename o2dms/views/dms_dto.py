@@ -12,16 +12,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from flask_restx import Namespace, fields
+from flask_restx import fields
+from o2dms.views import api_dms_lcm_v1
 
 
 class DmsDTO:
-
-    api = Namespace("O2DMS",
-                    description='DMS related operations.')
-
-    dms_get = api.model(
-        "Get DMS information",
+    dms_get = api_dms_lcm_v1.model(
+        "DmsGetDto",
         {
             'deploymentManagerId': fields.String(
                 required=True,
@@ -36,12 +33,39 @@ class DmsDTO:
 
 
 class DmsLcmNfDeploymentDescriptorDTO:
+    dmslcm_NfDeploymentDescriptor_get = api_dms_lcm_v1.model(
+        "NfDeploymentDescriptorGetDto",
+        {
+            'id': fields.String(
+                required=True,
+                description='NfDeploymentDescriptor ID'),
+            'name': fields.String,
+            'description': fields.String,
+            'inputParams': fields.String,
+            'outputParams': fields.String
+        }
+    )
 
-    api = Namespace("O2DMS_LCM_NfDeploymentDescriptor",
-                    description='DMS LCM NfDeploymentDescritpor operations.')
+    NfDeploymentDescriptor_create = api_dms_lcm_v1.model(
+        "NfDeploymentDescriptorCreateDto",
+        {
+            'name': fields.String,
+            'description': fields.String,
+            'inputParams': fields.String,
+            'outputParams': fields.String
+        }
+    )
 
-    dmslcm_NfDeploymentDescriptor_get = api.model(
-        "Get NfDeploymentDescriptor information",
+    NfDeploymentDescriptor_create_post_resp = api_dms_lcm_v1.model(
+        "NfDeploymentDescriptorCreateRespDto",
+        {
+            'id': fields.String(
+                required=True, description='NfDeploymentDescriptor ID'),
+        }
+    )
+
+    NfDeploymentDescriptor_update = api_dms_lcm_v1.model(
+        "NfDeploymentDescriptorCreateDto",
         {
             'id': fields.String(
                 required=True,

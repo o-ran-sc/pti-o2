@@ -42,7 +42,7 @@ def get_o2ims_api_base():
 
 
 def get_o2dms_api_base():
-    return get_root_api_base() + "o2dms/v1"
+    return get_root_api_base() + "o2dms"
 
 
 def get_redis_host_and_port():

@@ -27,6 +27,16 @@ Message = Union[commands.Command, events.Event]
 
 
 class MessageBus:
+    __instance: MessageBus = None
+
+    @staticmethod
+    def set_instance(instance: MessageBus):
+        MessageBus.__instance = instance
+
+    @staticmethod
+    def get_instance() -> MessageBus:
+        return MessageBus.__instance
+
     def __init__(
         self,
         uow: unit_of_work.AbstractUnitOfWork,

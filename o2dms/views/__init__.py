@@ -13,6 +13,13 @@
 #  limitations under the License.
 
 from flask_restx import Namespace
+from o2common.config import config
+
 
 api_dms_lcm_v1 = Namespace(
     "O2DMS_LCM", description='DMS LCM related operations.')
+apibase = config.get_o2dms_api_base()
+
+
+def configure_namespace(app):
+    app.add_namespace(api_dms_lcm_v1, path=apibase)

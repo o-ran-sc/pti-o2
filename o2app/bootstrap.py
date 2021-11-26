@@ -72,11 +72,13 @@ def bootstrap(
         for command_type, handler in handlers.COMMAND_HANDLERS.items()
     }
 
-    return messagebus.MessageBus(
+    bus = messagebus.MessageBus(
         uow=uow,
         event_handlers=injected_event_handlers,
         command_handlers=injected_command_handlers,
     )
+    messagebus.MessageBus.set_instance(bus)
+    return bus
 
 
 def inject_dependencies(handler, dependencies):

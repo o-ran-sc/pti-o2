@@ -6,8 +6,8 @@ cloned into temp before docker building
 ```sh
 mkdir -p temp
 cd temp
-git clone https://opendev.org/starlingx/config.git
-git clone https://opendev.org/starlingx/distcloud-client.git
+git clone --depth 1 --branch master https://opendev.org/starlingx/config.git
+git clone --depth 1 --branch master https://opendev.org/starlingx/distcloud-client.git
 cd -
 ```
 

@@ -43,8 +43,18 @@ class UpdateResourcePool(UpdateStxObject):
 
 
 @dataclass
+class UpdateResourceType(UpdateStxObject):
+    parentid: str
+
+
+@dataclass
 class UpdateResource(UpdateStxObject):
     parentid: str
+
+
+@dataclass
+class UpdatePserver(UpdateResource):
+    pass
 
 
 @dataclass
@@ -53,5 +63,15 @@ class UpdatePserverCpu(UpdateResource):
 
 
 @dataclass
-class UpdatePserver(UpdateResource):
+class UpdatePserverMem(UpdateResource):
+    pass
+
+
+@dataclass
+class UpdatePserverIf(UpdateResource):
+    pass
+
+
+@dataclass
+class UpdatePserverPort(UpdateResource):
     pass

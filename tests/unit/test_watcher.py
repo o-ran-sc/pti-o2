@@ -77,7 +77,6 @@ class FakeOcloudRepo(OcloudRepository):
         ocloud1.update_by(ocloud)
 
 
-
 class FakeStxObjRepo(StxObjectRepository):
     def __init__(self):
         super().__init__()
@@ -129,8 +128,8 @@ class FakeUnitOfWork(AbstractUnitOfWork):
 
 def create_fake_bus(uow):
     def update_ocloud(
-        cmd: commands.UpdateOCloud,
-        uow: AbstractUnitOfWork):
+            cmd: commands.UpdateOCloud,
+            uow: AbstractUnitOfWork):
         return
 
     fakeuow = FakeUnitOfWork()
@@ -169,14 +168,13 @@ def test_watchers_worker():
         def _targetname(self):
             return "fakeocloudwatcher"
 
-        def _probe(self, parent: object=None):
+        def _probe(self, parent: object = None):
             # import pdb; pdb.set_trace()
             self.fakeOcloudWatcherCounter += 1
             # hacking to stop the blocking sched task
             if self.fakeOcloudWatcherCounter > 2:
                 testedworker.stop()
             return []
-
 
     # fakeRepo = FakeOcloudRepo()
     fakeuow = FakeUnitOfWork()

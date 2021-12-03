@@ -20,7 +20,7 @@ from .events import Event
 class AgRoot:
     def __init__(self) -> None:
         self.hash = ""
-        # self.id = ""
         self.updatetime = datetime.now()
         self.createtime = datetime.now()
         self.events = []  # type: List[Event]
+        # self.id = ""

@@ -14,6 +14,7 @@
 
 # pylint: disable=unused-argument
 from __future__ import annotations
+import json
 
 from o2ims.domain.stx_object import StxGenericModel
 # from dataclasses import asdict
@@ -21,9 +22,9 @@ from o2ims.domain.stx_object import StxGenericModel
 # TYPE_CHECKING
 from o2ims.domain import commands
 from o2common.service.unit_of_work import AbstractUnitOfWork
+# from o2ims.domain.resource_type import InvalidOcloudState
 from o2ims.domain.resource_type import MismatchedModel
-from o2ims.domain.ocloud import DeploymentManager
-from o2common.config import config
+from o2ims.domain.ocloud import ResourcePool
 # if TYPE_CHECKING:
 #     from . import unit_of_work
 
@@ -35,72 +36,65 @@ class InvalidResourceType(Exception):
     pass
 
 
-def update_dms(
-    cmd: commands.UpdateDms,
+def update_resourcepool(
+    cmd: commands.UpdateResourcePool,
     uow: AbstractUnitOfWork
 ):
     stxobj = cmd.data
     with uow:
-        dms = uow.deployment_managers.get(stxobj.id)
-        if not dms:
-            logger.info("add dms:" + stxobj.name
+        resource_pool = uow.resource_pools.get(stxobj.id)
+        if not resource_pool:
+            logger.info("add resource pool:" + stxobj.name
                         + " update_at: " + str(stxobj.updatetime)
                         + " id: " + str(stxobj.id)
                         + " hash: " + str(stxobj.hash))
-            # ocloud = uow.oclouds.get(cmd.parent.oCloudId)
             localmodel = create_by(stxobj, cmd.parentid)
-            uow.deployment_managers.add(localmodel)
+            uow.resource_pools.add(localmodel)
 
-            logger.info("Add a dms: " + stxobj.id
+            logger.info("Add the resource pool: " + stxobj.id
                         + ", name: " + stxobj.name)
         else:
-            localmodel = dms
+            localmodel = resource_pool
             if is_outdated(localmodel, stxobj):
-                logger.info("update a dms:" + stxobj.name
+                logger.info("update resource pool:" + stxobj.name
                             + " update_at: " + str(stxobj.updatetime)
                             + " id: " + str(stxobj.id)
                             + " hash: " + str(stxobj.hash))
                 update_by(localmodel, stxobj, cmd.parentid)
-                uow.deployment_managers.update(localmodel)
+                uow.resource_pools.update(localmodel)
 
-            logger.info("Update a dms: " + stxobj.id
+            logger.info("Update the resource pool: " + stxobj.id
                         + ", name: " + stxobj.name)
         uow.commit()
 
 
-def is_outdated(ocloud: DeploymentManager, stxobj: StxGenericModel):
-    # if stxobj.updatetime:
-    #     return True if Ocloud.updatetime < stxobj.updatetime else False
-    # else:
-    return True if ocloud.hash != stxobj.hash else False
+def is_outdated(resourcepool: ResourcePool, stxobj: StxGenericModel):
+    return True if resourcepool.hash != stxobj.hash else False
 
 
-def create_by(stxobj: StxGenericModel, parentid: str) -> DeploymentManager:
-    dmsendpoint = config.get_api_url() +\
-        config.get_o2dms_api_base() + "/" + stxobj.id
-    description = "A DMS"
-    ocloudid = parentid
-    supportedLocations = ''
-    capabilities = ''
-    capacity = ''
-    localmodel = DeploymentManager(
-        stxobj.id, stxobj.name, ocloudid, dmsendpoint, description,
-        supportedLocations, capabilities, capacity)
-    localmodel.createtime = stxobj.createtime
-    localmodel.updatetime = stxobj.updatetime
-    localmodel.hash = stxobj.hash
+def create_by(stxobj: StxGenericModel, parentid: str) -> ResourcePool:
+    content = json.loads(stxobj.content)
+    globalcloudId = stxobj.id  # to be updated
+    description = "A Resource Pool"
+    resourcepool = ResourcePool(stxobj.id, stxobj.name,
+                                content['location'],
+                                parentid, globalcloudId, description)
+    resourcepool.createtime = stxobj.createtime
+    resourcepool.updatetime = stxobj.updatetime
+    resourcepool.hash = stxobj.hash
 
-    return localmodel
+    return resourcepool
 
 
-def update_by(target: DeploymentManager, stxobj: StxGenericModel,
+def update_by(target: ResourcePool, stxobj: StxGenericModel,
               parentid: str) -> None:
-    if target.deploymentManagerId != stxobj.id:
+    if target.resourcePoolId != stxobj.id:
         raise MismatchedModel("Mismatched Id")
+    content = json.loads(stxobj.content)
     target.name = stxobj.name
+    target.location = content['location']
     target.createtime = stxobj.createtime
     target.updatetime = stxobj.updatetime
-    # ocloud.content = stxobj.content
     target.hash = stxobj.hash
     target.oCloudId = parentid
     target.version_number = target.version_number + 1

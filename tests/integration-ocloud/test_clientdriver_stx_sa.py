@@ -12,14 +12,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import sys
+# import sys
+# import logging
 import pytest
 
 from o2common.config import config
 from o2ims.adapter.clients.ocloud_sa_client import StxSaClientImp
 from cgtsclient.client import get_client
-
-import logging
 
 
 @pytest.fixture
@@ -32,7 +31,7 @@ def real_stx_aio_client():
 
 
 def test_get_instanceinfo(real_stx_aio_client):
-    logger = logging.getLogger(__name__)
+    # logger = logging.getLogger(__name__)
     stxclientimp = StxSaClientImp(real_stx_aio_client)
     assert stxclientimp is not None
     systeminfo = stxclientimp.getInstanceInfo()
@@ -61,6 +60,7 @@ def test_get_pserver(real_stx_aio_client):
     assert host1 != host2
     assert host1.id == host2.id
 
+
 def test_get_k8s_list(real_stx_aio_client):
     stxSaClientImp = StxSaClientImp(real_stx_aio_client)
     assert stxSaClientImp is not None
@@ -72,6 +72,7 @@ def test_get_k8s_list(real_stx_aio_client):
     assert k8s1 != k8s2
     assert k8s1.name == k8s2.name
     assert k8s1.id == k8s2.id
+
 
 def test_get_cpu_list(real_stx_aio_client):
     stxSaClientImp = StxSaClientImp(real_stx_aio_client)
@@ -85,3 +86,45 @@ def test_get_cpu_list(real_stx_aio_client):
     cpu2 = stxSaClientImp.getCpu(cpu1.id)
     assert cpu1 != cpu2
     assert cpu1.id == cpu2.id
+
+
+def test_get_mem_list(real_stx_aio_client):
+    stxSaClientImp = StxSaClientImp(real_stx_aio_client)
+    assert stxSaClientImp is not None
+    hostlist = stxSaClientImp.getPserverList()
+    assert len(hostlist) > 0
+
+    memlist = stxSaClientImp.getMemList(hostid=hostlist[0].id)
+    assert len(memlist) > 0
+    mem1 = memlist[0]
+    mem2 = stxSaClientImp.getMem(mem1.id)
+    assert mem1 != mem2
+    assert mem1.id == mem2.id
+
+
+def test_get_if_list(real_stx_aio_client):
+    stxSaClientImp = StxSaClientImp(real_stx_aio_client)
+    assert stxSaClientImp is not None
+    hostlist = stxSaClientImp.getPserverList()
+    assert len(hostlist) > 0
+
+    iflist = stxSaClientImp.getIfList(hostid=hostlist[0].id)
+    assert len(iflist) > 0
+    if1 = iflist[0]
+    if2 = stxSaClientImp.getIf(if1.id)
+    assert if1 != if2
+    assert if1.id == if2.id
+
+
+def test_get_port_list(real_stx_aio_client):
+    stxSaClientImp = StxSaClientImp(real_stx_aio_client)
+    assert stxSaClientImp is not None
+    hostlist = stxSaClientImp.getPserverList()
+    assert len(hostlist) > 0
+
+    portlist = stxSaClientImp.getPortList(hostid=hostlist[0].id)
+    assert len(portlist) > 0
+    port1 = portlist[0]
+    port2 = stxSaClientImp.getPort(port1.id)
+    assert port1 != port2
+    assert port1.id == port2.id

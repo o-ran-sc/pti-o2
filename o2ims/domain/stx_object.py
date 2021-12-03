@@ -25,6 +25,7 @@ logger = o2logging.get_logger(__name__)
 class StxGenericModel(AgRoot):
     def __init__(self, type: ResourceTypeEnum,
                  api_response: dict = None, content_hash=None) -> None:
+        super().__init__()
         if api_response:
             self.id = str(api_response.uuid)
             self.type = type

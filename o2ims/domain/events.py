@@ -20,3 +20,8 @@ from o2common.domain.events import Event
 @dataclass
 class OcloudUpdated(Event):
     oCloudId: str
+
+
+@dataclass
+class ResourceTypeUpdated(Event):
+    oCloudId: str

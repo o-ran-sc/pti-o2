@@ -16,10 +16,11 @@
 from __future__ import annotations
 # from dataclasses import asdict
 from typing import List, Dict, Callable, Type
-from o2ims.service.auditor import dms_handler
 # TYPE_CHECKING
 from o2ims.domain import commands, events
-from o2ims.service.auditor import ocloud_handler
+from o2ims.service.auditor import ocloud_handler, dms_handler, \
+    resourcepool_handler, pserver_handler, pserver_cpu_handler, \
+    pserver_mem_handler, pserver_port_handler, pserver_if_handler
 
 # if TYPE_CHECKING:
 #     from . import unit_of_work
@@ -35,5 +36,11 @@ EVENT_HANDLERS = {
 
 COMMAND_HANDLERS = {
     commands.UpdateOCloud: ocloud_handler.update_ocloud,
-    commands.UpdateDms: dms_handler.update_dms
+    commands.UpdateDms: dms_handler.update_dms,
+    commands.UpdateResourcePool: resourcepool_handler.update_resourcepool,
+    commands.UpdatePserver: pserver_handler.update_pserver,
+    commands.UpdatePserverCpu: pserver_cpu_handler.update_pserver_cpu,
+    commands.UpdatePserverMem: pserver_mem_handler.update_pserver_mem,
+    commands.UpdatePserverIf: pserver_if_handler.update_pserver_if,
+    commands.UpdatePserverPort: pserver_port_handler.update_pserver_port,
 }  # type: Dict[Type[commands.Command], Callable]

@@ -31,6 +31,15 @@ from o2ims.adapter.clients.ocloud_sa_client import StxPserverClient
 from o2ims.service.watcher.pserver_cpu_watcher import PServerCpuWatcher
 from o2ims.adapter.clients.ocloud_sa_client import StxCpuClient
 
+from o2ims.service.watcher.pserver_mem_watcher import PServerMemWatcher
+from o2ims.adapter.clients.ocloud_sa_client import StxMemClient
+
+from o2ims.service.watcher.pserver_if_watcher import PServerIfWatcher
+from o2ims.adapter.clients.ocloud_sa_client import StxIfClient
+
+from o2ims.service.watcher.pserver_port_watcher import PServerPortWatcher
+from o2ims.adapter.clients.ocloud_sa_client import StxPortClient
+
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -58,6 +67,12 @@ class WatcherService(cotyledon.Service):
                 PServerWatcher(StxPserverClient(), self.bus))
             child_pserver.addchild(
                 PServerCpuWatcher(StxCpuClient(), self.bus))
+            child_pserver.addchild(
+                PServerMemWatcher(StxMemClient(), self.bus))
+            child_pserver.addchild(
+                PServerIfWatcher(StxIfClient(), self.bus))
+            child_pserver.addchild(
+                PServerPortWatcher(StxPortClient(), self.bus))
 
             self.worker.add_watcher(root)
 

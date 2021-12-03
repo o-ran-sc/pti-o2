@@ -12,12 +12,15 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+# from typing_extensions import Required
 from sqlalchemy import (
     Table,
     MetaData,
     Column,
     Integer,
     String,
+    Text,
+    Enum,
     # Date,
     DateTime,
     ForeignKey,
@@ -29,6 +32,7 @@ from sqlalchemy.orm import mapper, relationship
 # from sqlalchemy.sql.sqltypes import Integer
 
 from o2ims.domain import ocloud as ocloudModel
+from o2ims.domain.resource_type import ResourceTypeEnum
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -59,6 +63,7 @@ resourcetype = Table(
     Column("hash", String(255)),
 
     Column("resourceTypeId", String(255), primary_key=True),
+    Column("resourceTypeEnum", Enum(ResourceTypeEnum), nullable=False),
     Column("oCloudId", ForeignKey("ocloud.oCloudId")),
     Column("name", String(255)),
     Column("vendor", String(255)),
@@ -98,10 +103,9 @@ resource = Table(
     Column("resourceTypeId", ForeignKey("resourcetype.resourceTypeId")),
     Column("resourcePoolId", ForeignKey("resourcepool.resourcePoolId")),
     # Column("globalAssetId", String(255)),
-    # Column("oCloudId", ForeignKey("ocloud.oCloudId")),
     Column("parentId", String(255)),
     Column("description", String(255)),
-    # Column("elements", String(255))
+    Column("elements", Text())
     # Column("extensions", String(1024))
 )
 

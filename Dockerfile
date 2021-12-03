@@ -5,12 +5,12 @@ RUN apt-get update; apt-get install -y git gcc
 # in case git repo is not accessable
 # RUN mkdir -p /cgtsclient
 # COPY temp/config /cgtsclient/
-RUN git clone https://opendev.org/starlingx/config.git /cgtsclient
+RUN git clone --depth 1 --branch master https://opendev.org/starlingx/config.git /cgtsclient
 RUN pip install -e /cgtsclient/sysinv/cgts-client/cgts-client/
 
 # RUN mkdir -p /distcloud-client
 # COPY temp/distcloud-client /distcloud-client/
-RUN git clone https://opendev.org/starlingx/distcloud-client.git /distcloud-client/
+RUN git clone --depth 1 --branch master https://opendev.org/starlingx/distcloud-client.git /distcloud-client/
 RUN pip install -e /distcloud-client/distributedcloud-client
 # in case git repo is not accessable
 

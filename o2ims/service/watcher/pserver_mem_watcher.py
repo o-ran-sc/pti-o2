@@ -23,16 +23,16 @@ from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
 
-class PServerCpuWatcher(ResourceWatcher):
+class PServerMemWatcher(ResourceWatcher):
     def __init__(self, client: BaseClient,
                  bus: MessageBus) -> None:
         super().__init__(client, bus)
 
     def _targetname(self):
-        return "pserver_cpu"
+        return "pserver_mem"
 
     def _probe(self, parent: StxGenericModel):
         hostid = parent.id
         newmodels = self._client.list(hostid=hostid)
-        return [commands.UpdatePserverCpu(data=m, parentid=hostid)
+        return [commands.UpdatePserverMem(data=m, parentid=hostid)
                 for m in newmodels]

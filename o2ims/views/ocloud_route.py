@@ -12,12 +12,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import uuid
 from flask_restx import Resource
 
 from o2ims.views import ocloud_view, api_ims_inventory_v1
 from o2common.config import config
-from o2ims.domain.ocloud import Subscription
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
     ResourcePoolDTO, ResourceDTO, DeploymentManagerDTO, SubscriptionDTO
 
@@ -180,12 +178,8 @@ class SubscriptionsListRouter(Resource):
     @api_ims_inventory_v1.marshal_with(post_resp, code=201)
     def post(self):
         data = api_ims_inventory_v1.payload
-        sub_uuid = str(uuid.uuid4())
-        subscription = Subscription(
-            sub_uuid, data['callback'], data['consumerSubscriptionId'],
-            data['filter'])
-        ocloud_view.subscription_create(subscription, bus.uow)
-        return {"subscriptionId": sub_uuid}, 201
+        result = ocloud_view.subscription_create(data, bus.uow)
+        return result, 201
 
 
 @api_ims_inventory_v1.route("/subscriptions/<subscriptionID>")
@@ -208,10 +202,8 @@ class SubscriptionGetDelRouter(Resource):
     @api_ims_inventory_v1.doc('Delete subscription by ID')
     @api_ims_inventory_v1.response(204, 'Subscription deleted')
     def delete(self, subscriptionID):
-        with bus.uow:
-            bus.uow.subscriptions.delete(subscriptionID)
-            bus.uow.commit()
-        return '', 204
+        result = ocloud_view.subscription_delete(subscriptionID, bus.uow)
+        return result, 204
 
 
 def configure_namespace(app, bus_new):

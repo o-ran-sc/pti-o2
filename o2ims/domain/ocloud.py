@@ -73,8 +73,9 @@ class ResourceType(AgRoot):
                  description: str = '') -> None:
         super().__init__()
         self.resourceTypeId = typeid
+        self.version_number = 0
         self.oCloudId = ocloudid
-        self.resourceTypeEnum = typeEnum.value
+        self.resourceTypeEnum = typeEnum
         self.name = name
         self.vender = vender
         self.model = model
@@ -85,17 +86,16 @@ class ResourceType(AgRoot):
 
 class Resource(AgRoot):
     def __init__(self, resourceId: str, resourceTypeId: str,
-                 resourcePoolId: str, oCloudId: str = '',
-                 parentId: str = '', elements: list = [],
+                 resourcePoolId: str, parentId: str = '',
+                 gAssetId: str = '', elements: str = '',
                  description: str = '') -> None:
         super().__init__()
         self.resourceId = resourceId
         self.version_number = 0
-        self.oCloudId = oCloudId
         self.resourceTypeId = resourceTypeId
         self.resourcePoolId = resourcePoolId
+        self.globalAssetId = gAssetId
         self.parentId = parentId
-        self.path = str()
         self.elements = elements
         self.description = description
         self.extensions = []
@@ -116,7 +116,6 @@ class Ocloud(AgRoot):
         self.deploymentManagers = []
         self.resourceTypes = []
         self.extensions = []
-        # self.events = []
 
     # def addDeploymentManager(self,
     #                          deploymentManager: DeploymentManager):

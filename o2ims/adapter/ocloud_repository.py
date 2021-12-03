@@ -18,6 +18,8 @@ from o2ims.domain import ocloud
 from o2ims.domain.ocloud_repo import OcloudRepository, ResourceTypeRepository,\
     ResourcePoolRepository, ResourceRepository, DeploymentManagerRepository,\
     SubscriptionRepository
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
 
 class OcloudSqlAlchemyRepository(OcloudRepository):

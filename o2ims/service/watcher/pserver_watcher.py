@@ -34,5 +34,5 @@ class PServerWatcher(ResourceWatcher):
     def _probe(self, parent: StxGenericModel):
         resourcepoolid = parent.id
         newmodels = self._client.list(resourcepoolid=resourcepoolid)
-        return [commands.UpdatePserverCpu(data=m, parentid=resourcepoolid)
+        return [commands.UpdatePserver(data=m, parentid=resourcepoolid)
                 for m in newmodels]

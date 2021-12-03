@@ -12,11 +12,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import uuid
 from sqlalchemy import select
 
 from o2ims.adapter.orm import ocloud, resource, resourcetype, \
     resourcepool, deploymentmanager, subscription
 from o2common.service import unit_of_work
+from o2ims.views.ocloud_dto import SubscriptionDTO
 from o2ims.domain.ocloud import Subscription
 
 
@@ -115,11 +117,18 @@ def subscription_one(subscriptionId: str,
     return None if first is None else dict(first)
 
 
-def subscription_create(subscription: Subscription,
+def subscription_create(subscriptionDto: SubscriptionDTO.subscription,
                         uow: unit_of_work.AbstractUnitOfWork):
+
+    sub_uuid = str(uuid.uuid4())
+    subscription = Subscription(
+        sub_uuid, subscriptionDto['callback'],
+        subscriptionDto['consumerSubscriptionId'],
+        subscriptionDto['filter'])
     with uow:
         uow.subscriptions.add(subscription)
         uow.commit()
+    return {"subscriptionId": sub_uuid}
 
 
 def subscription_delete(subscriptionId: str,

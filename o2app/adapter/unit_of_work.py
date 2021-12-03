@@ -24,6 +24,9 @@ from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.adapter import ocloud_repository
 from o2dms.adapter import dms_repository
 
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
+
 DEFAULT_SESSION_FACTORY = sessionmaker(
     bind=create_engine(
         config.get_postgres_uri(),
@@ -70,26 +73,26 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
 
     def _collect_new_events(self):
         for entry in self.oclouds.seen:
-            while entry.events:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.resource_pools.seen:
-            while entry.events:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.resources.seen:
-            while entry.events:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.resource_types.seen:
-            while entry.events:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.deployment_managers.seen:
-            while entry.events:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.nfdeployment_descs.seen:
-            while entry.events:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.nfdeployments.seen:
-            while entry.events:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.ocloudvresources.seen:
-            while entry.events:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)

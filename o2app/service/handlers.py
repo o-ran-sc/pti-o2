@@ -14,8 +14,8 @@
 
 # pylint: disable=unused-argument
 from __future__ import annotations
-from o2dms.service.nfdeployment_handler import install_nfdeployment
-from o2dms.service.nfdeployment_handler import publish_nfdeployment_created
+
+from o2dms.service import nfdeployment_handler
 # from dataclasses import asdict
 from typing import List, Dict, Callable, Type
 # TYPE_CHECKING
@@ -37,8 +37,18 @@ class InvalidResourceType(Exception):
 
 
 EVENT_HANDLERS = {
-    o2dms_events.NfDeploymentCreated: [publish_nfdeployment_created]
-}
+    o2dms_events.NfDeploymentStateChanged: [
+        nfdeployment_handler.publish_nfdeployment_state_change
+    ]
+    # o2dms_events.NfDeploymentCreated: [
+    #     nfdeployment_handler.publish_nfdeployment_created],
+    # o2dms_events.NfDeploymentInstalled: [
+    #     nfdeployment_handler.publish_nfdeployment_installed],
+    # o2dms_events.NfDeploymentUninstalling: [
+    #     nfdeployment_handler.publish_nfdeployment_uninstalling],
+    # o2dms_events.NfDeploymentUninstalled: [
+    #     nfdeployment_handler.publish_nfdeployment_uninstalled]
+} # type: Dict[Type[events.Event], Callable]
 
 
 COMMAND_HANDLERS = {
@@ -51,5 +61,13 @@ COMMAND_HANDLERS = {
     commands.UpdatePserverIf: pserver_if_handler.update_pserver_if,
     commands.UpdatePserverIfPort: pserver_port_handler.update_pserver_port,
     commands.UpdatePserverEth: pserver_eth_handler.update_pserver_eth,
-    o2dms_cmmands.InstallNfDeployment: install_nfdeployment
+
+    o2dms_cmmands.HandleNfDeploymentStateChanged: \
+        nfdeployment_handler.handle_nfdeployment_statechanged,
+    o2dms_cmmands.InstallNfDeployment: \
+        nfdeployment_handler.install_nfdeployment,
+    o2dms_cmmands.UninstallNfDeployment: \
+        nfdeployment_handler.uninstall_nfdeployment,
+    o2dms_cmmands.DeleteNfDeployment: \
+        nfdeployment_handler.delete_nfdeployment,
 }  # type: Dict[Type[commands.Command], Callable]

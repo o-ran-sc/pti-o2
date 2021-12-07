@@ -105,7 +105,7 @@ class DmsLcmNfDeploymentGetRouter(Resource):
             bus = MessageBus.get_instance()
             data = api_dms_lcm_v1.payload
             dms_lcm_view.lcm_nfdeployment_update(
-                nfDeploymentId, data, bus.uow)
+                nfDeploymentId, data, bus)
             return {}, 201
         except Exception as ex:
             logger.warning("{}".format(str(ex)))
@@ -115,7 +115,11 @@ class DmsLcmNfDeploymentGetRouter(Resource):
     @api_dms_lcm_v1.response(204, 'NfDeployment deleted')
     def delete(self, nfDeploymentId, deploymentManagerID):
         bus = MessageBus.get_instance()
-        with bus.uow:
-            bus.uow.nfdeployments.delete(nfDeploymentId)
-            bus.uow.commit()
+        result = dms_lcm_view\
+            .lcm_nfdeployment_uninstall(nfDeploymentId, bus)
+        if result is not None:
+            return result
+        api_dms_lcm_v1.abort(
+            404, "NfDeployment {} doesn't exist".format(
+                nfDeploymentId))
         return '', 204

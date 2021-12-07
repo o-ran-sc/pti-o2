@@ -14,14 +14,47 @@
 
 # pylint: disable=too-few-public-methods
 from dataclasses import dataclass
+from o2dms.domain.states import NfDeploymentState
 from o2common.domain.events import Event
 
 
 @dataclass
-class NfDeploymentCreated(Event):
+class NfDeploymentStateChanged(Event):
     NfDeploymentId: str
+    FromState: NfDeploymentState
+    ToState: NfDeploymentState
 
 
-@dataclass
-class NfDeploymentDeleted(Event):
-    NfDeploymentId: str
+# @dataclass
+# class NfDeploymentCreated(Event):
+#     NfDeploymentId: str
+
+
+# @dataclass
+# class NfDeploymentInstalled(Event):
+#     NfDeploymentId: str
+
+
+# @dataclass
+# class NfDeploymentUninstalling(Event):
+#     NfDeploymentId: str
+
+
+# @dataclass
+# class NfDeploymentUninstalled(Event):
+#     NfDeploymentId: str
+
+
+# @dataclass
+# class NfDeploymentUpdating(Event):
+#     NfDeploymentId: str
+
+
+# @dataclass
+# class NfDeploymentUpdated(Event):
+#     NfDeploymentId: str
+
+
+# @dataclass
+# class NfDeploymentDeleted(Event):
+#     NfDeploymentId: str

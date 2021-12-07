@@ -32,7 +32,7 @@ def main():
     logger.info("Redis pubsub starting")
     bus = bootstrap.bootstrap()
     pubsub = r.pubsub(ignore_subscribe_messages=True)
-    pubsub.subscribe("NfDeploymentCreated")
+    pubsub.subscribe("NfDeploymentStateChanged")
 
     for m in pubsub.listen():
         try:
@@ -45,17 +45,18 @@ def main():
 def handle_dms_changed(m, bus):
     logger.info("handling %s", m)
     channel = m['channel'].decode("UTF-8")
-    if channel == "NfDeploymentCreated":
+    if channel == "NfDeploymentStateChanged":
         datastr = m['data']
         data = json.loads(datastr)
-        logger.info('InstallNfDeployment with cmd:{}'.format(data))
-        cmd = commands.InstallNfDeployment(NfDeploymentId = data['NfDeploymentId'])
+        logger.info('HandleNfDeploymentStateChanged with cmd:{}'.format(data))
+        cmd = commands.HandleNfDeploymentStateChanged(
+            NfDeploymentId = data['NfDeploymentId'],
+            FromState = data['FromState'],
+            ToState = data['ToState']
+        )
         bus.handle(cmd)
     else:
         logger.info("unhandled:{}".format(channel))
-    # data = json.loads(m["data"])
-    # cmd = commands.UpdateDms(ref=data["dmsid"])
-    # bus.handle(cmd)
 
 
 if __name__ == "__main__":

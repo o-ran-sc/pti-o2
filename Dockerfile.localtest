@@ -29,14 +29,29 @@ COPY o2common/ /src/o2common/
 
 RUN mkdir -p /src/o2app/
 COPY o2app/ /src/o2app/
+
+RUN mkdir -p /src/helm_sdk/
+COPY helm_sdk/ /src/helm_sdk/
+
 COPY setup.py /src/
 
 COPY configs/ /etc/o2/
 
-# RUN pip install -e /src
+# RUN mkdir -p /helmsdk
+# COPY temp/helmsdk /helmsdk/
+# # RUN git clone --depth 1 --branch master https://github.com/cloudify-incubator/cloudify-helm-plugin.git helmsdk
+# COPY /helmsdk/helm_sdk /src/helm_sdk
 
+# RUN pip install -e /src
 COPY tests/ /tests/
 
 RUN apt-get install -y procps vim
+
+RUN apt-get install -y curl
+RUN curl -O https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz;
+RUN tar -zxvf helm-v3.3.1-linux-amd64.tar.gz; cp linux-amd64/helm /usr/local/bin
+
+RUN mkdir -p /etc/kubeconfig/
+COPY temp/kubeconfig/config /etc/kubeconfig/
 
 WORKDIR /src

@@ -18,6 +18,9 @@ services:
       - OS_AUTH_URL=${OS_AUTH_URL}
       - OS_USERNAME=${OS_USERNAME}
       - OS_PASSWORD=${OS_PASSWORD}
+      - K8S_KUBECONFIG=${K8S_KUBECONFIG}
+      - K8S_APISERVER=${K8S_APISERVER}
+      - K8S_TOKEN=${K8S_TOKEN}
       - LOGGING_CONFIG_LEVEL=DEBUG
     volumes:
       - ./configs:/configs
@@ -25,6 +28,7 @@ services:
       - ./o2dms:/o2dms
       - ./o2common:/o2common
       - ./o2app:/o2app
+      - ./helm_sdk:/helm_sdk
       - ./tests:/tests
     entrypoint:
       - /bin/sh
@@ -53,6 +57,7 @@ services:
       - ./o2dms:/o2dms
       - ./o2common:/o2common
       - ./o2app:/o2app
+      - ./helm_sdk:/helm_sdk
       - ./tests:/tests
     entrypoint:
       - /bin/sh
@@ -82,6 +87,7 @@ services:
       - ./o2dms:/o2dms
       - ./o2common:/o2common
       - ./o2app:/o2app
+      - ./helm_sdk:/helm_sdk
       - ./tests:/tests
     entrypoint:
       - /bin/sh

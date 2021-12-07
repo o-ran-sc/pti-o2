@@ -18,6 +18,7 @@ from sqlalchemy import (
     Column,
     Integer,
     String,
+    Text,
     # Date,
     DateTime,
     # ForeignKey,
@@ -45,9 +46,10 @@ nfDeploymentDesc = Table(
     Column("deploymentManagerId", String(255)),
     Column("name", String(255)),
     Column("description", String(255)),
-    Column("inputParams", String(255)),
+    Column("inputParams", Text()),
     Column("outputParams", String(255)),
-    Column("artifactUrl", String(255)),
+    Column("artifactRepoUrl", String(255)),
+    Column("artifactName", String(255)),
     # Column("extensions", String(1024))
 )
 

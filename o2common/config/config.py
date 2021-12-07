@@ -91,3 +91,14 @@ def get_stx_access_info():
     os_client_args['os_region_name'] = 'RegionOne'
     os_client_args['api_version'] = 1
     return os_client_args
+
+
+def get_k8s_api_endpoint():
+    K8S_KUBECONFIG = os.environ.get("K8S_KUBECONFIG", None)
+    K8S_APISERVER = os.environ.get("K8S_APISERVER", None)
+    K8S_TOKEN = os.environ.get("K8S_TOKEN", None)
+    return K8S_KUBECONFIG, K8S_APISERVER, K8S_TOKEN
+
+
+def get_helm_cli():
+    return '/usr/local/bin/helm'

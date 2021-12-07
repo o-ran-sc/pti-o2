@@ -14,8 +14,8 @@
 
 from sqlalchemy import select
 import uuid
+from o2dms.domain.states import NfDeploymentState
 from o2common.service import messagebus
-from o2dms.domain import events
 from o2common.service import unit_of_work
 from o2dms.adapter.orm import nfDeployment
 from o2dms.api.dms_dto import DmsLcmNfDeploymentDTO
@@ -48,19 +48,20 @@ def lcm_nfdeployment_create(
         bus: messagebus.MessageBus):
 
     uow = bus.uow
+    id = str(uuid.uuid4())
     with uow:
         _check_duplication(input, uow)
         _check_dependencies(input, uow)
-        id = str(uuid.uuid4())
         entity = NfDeployment(
             id, input['name'], deploymentManagerId, input['description'],
             input['descriptorId'], input['parentDeploymentId'])
         uow.nfdeployments.add(entity)
+        entity.transit_state(NfDeploymentState.NotInstalled)
 
-        # publish event
-        event = events.NfDeploymentCreated(NfDeploymentId=id)
+        # to be refactor later according to O2 DMS API design
+        entity.transit_state(NfDeploymentState.Installing)
         uow.commit()
-    bus.handle(event)
+    _handle_events(bus)
 
     return id
 
@@ -68,24 +69,61 @@ def lcm_nfdeployment_create(
 def lcm_nfdeployment_update(
         nfdeploymentid: str,
         input: DmsLcmNfDeploymentDTO.NfDeployment_update,
-        uow: unit_of_work.AbstractUnitOfWork):
+        bus: messagebus.MessageBus):
 
+    uow = bus.uow
     with uow:
-        entity = uow.nfdeployments.get(nfdeploymentid)
+        entity: NfDeployment = uow.nfdeployments.get(nfdeploymentid)
         entity.name = input['name']
         entity.description = input['description']
         entity.outputParams = input['parentDeploymentId']
+        entity.transit_state(NfDeploymentState.Updating)
         uow.commit()
+    _handle_events(bus)
     return True
 
 
-def lcm_nfdeployment_delete(
-        nfdeploymentid: str, uow: unit_of_work.AbstractUnitOfWork):
+def _handle_events(bus: messagebus.MessageBus):
+    # handle events
+    events = bus.uow.collect_new_events()
+    for event in events:
+        bus.handle(event)
+    return True
 
+
+def lcm_nfdeployment_uninstall(
+        nfdeploymentid: str,
+        bus: messagebus.MessageBus):
+
+    uow = bus.uow
     with uow:
-        uow.nfdeployments.delete(nfdeploymentid)
+        entity: NfDeployment = uow.nfdeployments.get(nfdeploymentid)
+        if entity.status == NfDeploymentState.Installed:
+            entity.transit_state(NfDeploymentState.Uninstalling)
+        elif entity.status == NfDeploymentState.Abnormal:
+            bus.uow.nfdeployments.delete(nfdeploymentid)
+        else:
+            entity.transit_state(NfDeploymentState.Abnormal)
         uow.commit()
+    _handle_events(bus)
     return True
+
+
+# def lcm_nfdeployment_delete(
+#         nfdeploymentid: str,
+#         bus: messagebus.MessageBus):
+
+#     uow = bus.uow
+#     with uow:
+#         entity = uow.nfdeployments.get(nfdeploymentid)
+#         if entity.status != NfDeploymentState.Initial:
+#             raise Exception(
+#                 "NfDeployment {} is not in status to delete".format(
+#                     nfdeploymentid))
+#         uow.nfdeployments.delete(nfdeploymentid)
+#         entity.transit_state(NfDeploymentState.Deleted)
+#         uow.commit()
+#     return True
 
 
 def _check_duplication(

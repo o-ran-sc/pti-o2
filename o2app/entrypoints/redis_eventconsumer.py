@@ -51,6 +51,18 @@ def handle_dms_changed(m, bus):
         logger.info('InstallNfDeployment with cmd:{}'.format(data))
         cmd = commands.InstallNfDeployment(NfDeploymentId = data['NfDeploymentId'])
         bus.handle(cmd)
+    elif channel == "NfDeploymentUninstalling":
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('UninstallNfDeployment with cmd:{}'.format(data))
+        cmd = commands.UninstallNfDeployment(NfDeploymentId = data['NfDeploymentId'])
+        bus.handle(cmd)
+    elif channel == "NfDeploymentUninstalled":
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('DeleteNfDeployment with cmd:{}'.format(data))
+        cmd = commands.DeleteNfDeployment(NfDeploymentId = data['NfDeploymentId'])
+        bus.handle(cmd)
     else:
         logger.info("unhandled:{}".format(channel))
     # data = json.loads(m["data"])

@@ -23,5 +23,30 @@ class NfDeploymentCreated(Event):
 
 
 @dataclass
+class NfDeploymentInstalled(Event):
+    NfDeploymentId: str
+
+
+@dataclass
+class NfDeploymentUninstalling(Event):
+    NfDeploymentId: str
+
+
+@dataclass
+class NfDeploymentUninstalled(Event):
+    NfDeploymentId: str
+
+
+@dataclass
+class NfDeploymentUpdating(Event):
+    NfDeploymentId: str
+
+
+@dataclass
+class NfDeploymentUpdated(Event):
+    NfDeploymentId: str
+
+
+@dataclass
 class NfDeploymentDeleted(Event):
     NfDeploymentId: str

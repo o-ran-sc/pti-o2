@@ -13,14 +13,15 @@
 #  limitations under the License.
 
 from __future__ import annotations
+from o2dms.domain.states import NfDeploymentState
 
-from o2common.domain.base import AgRoot
+from o2common.domain.base import AgRoot, Serializer
 
 
-class NfDeploymentDesc(AgRoot):
+class NfDeploymentDesc(AgRoot, Serializer):
     def __init__(self, id: str, name: str, dmsId: str, description: str = '',
                  inputParams: str = '', outputParams: str = '',
-                 artifacturl: str = '') -> None:
+                 artifactRepoUrl: str = '', artifactName: str = '') -> None:
         super().__init__()
         self.id = id
         self.version_number = 0
@@ -29,11 +30,13 @@ class NfDeploymentDesc(AgRoot):
         self.description = description
         self.inputParams = inputParams
         self.outputParams = outputParams
-        self.artifactUrl = artifacturl
+        self.artifactRepoUrl = artifactRepoUrl
+        self.artifactName = artifactName
+        self.status = 0
         # self.extensions = []
 
 
-class NfDeployment(AgRoot):
+class NfDeployment(AgRoot, Serializer):
     def __init__(self, id: str, name: str, dmsId: str, description: str = '',
                  descriptorId: str = '', parentId: str = '',) -> None:
         super().__init__()
@@ -44,10 +47,10 @@ class NfDeployment(AgRoot):
         self.description = description
         self.descriptorId = descriptorId
         self.parentDeploymentId = parentId
-        self.status = 0
+        self.status = NfDeploymentState.Initial
 
 
-class NfOCloudVResource(AgRoot):
+class NfOCloudVResource(AgRoot, Serializer):
     def __init__(self, id: str, name: str, dmsId: str, description: str = '',
                  descriptorId: str = '', nfDeploymentId: str = '',
                  vresourceType: int = 0,) -> None:

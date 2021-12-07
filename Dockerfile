@@ -14,6 +14,8 @@ RUN git clone --depth 1 --branch master https://opendev.org/starlingx/distcloud-
 RUN pip install -e /distcloud-client/distributedcloud-client
 # in case git repo is not accessable
 
+RUN git clone --depth 1 --branch master https://github.com/cloudify-incubator/cloudify-helm-plugin.git /helmsdk
+
 
 COPY requirements.txt /tmp/
 COPY requirements-stx.txt /tmp/

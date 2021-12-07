@@ -40,6 +40,9 @@ class NfDeploymentRepository(abc.ABC):
     def delete(self, nfdeployment_id):
         self._delete(nfdeployment_id)
 
+    def count(self, **kwargs):
+        return self._count(**kwargs)
+
     @abc.abstractmethod
     def _add(self, nfdeployment: dms.NfDeployment):
         raise NotImplementedError
@@ -54,6 +57,10 @@ class NfDeploymentRepository(abc.ABC):
 
     @abc.abstractmethod
     def _delete(self, nfdeployment_id):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _count(self, **kwargs):
         raise NotImplementedError
 
 
@@ -80,6 +87,9 @@ class NfDeploymentDescRepository(abc.ABC):
     def delete(self, nfdeployment_descriptor_id):
         self._delete(nfdeployment_descriptor_id)
 
+    def count(self, **kwargs):
+        return self._count(**kwargs)
+
     @abc.abstractmethod
     def _add(self, nfdeployment_descriptor: dms.NfDeploymentDesc):
         raise NotImplementedError
@@ -94,6 +104,10 @@ class NfDeploymentDescRepository(abc.ABC):
 
     @abc.abstractmethod
     def _delete(self, nfdeployment_descriptor_id):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _count(self, **kwargs):
         raise NotImplementedError
 
 

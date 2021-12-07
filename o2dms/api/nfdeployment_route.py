@@ -15,12 +15,17 @@
 # from flask import jsonify
 from flask_restx import Resource
 
-from o2common.config import config
-from o2dms.views.dms_dto import DmsLcmNfDeploymentDTO
-from o2dms.views import dms_lcm_view, api_dms_lcm_v1
-from o2common.service.messagebus import MessageBus
+from o2dms.api.dms_dto import DmsLcmNfDeploymentDTO
+from o2dms.api import dms_lcm_nfdeployment as dms_lcm_view
+from o2dms.api.dms_api_ns import api_dms_lcm_v1
 
-apibase = config.get_o2dms_api_base()
+from o2common.service.messagebus import MessageBus
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
+
+
+def configure_api_route():
+    pass
 
 
 # LCM services #
@@ -49,11 +54,18 @@ class DmsLcmNfDeploymentListRouter(Resource):
     @api_dms_lcm_v1.expect(createdto)
     @api_dms_lcm_v1.marshal_with(post_resp, code=201)
     def post(self, deploymentManagerID):
-        bus = MessageBus.get_instance()
-        data = api_dms_lcm_v1.payload
-        id = dms_lcm_view.lcm_nfdeployment_create(
-            deploymentManagerID, data, bus.uow)
-        return {"id": id}, 201
+        try:
+            logger.debug("create deployment:{}".format(
+                api_dms_lcm_v1.payload
+            ))
+            bus = MessageBus.get_instance()
+            data = api_dms_lcm_v1.payload
+            id = dms_lcm_view.lcm_nfdeployment_create(
+                deploymentManagerID, data, bus)
+            return {"id": id}, 201
+        except Exception as ex:
+            logger.warning("{}".format(str(ex)))
+            api_dms_lcm_v1.abort(400, str(ex))
 
 
 @api_dms_lcm_v1\
@@ -70,7 +82,7 @@ class DmsLcmNfDeploymentGetRouter(Resource):
     updatedto = DmsLcmNfDeploymentDTO.\
         NfDeployment_update
 
-    @api_dms_lcm_v1.doc('Get a NfDeploymentDescriptor')
+    @api_dms_lcm_v1.doc('Get a NfDeployment')
     @api_dms_lcm_v1.marshal_with(model)
     def get(self, nfDeploymentId, deploymentManagerID):
         bus = MessageBus.get_instance()
@@ -79,17 +91,25 @@ class DmsLcmNfDeploymentGetRouter(Resource):
         if result is not None:
             return result
         api_dms_lcm_v1.abort(
-            404, "NfDeploymentDescriptor {} doesn't exist".format(
+            404, "NfDeployment {} doesn't exist".format(
                 nfDeploymentId))
 
     @api_dms_lcm_v1.doc('Update a NfDeployment')
     @api_dms_lcm_v1.expect(updatedto)
     def put(self, nfDeploymentId, deploymentManagerID):
-        bus = MessageBus.get_instance()
-        data = api_dms_lcm_v1.payload
-        dms_lcm_view.lcm_nfdeployment_update(
-            nfDeploymentId, data, bus.uow)
-        return {}, 201
+        try:
+            logger.debug("update deployment:{},{}".format(
+                nfDeploymentId,
+                api_dms_lcm_v1.payload
+            ))
+            bus = MessageBus.get_instance()
+            data = api_dms_lcm_v1.payload
+            dms_lcm_view.lcm_nfdeployment_update(
+                nfDeploymentId, data, bus.uow)
+            return {}, 201
+        except Exception as ex:
+            logger.warning("{}".format(str(ex)))
+            api_dms_lcm_v1.abort(400, str(ex))
 
     @api_dms_lcm_v1.doc('Delete NfDeployment by ID')
     @api_dms_lcm_v1.response(204, 'NfDeployment deleted')

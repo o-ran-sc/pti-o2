@@ -18,9 +18,14 @@ from __future__ import annotations
 from typing import List, Dict, Callable, Type
 # TYPE_CHECKING
 from o2ims.domain import commands, events
+
+from o2dms.domain import commands as o2dms_cmmands
+from o2dms.domain import events as o2dms_events
 from o2ims.service.auditor import ocloud_handler, dms_handler, \
     resourcepool_handler, pserver_handler, pserver_cpu_handler, \
     pserver_mem_handler, pserver_port_handler, pserver_if_handler
+from o2dms.service.nfdeployment_handler import publish_nfdeployment_created
+from o2dms.service.nfdeployment_handler import install_nfdeployment
 
 # if TYPE_CHECKING:
 #     from . import unit_of_work
@@ -31,7 +36,8 @@ class InvalidResourceType(Exception):
 
 
 EVENT_HANDLERS = {
-}  # type: Dict[Type[events.Event], List[Callable]]
+    o2dms_events.NfDeploymentCreated: [publish_nfdeployment_created]
+}
 
 
 COMMAND_HANDLERS = {
@@ -43,4 +49,6 @@ COMMAND_HANDLERS = {
     commands.UpdatePserverMem: pserver_mem_handler.update_pserver_mem,
     commands.UpdatePserverIf: pserver_if_handler.update_pserver_if,
     commands.UpdatePserverPort: pserver_port_handler.update_pserver_port,
+    o2dms_cmmands.InstallNfDeployment: install_nfdeployment
+
 }  # type: Dict[Type[commands.Command], Callable]

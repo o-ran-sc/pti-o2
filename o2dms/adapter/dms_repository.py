@@ -42,6 +42,10 @@ class NfDeploymentDescSqlAlchemyRepository(dms_repo
             id=nfdeployment_desc_id
         ).delete()
 
+    def _count(self, **kwargs):
+        return self.session.query(
+            dms.NfDeploymentDesc).filter_by(**kwargs).count()
+
 
 class NfDeploymentSqlAlchemyRepository(
         dms_repo.NfDeploymentRepository):
@@ -68,6 +72,10 @@ class NfDeploymentSqlAlchemyRepository(
         self.session.query(dms.NfDeployment).filter_by(
             id=nfdeployment_id
         ).delete()
+
+    def _count(self, **kwargs):
+        return self.session.query(
+            dms.NfDeployment).filter_by(**kwargs).count()
 
 
 class NfOCloudVResourceSqlAlchemyRepository(

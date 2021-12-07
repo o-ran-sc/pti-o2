@@ -17,7 +17,7 @@ from flask_restx import Api
 
 from o2app import bootstrap
 from o2ims.views import ocloud_route as ims_route
-from o2dms.views import configure_namespace as dms_route_configure_namespace
+from o2dms.api import configure_namespace as dms_route_configure_namespace
 
 
 # apibase = config.get_o2ims_api_base()

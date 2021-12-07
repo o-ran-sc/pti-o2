@@ -13,7 +13,9 @@
 #  limitations under the License.
 
 from flask_restx import fields
-from o2dms.views import api_dms_lcm_v1
+from o2dms.api.dms_api_ns import api_dms_lcm_v1
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
 
 class DmsDTO:
@@ -42,7 +44,8 @@ class DmsLcmNfDeploymentDescriptorDTO:
             'name': fields.String,
             'description': fields.String,
             'inputParams': fields.String,
-            'outputParams': fields.String
+            'outputParams': fields.String,
+            'artifactUrl': fields.String
         }
     )
 
@@ -51,6 +54,7 @@ class DmsLcmNfDeploymentDescriptorDTO:
         {
             'name': fields.String,
             'description': fields.String,
+            'artifactUrl': fields.String,
             'inputParams': fields.String,
             'outputParams': fields.String
         }
@@ -69,6 +73,7 @@ class DmsLcmNfDeploymentDescriptorDTO:
         {
             'name': fields.String,
             'description': fields.String,
+            'artifactUrl': fields.String,
             'inputParams': fields.String,
             'outputParams': fields.String
         }
@@ -113,7 +118,6 @@ class DmsLcmNfDeploymentDTO:
         {
             'name': fields.String,
             'description': fields.String,
-            'descriptorId': fields.String,
             'parentDeploymentId': fields.String
         }
     )

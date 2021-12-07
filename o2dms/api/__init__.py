@@ -12,14 +12,22 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from flask_restx import Namespace
+from o2dms.api.dms_api_ns import api_dms_lcm_v1
+from . import dms_route
+from . import nfdeployment_desc_route
+from . import nfdeployment_route
 from o2common.config import config
 
-
-api_dms_lcm_v1 = Namespace(
-    "O2DMS_LCM", description='DMS LCM related operations.')
-apibase = config.get_o2dms_api_base()
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
 
 def configure_namespace(app):
+    apibase = config.get_o2dms_api_base()
+    logger.info(
+        "Expose O2DMS API:{}".format(apibase))
+
+    dms_route.configure_api_route()
+    nfdeployment_desc_route.configure_api_route()
+    nfdeployment_route.configure_api_route()
     app.add_namespace(api_dms_lcm_v1, path=apibase)

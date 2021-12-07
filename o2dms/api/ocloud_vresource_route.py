@@ -15,12 +15,17 @@
 # from flask import jsonify
 from flask_restx import Resource
 
-from o2common.config import config
-from o2dms.views.dms_dto import DmsLcmNfOCloudVResourceDTO
-from o2dms.views import dms_lcm_view, api_dms_lcm_v1
-from o2common.service.messagebus import MessageBus
+from o2dms.api.dms_dto import DmsLcmNfOCloudVResourceDTO
+from o2dms.api import dms_lcm_nfdeployment_vres as dms_lcm_view
+from o2dms.api.dms_api_ns import api_dms_lcm_v1
 
-apibase = config.get_o2dms_api_base()
+from o2common.service.messagebus import MessageBus
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
+
+
+def configure_api_route():
+    pass
 
 
 # LCM services #

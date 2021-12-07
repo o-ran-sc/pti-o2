@@ -15,12 +15,17 @@
 # from flask import jsonify
 from flask_restx import Resource
 
-from o2common.config import config
-from o2dms.views.dms_dto import DmsLcmNfDeploymentDescriptorDTO
-from o2dms.views import dms_lcm_view, api_dms_lcm_v1
-from o2common.service.messagebus import MessageBus
+from o2dms.api.dms_dto import DmsLcmNfDeploymentDescriptorDTO
+from o2dms.api import dms_lcm_nfdeploymentdesc as dms_lcm_view
+from o2dms.api.dms_api_ns import api_dms_lcm_v1
 
-apibase = config.get_o2dms_api_base()
+from o2common.service.messagebus import MessageBus
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
+
+
+def configure_api_route():
+    pass
 
 
 # LCM services #
@@ -49,11 +54,18 @@ class DmsLcmNfDeploymentDescListRouter(Resource):
     @api_dms_lcm_v1.expect(createdto)
     @api_dms_lcm_v1.marshal_with(post_resp, code=201)
     def post(self, deploymentManagerID):
-        bus = MessageBus.get_instance()
-        data = api_dms_lcm_v1.payload
-        id = dms_lcm_view.lcm_nfdeploymentdesc_create(
-            deploymentManagerID, data, bus.uow)
-        return {"id": id}, 201
+        try:
+            logger.debug("create deployment desc:{}".format(
+                api_dms_lcm_v1.payload
+            ))
+            bus = MessageBus.get_instance()
+            data = api_dms_lcm_v1.payload
+            id = dms_lcm_view.lcm_nfdeploymentdesc_create(
+                deploymentManagerID, data, bus.uow)
+            return {"id": id}, 201
+        except Exception as ex:
+            logger.warning("{}".format(str(ex)))
+            api_dms_lcm_v1.abort(400, str(ex))
 
 
 @api_dms_lcm_v1\
@@ -85,6 +97,9 @@ class DmsLcmNfDeploymentDescGetRouter(Resource):
     @api_dms_lcm_v1.doc('Update a NfDeploymentDescriptor')
     @api_dms_lcm_v1.expect(updatedto)
     def put(self, nfDeploymentDescriptorId, deploymentManagerID):
+        logger.debug("update deployment desc:{}".format(
+            api_dms_lcm_v1.payload
+        ))
         bus = MessageBus.get_instance()
         data = api_dms_lcm_v1.payload
         dms_lcm_view.lcm_nfdeploymentdesc_update(

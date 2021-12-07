@@ -13,11 +13,14 @@
 #  limitations under the License.
 
 # import json
+from logging import log
 import redis
-
+import json
 from o2app import bootstrap
 from o2common.config import config
 # from o2common.domain import commands
+from o2dms.domain import commands
+from o2dms.domain import events
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -29,14 +32,27 @@ def main():
     logger.info("Redis pubsub starting")
     bus = bootstrap.bootstrap()
     pubsub = r.pubsub(ignore_subscribe_messages=True)
-    pubsub.subscribe("dms_changed")
+    pubsub.subscribe("NfDeploymentCreated")
 
     for m in pubsub.listen():
-        handle_dms_changed(m, bus)
+        try:
+            handle_dms_changed(m, bus)
+        except Exception as ex:
+            logger.warning("{}".format(str(ex)))
+            continue
 
 
 def handle_dms_changed(m, bus):
     logger.info("handling %s", m)
+    channel = m['channel'].decode("UTF-8")
+    if channel == "NfDeploymentCreated":
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('InstallNfDeployment with cmd:{}'.format(data))
+        cmd = commands.InstallNfDeployment(NfDeploymentId = data['NfDeploymentId'])
+        bus.handle(cmd)
+    else:
+        logger.info("unhandled:{}".format(channel))
     # data = json.loads(m["data"])
     # cmd = commands.UpdateDms(ref=data["dmsid"])
     # bus.handle(cmd)

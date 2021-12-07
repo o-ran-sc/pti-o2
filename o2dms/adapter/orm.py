@@ -47,6 +47,7 @@ nfDeploymentDesc = Table(
     Column("description", String(255)),
     Column("inputParams", String(255)),
     Column("outputParams", String(255)),
+    Column("artifactUrl", String(255)),
     # Column("extensions", String(1024))
 )
 

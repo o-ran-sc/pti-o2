@@ -19,7 +19,8 @@ from o2common.domain.base import AgRoot
 
 class NfDeploymentDesc(AgRoot):
     def __init__(self, id: str, name: str, dmsId: str, description: str = '',
-                 inputParams: str = '', outputParams: str = '',) -> None:
+                 inputParams: str = '', outputParams: str = '',
+                 artifacturl: str = '') -> None:
         super().__init__()
         self.id = id
         self.version_number = 0
@@ -28,6 +29,7 @@ class NfDeploymentDesc(AgRoot):
         self.description = description
         self.inputParams = inputParams
         self.outputParams = outputParams
+        self.artifactUrl = artifacturl
         # self.extensions = []
 
 

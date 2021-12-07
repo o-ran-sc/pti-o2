@@ -15,9 +15,17 @@
 # from flask import jsonify
 from flask_restx import Resource
 
-from o2dms.views.dms_dto import DmsDTO
-from o2dms.views import dms_lcm_view, api_dms_lcm_v1
+from o2dms.api.dms_dto import DmsDTO
+from o2dms.api import dms_lcm_view
+from o2dms.api.dms_api_ns import api_dms_lcm_v1
+
 from o2common.service.messagebus import MessageBus
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
+
+
+def configure_api_route():
+    pass
 
 
 # ----------  DeploymentManagers ---------- #
@@ -31,6 +39,9 @@ class DmsGetRouter(Resource):
     @api_dms_lcm_v1.doc('Get deployment manager')
     @api_dms_lcm_v1.marshal_with(model)
     def get(self, deploymentManagerID):
+        logger.debug("get o2dms info:{}".format(
+            deploymentManagerID
+        ))
         bus = MessageBus.get_instance()
         result = dms_lcm_view.deployment_manager_one(
             deploymentManagerID, bus.uow)

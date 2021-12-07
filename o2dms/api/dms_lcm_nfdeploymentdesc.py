@@ -56,7 +56,8 @@ def lcm_nfdeploymentdesc_create(
         id = str(uuid.uuid4())
         entity = NfDeploymentDesc(
             id, input['name'], deploymentManagerId, input['description'],
-            input['inputParams'], input['outputParams'], input['artifactUrl'])
+            input['inputParams'], input['outputParams'],
+            input['artifactRepoUrl'], input['artifactName'])
         uow.nfdeployment_descs.add(entity)
         uow.commit()
     return id
@@ -73,7 +74,8 @@ def lcm_nfdeploymentdesc_update(
         entity.description = input['description']
         entity.inputParams = input['inputParams']
         entity.outputParams = input['outputParams']
-        entity.artifactUrl = input['artifactUrl']
+        entity.artifactRepoUrl = input['artifactRepoUrl']
+        entity.artifactName = input['artifactName']
         uow.commit()
     return True
 

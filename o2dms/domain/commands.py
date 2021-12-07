@@ -16,6 +16,8 @@
 # from datetime import date
 # from typing import Optional
 from dataclasses import dataclass
+from o2dms.domain.states import NfDeploymentState
+# from o2dms.domain.dms import NfDeployment
 # from datetime import datetime
 # from o2ims.domain.resource_type import ResourceTypeEnum
 
@@ -25,3 +27,20 @@ from o2common.domain.commands import Command
 @dataclass
 class InstallNfDeployment(Command):
     NfDeploymentId: str
+
+
+@dataclass
+class UninstallNfDeployment(Command):
+    NfDeploymentId: str
+
+
+@dataclass
+class DeleteNfDeployment(Command):
+    NfDeploymentId: str
+
+
+@dataclass
+class HandleNfDeploymentStateChanged(Command):
+    NfDeploymentId: str
+    FromState: NfDeploymentState
+    ToState: NfDeploymentState

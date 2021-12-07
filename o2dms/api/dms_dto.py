@@ -45,7 +45,8 @@ class DmsLcmNfDeploymentDescriptorDTO:
             'description': fields.String,
             'inputParams': fields.String,
             'outputParams': fields.String,
-            'artifactUrl': fields.String
+            'artifactRepoUrl': fields.String,
+            'artifactName': fields.String
         }
     )
 
@@ -54,7 +55,8 @@ class DmsLcmNfDeploymentDescriptorDTO:
         {
             'name': fields.String,
             'description': fields.String,
-            'artifactUrl': fields.String,
+            'artifactRepoUrl': fields.String,
+            'artifactName': fields.String,
             'inputParams': fields.String,
             'outputParams': fields.String
         }
@@ -73,7 +75,8 @@ class DmsLcmNfDeploymentDescriptorDTO:
         {
             'name': fields.String,
             'description': fields.String,
-            'artifactUrl': fields.String,
+            'artifactRepoUrl': fields.String,
+            'artifactName': fields.String,
             'inputParams': fields.String,
             'outputParams': fields.String
         }

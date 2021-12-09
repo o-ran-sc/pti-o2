@@ -31,8 +31,8 @@ class InvalidResourceType(Exception):
     pass
 
 
-def update_pserver_port(
-    cmd: commands.UpdatePserverIfPort,
+def update_pserver_eth(
+    cmd: commands.UpdatePserverEth,
     uow: AbstractUnitOfWork
 ):
     stxobj = cmd.data
@@ -53,33 +53,33 @@ def update_pserver_port(
             resourcetype_id = str(uuid.uuid4())
             uow.resource_types.add(ResourceType(
                 resourcetype_id,
-                'pserver_if_port', stxobj.type,
+                'pserver_ethernet', stxobj.type,
                 resourcepool.oCloudId))
         else:
             resourcetype_id = first['resourceTypeId']
 
         resource = uow.resources.get(stxobj.id)
         if not resource:
-            logger.info("add the port of pserver interface:" + stxobj.name
+            logger.info("add the ethernet of pserver:" + stxobj.name
                         + " update_at: " + str(stxobj.updatetime)
                         + " id: " + str(stxobj.id)
                         + " hash: " + str(stxobj.hash))
             localmodel = create_by(stxobj, p_resource, resourcetype_id)
             uow.resources.add(localmodel)
 
-            logger.info("Add the port of pserver interface: " + stxobj.id
+            logger.info("Add the ethernet of pserver: " + stxobj.id
                         + ", name: " + stxobj.name)
         else:
             localmodel = resource
             if is_outdated(localmodel, stxobj):
-                logger.info("update port of pserver interface:" + stxobj.name
+                logger.info("update ethernet of pserver:" + stxobj.name
                             + " update_at: " + str(stxobj.updatetime)
                             + " id: " + str(stxobj.id)
                             + " hash: " + str(stxobj.hash))
                 update_by(localmodel, stxobj, p_resource)
                 uow.resources.update(localmodel)
 
-            logger.info("Update the port of pserver interface: " + stxobj.id
+            logger.info("Update the ethernet of pserver: " + stxobj.id
                         + ", name: " + stxobj.name)
         uow.commit()
 
@@ -95,7 +95,7 @@ def create_by(stxobj: StxGenericModel, parent: Resource, resourcetype_id: str)\
     resourcepool_id = parent.resourcePoolId
     parent_id = parent.resourceId
     gAssetId = ''  # TODO: global ID
-    description = "A port resource of the interface"
+    description = "An ethernet resource of the physical server"
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
                         stxobj.name, parent_id, gAssetId, stxobj.content,
                         description)

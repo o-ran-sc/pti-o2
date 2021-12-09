@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 import uuid
+from unittest.mock import MagicMock
 
 from o2ims.domain import ocloud
 from o2ims.domain import resource_type as rt
@@ -71,7 +72,7 @@ def test_new_resource():
     resource_type_id1 = str(uuid.uuid4())
     resource_pool_id1 = str(uuid.uuid4())
     resource1 = ocloud.Resource(
-        resource_id1, resource_type_id1, resource_pool_id1)
+        resource_id1, resource_type_id1, resource_pool_id1, 'resource1')
     assert resource_id1 is not None and resource1.resourceId == resource_id1
 
 
@@ -97,25 +98,30 @@ def test_view_olcouds(mock_uow):
     session, uow = mock_uow
 
     ocloud1_UUID = str(uuid.uuid4)
-    session.return_value.execute.return_value = [
-        {"oCloudId": ocloud1_UUID}]
+    ocloud1 = MagicMock()
+    ocloud1.serialize.return_value = {
+        'oCloudId': ocloud1_UUID, 'name': 'ocloud1'}
+    session.return_value.query.return_value = [ocloud1]
 
     ocloud_list = ocloud_view.oclouds(uow)
-    assert str(ocloud_list[0].get("oCloudId")) == ocloud1_UUID
+    # assert str(ocloud_list[0].get("oCloudId")) == ocloud1_UUID
+    assert len(ocloud_list) == 1
 
 
 def test_view_olcoud_one(mock_uow):
     session, uow = mock_uow
 
     ocloud1_UUID = str(uuid.uuid4)
-    session.return_value.execute.return_value.first.return_value = None
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = None
 
     # Query return None
     ocloud_res = ocloud_view.ocloud_one(ocloud1_UUID, uow)
     assert ocloud_res is None
 
-    session.return_value.execute.return_value.first.return_value = {
-        "oCloudId": ocloud1_UUID}
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = {
+            "oCloudId": ocloud1_UUID}
 
     ocloud_res = ocloud_view.ocloud_one(ocloud1_UUID, uow)
     assert str(ocloud_res.get("oCloudId")) == ocloud1_UUID
@@ -125,9 +131,10 @@ def test_view_resource_types(mock_uow):
     session, uow = mock_uow
 
     resource_type_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value = [
-        {"resourceTypeId": resource_type_id1}
-    ]
+    restype1 = MagicMock()
+    restype1.serialize.return_value = {
+        "resourceTypeId": resource_type_id1}
+    session.return_value.query.return_value = [restype1]
 
     resource_type_list = ocloud_view.resource_types(uow)
     assert str(resource_type_list[0].get(
@@ -138,15 +145,17 @@ def test_view_resource_type_one(mock_uow):
     session, uow = mock_uow
 
     resource_type_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value.first.return_value = None
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = None
 
     # Query return None
     resource_type_res = ocloud_view.resource_type_one(
         resource_type_id1, uow)
     assert resource_type_res is None
 
-    session.return_value.execute.return_value.first.return_value = {
-        "resourceTypeId": resource_type_id1}
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = {
+            "resourceTypeId": resource_type_id1}
 
     resource_type_res = ocloud_view.resource_type_one(resource_type_id1, uow)
     assert str(resource_type_res.get("resourceTypeId")) == resource_type_id1
@@ -156,9 +165,10 @@ def test_view_resource_pools(mock_uow):
     session, uow = mock_uow
 
     resource_pool_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value = [
-        {"resourcePoolId": resource_pool_id1}
-    ]
+    respool1 = MagicMock()
+    respool1.serialize.return_value = {
+        "resourcePoolId": resource_pool_id1}
+    session.return_value.query.return_value = [respool1]
 
     resource_pool_list = ocloud_view.resource_pools(uow)
     assert str(resource_pool_list[0].get(
@@ -169,16 +179,18 @@ def test_view_resource_pool_one(mock_uow):
     session, uow = mock_uow
 
     resource_pool_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value.first.return_value = None
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = None
 
     # Query return None
     resource_pool_res = ocloud_view.resource_pool_one(
         resource_pool_id1, uow)
     assert resource_pool_res is None
 
-    session.return_value.execute.return_value.first.return_value = {
-        "resourcePoolId": resource_pool_id1
-    }
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = {
+            "resourcePoolId": resource_pool_id1
+        }
 
     resource_pool_res = ocloud_view.resource_pool_one(resource_pool_id1, uow)
     assert str(resource_pool_res.get("resourcePoolId")) == resource_pool_id1
@@ -189,10 +201,12 @@ def test_view_resources(mock_uow):
 
     resource_id1 = str(uuid.uuid4())
     resource_pool_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value = [{
+    res1 = MagicMock()
+    res1.serialize.return_value = {
         "resourceId": resource_id1,
         "resourcePoolId": resource_pool_id1
-    }]
+    }
+    session.return_value.query.return_value.filter_by.return_value = [res1]
 
     resource_list = ocloud_view.resources(resource_pool_id1, uow)
     assert str(resource_list[0].get("resourceId")) == resource_id1
@@ -204,16 +218,18 @@ def test_view_resource_one(mock_uow):
 
     resource_id1 = str(uuid.uuid4())
     resource_pool_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value.first.return_value = None
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = None
 
     # Query return None
     resource_res = ocloud_view.resource_one(resource_id1, uow)
     assert resource_res is None
 
-    session.return_value.execute.return_value.first.return_value = {
-        "resourceId": resource_id1,
-        "resourcePoolId": resource_pool_id1
-    }
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = {
+            "resourceId": resource_id1,
+            "resourcePoolId": resource_pool_id1
+        }
 
     resource_res = ocloud_view.resource_one(resource_id1, uow)
     assert str(resource_res.get("resourceId")) == resource_id1
@@ -223,9 +239,11 @@ def test_view_deployment_managers(mock_uow):
     session, uow = mock_uow
 
     deployment_manager_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value = [{
+    dm1 = MagicMock()
+    dm1.serialize.return_value = {
         "deploymentManagerId": deployment_manager_id1,
-    }]
+    }
+    session.return_value.query.return_value = [dm1]
 
     deployment_manager_list = ocloud_view.deployment_managers(uow)
     assert str(deployment_manager_list[0].get(
@@ -236,16 +254,18 @@ def test_view_deployment_manager_one(mock_uow):
     session, uow = mock_uow
 
     deployment_manager_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value.first.return_value = None
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = None
 
     # Query return None
     deployment_manager_res = ocloud_view.deployment_manager_one(
         deployment_manager_id1, uow)
     assert deployment_manager_res is None
 
-    session.return_value.execute.return_value.first.return_value = {
-        "deploymentManagerId": deployment_manager_id1,
-    }
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = {
+            "deploymentManagerId": deployment_manager_id1,
+        }
 
     deployment_manager_res = ocloud_view.deployment_manager_one(
         deployment_manager_id1, uow)
@@ -257,9 +277,11 @@ def test_view_subscriptions(mock_uow):
     session, uow = mock_uow
 
     subscription_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value = [{
+    sub1 = MagicMock()
+    sub1.serialize.return_value = {
         "subscriptionId": subscription_id1,
-    }]
+    }
+    session.return_value.query.return_value = [sub1]
 
     subscription_list = ocloud_view.subscriptions(uow)
     assert str(subscription_list[0].get(
@@ -270,16 +292,18 @@ def test_view_subscription_one(mock_uow):
     session, uow = mock_uow
 
     subscription_id1 = str(uuid.uuid4())
-    session.return_value.execute.return_value.first.return_value = None
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = None
 
     # Query return None
     subscription_res = ocloud_view.subscription_one(
         subscription_id1, uow)
     assert subscription_res is None
 
-    session.return_value.execute.return_value.first.return_value = {
-        "subscriptionId": subscription_id1,
-    }
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = {
+            "subscriptionId": subscription_id1,
+        }
 
     subscription_res = ocloud_view.subscription_one(
         subscription_id1, uow)
@@ -289,7 +313,7 @@ def test_view_subscription_one(mock_uow):
 
 def test_flask_get_list(mock_flask_uow):
     session, app = mock_flask_uow
-    session.return_value.execute.return_value = []
+    session.query.return_value = []
     apibase = config.get_o2ims_api_base()
 
     with app.test_client() as client:
@@ -315,7 +339,9 @@ def test_flask_get_list(mock_flask_uow):
 
 def test_flask_get_one(mock_flask_uow):
     session, app = mock_flask_uow
-    session.return_value.execute.return_value.first.return_value = None
+
+    session.return_value.query.return_value.filter_by.return_value.\
+        first.return_value = None
     apibase = config.get_o2ims_api_base()
 
     with app.test_client() as client:

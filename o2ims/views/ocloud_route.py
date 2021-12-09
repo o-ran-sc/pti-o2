@@ -117,7 +117,9 @@ class ResourcesListRouter(Resource):
 @api_ims_inventory_v1.response(404, 'Resource not found')
 class ResourceGetRouter(Resource):
 
-    model = ResourceDTO.resource_get
+    # dto = ResourceDTO()
+    # model = dto.get_resource_get()
+    model = ResourceDTO.recursive_resource_mapping()
 
     @api_ims_inventory_v1.doc('Get resource')
     @api_ims_inventory_v1.marshal_with(model)

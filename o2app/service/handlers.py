@@ -14,6 +14,8 @@
 
 # pylint: disable=unused-argument
 from __future__ import annotations
+from o2dms.service.nfdeployment_handler import install_nfdeployment
+from o2dms.service.nfdeployment_handler import publish_nfdeployment_created
 # from dataclasses import asdict
 from typing import List, Dict, Callable, Type
 # TYPE_CHECKING
@@ -23,9 +25,8 @@ from o2dms.domain import commands as o2dms_cmmands
 from o2dms.domain import events as o2dms_events
 from o2ims.service.auditor import ocloud_handler, dms_handler, \
     resourcepool_handler, pserver_handler, pserver_cpu_handler, \
-    pserver_mem_handler, pserver_port_handler, pserver_if_handler
-from o2dms.service.nfdeployment_handler import publish_nfdeployment_created
-from o2dms.service.nfdeployment_handler import install_nfdeployment
+    pserver_mem_handler, pserver_port_handler, pserver_if_handler,\
+    pserver_eth_handler
 
 # if TYPE_CHECKING:
 #     from . import unit_of_work
@@ -48,7 +49,7 @@ COMMAND_HANDLERS = {
     commands.UpdatePserverCpu: pserver_cpu_handler.update_pserver_cpu,
     commands.UpdatePserverMem: pserver_mem_handler.update_pserver_mem,
     commands.UpdatePserverIf: pserver_if_handler.update_pserver_if,
-    commands.UpdatePserverPort: pserver_port_handler.update_pserver_port,
+    commands.UpdatePserverIfPort: pserver_port_handler.update_pserver_port,
+    commands.UpdatePserverEth: pserver_eth_handler.update_pserver_eth,
     o2dms_cmmands.InstallNfDeployment: install_nfdeployment
-
 }  # type: Dict[Type[commands.Command], Callable]

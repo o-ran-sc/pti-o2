@@ -132,7 +132,7 @@ def test_view_resources(sqlite_uow):
     resource_type_id1 = str(uuid.uuid4())
     resource_pool_id1 = str(uuid.uuid4())
     resource1 = ocloud.Resource(
-        resource_id1, resource_type_id1, resource_pool_id1)
+        resource_id1, resource_type_id1, resource_pool_id1, 'resource1')
     with sqlite_uow as uow:
         uow.resources.add(resource1)
         uow.commit()
@@ -146,7 +146,7 @@ def test_view_resource_one(sqlite_uow):
     resource_type_id1 = str(uuid.uuid4())
     resource_pool_id1 = str(uuid.uuid4())
     resource1 = ocloud.Resource(
-        resource_id1, resource_type_id1, resource_pool_id1)
+        resource_id1, resource_type_id1, resource_pool_id1, 'resource1')
 
     # Query return None
     resource_res = ocloud_view.resource_one(resource_id1, sqlite_uow)

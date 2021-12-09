@@ -95,9 +95,10 @@ def create_by(stxobj: StxGenericModel, parent: Resource, resourcetype_id: str)\
     resourcepool_id = parent.resourcePoolId
     parent_id = parent.resourceId
     gAssetId = ''  # TODO: global ID
-    description = "A interface resource of the physical server"
+    description = "An interface resource of the physical server"
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
-                        parent_id, gAssetId, stxobj.content, description)
+                        stxobj.name, parent_id, gAssetId, stxobj.content,
+                        description)
     resource.createtime = stxobj.createtime
     resource.updatetime = stxobj.updatetime
     resource.hash = stxobj.hash

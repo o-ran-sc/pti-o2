@@ -137,7 +137,7 @@ def test_add_resource(sqlite_session_factory):
     resource_type_id1 = str(uuid.uuid4())
     resource_pool_id1 = str(uuid.uuid4())
     resource1 = ocloud.Resource(
-        resource_id1, resource_type_id1, resource_pool_id1)
+        resource_id1, resource_type_id1, resource_pool_id1, 'resource1')
     repo.add(resource1)
     assert repo.get(resource_id1) == resource1
 

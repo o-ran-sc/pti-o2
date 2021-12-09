@@ -43,9 +43,9 @@ def update_ocloud(
     stxobj = cmd.data
     with uow:
         oclouds = uow.oclouds.list()
-        if oclouds and len(oclouds) > 1:
+        if oclouds and oclouds.count() > 1:
             raise InvalidOcloudState("More than 1 ocloud is found")
-        elif not oclouds or len(oclouds) == 0:
+        elif not oclouds or oclouds.count() == 0:
             logger.info("add ocloud:" + stxobj.name
                         + " update_at: " + str(stxobj.updatetime)
                         + " id: " + str(stxobj.id)
@@ -56,7 +56,7 @@ def update_ocloud(
             logger.info("Add the ocloud: " + stxobj.id
                         + ", name: " + stxobj.name)
         else:
-            localmodel = oclouds.pop()
+            localmodel = oclouds.first()
             if is_outdated(localmodel, stxobj):
                 logger.info("update ocloud:" + stxobj.name
                             + " update_at: " + str(stxobj.updatetime)

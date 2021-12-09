@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from typing import List
-# from o2ims.adapter import orm
+
 from o2ims.domain import ocloud
 from o2ims.domain.ocloud_repo import OcloudRepository, ResourceTypeRepository,\
     ResourcePoolRepository, ResourceRepository, DeploymentManagerRepository,\
@@ -36,8 +36,7 @@ class OcloudSqlAlchemyRepository(OcloudRepository):
             oCloudId=ocloud_id).first()
 
     def _list(self) -> List[ocloud.Ocloud]:
-        return self.session.query(ocloud.Ocloud).order_by(
-            ocloud.Ocloud.name).all()
+        return self.session.query(ocloud.Ocloud)
 
     def _update(self, ocloud: ocloud.Ocloud):
         self.session.add(ocloud)
@@ -56,7 +55,7 @@ class ResouceTypeSqlAlchemyRepository(ResourceTypeRepository):
             resourceTypeId=resource_type_id).first()
 
     def _list(self) -> List[ocloud.ResourceType]:
-        return self.session.query()
+        return self.session.query(ocloud.ResourceType)
 
     def _update(self, resourceType: ocloud.ResourceType):
         self.session.add(resourceType)
@@ -75,7 +74,7 @@ class ResourcePoolSqlAlchemyRepository(ResourcePoolRepository):
             resourcePoolId=resource_pool_id).first()
 
     def _list(self) -> List[ocloud.ResourcePool]:
-        return self.session.query()
+        return self.session.query(ocloud.ResourcePool)
 
     def _update(self, resourcePool: ocloud.ResourcePool):
         self.session.add(resourcePool)
@@ -90,11 +89,31 @@ class ResourceSqlAlchemyRepository(ResourceRepository):
         self.session.add(resource)
 
     def _get(self, resource_id) -> ocloud.Resource:
-        return self.session.query(ocloud.Resource).filter_by(
-            resourceId=resource_id).first()
+        # return self.session.query(ocloud.Resource).filter_by(
+        #     resourceId=resource_id).first()
+        # topq = uow.session.query(orm.resource).filter(
+        #     orm.resource.c.resourceId == resourceId).\
+        #     cte('cte', recursive=True)
+        # bootomq = uow.session.query(orm.resource).join(
+        #     topq, orm.resource.c.parentId == topq.c.resourceId)
+        # res = uow.session.query(topq.union(bootomq))
+        def recursive(id):
+            res = self.session.query(ocloud.Resource).filter_by(
+                resourceId=id).first()
+            if res is not None:
+                query = self.session.query(ocloud.Resource).filter_by(
+                    parentId=res.resourceId)
+                children = []
+                for r in query:
+                    child = recursive(r.resourceId)
+                    children.append(child)
+                res.set_children(children)
+            return res
+        return recursive(resource_id)
 
-    def _list(self) -> List[ocloud.Resource]:
-        return self.session.query()
+    def _list(self, resourcepool_id) -> List[ocloud.Resource]:
+        return self.session.query(ocloud.Resource).filter_by(
+            resourcePoolId=resourcepool_id)
 
     def _update(self, resource: ocloud.Resource):
         self.session.add(resource)
@@ -113,7 +132,7 @@ class DeploymentManagerSqlAlchemyRepository(DeploymentManagerRepository):
             deploymentManagerId=deployment_manager_id).first()
 
     def _list(self) -> List[ocloud.DeploymentManager]:
-        return self.session.query()
+        return self.session.query(ocloud.DeploymentManager)
 
     def _update(self, deployment_manager: ocloud.DeploymentManager):
         self.session.add(deployment_manager)
@@ -132,7 +151,7 @@ class SubscriptionSqlAlchemyRepository(SubscriptionRepository):
             subscriptionId=subscription_id).first()
 
     def _list(self) -> List[ocloud.Subscription]:
-        return self.session.query()
+        return self.session.query(ocloud.Subscription)
 
     def _update(self, subscription: ocloud.Subscription):
         self.session.add(subscription)

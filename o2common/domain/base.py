@@ -14,13 +14,31 @@
 
 from datetime import datetime
 from typing import List
+from sqlalchemy.inspection import inspect
 from .events import Event
 
 
 class AgRoot:
+
     def __init__(self) -> None:
         self.hash = ""
         self.updatetime = datetime.now()
         self.createtime = datetime.now()
         self.events = []  # type: List[Event]
         # self.id = ""
+
+
+class Serializer(object):
+
+    def serialize(self):
+        # d = {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+        # if 'createtime' in d:
+        #     d['createtime'] = d['createtime'].isoformat()
+        # if 'updatetime' in d:
+        #     d['updatetime'] = d['updatetime'].isoformat()
+        # return d
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+    @staticmethod
+    def serialize_list(li):
+        return [m.serialize() for m in li]

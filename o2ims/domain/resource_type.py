@@ -8,8 +8,9 @@ class ResourceTypeEnum(Enum):
     PSERVER = 11
     PSERVER_CPU = 12
     PSERVER_RAM = 13
-    PSERVER_PORT = 14
-    PSERVER_IF = 15
+    PSERVER_IF = 14
+    PSERVER_IF_PORT = 15
+    PSERVER_ETH = 16
 
 
 class InvalidOcloudState(Exception):

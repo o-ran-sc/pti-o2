@@ -136,8 +136,8 @@ class ResourceRepository(abc.ABC):
             self.seen.add(resource)
         return resource
 
-    def list(self) -> List[ocloud.Resource]:
-        return self._list()
+    def list(self, resourcepool_id) -> List[ocloud.Resource]:
+        return self._list(resourcepool_id)
 
     def update(self, resource: ocloud.Resource):
         self._update(resource)

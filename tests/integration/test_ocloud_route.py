@@ -103,7 +103,7 @@ def test_route_resources(sqlite_flask_uow):
         resource_type_id1 = str(uuid.uuid4())
         resource_pool_id1 = str(uuid.uuid4())
         resource1 = ocloud.Resource(
-            resource_id1, resource_type_id1, resource_pool_id1)
+            resource_id1, resource_type_id1, resource_pool_id1, 'resource1')
         uow.resources.add(resource1)
         uow.commit()
 

@@ -93,7 +93,6 @@ class StxCpuClient(BaseClient):
 class StxMemClient(BaseClient):
     def __init__(self):
         super().__init__()
-        # self._pserver_id = pserver_id
         self.driver = StxSaClientImp()
 
     def _get(self, id) -> ocloudModel.StxGenericModel:
@@ -103,23 +102,21 @@ class StxMemClient(BaseClient):
         return self.driver.getMemList(**filters)
 
 
-class StxPortClient(BaseClient):
+class StxEthClient(BaseClient):
     def __init__(self):
         super().__init__()
-        # self._pserver_id = pserver_id
         self.driver = StxSaClientImp()
 
     def _get(self, id) -> ocloudModel.StxGenericModel:
-        return self.driver.getPort(id)
+        return self.driver.getEthernet(id)
 
     def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
-        return self.driver.getPortList(**filters)
+        return self.driver.getEthernetList(**filters)
 
 
 class StxIfClient(BaseClient):
     def __init__(self):
         super().__init__()
-        # self._pserver_id = pserver_id
         self.driver = StxSaClientImp()
 
     def _get(self, id) -> ocloudModel.StxGenericModel:
@@ -127,6 +124,18 @@ class StxIfClient(BaseClient):
 
     def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
         return self.driver.getIfList(**filters)
+
+
+class StxIfPortClient(BaseClient):
+    def __init__(self):
+        super().__init__()
+        self.driver = StxSaClientImp()
+
+    def _get(self, id) -> ocloudModel.StxGenericModel:
+        return self.driver.getPort(id)
+
+    def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
+        return self.driver.getPortList(**filters)
 
 
 # internal driver which implement client call to Stx Standalone instance
@@ -142,27 +151,27 @@ class StxSaClientImp(object):
 
     def getInstanceInfo(self) -> ocloudModel.StxGenericModel:
         systems = self.stxclient.isystem.list()
-        logger.debug("systems:" + str(systems[0].to_dict()))
+        logger.debug('systems:' + str(systems[0].to_dict()))
         return ocloudModel.StxGenericModel(
             ResourceTypeEnum.OCLOUD, systems[0]) if systems else None
 
     def getPserverList(self, **filters) -> List[ocloudModel.StxGenericModel]:
         # resourcepoolid = filters.get("resourcepoolid", None)
         hosts = self.stxclient.ihost.list()
-        logger.debug("host 1:" + str(hosts[0].to_dict()))
+        logger.debug('host 1:' + str(hosts[0].to_dict()))
         return [ocloudModel.StxGenericModel(
             ResourceTypeEnum.PSERVER, self._hostconverter(host))
             for host in hosts if host]
 
     def getPserver(self, id) -> ocloudModel.StxGenericModel:
         host = self.stxclient.ihost.get(id)
-        logger.debug("host:" + str(host.to_dict()))
+        logger.debug('host:' + str(host.to_dict()))
         return ocloudModel.StxGenericModel(
             ResourceTypeEnum.PSERVER, self._hostconverter(host))
 
     def getK8sList(self, **filters) -> List[ocloudModel.StxGenericModel]:
         k8sclusters = self.stxclient.kube_cluster.list()
-        logger.debug("k8sresources[0]:" + str(k8sclusters[0].to_dict()))
+        logger.debug('k8sresources[0]:' + str(k8sclusters[0].to_dict()))
         return [ocloudModel.StxGenericModel(
             ResourceTypeEnum.DMS,
             self._k8sconverter(k8sres), self._k8shasher(k8sres))
@@ -178,14 +187,14 @@ class StxSaClientImp(object):
 
         if not k8scluster:
             return None
-        logger.debug("k8sresource:" + str(k8scluster.to_dict()))
+        logger.debug('k8sresource:' + str(k8scluster.to_dict()))
         return ocloudModel.StxGenericModel(
             ResourceTypeEnum.DMS,
             self._k8sconverter(k8scluster), self._k8shasher(k8scluster))
 
     def getCpuList(self, **filters) -> List[ocloudModel.StxGenericModel]:
-        hostid = filters.get("hostid", None)
-        assert (hostid is not None), "missing hostid to query icpu list"
+        hostid = filters.get('hostid', None)
+        assert (hostid is not None), 'missing hostid to query icpu list'
         cpulist = self.stxclient.icpu.list(hostid)
         return [ocloudModel.StxGenericModel(
             ResourceTypeEnum.PSERVER_CPU,
@@ -197,8 +206,8 @@ class StxSaClientImp(object):
             ResourceTypeEnum.PSERVER_CPU, self._cpuconverter(cpuinfo))
 
     def getMemList(self, **filters) -> List[ocloudModel.StxGenericModel]:
-        hostid = filters.get("hostid", None)
-        assert (hostid is not None), "missing hostid to query imem list"
+        hostid = filters.get('hostid', None)
+        assert (hostid is not None), 'missing hostid to query imem list'
         memlist = self.stxclient.imemory.list(hostid)
         return [ocloudModel.StxGenericModel(
             ResourceTypeEnum.PSERVER_RAM,
@@ -209,22 +218,22 @@ class StxSaClientImp(object):
         return ocloudModel.StxGenericModel(
             ResourceTypeEnum.PSERVER_RAM, self._memconverter(meminfo))
 
-    def getPortList(self, **filters) -> List[ocloudModel.StxGenericModel]:
-        hostid = filters.get("hostid", None)
-        assert (hostid is not None), "missing hostid to query port list"
-        portlist = self.stxclient.port.list(hostid)
+    def getEthernetList(self, **filters) -> List[ocloudModel.StxGenericModel]:
+        hostid = filters.get('hostid', None)
+        assert (hostid is not None), 'missing hostid to query port list'
+        ethlist = self.stxclient.ethernet_port.list(hostid)
         return [ocloudModel.StxGenericModel(
-            ResourceTypeEnum.PSERVER_PORT,
-            port) for port in portlist if port]
+            ResourceTypeEnum.PSERVER_ETH,
+            self._ethconverter(eth)) for eth in ethlist if eth]
 
-    def getPort(self, id) -> ocloudModel.StxGenericModel:
-        portinfo = self.stxclient.port.get(id)
+    def getEthernet(self, id) -> ocloudModel.StxGenericModel:
+        ethinfo = self.stxclient.ethernet_port.get(id)
         return ocloudModel.StxGenericModel(
-            ResourceTypeEnum.PSERVER_PORT, portinfo)
+            ResourceTypeEnum.PSERVER_ETH, self._ethconverter(ethinfo))
 
     def getIfList(self, **filters) -> List[ocloudModel.StxGenericModel]:
-        hostid = filters.get("hostid", None)
-        assert (hostid is not None), "missing hostid to query iinterface list"
+        hostid = filters.get('hostid', None)
+        assert (hostid is not None), 'missing hostid to query iinterface list'
         iflist = self.stxclient.iinterface.list(hostid)
         return [ocloudModel.StxGenericModel(
             ResourceTypeEnum.PSERVER_IF,
@@ -234,6 +243,19 @@ class StxSaClientImp(object):
         ifinfo = self.stxclient.iinterface.get(id)
         return ocloudModel.StxGenericModel(
             ResourceTypeEnum.PSERVER_IF, self._ifconverter(ifinfo))
+
+    def getPortList(self, **filters) -> List[ocloudModel.StxGenericModel]:
+        ifid = filters.get('interfaceid', None)
+        assert (ifid is not None), 'missing interface id to query port list'
+        portlist = self.stxclient.iinterface.list_ports(ifid)
+        return [ocloudModel.StxGenericModel(
+            ResourceTypeEnum.PSERVER_IF_PORT,
+            port) for port in portlist if port]
+
+    def getPort(self, id) -> ocloudModel.StxGenericModel:
+        portinfo = self.stxclient.port.get(id)
+        return ocloudModel.StxGenericModel(
+            ResourceTypeEnum.PSERVER_IF_PORT, portinfo)
 
     def _getIsystems(self):
         return self.stxclient.isystem.list()
@@ -250,36 +272,45 @@ class StxSaClientImp(object):
 
     @ staticmethod
     def _hostconverter(host):
-        setattr(host, "name", host.hostname)
+        setattr(host, 'name', host.hostname)
         return host
 
     @ staticmethod
     def _cpuconverter(cpu):
-        setattr(cpu, "name", "cpu-"+str(cpu.cpu))
+        setattr(cpu, 'name', cpu.ihost_uuid.split(
+            '-', 1)[0] + '-cpu-'+str(cpu.cpu))
         return cpu
 
     @ staticmethod
     def _memconverter(mem):
-        setattr(mem, "name", "mem-node-"+str(mem.numa_node))
+        setattr(mem, 'name', mem.ihost_uuid.split('-', 1)[0] +
+                '-mem-node-'+str(mem.numa_node))
         return mem
 
     @ staticmethod
+    def _ethconverter(eth):
+        setattr(eth, 'name', eth.host_uuid.split('-', 1)[0] + '-'+eth.name)
+        setattr(eth, 'updated_at', None)
+        setattr(eth, 'created_at', None)
+        return eth
+
+    @ staticmethod
     def _ifconverter(ifs):
-        setattr(ifs, "name", ifs.ifname)
+        setattr(ifs, 'name', ifs.ihost_uuid.split('-', 1)[0] + '-'+ifs.ifname)
         setattr(ifs, 'updated_at', None)
         setattr(ifs, 'created_at', None)
         return ifs
 
     @ staticmethod
     def _k8sconverter(cluster):
-        setattr(cluster, "name", cluster.cluster_name)
-        setattr(cluster, "uuid",
+        setattr(cluster, 'name', cluster.cluster_name)
+        setattr(cluster, 'uuid',
                 uuid.uuid3(uuid.NAMESPACE_URL, cluster.cluster_name))
         setattr(cluster, 'updated_at', None)
         setattr(cluster, 'created_at', None)
         setattr(cluster, 'events', [])
-        logger.debug("k8s cluster name/uuid:" +
-                     cluster.name + "/" + str(cluster.uuid))
+        logger.debug('k8s cluster name/uuid:' +
+                     cluster.name + '/' + str(cluster.uuid))
         return cluster
 
     @ staticmethod

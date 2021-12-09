@@ -102,6 +102,7 @@ resource = Table(
     Column("resourceId", String(255), primary_key=True),
     Column("resourceTypeId", ForeignKey("resourcetype.resourceTypeId")),
     Column("resourcePoolId", ForeignKey("resourcepool.resourcePoolId")),
+    Column("name", String(255)),
     # Column("globalAssetId", String(255)),
     Column("parentId", String(255)),
     Column("description", String(255)),

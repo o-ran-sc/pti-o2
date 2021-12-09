@@ -23,16 +23,16 @@ from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
 
-class PServerIfPortWatcher(ResourceWatcher):
+class PServerEthWatcher(ResourceWatcher):
     def __init__(self, client: BaseClient,
                  bus: MessageBus) -> None:
         super().__init__(client, bus)
 
     def _targetname(self):
-        return "pserver_if_port"
+        return "pserver_ethernet"
 
     def _probe(self, parent: StxGenericModel):
-        interfaceid = parent.id
-        newmodels = self._client.list(interfaceid=interfaceid)
-        return [commands.UpdatePserverIfPort(data=m, parentid=interfaceid)
+        hostid = parent.id
+        newmodels = self._client.list(hostid=hostid)
+        return [commands.UpdatePserverEth(data=m, parentid=hostid)
                 for m in newmodels]

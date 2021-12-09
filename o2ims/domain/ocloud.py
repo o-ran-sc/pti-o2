@@ -13,8 +13,9 @@
 #  limitations under the License.
 
 from __future__ import annotations
+import json
 
-from o2common.domain.base import AgRoot
+from o2common.domain.base import AgRoot, Serializer
 # from dataclasses import dataclass
 # from datetime import date
 # from typing import Optional, List, Set
@@ -22,7 +23,7 @@ from .resource_type import ResourceTypeEnum
 # from uuid import UUID
 
 
-class Subscription(AgRoot):
+class Subscription(AgRoot, Serializer):
     def __init__(self, id: str, callback: str, consumersubid: str = '',
                  filter: str = '') -> None:
         super().__init__()
@@ -33,7 +34,7 @@ class Subscription(AgRoot):
         self.filter = filter
 
 
-class DeploymentManager(AgRoot):
+class DeploymentManager(AgRoot, Serializer):
     def __init__(self, id: str, name: str, ocloudid: str,
                  dmsendpoint: str, description: str = '',
                  supportedLocations: str = '', capabilities: str = '',
@@ -51,7 +52,7 @@ class DeploymentManager(AgRoot):
         self.extensions = []
 
 
-class ResourcePool(AgRoot):
+class ResourcePool(AgRoot, Serializer):
     def __init__(self, id: str, name: str, location: str,
                  ocloudid: str, gLocationId: str = '',
                  description: str = '') -> None:
@@ -66,7 +67,7 @@ class ResourcePool(AgRoot):
         self.extensions = []
 
 
-class ResourceType(AgRoot):
+class ResourceType(AgRoot, Serializer):
     def __init__(self, typeid: str, name: str, typeEnum: ResourceTypeEnum,
                  ocloudid: str, vender: str = '', model: str = '',
                  version: str = '',
@@ -84,9 +85,9 @@ class ResourceType(AgRoot):
         self.extensions = []
 
 
-class Resource(AgRoot):
+class Resource(AgRoot, Serializer):
     def __init__(self, resourceId: str, resourceTypeId: str,
-                 resourcePoolId: str, parentId: str = '',
+                 resourcePoolId: str, name: str, parentId: str = '',
                  gAssetId: str = '', elements: str = '',
                  description: str = '') -> None:
         super().__init__()
@@ -94,14 +95,34 @@ class Resource(AgRoot):
         self.version_number = 0
         self.resourceTypeId = resourceTypeId
         self.resourcePoolId = resourcePoolId
+        self.name = name
         self.globalAssetId = gAssetId
         self.parentId = parentId
         self.elements = elements
         self.description = description
+        self.children = []
         self.extensions = []
 
+    def set_children(self, children: list):
+        self.children = children
 
-class Ocloud(AgRoot):
+    def serialize(self):
+        d = Serializer.serialize(self)
+
+        if 'elements' in d and d['elements'] != '':
+            d['elements'] = json.loads(d['elements'])
+
+        if not hasattr(self, 'children') or len(self.children) == 0:
+            return d
+        else:
+            d['children'] = []
+
+        for child in self.children:
+            d['children'].append(child.serialize())
+        return d
+
+
+class Ocloud(AgRoot, Serializer):
     def __init__(self, ocloudid: str, name: str, imsendpoint: str,
                  globalcloudId: str = '',
                  description: str = '', version_number: int = 0) -> None:

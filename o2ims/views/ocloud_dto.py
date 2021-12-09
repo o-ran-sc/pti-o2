@@ -70,22 +70,64 @@ class ResourceDTO:
                                         description='Resource ID'),
             'resourceTypeId': fields.String,
             'resourcePoolId': fields.String,
+            'name': fields.String,
             'parentId': fields.String,
             'description': fields.String,
         }
     )
 
-    resource_get = api_ims_inventory_v1.model(
-        "ResourceGetDto",
-        {
+    def recursive_resource_mapping(iteration_number=2):
+        resource_json_mapping = {
             'resourceId': fields.String(required=True,
                                         description='Resource ID'),
             'resourceTypeId': fields.String,
             'resourcePoolId': fields.String,
+            'name': fields.String,
+            'parentId': fields.String,
+            'description': fields.String,
+            'elements': fields.String,
+        }
+        if iteration_number:
+            resource_json_mapping['children'] = fields.List(
+                fields.Nested(ResourceDTO.recursive_resource_mapping(
+                    iteration_number-1)))
+        return api_ims_inventory_v1.model(
+            'ResourceGetDto' + str(iteration_number), resource_json_mapping)
+
+    def _recursive_resource_mapping(self, iteration_number=2):
+        resource_json_mapping = {
+            'resourceId': fields.String(required=True,
+                                        description='Resource ID'),
+            'resourceTypeId': fields.String,
+            'resourcePoolId': fields.String,
+            'name': fields.String,
             'parentId': fields.String,
             'description': fields.String,
         }
-    )
+        if iteration_number:
+            resource_json_mapping['children'] = fields.List(
+                fields.Nested(self._recursive_resource_mapping(
+                    iteration_number-1)))
+            # print(type(resource_json_mapping['children']))
+            if resource_json_mapping['children'] is None:
+                del resource_json_mapping['children']
+        return resource_json_mapping
+
+    def get_resource_get(self):
+        return api_ims_inventory_v1.model(
+            'ResourceGetDto',
+            {
+                'resourceId': fields.String(required=True,
+                                            description='Resource ID'),
+                'resourceTypeId': fields.String,
+                'resourcePoolId': fields.String,
+                'name': fields.String,
+                'parentId': fields.String,
+                'description': fields.String,
+                'children': fields.List(fields.Nested(
+                    self._recursive_resource_mapping()))
+            }
+        )
 
 
 class DeploymentManagerDTO:

@@ -13,10 +13,7 @@
 #  limitations under the License.
 
 import uuid
-from sqlalchemy import select
 
-from o2ims.adapter.orm import ocloud, resource, resourcetype, \
-    resourcepool, deploymentmanager, subscription
 from o2common.service import unit_of_work
 from o2ims.views.ocloud_dto import SubscriptionDTO
 from o2ims.domain.ocloud import Subscription
@@ -24,97 +21,79 @@ from o2ims.domain.ocloud import Subscription
 
 def oclouds(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(select(ocloud))
-    return [dict(r) for r in res]
+        li = uow.oclouds.list()
+    return [r.serialize() for r in li]
 
 
 def ocloud_one(ocloudid: str, uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(
-            select(ocloud).where(ocloud.c.oCloudId == ocloudid))
-        first = res.first()
-    return None if first is None else dict(first)
+        first = uow.oclouds.get(ocloudid)
+        return first.serialize() if first is not None else None
 
 
 def resource_types(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(select(resourcetype))
-    return [dict(r) for r in res]
+        li = uow.resource_types.list()
+    return [r.serialize() for r in li]
 
 
 def resource_type_one(resourceTypeId: str,
                       uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(select(resourcetype).where(
-            resourcetype.c.resourceTypeId == resourceTypeId))
-        first = res.first()
-    return None if first is None else dict(first)
+        first = uow.resource_types.get(resourceTypeId)
+        print(first)
+        return first.serialize() if first is not None else None
 
 
 def resource_pools(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(select(resourcepool))
-    return [dict(r) for r in res]
+        li = uow.resource_pools.list()
+    return [r.serialize() for r in li]
 
 
 def resource_pool_one(resourcePoolId: str,
                       uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(select(resourcepool).where(
-            resourcepool.c.resourcePoolId == resourcePoolId))
-        first = res.first()
-    return None if first is None else dict(first)
+        first = uow.resource_pools.get(resourcePoolId)
+        return first.serialize() if first is not None else None
 
 
 def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(select(resource).where(
-            resource.c.resourcePoolId == resourcePoolId))
-    return [dict(r) for r in res]
+        li = uow.resources.list(resourcePoolId)
+    return [r.serialize() for r in li]
 
 
 def resource_one(resourceId: str, uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        # topq = uow.session.query(resource).filter(
-        #     resource.c.resourceId == resourceId).cte('cte', recursive=True)
-        # bootomq = uow.session.query(resource).join(
-        #     topq, resource.c.parentId == topq.c.resourceId)
-        # res = uow.session.query(topq.union(bootomq))
-        # print(res)
-        res = uow.session.execute(select(resource).where(
-            resource.c.resourceId == resourceId))
-        first = res.first()
-    return None if first is None else dict(first)
+        first = uow.resources.get(resourceId)
+        return first.serialize() if first is not None else None
 
 
 def deployment_managers(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(select(deploymentmanager))
-    return [dict(r) for r in res]
+        li = uow.deployment_managers.list()
+    return [r.serialize() for r in li]
 
 
 def deployment_manager_one(deploymentManagerId: str,
                            uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(select(deploymentmanager).where(
-            deploymentmanager.c.deploymentManagerId == deploymentManagerId))
-        first = res.first()
-    return None if first is None else dict(first)
+        first = uow.deployment_managers.get(deploymentManagerId)
+        return first.serialize() if first is not None else None
 
 
 def subscriptions(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(select(subscription))
-    return [dict(r) for r in res]
+        li = uow.subscriptions.list()
+    return [r.serialize() for r in li]
 
 
 def subscription_one(subscriptionId: str,
                      uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        res = uow.session.execute(select(subscription).where(
-            subscription.c.subscriptionId == subscriptionId))
-        first = res.first()
-    return None if first is None else dict(first)
+        first = uow.subscriptions.get(subscriptionId)
+        return first.serialize() if first is not None else None
 
 
 def subscription_create(subscriptionDto: SubscriptionDTO.subscription,

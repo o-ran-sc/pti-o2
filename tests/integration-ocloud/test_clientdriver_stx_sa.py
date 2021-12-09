@@ -102,6 +102,20 @@ def test_get_mem_list(real_stx_aio_client):
     assert mem1.id == mem2.id
 
 
+def test_get_eth_list(real_stx_aio_client):
+    stxSaClientImp = StxSaClientImp(real_stx_aio_client)
+    assert stxSaClientImp is not None
+    hostlist = stxSaClientImp.getPserverList()
+    assert len(hostlist) > 0
+
+    ethlist = stxSaClientImp.getEthernetList(hostid=hostlist[0].id)
+    assert len(ethlist) > 0
+    eth1 = ethlist[0]
+    eth2 = stxSaClientImp.getEthernet(eth1.id)
+    assert eth1 != eth2
+    assert eth1.id == eth2.id
+
+
 def test_get_if_list(real_stx_aio_client):
     stxSaClientImp = StxSaClientImp(real_stx_aio_client)
     assert stxSaClientImp is not None
@@ -116,13 +130,16 @@ def test_get_if_list(real_stx_aio_client):
     assert if1.id == if2.id
 
 
-def test_get_port_list(real_stx_aio_client):
+def test_get_if_port_list(real_stx_aio_client):
     stxSaClientImp = StxSaClientImp(real_stx_aio_client)
     assert stxSaClientImp is not None
     hostlist = stxSaClientImp.getPserverList()
     assert len(hostlist) > 0
 
-    portlist = stxSaClientImp.getPortList(hostid=hostlist[0].id)
+    iflist = stxSaClientImp.getIfList(hostid=hostlist[0].id)
+    assert len(iflist) > 0
+
+    portlist = stxSaClientImp.getPortList(interfaceid=iflist[0].id)
     assert len(portlist) > 0
     port1 = portlist[0]
     port2 = stxSaClientImp.getPort(port1.id)

@@ -68,10 +68,15 @@ class UpdatePserverMem(UpdateResource):
 
 
 @dataclass
+class UpdatePserverEth(UpdateResource):
+    pass
+
+
+@dataclass
 class UpdatePserverIf(UpdateResource):
     pass
 
 
 @dataclass
-class UpdatePserverPort(UpdateResource):
+class UpdatePserverIfPort(UpdateResource):
     pass

@@ -17,7 +17,7 @@ import pytest
 
 from o2common.config import config
 from o2ims.views import ocloud_view
-from o2ims.domain import ocloud
+from o2ims.domain import ocloud, subscription_obj
 from o2ims.domain import resource_type as rt
 
 
@@ -200,7 +200,7 @@ def test_view_deployment_manager_one(sqlite_uow):
 def test_view_subscriptions(sqlite_uow):
 
     subscription_id1 = str(uuid.uuid4())
-    subscription1 = ocloud.Subscription(
+    subscription1 = subscription_obj.Subscription(
         subscription_id1, "https://callback/uri/write/here")
     with sqlite_uow as uow:
         uow.subscriptions.add(subscription1)
@@ -214,7 +214,7 @@ def test_view_subscriptions(sqlite_uow):
 def test_view_subscription_one(sqlite_uow):
 
     subscription_id1 = str(uuid.uuid4())
-    subscription1 = ocloud.Subscription(
+    subscription1 = subscription_obj.Subscription(
         subscription_id1, "https://callback/uri/write/here")
 
     # Query return None
@@ -235,7 +235,7 @@ def test_view_subscription_one(sqlite_uow):
 def test_view_subscription_delete(sqlite_uow):
 
     subscription_id1 = str(uuid.uuid4())
-    subscription1 = ocloud.Subscription(
+    subscription1 = subscription_obj.Subscription(
         subscription_id1, "https://callback/uri/write/here")
 
     with sqlite_uow as uow:

@@ -17,8 +17,9 @@ from __future__ import annotations
 import uuid
 # import json
 
-from o2ims.domain import commands
+from o2ims.domain import commands, events
 from o2ims.domain.stx_object import StxGenericModel
+from o2ims.domain.subscription_obj import NotificationEventEnum
 from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.domain.resource_type import MismatchedModel
 from o2ims.domain.ocloud import Resource, ResourceType
@@ -114,4 +115,8 @@ def update_by(target: Resource, stxobj: StxGenericModel,
     target.updatetime = stxobj.updatetime
     target.hash = stxobj.hash
     target.version_number = target.version_number + 1
-    target.events = []
+    target.events = target.events.append(events.ResourceChanged(
+        id=stxobj.id,
+        resourcePoolId=target.resourcePoolId,
+        notificationEventType=NotificationEventEnum.MODIFY,
+    ))

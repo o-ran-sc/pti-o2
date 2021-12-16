@@ -14,10 +14,10 @@
 
 from typing import List
 
-from o2ims.domain import ocloud
+from o2ims.domain import ocloud, subscription_obj
 from o2ims.domain.ocloud_repo import OcloudRepository, ResourceTypeRepository,\
-    ResourcePoolRepository, ResourceRepository, DeploymentManagerRepository,\
-    SubscriptionRepository
+    ResourcePoolRepository, ResourceRepository, DeploymentManagerRepository
+from o2ims.domain.subscription_repo import SubscriptionRepository
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -143,19 +143,19 @@ class SubscriptionSqlAlchemyRepository(SubscriptionRepository):
         super().__init__()
         self.session = session
 
-    def _add(self, subscription: ocloud.Subscription):
+    def _add(self, subscription: subscription_obj.Subscription):
         self.session.add(subscription)
 
-    def _get(self, subscription_id) -> ocloud.Subscription:
-        return self.session.query(ocloud.Subscription).filter_by(
+    def _get(self, subscription_id) -> subscription_obj.Subscription:
+        return self.session.query(subscription_obj.Subscription).filter_by(
             subscriptionId=subscription_id).first()
 
-    def _list(self) -> List[ocloud.Subscription]:
-        return self.session.query(ocloud.Subscription)
+    def _list(self) -> List[subscription_obj.Subscription]:
+        return self.session.query(subscription_obj.Subscription)
 
-    def _update(self, subscription: ocloud.Subscription):
+    def _update(self, subscription: subscription_obj.Subscription):
         self.session.add(subscription)
 
     def _delete(self, subscription_id):
-        self.session.query(ocloud.Subscription).filter_by(
+        self.session.query(subscription_obj.Subscription).filter_by(
             subscriptionId=subscription_id).delete()

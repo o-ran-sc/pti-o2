@@ -27,6 +27,8 @@ from o2ims.service.auditor import ocloud_handler, dms_handler, \
     resourcepool_handler, pserver_handler, pserver_cpu_handler, \
     pserver_mem_handler, pserver_port_handler, pserver_if_handler,\
     pserver_eth_handler
+from o2ims.service.event import notify_handler, ocloud_event, \
+    resource_event, resource_pool_event
 
 # if TYPE_CHECKING:
 #     from . import unit_of_work
@@ -39,7 +41,7 @@ class InvalidResourceType(Exception):
 EVENT_HANDLERS = {
     o2dms_events.NfDeploymentStateChanged: [
         nfdeployment_handler.publish_nfdeployment_state_change
-    ]
+    ],
     # o2dms_events.NfDeploymentCreated: [
     #     nfdeployment_handler.publish_nfdeployment_created],
     # o2dms_events.NfDeploymentInstalled: [
@@ -48,7 +50,11 @@ EVENT_HANDLERS = {
     #     nfdeployment_handler.publish_nfdeployment_uninstalling],
     # o2dms_events.NfDeploymentUninstalled: [
     #     nfdeployment_handler.publish_nfdeployment_uninstalled]
-} # type: Dict[Type[events.Event], Callable]
+    events.OcloudChanged: [ocloud_event.notify_ocloud_update],
+    events.ResourceChanged: [resource_event.notify_resource_change],
+    events.ResourcePoolChanged: [resource_pool_event.\
+                                 notify_resourcepool_change],
+}  # type: Dict[Type[events.Event], Callable]
 
 
 COMMAND_HANDLERS = {
@@ -61,13 +67,13 @@ COMMAND_HANDLERS = {
     commands.UpdatePserverIf: pserver_if_handler.update_pserver_if,
     commands.UpdatePserverIfPort: pserver_port_handler.update_pserver_port,
     commands.UpdatePserverEth: pserver_eth_handler.update_pserver_eth,
-
-    o2dms_cmmands.HandleNfDeploymentStateChanged: \
-        nfdeployment_handler.handle_nfdeployment_statechanged,
-    o2dms_cmmands.InstallNfDeployment: \
-        nfdeployment_handler.install_nfdeployment,
-    o2dms_cmmands.UninstallNfDeployment: \
-        nfdeployment_handler.uninstall_nfdeployment,
-    o2dms_cmmands.DeleteNfDeployment: \
-        nfdeployment_handler.delete_nfdeployment,
+    o2dms_cmmands.HandleNfDeploymentStateChanged:
+    nfdeployment_handler.handle_nfdeployment_statechanged,
+    o2dms_cmmands.InstallNfDeployment:
+    nfdeployment_handler.install_nfdeployment,
+    o2dms_cmmands.UninstallNfDeployment:
+    nfdeployment_handler.uninstall_nfdeployment,
+    o2dms_cmmands.DeleteNfDeployment:
+    nfdeployment_handler.delete_nfdeployment,
+    commands.PubMessage2SMO: notify_handler.notify_change_to_smo,
 }  # type: Dict[Type[commands.Command], Callable]

@@ -20,11 +20,12 @@ from o2ims.domain.stx_object import StxGenericModel
 # from dataclasses import asdict
 # from typing import List, Dict, Callable, Type
 # TYPE_CHECKING
-from o2ims.domain import commands
+from o2ims.domain import commands, events
 from o2common.service.unit_of_work import AbstractUnitOfWork
 # from o2ims.domain.resource_type import InvalidOcloudState
 from o2ims.domain.resource_type import MismatchedModel
 from o2ims.domain.ocloud import ResourcePool
+from o2ims.domain.subscription_obj import NotificationEventEnum
 # if TYPE_CHECKING:
 #     from . import unit_of_work
 
@@ -98,4 +99,7 @@ def update_by(target: ResourcePool, stxobj: StxGenericModel,
     target.hash = stxobj.hash
     target.oCloudId = parentid
     target.version_number = target.version_number + 1
-    target.events = []
+    target.events = target.events.append(events.ResourcePoolChanged(
+        id=stxobj.id,
+        notificationEventType=NotificationEventEnum.MODIFY,
+    ))

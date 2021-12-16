@@ -5,6 +5,7 @@ requests
 tox
 
 pytest
+pytest-cov
 pytest-icdiff
 mock
 

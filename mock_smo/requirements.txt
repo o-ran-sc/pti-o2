@@ -1,0 +1,5 @@
+flask
+flask-restx
+redis
+PyYAML>=5.4.1
+

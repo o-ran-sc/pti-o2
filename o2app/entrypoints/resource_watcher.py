@@ -54,7 +54,7 @@ class WatcherService(cotyledon.Service):
         super().__init__(worker_id)
         self.args = args
         self.bus = bootstrap.bootstrap()
-        self.worker = PollWorker()
+        self.worker = PollWorker(bus=self.bus)
 
     def run(self):
         try:

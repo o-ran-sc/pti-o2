@@ -14,14 +14,34 @@
 
 # pylint: disable=too-few-public-methods
 from dataclasses import dataclass
+from datetime import datetime
 from o2common.domain.events import Event
+from o2ims.domain.subscription_obj import NotificationEventEnum
 
 
 @dataclass
-class OcloudUpdated(Event):
-    oCloudId: str
+class OcloudChanged(Event):
+    id: str
+    notificationEventType: NotificationEventEnum
+    updatetime: datetime.now()
 
 
 @dataclass
-class ResourceTypeUpdated(Event):
-    oCloudId: str
+class ResourceTypeChanged(Event):
+    id: str
+    updatetime: datetime.now()
+
+
+@dataclass
+class ResourcePoolChanged(Event):
+    id: str
+    notificationEventType: NotificationEventEnum
+    updatetime: datetime.now()
+
+
+@dataclass
+class ResourceChanged(Event):
+    id: str
+    resourcePoolId: str
+    notificationEventType: NotificationEventEnum
+    updatetime: datetime.now()

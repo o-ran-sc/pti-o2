@@ -93,6 +93,31 @@ services:
       - /bin/sh
       - /tests/o2app-watcher-entry.sh
 
+  mock_smo:
+    build:
+      context: ./mock_smo
+      dockerfile: Dockerfile
+    image: mock-smo
+    depends_on:
+      - mock_smo_redis
+    environment:
+      - API_HOST=api
+      - REDIS_HOST=mock_smo_redis
+      - MOCK_SMO_HOST=mock_smo
+      - PYTHONDONTWRITEBYTECODE=1
+      - FLASK_APP=/mock_smo/entrypoints/mock_smo.py
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=1
+      - LOGGING_CONFIG_LEVEL=DEBUG
+    volumes:
+      - ./mock_smo/etc:/tmp/etc
+      - ./mock_smo/mock_smo:/mock_smo
+    entrypoint:
+      - /bin/sh
+      - /src/o2app-mock-smo.sh
+    ports:
+      - "5001:80"
+
   postgres:
     image: postgres:9.6
     environment:
@@ -105,3 +130,8 @@ services:
     image: redis:alpine
     ports:
       - "63791:6379"
+
+  mock_smo_redis:
+    image: redis:alpine
+    ports:
+      - "63792:6379"

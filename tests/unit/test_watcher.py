@@ -15,7 +15,7 @@
 import time
 from datetime import datetime
 import json
-from typing import List
+from typing import Callable, List
 # from o2common.config import config
 import uuid
 from o2common.service.watcher.base import BaseWatcher, WatcherTree
@@ -129,7 +129,8 @@ class FakeUnitOfWork(AbstractUnitOfWork):
 def create_fake_bus(uow):
     def update_ocloud(
             cmd: commands.UpdateOCloud,
-            uow: AbstractUnitOfWork):
+            uow: AbstractUnitOfWork,
+            publish: Callable):
         return
 
     fakeuow = FakeUnitOfWork()

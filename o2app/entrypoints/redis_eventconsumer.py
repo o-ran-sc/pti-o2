@@ -13,19 +13,21 @@
 #  limitations under the License.
 
 # import json
-from logging import log
 import redis
 import json
 from o2app import bootstrap
 from o2common.config import config
 # from o2common.domain import commands
 from o2dms.domain import commands
-from o2dms.domain import events
+from o2ims.domain import commands as imscmd
 
 from o2common.helper import o2logging
+from o2ims.domain.subscription_obj import Message2SMO
 logger = o2logging.get_logger(__name__)
 
 r = redis.Redis(**config.get_redis_host_and_port())
+
+apibase = config.get_o2ims_api_base()
 
 
 def main():
@@ -33,6 +35,7 @@ def main():
     bus = bootstrap.bootstrap()
     pubsub = r.pubsub(ignore_subscribe_messages=True)
     pubsub.subscribe("NfDeploymentStateChanged")
+    pubsub.subscribe('ResourceChanged')
 
     for m in pubsub.listen():
         try:
@@ -50,10 +53,21 @@ def handle_dms_changed(m, bus):
         data = json.loads(datastr)
         logger.info('HandleNfDeploymentStateChanged with cmd:{}'.format(data))
         cmd = commands.HandleNfDeploymentStateChanged(
-            NfDeploymentId = data['NfDeploymentId'],
-            FromState = data['FromState'],
-            ToState = data['ToState']
+            NfDeploymentId=data['NfDeploymentId'],
+            FromState=data['FromState'],
+            ToState=data['ToState']
         )
+        bus.handle(cmd)
+    if channel == 'ResourceChanged':
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('ResourceChanged with cmd:{}'.format(data))
+        ref = apibase + '/resourcePools/' + data['resourcePoolId'] +\
+            '/resources/' + data['id']
+        cmd = imscmd.PubMessage2SMO(data=Message2SMO(
+            id=data['id'], ref=ref,
+            eventtype=data['notificationEventType'],
+            updatetime=data['updatetime']))
         bus.handle(cmd)
     else:
         logger.info("unhandled:{}".format(channel))

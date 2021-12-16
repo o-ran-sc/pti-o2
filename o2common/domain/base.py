@@ -15,10 +15,13 @@
 from datetime import datetime
 from typing import List
 from sqlalchemy.inspection import inspect
+from sqlalchemy.exc import NoInspectionAvailable
 from .events import Event
 
 
 class AgRoot:
+
+    events = []
 
     def __init__(self) -> None:
         self.hash = ""
@@ -27,17 +30,23 @@ class AgRoot:
         self.events = []  # type: List[Event]
         # self.id = ""
 
+    # def append_event(self, event: Event):
+    #     self.events = self.events.append(event)
+
 
 class Serializer(object):
 
     def serialize(self):
-        # d = {c: getattr(self, c) for c in inspect(self).attrs.keys()}
-        # if 'createtime' in d:
-        #     d['createtime'] = d['createtime'].isoformat()
-        # if 'updatetime' in d:
-        #     d['updatetime'] = d['updatetime'].isoformat()
-        # return d
-        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+        try:
+            # d = {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+            # if 'createtime' in d:
+            #     d['createtime'] = d['createtime'].isoformat()
+            # if 'updatetime' in d:
+            #     d['updatetime'] = d['updatetime'].isoformat()
+            # return d
+            return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+        except NoInspectionAvailable:
+            return self.__dict__
 
     @staticmethod
     def serialize_list(li):

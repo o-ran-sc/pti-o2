@@ -28,4 +28,4 @@ r = redis.Redis(**config.get_redis_host_and_port())
 
 def publish(channel, event: events.Event):
     logger.info("publishing: channel=%s, event=%s", channel, event)
-    r.publish(channel, json.dumps(asdict(event)))
+    r.publish(channel, json.dumps(asdict(event), default=str))

@@ -16,7 +16,7 @@ import uuid
 
 from o2common.service import unit_of_work
 from o2ims.views.ocloud_dto import SubscriptionDTO
-from o2ims.domain.ocloud import Subscription
+from o2ims.domain.subscription_obj import Subscription
 
 
 def oclouds(uow: unit_of_work.AbstractUnitOfWork):
@@ -41,7 +41,6 @@ def resource_type_one(resourceTypeId: str,
                       uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         first = uow.resource_types.get(resourceTypeId)
-        print(first)
         return first.serialize() if first is not None else None
 
 

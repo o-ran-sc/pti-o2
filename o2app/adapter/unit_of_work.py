@@ -73,13 +73,15 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
 
     def _collect_new_events(self):
         for entry in self.oclouds.seen:
-            while hasattr(entry, 'events') and len(entry.events) > 0:
+            logger.debug('++++++ {}'.format(entry.events))
+            # while hasattr(entry, 'events') and len(entry.events) > 0:
+            while entry.events is not None and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.resource_pools.seen:
-            while hasattr(entry, 'events') and len(entry.events) > 0:
+            while entry.events is not None and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.resources.seen:
-            while hasattr(entry, 'events') and len(entry.events) > 0:
+            while entry.events is not None and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.resource_types.seen:
             while hasattr(entry, 'events') and len(entry.events) > 0:

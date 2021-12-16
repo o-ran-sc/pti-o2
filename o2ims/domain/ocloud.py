@@ -23,17 +23,6 @@ from .resource_type import ResourceTypeEnum
 # from uuid import UUID
 
 
-class Subscription(AgRoot, Serializer):
-    def __init__(self, id: str, callback: str, consumersubid: str = '',
-                 filter: str = '') -> None:
-        super().__init__()
-        self.subscriptionId = id
-        self.version_number = 0
-        self.callback = callback
-        self.consumerSubscriptionId = consumersubid
-        self.filter = filter
-
-
 class DeploymentManager(AgRoot, Serializer):
     def __init__(self, id: str, name: str, ocloudid: str,
                  dmsendpoint: str, description: str = '',

@@ -16,9 +16,11 @@
 from __future__ import annotations
 import uuid
 # import json
+from typing import Callable
 
-from o2ims.domain import commands
+from o2ims.domain import commands, events
 from o2ims.domain.stx_object import StxGenericModel
+from o2ims.domain.subscription_obj import NotificationEventEnum
 from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.domain.resource_type import MismatchedModel
 from o2ims.domain.ocloud import Resource, ResourceType
@@ -33,7 +35,8 @@ class InvalidResourceType(Exception):
 
 def update_pserver(
     cmd: commands.UpdatePserver,
-    uow: AbstractUnitOfWork
+    uow: AbstractUnitOfWork,
+    publish: Callable
 ):
     stxobj = cmd.data
     with uow:
@@ -115,4 +118,8 @@ def update_by(target: Resource, stxobj: StxGenericModel,
     target.updatetime = stxobj.updatetime
     target.hash = stxobj.hash
     target.version_number = target.version_number + 1
-    target.events = []
+    target.events = target.events.append(events.ResourceChanged(
+        id=stxobj.id,
+        resourcePoolId=target.resourcePoolId,
+        notificationEventType=NotificationEventEnum.MODIFY,
+    ))

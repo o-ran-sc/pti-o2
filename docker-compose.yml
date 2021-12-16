@@ -93,6 +93,31 @@ services:
       - /bin/sh
       - /tests/o2app-watcher-entry.sh
 
+  mock_smo:
+    image: o2imsdms
+    depends_on:
+      - redis_pubsub
+      - api
+    environment:
+      - API_HOST=api
+      - REDIS_HOST=redis
+      - MOCK_SMO_HOST=mock_smo
+      - PYTHONDONTWRITEBYTECODE=1
+      - FLASK_APP=/o2app/entrypoints/mock_smo.py
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=1
+      - LOGGING_CONFIG_LEVEL=DEBUG
+    volumes:
+      - ./configs:/configs
+      - ./o2common:/o2common
+      - ./o2app:/o2app
+      - ./tests:/tests
+    entrypoint:
+      - /bin/sh
+      - /tests/o2app-mock-smo.sh
+    ports:
+      - "5001:80"
+
   postgres:
     image: postgres:9.6
     environment:

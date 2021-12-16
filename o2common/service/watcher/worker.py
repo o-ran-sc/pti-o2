@@ -14,6 +14,7 @@
 
 import time
 import sched
+# from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2common.service.watcher.base import WatcherTree
 
 from o2common.helper import o2logging
@@ -21,12 +22,13 @@ logger = o2logging.get_logger(__name__)
 
 
 class PollWorker(object):
-    def __init__(self, interval=10) -> None:
+    def __init__(self, interval=10, bus=None) -> None:
         super().__init__()
         self.watchers = []
         self.schedinstance = sched.scheduler(time.time, time.sleep)
         self.schedinterval = interval
         self._stopped = True
+        self._bus = bus
 
     def set_interval(self, interval):
         if interval > 0:
@@ -48,6 +50,13 @@ class PollWorker(object):
             except Exception as ex:
                 logger.warning("Worker raises exception:" + str(ex))
                 continue
+
+        # handle events
+        if self._bus is not None:
+            events = self._bus.uow.collect_new_events()
+            for event in events:
+                self._bus.handle(event)
+
         self.schedinstance.enter(self.schedinterval, 1, self._repeat)
 
     # note the sched run will block current thread

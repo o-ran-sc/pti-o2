@@ -161,7 +161,7 @@ class StxSaClientImp(object):
         logger.debug('host 1:' + str(hosts[0].to_dict()))
         return [ocloudModel.StxGenericModel(
             ResourceTypeEnum.PSERVER, self._hostconverter(host))
-            for host in hosts if host]
+            for host in hosts if host and host.availability == 'available']
 
     def getPserver(self, id) -> ocloudModel.StxGenericModel:
         host = self.stxclient.ihost.get(id)

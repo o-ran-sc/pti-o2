@@ -17,7 +17,7 @@ import pytest
 
 from o2ims.domain import resource_type as rt
 from o2ims.adapter import ocloud_repository as repository
-from o2ims.domain import ocloud
+from o2ims.domain import ocloud, subscription_obj
 from o2common.config import config
 
 pytestmark = pytest.mark.usefixtures("mappers")
@@ -158,7 +158,7 @@ def test_add_subscription(sqlite_session_factory):
     session = sqlite_session_factory()
     repo = repository.SubscriptionSqlAlchemyRepository(session)
     subscription_id1 = str(uuid.uuid4())
-    subscription1 = ocloud.Subscription(
+    subscription1 = subscription_obj.Subscription(
         subscription_id1, "https://callback/uri/write/here")
     repo.add(subscription1)
     assert repo.get(subscription_id1) == subscription1

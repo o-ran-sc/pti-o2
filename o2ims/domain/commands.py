@@ -19,12 +19,18 @@ from dataclasses import dataclass
 # from datetime import datetime
 # from o2ims.domain.resource_type import ResourceTypeEnum
 from o2ims.domain.stx_object import StxGenericModel
+from o2ims.domain.subscription_obj import Message2SMO
 from o2common.domain.commands import Command
 
 
 @dataclass
 class UpdateStxObject(Command):
     data: StxGenericModel
+
+
+@dataclass
+class PubMessage2SMO(Command):
+    data: Message2SMO
 
 
 @dataclass

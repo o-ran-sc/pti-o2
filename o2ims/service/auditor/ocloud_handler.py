@@ -14,17 +14,20 @@
 
 # pylint: disable=unused-argument
 from __future__ import annotations
+from typing import Callable
 
-from o2ims.domain.stx_object import StxGenericModel
 # from dataclasses import asdict
 # from typing import List, Dict, Callable, Type
 # TYPE_CHECKING
-from o2ims.domain import commands
-from o2common.service.unit_of_work import AbstractUnitOfWork
-from o2ims.domain.resource_type import InvalidOcloudState
-from o2ims.domain.resource_type import MismatchedModel
-from o2ims.domain.ocloud import Ocloud
+
 from o2common.config import config
+# from o2common.service.messagebus import MessageBus
+from o2common.service.unit_of_work import AbstractUnitOfWork
+from o2ims.domain import events, commands
+from o2ims.domain.ocloud import Ocloud
+from o2ims.domain.stx_object import StxGenericModel
+from o2ims.domain.resource_type import InvalidOcloudState, MismatchedModel
+from o2ims.domain.subscription_obj import NotificationEventEnum
 # if TYPE_CHECKING:
 #     from . import unit_of_work
 
@@ -38,7 +41,8 @@ class InvalidResourceType(Exception):
 
 def update_ocloud(
     cmd: commands.UpdateOCloud,
-    uow: AbstractUnitOfWork
+    uow: AbstractUnitOfWork,
+    publish: Callable
 ):
     stxobj = cmd.data
     with uow:
@@ -99,4 +103,8 @@ def update_by(ocloud: Ocloud, stxobj: StxGenericModel) -> None:
     # ocloud.content = stxobj.content
     ocloud.hash = stxobj.hash
     ocloud.version_number = ocloud.version_number + 1
-    ocloud.events = []
+    ocloud.events.append(events.OcloudChanged(
+        id=stxobj.id,
+        notificationEventType=NotificationEventEnum.MODIFY,
+        updatetime=stxobj.updatetime
+    ))

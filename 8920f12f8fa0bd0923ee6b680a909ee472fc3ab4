@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7a56477_57bffda0",
+        "filename": "o2ims/domain/subscription_obj.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2021-12-20T07:30:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2088a8d6_1380684f",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 20
+      },
+      "revId": "8920f12f8fa0bd0923ee6b680a909ee472fc3ab4",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d503bb38_de421d51",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-12-20T06:26:13Z",
       "side": 1,
       "message": "remove the unnecessary assignment",
+      "range": {
+        "startLine": 121,
+        "startChar": 4,
+        "endLine": 121,
+        "endChar": 20
+      },
+      "revId": "8920f12f8fa0bd0923ee6b680a909ee472fc3ab4",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ceb841a4_6a0aabd0",
+        "filename": "o2ims/service/auditor/pserver_handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2021-12-20T07:30:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d503bb38_de421d51",
       "range": {
         "startLine": 121,
         "startChar": 4,

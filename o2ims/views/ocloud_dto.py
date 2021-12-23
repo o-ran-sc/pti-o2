@@ -178,3 +178,32 @@ class SubscriptionDTO:
                                             description='Subscription ID'),
         }
     )
+
+
+class RegistrationDTO:
+
+    registration_get = api_ims_inventory_v1.model(
+        "RegistrationGetDto",
+        {
+            'registrationId': fields.String(required=True,
+                                            description='Registration ID'),
+            'callback': fields.String,
+            'notified': fields.Boolean,
+        }
+    )
+
+    registration = api_ims_inventory_v1.model(
+        "RegistrationCreateDto",
+        {
+            'callback': fields.String(
+                required=True, description='Registration SMO callback address')
+        }
+    )
+
+    registration_post_resp = api_ims_inventory_v1.model(
+        "RegistrationCreatedRespDto",
+        {
+            'registrationId': fields.String(required=True,
+                                            description='registration ID'),
+        }
+    )

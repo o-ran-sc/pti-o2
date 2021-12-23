@@ -30,6 +30,14 @@ class Subscription(AgRoot, Serializer):
         self.filter = filter
 
 
+class Registration(AgRoot, Serializer):
+    def __init__(self, id: str, url: str) -> None:
+        super().__init__()
+        self.registrationId = id
+        self.callback = url
+        self.notified = False
+
+
 class NotificationEventEnum(str, Enum):
     CREATE = 'CREATE'
     MODIFY = 'MODIFY'

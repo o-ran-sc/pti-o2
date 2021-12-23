@@ -15,8 +15,8 @@
 import uuid
 
 from o2common.service import unit_of_work
-from o2ims.views.ocloud_dto import SubscriptionDTO
-from o2ims.domain.subscription_obj import Subscription
+from o2ims.views.ocloud_dto import RegistrationDTO, SubscriptionDTO
+from o2ims.domain.subscription_obj import Registration, Subscription
 
 
 def oclouds(uow: unit_of_work.AbstractUnitOfWork):
@@ -113,5 +113,38 @@ def subscription_delete(subscriptionId: str,
                         uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         uow.subscriptions.delete(subscriptionId)
+        uow.commit()
+    return True
+
+
+def registrations(uow: unit_of_work.AbstractUnitOfWork):
+    with uow:
+        li = uow.registrations.list()
+    return [r.serialize() for r in li]
+
+
+def registration_one(registrationId: str,
+                     uow: unit_of_work.AbstractUnitOfWork):
+    with uow:
+        first = uow.registrations.get(registrationId)
+        return first.serialize() if first is not None else None
+
+
+def registration_create(registrationDto: RegistrationDTO.registration,
+                        uow: unit_of_work.AbstractUnitOfWork):
+
+    reg_uuid = str(uuid.uuid4())
+    registration = Registration(
+        reg_uuid, registrationDto['callback'])
+    with uow:
+        uow.registrations.add(registration)
+        uow.commit()
+    return {"registrationId": reg_uuid}
+
+
+def registration_delete(registrationId: str,
+                        uow: unit_of_work.AbstractUnitOfWork):
+    with uow:
+        uow.registrations.delete(registrationId)
         uow.commit()
     return True

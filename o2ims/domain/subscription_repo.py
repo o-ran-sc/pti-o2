@@ -55,3 +55,43 @@ class SubscriptionRepository(abc.ABC):
     @abc.abstractmethod
     def _delete(self, subscription_id):
         raise NotImplementedError
+
+
+class RegistrationRepository(abc.ABC):
+    def __init__(self):
+        self.seen = set()  # type: Set[subobj.Subscription]
+
+    def add(self, registration: subobj.Registration):
+        self._add(registration)
+        self.seen.add(registration)
+
+    def get(self, registration_id) -> subobj.Registration:
+        registration = self._get(registration_id)
+        if registration:
+            self.seen.add(registration)
+        return registration
+
+    def list(self) -> List[subobj.Registration]:
+        return self._list()
+
+    def update(self, registration: subobj.Registration):
+        self._update(registration)
+
+    def delete(self, registration_id):
+        self._delete(registration_id)
+
+    @abc.abstractmethod
+    def _add(self, registration: subobj.Registration):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _get(self, registration_id) -> subobj.Registration:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _update(self, registration: subobj.Registration):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _delete(self, registration_id):
+        raise NotImplementedError

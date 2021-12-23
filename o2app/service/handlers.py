@@ -27,7 +27,8 @@ from o2ims.service.auditor import ocloud_handler, dms_handler, \
     resourcepool_handler, pserver_handler, pserver_cpu_handler, \
     pserver_mem_handler, pserver_port_handler, pserver_if_handler,\
     pserver_eth_handler
-from o2ims.service.event import notify_handler, ocloud_event, \
+from o2ims.service.command import notify_handler
+from o2ims.service.event import ocloud_event, \
     resource_event, resource_pool_event
 
 # if TYPE_CHECKING:

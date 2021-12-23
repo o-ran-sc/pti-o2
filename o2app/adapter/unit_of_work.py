@@ -51,6 +51,8 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
             .ResourceSqlAlchemyRepository(self.session)
         self.subscriptions = ocloud_repository\
             .SubscriptionSqlAlchemyRepository(self.session)
+        self.registrations = ocloud_repository\
+            .RegistrationSqlAlchemyRepository(self.session)
         self.deployment_managers = ocloud_repository\
             .DeploymentManagerSqlAlchemyRepository(self.session)
         self.nfdeployment_descs = dms_repository\

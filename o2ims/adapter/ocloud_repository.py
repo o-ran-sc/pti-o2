@@ -17,7 +17,8 @@ from typing import List
 from o2ims.domain import ocloud, subscription_obj
 from o2ims.domain.ocloud_repo import OcloudRepository, ResourceTypeRepository,\
     ResourcePoolRepository, ResourceRepository, DeploymentManagerRepository
-from o2ims.domain.subscription_repo import SubscriptionRepository
+from o2ims.domain.subscription_repo import SubscriptionRepository, \
+    RegistrationRepository
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -159,3 +160,26 @@ class SubscriptionSqlAlchemyRepository(SubscriptionRepository):
     def _delete(self, subscription_id):
         self.session.query(subscription_obj.Subscription).filter_by(
             subscriptionId=subscription_id).delete()
+
+
+class RegistrationSqlAlchemyRepository(RegistrationRepository):
+    def __init__(self, session):
+        super().__init__()
+        self.session = session
+
+    def _add(self, registration: subscription_obj.Registration):
+        self.session.add(registration)
+
+    def _get(self, registration_id) -> subscription_obj.Registration:
+        return self.session.query(subscription_obj.Registration).filter_by(
+            registrationId=registration_id).first()
+
+    def _list(self) -> List[subscription_obj.Registration]:
+        return self.session.query(subscription_obj.Registration)
+
+    def _update(self, registration: subscription_obj.Registration):
+        self.session.add(registration)
+
+    def _delete(self, registration_id):
+        self.session.query(subscription_obj.Registration).filter_by(
+            registrationId=registration_id).delete()

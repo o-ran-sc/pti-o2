@@ -24,6 +24,7 @@ from sqlalchemy import (
     # Date,
     DateTime,
     ForeignKey,
+    Boolean,
     # engine,
     # event,
 )
@@ -144,6 +145,17 @@ subscription = Table(
     Column("filter", String(255)),
 )
 
+registration = Table(
+    "registration",
+    metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+
+    Column("registrationId", String(255), primary_key=True),
+    Column("callback", String(255)),
+    Column("notified", Boolean),
+)
+
 
 def start_o2ims_mappers(engine=None):
     logger.info("Starting O2 IMS mappers")
@@ -168,6 +180,7 @@ def start_o2ims_mappers(engine=None):
         }
     )
     mapper(subModel.Subscription, subscription)
+    mapper(subModel.Registration, registration)
 
     if engine is not None:
         metadata.create_all(engine)

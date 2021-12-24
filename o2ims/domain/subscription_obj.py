@@ -30,14 +30,6 @@ class Subscription(AgRoot, Serializer):
         self.filter = filter
 
 
-class Registration(AgRoot, Serializer):
-    def __init__(self, id: str, url: str) -> None:
-        super().__init__()
-        self.registrationId = id
-        self.callback = url
-        self.notified = False
-
-
 class NotificationEventEnum(str, Enum):
     CREATE = 'CREATE'
     MODIFY = 'MODIFY'
@@ -51,6 +43,30 @@ class Message2SMO(Serializer):
         self.objectRef = ref
         self.id = id
         self.updatetime = updatetime
+
+
+class RegistrationStatusEnum(str, Enum):
+    CREATED = 'CREATED'
+    NOTIFIED = 'NOTIFIED'
+    FAILED = 'FAILED'
+
+
+class Registration(AgRoot, Serializer):
+    def __init__(self, id: str, url: str,
+                 status: RegistrationStatusEnum =
+                 RegistrationStatusEnum.CREATED,
+                 comments: str = '') -> None:
+        super().__init__()
+        self.registrationId = id
+        self.callback = url
+        self.status = status
+        self.comments = comments
+
+
+class RegistrationMessage(Serializer):
+    def __init__(self, is_all: bool = None, id: str = '') -> None:
+        self.all = is_all if is_all is not None else False
+        self.id = id
 
 
 @dataclass

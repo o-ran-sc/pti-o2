@@ -27,9 +27,9 @@ from o2ims.service.auditor import ocloud_handler, dms_handler, \
     resourcepool_handler, pserver_handler, pserver_cpu_handler, \
     pserver_mem_handler, pserver_port_handler, pserver_if_handler,\
     pserver_eth_handler
-from o2ims.service.command import notify_handler
-from o2ims.service.event import ocloud_event, \
-    resource_event, resource_pool_event
+from o2ims.service.command import notify_handler, registration_handler
+from o2ims.service.event import ocloud_event, resource_event, \
+    resource_pool_event, registration_event
 
 # if TYPE_CHECKING:
 #     from . import unit_of_work
@@ -55,6 +55,8 @@ EVENT_HANDLERS = {
     events.ResourceChanged: [resource_event.notify_resource_change],
     events.ResourcePoolChanged: [resource_pool_event.\
                                  notify_resourcepool_change],
+    events.RegistrationChanged: [registration_event.\
+                                 notify_registration_change],
 }  # type: Dict[Type[events.Event], Callable]
 
 
@@ -77,4 +79,5 @@ COMMAND_HANDLERS = {
     o2dms_cmmands.DeleteNfDeployment:
     nfdeployment_handler.delete_nfdeployment,
     commands.PubMessage2SMO: notify_handler.notify_change_to_smo,
+    commands.Register2SMO: registration_handler.registry_to_smo,
 }  # type: Dict[Type[commands.Command], Callable]

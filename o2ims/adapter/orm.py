@@ -24,7 +24,7 @@ from sqlalchemy import (
     # Date,
     DateTime,
     ForeignKey,
-    Boolean,
+    # Boolean,
     # engine,
     # event,
 )
@@ -153,7 +153,8 @@ registration = Table(
 
     Column("registrationId", String(255), primary_key=True),
     Column("callback", String(255)),
-    Column("notified", Boolean),
+    Column("status", String(255)),
+    Column("comments", String(255)),
 )
 
 

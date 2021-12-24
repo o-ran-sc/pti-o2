@@ -14,7 +14,7 @@
 
 # pylint: disable=unused-argument
 from __future__ import annotations
-from typing import Callable
+# from typing import Callable
 
 # from dataclasses import asdict
 # from typing import List, Dict, Callable, Type
@@ -41,8 +41,7 @@ class InvalidResourceType(Exception):
 
 def update_ocloud(
     cmd: commands.UpdateOCloud,
-    uow: AbstractUnitOfWork,
-    publish: Callable
+    uow: AbstractUnitOfWork
 ):
     stxobj = cmd.data
     with uow:

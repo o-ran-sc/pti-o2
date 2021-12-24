@@ -13,12 +13,12 @@
 #  limitations under the License.
 
 import json
-import redis
+# import redis
 # import requests
 import http.client
 from urllib.parse import urlparse
 
-from o2common.config import config
+# from o2common.config import config
 from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.domain import commands
 from o2ims.domain.subscription_obj import Subscription, Message2SMO
@@ -26,8 +26,8 @@ from o2ims.domain.subscription_obj import Subscription, Message2SMO
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
-# Maybe another MQ server
-r = redis.Redis(**config.get_redis_host_and_port())
+# # Maybe another MQ server
+# r = redis.Redis(**config.get_redis_host_and_port())
 
 
 def notify_change_to_smo(

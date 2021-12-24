@@ -16,6 +16,7 @@ from datetime import datetime
 from typing import List
 from sqlalchemy.inspection import inspect
 from sqlalchemy.exc import NoInspectionAvailable
+# from sqlalchemy.orm.exc import DetachedInstanceError
 from .events import Event
 
 

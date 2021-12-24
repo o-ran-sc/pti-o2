@@ -81,6 +81,12 @@ def callback():
     return '', 202
 
 
+@app.route('/registration', methods=['POST'])
+def registration():
+    logger.info('Registration data: {}'.format(request.get_data()))
+    return '', 200
+
+
 def subscription_ims(url, consumerSubscriptionId):
     sub_key = r.get(REDIS_SUB_KEY)
     logger.info('Subscription key is {}'.format(sub_key))

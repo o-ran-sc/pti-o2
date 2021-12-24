@@ -90,6 +90,12 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
         for entry in self.deployment_managers.seen:
             while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
+        for entry in self.subscriptions.seen:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
+                yield entry.events.pop(0)
+        for entry in self.registrations.seen:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
+                yield entry.events.pop(0)
         for entry in self.nfdeployment_descs.seen:
             while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)

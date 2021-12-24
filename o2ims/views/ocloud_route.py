@@ -227,7 +227,7 @@ class RegistrationListRouter(Resource):
     @api_ims_inventory_v1.marshal_with(post_resp, code=201)
     def post(self):
         data = api_ims_inventory_v1.payload
-        result = ocloud_view.registration_create(data, bus.uow)
+        result = ocloud_view.registration_create(data, bus)
         return result, 201
 
 

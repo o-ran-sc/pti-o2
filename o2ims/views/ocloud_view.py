@@ -12,9 +12,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import logging
 import uuid
+from datetime import datetime
 
-from o2common.service import unit_of_work
+from o2common.service import unit_of_work, messagebus
+from o2ims.domain import events
 from o2ims.views.ocloud_dto import RegistrationDTO, SubscriptionDTO
 from o2ims.domain.subscription_obj import Registration, Subscription
 
@@ -131,14 +134,21 @@ def registration_one(registrationId: str,
 
 
 def registration_create(registrationDto: RegistrationDTO.registration,
-                        uow: unit_of_work.AbstractUnitOfWork):
+                        bus: messagebus.MessageBus):
 
     reg_uuid = str(uuid.uuid4())
     registration = Registration(
         reg_uuid, registrationDto['callback'])
-    with uow:
+    with bus.uow as uow:
         uow.registrations.add(registration)
+        logging.debug('before event length {}'.format(
+            len(registration.events)))
+        registration.events.append(events.RegistrationChanged(
+            reg_uuid,
+            datetime.now()))
+        logging.debug('after event length {}'.format(len(registration.events)))
         uow.commit()
+    _handle_events(bus)
     return {"registrationId": reg_uuid}
 
 
@@ -147,4 +157,12 @@ def registration_delete(registrationId: str,
     with uow:
         uow.registrations.delete(registrationId)
         uow.commit()
+    return True
+
+
+def _handle_events(bus: messagebus.MessageBus):
+    # handle events
+    events = bus.uow.collect_new_events()
+    for event in events:
+        bus.handle(event)
     return True

@@ -11,6 +11,7 @@ services:
       - postgres
       - redis
     environment:
+      - API_HOST=api
       - DB_HOST=postgres
       - DB_PASSWORD=o2ims123
       - REDIS_HOST=redis

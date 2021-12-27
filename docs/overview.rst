@@ -5,42 +5,44 @@
 INF O2 Service Overview
 =======================
 
-This project implements a reference O2 IMS and DMS service to expose O2 interface to SMO.
+This project implements a reference O2 IMS and DMS service to expose INF platform to SMO via O2 interface.
 
-In the E release, the following API of O2 interface is enabled:
+In the E release, the following APIs are supported by INF O2 service:
 
-1. O-Cloud registration and inventory query
+1. O-Cloud Infrastructure Management Service
 
-   - O2 service discovers INF platform as O-Cloud, register the O-Cloud to SMO with provisioned SMO O2 endpoint.
+   - O-Cloud provisioning API
 
-     - Provision SMO O2 endpoint
+     - Provision SMO O2 endpoint into INF O2 service
 
-     - Register INF as O-Cloud to SMO via SMO O2 endpoint
+     - O2 service discovers INF platform as O-Cloud and register INF as O-Cloud to SMO via the provisioned SMO O2 endpoint
 
-   - O2 service discovers following resources of INF platform to answer queries from SMO
+   - O-Cloud Inventory API
 
-     - O-Cloud information
+     - O2 service discovers following resources of INF platform to answer queries from SMO
 
-     - Resource Pool of the O-Cloud
+       - O-Cloud information
 
-     - Resources of the Resource Pool, including pserver, cpu, memory, port, interface
+       - Resource Pool of the O-Cloud
 
-     - kubernetes API endpoint as Deployment Management Service
+       - Resources of the Resource Pool, including pserver, cpu, memory, port, interface
 
+       - Resource Types associated with Resources
+
+    - O-Cloud Subscription and Notification
+
+      - O2 service exposes Subscription API to enable SMO subscribes to Notification of changes of resources
+
+    - O-Cloud Deployment Management Service Endpoint discovery API
+
+      - O2 service enables lookup of O-Cloud DMS endpoints via DeploymentManagementService resource as part of inventory
 
 2. Deployment Management Service
 
-   - O2 service expose DMS on behalf of kubernetes API endpoint hosted by INF platform, which support NfDeployment described by Helm charts
+   - O2 service discovers kubernetes clusters hosted by INF platform, exposes them as Deployment Management Services via O-Cloud DMS endpoints
+
+   - The exposed DMS endpoint supports Lifecycle Management of NfDeployment which represents CNF described in helm chart, the API supports APIs below:
 
      - Management of NfDeploymentDescriptor
 
      - Management of NfDeployment
-
-
-3. Subscription and Notification
-
-   - O2 service exposes Subscription API to enable SMO subscribes to Notification of changes of resources
-
-     - Management of Subscriptions
-
-     - Notification delivery via Rest API provided by specific Subscriptions

@@ -15,7 +15,7 @@
 import uuid
 from unittest.mock import MagicMock
 
-from o2ims.domain import ocloud, subscription_obj
+from o2ims.domain import ocloud, subscription_obj, configuration_obj
 from o2ims.domain import resource_type as rt
 from o2ims.views import ocloud_view
 from o2common.config import config
@@ -94,12 +94,13 @@ def test_new_subscription():
         subscription1.subscriptionId == subscription_id1
 
 
-def test_new_registration():
-    registration_id1 = str(uuid.uuid4())
-    registration1 = subscription_obj.Registration(
-        registration_id1, "https://callback/uri/write/here")
-    assert registration_id1 is not None and\
-        registration1.registrationId == registration_id1
+def test_new_configuration():
+    configuration_id1 = str(uuid.uuid4())
+    configuration1 = configuration_obj.Configuration(
+        configuration_id1, "https://callback/uri/write/here",
+        "SMO")
+    assert configuration_id1 is not None and\
+        configuration1.configurationId == configuration_id1
 
 
 def test_view_olcouds(mock_uow):
@@ -319,44 +320,6 @@ def test_view_subscription_one(mock_uow):
         "subscriptionId")) == subscription_id1
 
 
-def test_view_registrations(mock_uow):
-    session, uow = mock_uow
-
-    registration_id1 = str(uuid.uuid4())
-    reg1 = MagicMock()
-    reg1.serialize.return_value = {
-        "registrationId": registration_id1,
-    }
-    session.return_value.query.return_value = [reg1]
-
-    registration_list = ocloud_view.registrations(uow)
-    assert str(registration_list[0].get(
-        "registrationId")) == registration_id1
-
-
-def test_view_registration_one(mock_uow):
-    session, uow = mock_uow
-
-    registration_id1 = str(uuid.uuid4())
-    session.return_value.query.return_value.filter_by.return_value.first.\
-        return_value.serialize.return_value = None
-
-    # Query return None
-    registration_res = ocloud_view.registration_one(
-        registration_id1, uow)
-    assert registration_res is None
-
-    session.return_value.query.return_value.filter_by.return_value.first.\
-        return_value.serialize.return_value = {
-            "registrationId": registration_id1,
-        }
-
-    registration_res = ocloud_view.registration_one(
-        registration_id1, uow)
-    assert str(registration_res.get(
-        "registrationId")) == registration_id1
-
-
 def test_flask_get_list(mock_flask_uow):
     session, app = mock_flask_uow
     session.query.return_value = []
@@ -380,9 +343,6 @@ def test_flask_get_list(mock_flask_uow):
         assert resp.get_data() == b'[]\n'
 
         resp = client.get(apibase+"/subscriptions")
-        assert resp.get_data() == b'[]\n'
-
-        resp = client.get(apibase+"/registrations")
         assert resp.get_data() == b'[]\n'
 
 
@@ -421,10 +381,6 @@ def test_flask_get_one(mock_flask_uow):
         resp = client.get(apibase+"/subscriptions/"+subscription_id1)
         assert resp.status_code == 404
 
-        registration_id1 = str(uuid.uuid4())
-        resp = client.get(apibase+"/registrations/"+registration_id1)
-        assert resp.status_code == 404
-
 
 def test_flask_post(mock_flask_uow):
     session, app = mock_flask_uow
@@ -442,13 +398,6 @@ def test_flask_post(mock_flask_uow):
         assert resp.status_code == 201
         assert 'subscriptionId' in resp.get_json()
 
-        reg_callback = 'http://registration/callback/url'
-        resp = client.post(apibase+'/registrations', json={
-            'callback': reg_callback,
-        })
-        assert resp.status_code == 201
-        assert 'registrationId' in resp.get_json()
-
 
 def test_flask_delete(mock_flask_uow):
     session, app = mock_flask_uow
@@ -459,10 +408,6 @@ def test_flask_delete(mock_flask_uow):
 
         subscription_id1 = str(uuid.uuid4())
         resp = client.delete(apibase+"/subscriptions/"+subscription_id1)
-        assert resp.status_code == 204
-
-        registration_id1 = str(uuid.uuid4())
-        resp = client.delete(apibase+"/registrations/"+registration_id1)
         assert resp.status_code == 204
 
 
@@ -576,25 +521,6 @@ def test_flask_not_allowed(mock_flask_uow):
 
         subscription_id1 = str(uuid.uuid4())
         uri = apibase + "/subscriptions/" + subscription_id1
-        resp = client.post(uri)
-        assert resp.status == '405 METHOD NOT ALLOWED'
-        resp = client.put(uri)
-        assert resp.status == '405 METHOD NOT ALLOWED'
-        resp = client.patch(uri)
-        assert resp.status == '405 METHOD NOT ALLOWED'
-
-        # Testing registrations not support method
-        ##########################
-        uri = apibase + "/registrations"
-        resp = client.put(uri)
-        assert resp.status == '405 METHOD NOT ALLOWED'
-        resp = client.patch(uri)
-        assert resp.status == '405 METHOD NOT ALLOWED'
-        resp = client.delete(uri)
-        assert resp.status == '405 METHOD NOT ALLOWED'
-
-        subscription_id1 = str(uuid.uuid4())
-        uri = apibase + "/registrations/" + subscription_id1
         resp = client.post(uri)
         assert resp.status == '405 METHOD NOT ALLOWED'
         resp = client.put(uri)

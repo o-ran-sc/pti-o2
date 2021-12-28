@@ -14,44 +14,44 @@
 
 import abc
 from typing import List, Set
-from o2ims.domain import subscription_obj as subobj
+from o2ims.domain import configuration_obj as obj
 
 
-class SubscriptionRepository(abc.ABC):
+class ConfigurationRepository(abc.ABC):
     def __init__(self):
-        self.seen = set()  # type: Set[subobj.Subscription]
+        self.seen = set()  # type: Set[obj.Configuration]
 
-    def add(self, subscription: subobj.Subscription):
-        self._add(subscription)
-        self.seen.add(subscription)
+    def add(self, configuration: obj.Configuration):
+        self._add(configuration)
+        self.seen.add(configuration)
 
-    def get(self, subscription_id) -> subobj.Subscription:
-        subscription = self._get(subscription_id)
-        if subscription:
-            self.seen.add(subscription)
-        return subscription
+    def get(self, configuration_id) -> obj.Configuration:
+        configuration = self._get(configuration_id)
+        if configuration:
+            self.seen.add(configuration)
+        return configuration
 
-    def list(self) -> List[subobj.Subscription]:
+    def list(self) -> List[obj.Configuration]:
         return self._list()
 
-    def update(self, subscription: subobj.Subscription):
-        self._update(subscription)
+    def update(self, configuration: obj.Configuration):
+        self._update(configuration)
 
-    def delete(self, subscription_id):
-        self._delete(subscription_id)
+    def delete(self, configuration_id):
+        self._delete(configuration_id)
 
     @abc.abstractmethod
-    def _add(self, subscription: subobj.Subscription):
+    def _add(self, configuration: obj.Configuration):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _get(self, subscription_id) -> subobj.Subscription:
+    def _get(self, configuration_id) -> obj.Configuration:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _update(self, subscription: subobj.Subscription):
+    def _update(self, configuration: obj.Configuration):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _delete(self, subscription_id):
+    def _delete(self, configuration_id):
         raise NotImplementedError

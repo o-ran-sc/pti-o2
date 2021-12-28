@@ -14,14 +14,17 @@
 
 from flask_restx import Resource
 
-from o2ims.views import ocloud_view, api_ims_inventory_v1
-from o2common.config import config
+from o2common.service.messagebus import MessageBus
+from o2ims.views import ocloud_view
+from o2ims.views.api_ns import api_ims_inventory_v1
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
-    ResourcePoolDTO, ResourceDTO, DeploymentManagerDTO, SubscriptionDTO,\
-    RegistrationDTO
+    ResourcePoolDTO, ResourceDTO, DeploymentManagerDTO, SubscriptionDTO
 
 
-apibase = config.get_o2ims_api_base()
+def configure_api_route():
+    # Set global bus for resource
+    global bus
+    bus = MessageBus.get_instance()
 
 
 # ----------  OClouds ---------- #
@@ -207,58 +210,3 @@ class SubscriptionGetDelRouter(Resource):
     def delete(self, subscriptionID):
         result = ocloud_view.subscription_delete(subscriptionID, bus.uow)
         return result, 204
-
-
-# ----------  Registration ---------- #
-@api_ims_inventory_v1.route("/registrations")
-class RegistrationListRouter(Resource):
-
-    model = RegistrationDTO.registration_get
-    expect = RegistrationDTO.registration
-    post_resp = RegistrationDTO.registration_post_resp
-
-    @api_ims_inventory_v1.doc('List registrations')
-    @api_ims_inventory_v1.marshal_list_with(model)
-    def get(self):
-        return ocloud_view.registrations(bus.uow)
-
-    @api_ims_inventory_v1.doc('Create a registration')
-    @api_ims_inventory_v1.expect(expect)
-    @api_ims_inventory_v1.marshal_with(post_resp, code=201)
-    def post(self):
-        data = api_ims_inventory_v1.payload
-        result = ocloud_view.registration_create(data, bus)
-        return result, 201
-
-
-@api_ims_inventory_v1.route("/registrations/<registrationID>")
-@api_ims_inventory_v1.param('registrationID', 'ID of the registration')
-@api_ims_inventory_v1.response(404, 'Registration not found')
-class RegistrationGetDelRouter(Resource):
-
-    model = RegistrationDTO.registration_get
-
-    @api_ims_inventory_v1.doc('Get registration by ID')
-    @api_ims_inventory_v1.marshal_with(model)
-    def get(self, registrationID):
-        result = ocloud_view.registration_one(
-            registrationID, bus.uow)
-        if result is not None:
-            return result
-        api_ims_inventory_v1.abort(404, "Registration {} doesn't exist".format(
-            registrationID))
-
-    @api_ims_inventory_v1.doc('Delete registration by ID')
-    @api_ims_inventory_v1.response(204, 'Registration deleted')
-    def delete(self, registrationID):
-        result = ocloud_view.registration_delete(registrationID, bus.uow)
-        return result, 204
-
-
-def configure_namespace(app, bus_new):
-
-    # Set global bus for resource
-    global bus
-    bus = bus_new
-
-    app.add_namespace(api_ims_inventory_v1, path=apibase)

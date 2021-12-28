@@ -20,11 +20,11 @@ from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
 
-def notify_registration_change(
-    event: events.RegistrationChanged,
+def notify_configuration_change(
+    event: events.ConfigurationChanged,
     publish: Callable,
 ):
     logger.info('In notify_registration_change')
-    publish("RegistrationChanged", event)
+    publish("ConfigurationChanged", event)
     logger.debug("published Registration Changed: {}".format(
         event.id))

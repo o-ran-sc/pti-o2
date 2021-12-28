@@ -12,8 +12,23 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from flask_restx import Namespace
 
-api_ims_inventory_v1 = Namespace(
-    "O2IMS_Inventory",
-    description='IMS Inventory related operations.')
+from o2common.config import config
+from . import ocloud_route, provision_route
+from . import api_ns
+
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
+
+
+def configure_namespace(app):
+    apiims = config.get_o2ims_api_base()
+    apiprovision = config.get_provision_api_base()
+    logger.info(
+        "Expose IMS API:{}\nExpose Provision API: {}".
+        format(apiims, apiprovision))
+
+    ocloud_route.configure_api_route()
+    provision_route.configure_api_route()
+    app.add_namespace(api_ns.api_ims_inventory_v1, path=apiims)
+    app.add_namespace(api_ns.api_provision_v1, path=apiprovision)

@@ -20,7 +20,7 @@ from o2ims.adapter.orm import metadata, start_o2ims_mappers
 # from o2ims.adapter.clients.orm_stx import start_o2ims_stx_mappers
 
 from o2app.adapter import unit_of_work
-from o2ims.views.ocloud_route import configure_namespace
+from o2ims.views import configure_namespace
 
 from o2app.bootstrap import bootstrap
 
@@ -38,8 +38,8 @@ def mock_flask_uow(mock_uow):
     app = Flask(__name__)
     app.config["TESTING"] = True
     api = Api(app)
-    bus = bootstrap(False, uow)
-    configure_namespace(api, bus)
+    bootstrap(False, uow)
+    configure_namespace(api)
     return session, app
 
 
@@ -75,8 +75,8 @@ def sqlite_flask_uow(sqlite_uow):
     app = Flask(__name__)
     app.config["TESTING"] = True
     api = Api(app)
-    bus = bootstrap(False, sqlite_uow)
-    configure_namespace(api, bus)
+    bootstrap(False, sqlite_uow)
+    configure_namespace(api)
     yield sqlite_uow, app
 
 
@@ -135,8 +135,8 @@ def postgres_flask_uow(postgres_uow):
     app = Flask(__name__)
     app.config["TESTING"] = True
     api = Api(app)
-    bus = bootstrap(False, postgres_uow)
-    configure_namespace(api, bus)
+    bootstrap(False, postgres_uow)
+    configure_namespace(api)
     yield postgres_uow, app
 
 

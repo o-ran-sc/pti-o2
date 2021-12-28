@@ -49,6 +49,6 @@ class ResourceChanged(Event):
 
 
 @dataclass
-class RegistrationChanged(Event):
+class ConfigurationChanged(Event):
     id: str
     updatetime: datetime.now()

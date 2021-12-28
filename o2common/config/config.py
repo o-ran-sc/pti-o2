@@ -41,6 +41,10 @@ def get_o2ims_api_base():
     return get_root_api_base() + 'o2ims_infrastructureInventory/v1'
 
 
+def get_provision_api_base():
+    return get_root_api_base() + 'provision/v1'
+
+
 def get_o2dms_api_base():
     return get_root_api_base() + "o2dms"
 

@@ -34,6 +34,7 @@ from sqlalchemy.orm import mapper, relationship
 
 from o2ims.domain import ocloud as ocloudModel
 from o2ims.domain import subscription_obj as subModel
+from o2ims.domain import configuration_obj as confModel
 from o2ims.domain.resource_type import ResourceTypeEnum
 
 from o2common.helper import o2logging
@@ -145,13 +146,14 @@ subscription = Table(
     Column("filter", String(255)),
 )
 
-registration = Table(
-    "registration",
+configuration = Table(
+    "configuration",
     metadata,
     Column("updatetime", DateTime),
     Column("createtime", DateTime),
 
-    Column("registrationId", String(255), primary_key=True),
+    Column("configurationId", String(255), primary_key=True),
+    Column("conftype", String(255)),
     Column("callback", String(255)),
     Column("status", String(255)),
     Column("comments", String(255)),
@@ -181,7 +183,7 @@ def start_o2ims_mappers(engine=None):
         }
     )
     mapper(subModel.Subscription, subscription)
-    mapper(subModel.Registration, registration)
+    mapper(confModel.Configuration, configuration)
 
     if engine is not None:
         metadata.create_all(engine)

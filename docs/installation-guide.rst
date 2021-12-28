@@ -164,14 +164,15 @@ The following instruction should be done outside of INF platform controller host
   curl -k http(s)://<OAM IP>:30205/o2ims_infrastructureInventory/v1
 
 
-3 Register O-Cloud to SMO
+3. Register O-Cloud to SMO
+--------------------------
 
 - assumed you have setup SMO O2 endpoint for registration
 - O2 service will post the O-Cloud registration data to that SMO O2 endpoint
 
 ::
 
-  curl -k -X POST http(s)://<OAM IP>:30205/provision/smo-endpoint/v1 -d '{"smo-o2-endpoint": "<SMO O2 endpoint for registration>"}'
+  curl -k -X POST http(s)://<OAM IP>:30205/provision/v1/smo-endpoint -d '{"endpoint": "<SMO O2 endpoint for registration>"}'
 
 
 References

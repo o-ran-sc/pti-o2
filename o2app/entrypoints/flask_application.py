@@ -16,7 +16,7 @@ from flask import Flask
 from flask_restx import Api
 
 from o2app import bootstrap
-from o2ims.views import ocloud_route as ims_route
+from o2ims.views import configure_namespace as ims_route_configure_namespace
 from o2dms.api import configure_namespace as dms_route_configure_namespace
 
 
@@ -30,5 +30,5 @@ api = Api(app, version='1.0.0',
           )
 bus = bootstrap.bootstrap()
 
-ims_route.configure_namespace(api, bus)
+ims_route_configure_namespace(api)
 dms_route_configure_namespace(api)

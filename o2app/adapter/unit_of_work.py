@@ -51,8 +51,8 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
             .ResourceSqlAlchemyRepository(self.session)
         self.subscriptions = ocloud_repository\
             .SubscriptionSqlAlchemyRepository(self.session)
-        self.registrations = ocloud_repository\
-            .RegistrationSqlAlchemyRepository(self.session)
+        self.configurations = ocloud_repository\
+            .ConfigurationSqlAlchemyRepository(self.session)
         self.deployment_managers = ocloud_repository\
             .DeploymentManagerSqlAlchemyRepository(self.session)
         self.nfdeployment_descs = dms_repository\
@@ -93,7 +93,7 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
         for entry in self.subscriptions.seen:
             while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
-        for entry in self.registrations.seen:
+        for entry in self.configurations.seen:
             while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.nfdeployment_descs.seen:

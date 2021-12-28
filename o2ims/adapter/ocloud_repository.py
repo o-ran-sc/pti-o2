@@ -14,11 +14,11 @@
 
 from typing import List
 
-from o2ims.domain import ocloud, subscription_obj
+from o2ims.domain import ocloud, subscription_obj, configuration_obj
 from o2ims.domain.ocloud_repo import OcloudRepository, ResourceTypeRepository,\
     ResourcePoolRepository, ResourceRepository, DeploymentManagerRepository
-from o2ims.domain.subscription_repo import SubscriptionRepository, \
-    RegistrationRepository
+from o2ims.domain.subscription_repo import SubscriptionRepository
+from o2ims.domain.configuration_repo import ConfigurationRepository
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -162,24 +162,24 @@ class SubscriptionSqlAlchemyRepository(SubscriptionRepository):
             subscriptionId=subscription_id).delete()
 
 
-class RegistrationSqlAlchemyRepository(RegistrationRepository):
+class ConfigurationSqlAlchemyRepository(ConfigurationRepository):
     def __init__(self, session):
         super().__init__()
         self.session = session
 
-    def _add(self, registration: subscription_obj.Registration):
-        self.session.add(registration)
+    def _add(self, configuration: configuration_obj.Configuration):
+        self.session.add(configuration)
 
-    def _get(self, registration_id) -> subscription_obj.Registration:
-        return self.session.query(subscription_obj.Registration).filter_by(
-            registrationId=registration_id).first()
+    def _get(self, configuration_id) -> configuration_obj.Configuration:
+        return self.session.query(configuration_obj.Configuration).filter_by(
+            configurationId=configuration_id).first()
 
-    def _list(self) -> List[subscription_obj.Registration]:
-        return self.session.query(subscription_obj.Registration)
+    def _list(self) -> List[configuration_obj.Configuration]:
+        return self.session.query(configuration_obj.Configuration)
 
-    def _update(self, registration: subscription_obj.Registration):
-        self.session.add(registration)
+    def _update(self, configuration: configuration_obj.Configuration):
+        self.session.add(configuration)
 
-    def _delete(self, registration_id):
-        self.session.query(subscription_obj.Registration).filter_by(
-            registrationId=registration_id).delete()
+    def _delete(self, configuration_id):
+        self.session.query(configuration_obj.Configuration).filter_by(
+            configurationId=configuration_id).delete()

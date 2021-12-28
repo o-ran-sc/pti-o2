@@ -36,7 +36,7 @@ def main():
     pubsub = r.pubsub(ignore_subscribe_messages=True)
     pubsub.subscribe("NfDeploymentStateChanged")
     pubsub.subscribe('ResourceChanged')
-    pubsub.subscribe('RegistrationChanged')
+    pubsub.subscribe('ConfigurationChanged')
     pubsub.subscribe('OcloudChanged')
 
     for m in pubsub.listen():
@@ -71,10 +71,10 @@ def handle_dms_changed(m, bus):
             eventtype=data['notificationEventType'],
             updatetime=data['updatetime']))
         bus.handle(cmd)
-    elif channel == 'RegistrationChanged':
+    elif channel == 'ConfigurationChanged':
         datastr = m['data']
         data = json.loads(datastr)
-        logger.info('RegistrationChanged with cmd:{}'.format(data))
+        logger.info('ConfigurationChanged with cmd:{}'.format(data))
         cmd = imscmd.Register2SMO(data=RegistrationMessage(id=data['id']))
         bus.handle(cmd)
     elif channel == 'OcloudChanged':

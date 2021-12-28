@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from typing_extensions import Required
 from flask_restx import fields
 
 from o2ims.views import api_ims_inventory_v1
@@ -180,30 +181,37 @@ class SubscriptionDTO:
     )
 
 
-class RegistrationDTO:
+class ConfigurationDTO:
 
-    registration_get = api_ims_inventory_v1.model(
-        "RegistrationGetDto",
+    configuration_get = api_ims_inventory_v1.model(
+        "ConfigurationGetDto",
         {
-            'registrationId': fields.String(required=True,
-                                            description='Registration ID'),
+            'configurationId': fields.String(required=True,
+                                             description='Configuration ID'),
+            'conftype': fields.String,
             'callback': fields.String,
-            'notified': fields.Boolean,
+            'status': fields.String,
+            'comments': fields.String,
         }
     )
 
-    registration = api_ims_inventory_v1.model(
-        "RegistrationCreateDto",
+    configuration = api_ims_inventory_v1.model(
+        "ConfigurationCreateDto",
         {
+            'conftype': fields.String(
+                required=True, description='Configuration Type',
+                example='SMO'),
             'callback': fields.String(
-                required=True, description='Registration SMO callback address')
+                required=True,
+                description='Configuration SMO callback address',
+                example='http://mock_smo:80/registration')
         }
     )
 
-    registration_post_resp = api_ims_inventory_v1.model(
-        "RegistrationCreatedRespDto",
+    configuration_post_resp = api_ims_inventory_v1.model(
+        "ConfigurationCreatedRespDto",
         {
-            'registrationId': fields.String(required=True,
-                                            description='registration ID'),
+            'configurationId': fields.String(required=True,
+                                             description='Configuration ID'),
         }
     )

@@ -18,8 +18,9 @@ from datetime import datetime
 
 from o2common.service import unit_of_work, messagebus
 from o2ims.domain import events
-from o2ims.views.ocloud_dto import RegistrationDTO, SubscriptionDTO
-from o2ims.domain.subscription_obj import Registration, Subscription
+from o2ims.views.ocloud_dto import SubscriptionDTO, ConfigurationDTO
+from o2ims.domain.subscription_obj import Subscription
+from o2ims.domain.configuration_obj import Configuration
 
 
 def oclouds(uow: unit_of_work.AbstractUnitOfWork):
@@ -120,42 +121,43 @@ def subscription_delete(subscriptionId: str,
     return True
 
 
-def registrations(uow: unit_of_work.AbstractUnitOfWork):
+def configurations(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        li = uow.registrations.list()
+        li = uow.configurations.list()
     return [r.serialize() for r in li]
 
 
-def registration_one(registrationId: str,
-                     uow: unit_of_work.AbstractUnitOfWork):
+def configuration_one(configurationId: str,
+                      uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        first = uow.registrations.get(registrationId)
+        first = uow.configurations.get(configurationId)
         return first.serialize() if first is not None else None
 
 
-def registration_create(registrationDto: RegistrationDTO.registration,
-                        bus: messagebus.MessageBus):
+def configuration_create(configurationDto: ConfigurationDTO.configuration,
+                         bus: messagebus.MessageBus):
 
-    reg_uuid = str(uuid.uuid4())
-    registration = Registration(
-        reg_uuid, registrationDto['callback'])
+    conf_uuid = str(uuid.uuid4())
+    configuration = Configuration(
+        conf_uuid, configurationDto['callback'], configurationDto['conftype'])
     with bus.uow as uow:
-        uow.registrations.add(registration)
+        uow.configurations.add(configuration)
         logging.debug('before event length {}'.format(
-            len(registration.events)))
-        registration.events.append(events.RegistrationChanged(
-            reg_uuid,
+            len(configuration.events)))
+        configuration.events.append(events.ConfigurationChanged(
+            conf_uuid,
             datetime.now()))
-        logging.debug('after event length {}'.format(len(registration.events)))
+        logging.debug('after event length {}'.format(
+            len(configuration.events)))
         uow.commit()
     _handle_events(bus)
-    return {"registrationId": reg_uuid}
+    return {"configurationId": conf_uuid}
 
 
-def registration_delete(registrationId: str,
-                        uow: unit_of_work.AbstractUnitOfWork):
+def configuration_delete(configurationId: str,
+                         uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        uow.registrations.delete(registrationId)
+        uow.configurations.delete(configurationId)
         uow.commit()
     return True
 

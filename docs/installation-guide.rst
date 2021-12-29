@@ -38,7 +38,7 @@ The following instruction must be done over INF platform controller host (contro
 
 -  Please see the O-RAN INF documentation to find out how to ssh to controller host of INF platform.
 
-::
+.. code:: shell
 
   USER="admin-user"
   NAMESPACE="kube-system"
@@ -74,20 +74,22 @@ The following instruction must be done over INF platform controller host (contro
 
 The following instruction should be done outside of INF platform controller host
 
-::
+.. code:: shell
 
   sudo apt-get install -y apt-transport-https
   echo "deb http://mirrors.ustc.edu.cn/kubernetes/apt kubernetes-xenial main" | \
   sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+  gpg --keyserver keyserver.ubuntu.com --recv-keys 836F4BEB
+  gpg --export --armor 836F4BEB | sudo apt-key add -
   sudo apt-get update
   sudo apt-get install -y kubectl
 
   source <(kubectl completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
   echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permanently to your bash shell.
 
-  https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz
+  curl https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz --output helm-v3.5.3-linux-amd64.tar.gz
   tar xvf helm-v3.5.3-linux-amd64.tar.gz
-  sudo cp linux-amd64/helm /usr/local/bin
+  sudo cp linux-amd64/helm /usr/local/bin/
 
   source <(helm completion bash)
   echo "source <(helm completion bash)" >> ~/.bashrc
@@ -100,7 +102,7 @@ The following instruction should be done outside of INF platform controller host
 
   kubectl config set-cluster inf-cluster --server=https://${OAM_IP}:6443 --insecure-skip-tls-verify
   kubectl config set-credentials ${USER} --token=$TOKEN_DATA
-  kubectl config  set-context ${USER}@inf-cluster --cluster=inf-cluster --user ${USER} --namespace=${NAMESPACE}
+  kubectl config set-context ${USER}@inf-cluster --cluster=inf-cluster --user ${USER} --namespace=${NAMESPACE}
   kubectl config use-context ${USER}@inf-cluster
 
   kubectl get pods -A
@@ -112,28 +114,30 @@ The following instruction should be done outside of INF platform controller host
 2.1 Retrieve Helm chart for deploying of O2 service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-::
+.. code:: shell
 
-  git clone  -b e-release "https://gerrit.o-ran-sc.org/r/pti/o2"
+  git clone -b e-release "https://gerrit.o-ran-sc.org/r/pti/o2"
 
 
 
 2.2 Prepare override yaml
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-::
+.. code:: shell
 
   export NAMESPACE=orano2
   kubectl create ns ${NAMESPACE}
 
-  cd /home/sysadmin/
-  source /etc/platform/openrc
+  export OS_AUTH_URL=<INF OAM Auth URL>
+  export OS_USERNAME=<INF username>
+  export OS_PASSWORD=<INF password for user>
+
   cat <<EOF>o2service-override.yaml
   o2ims:
     imagePullSecrets: admin-orano2-registry-secret
     image:
-      repository: registry.local:9001/admin/o2imsdms
-      tag: 0.1.4
+      repository: nexus3.o-ran-sc.org:10004/o-ran-sc/pti-o2imsdms
+      tag: 1.0.0
       pullPolicy: IfNotPresent
     logginglevel: "DEBUG"
 
@@ -147,7 +151,7 @@ The following instruction should be done outside of INF platform controller host
 2.3 Deploy by helm cli
 ~~~~~~~~~~~~~~~~~~~~~~
 
-::
+.. code:: shell
 
   helm install o2service o2/charts/ -f o2service-override.yaml
   helm list |grep o2service
@@ -158,10 +162,10 @@ The following instruction should be done outside of INF platform controller host
 2.4 Verify O2 service
 ~~~~~~~~~~~~~~~~~~~~~
 
-::
+.. code:: shell
 
   curl -k http(s)://<OAM IP>:30205
-  curl -k http(s)://<OAM IP>:30205/o2ims_infrastructureInventory/v1
+  curl -k http(s)://<OAM IP>:30205/o2ims_infrastructureInventory/v1/
 
 
 3. Register O-Cloud to SMO
@@ -170,9 +174,13 @@ The following instruction should be done outside of INF platform controller host
 - assumed you have setup SMO O2 endpoint for registration
 - O2 service will post the O-Cloud registration data to that SMO O2 endpoint
 
-::
+.. code:: shell
 
-  curl -k -X POST http(s)://<OAM IP>:30205/provision/v1/smo-endpoint -d '{"endpoint": "<SMO O2 endpoint for registration>"}'
+  curl -k -X 'POST' \
+    'http(s)://<OAM IP>:30205/provision/v1/smo-endpoint' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{"endpoint": "<SMO O2 endpoint for registration>"}'
 
 
 References

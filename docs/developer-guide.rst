@@ -10,9 +10,9 @@ Developer-Guide
    :local:
 
 
-This project implements a reference implementation for O-RAN O2 IMS and DMS to expose INF platfrom to SMO with O2 interface.
+This project implements a reference implementation for O-RAN O2 IMS and DMS to expose the INF platform to SMO with the O2 interface.
 
-To contribute on this project, you are supposed to be familiar with INF platfrom as well as O-RAN O2 interface specifications:
+To contribute to this project, you are supposed to be familiar with the INF platform as well as O-RAN O2 interface specifications:
 
 - `O-RAN SC INF platfrom`_
 - `O-RAN O2 interface`_
@@ -22,8 +22,8 @@ To contribute on this project, you are supposed to be familiar with INF platfrom
 
 
 
-1. Prerequisite for build environment
--------------------------------------
+1. Prerequisite for building environment
+----------------------------------------
 
 * A ubuntu 18.04 host is sufficient to build o2 projects
 
@@ -37,7 +37,7 @@ To contribute on this project, you are supposed to be familiar with INF platfrom
   $ tox -e code
 
 
-1. local test with docker-compose
+2. Local test with docker-compose
 ---------------------------------
 
 * To test with docker-compose, a docker engine is supposed to be installed as well

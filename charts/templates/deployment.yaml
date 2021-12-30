@@ -127,6 +127,8 @@ spec:
               value: "1"
             - name: REDIS_HOST
               value: redis
+            - name: K8S_KUBECONFIG
+              value: {{ .Values.ocloud.K8S_KUBECONFIG }}
           volumeMounts:
             - name: scripts
               mountPath: /opt

@@ -41,3 +41,4 @@ ocloud:
   OS_AUTH_URL: ""
   OS_USERNAME: ""
   OS_PASSWORD: ""
+  K8S_KUBECONFIG: ""

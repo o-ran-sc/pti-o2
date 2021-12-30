@@ -22,8 +22,8 @@ class SmoEndpointDTO:
     endpoint_get = api_provision_v1.model(
         "SmoEndpointGetDto",
         {
-            'configurationId': fields.String(required=True,
-                                             description='Configuration ID'),
+            'id': fields.String(required=True,
+                                description='SMO Endpoint Configuration ID'),
             'endpoint': fields.String,
             'status': fields.String,
             'comments': fields.String,
@@ -43,7 +43,7 @@ class SmoEndpointDTO:
     endpoint_post_resp = api_provision_v1.model(
         "SmoEndpointCreatedRespDto",
         {
-            'configurationId': fields.String(required=True,
-                                             description='Configuration ID'),
+            'id': fields.String(required=True,
+                                description='SMO Endpoint Configuration ID'),
         }
     )

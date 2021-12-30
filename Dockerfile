@@ -44,6 +44,9 @@ COPY configs/ /etc/o2/
 
 COPY tests/ /tests/
 
-RUN apt-get install -y procps vim
+RUN apt-get install -y procps vim curl
+
+RUN curl -O https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz;
+RUN tar -zxvf helm-v3.3.1-linux-amd64.tar.gz; cp linux-amd64/helm /usr/local/bin
 
 WORKDIR /src

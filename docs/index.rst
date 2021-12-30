@@ -3,7 +3,7 @@
 .. Copyright (C) 2021 Wind River Systems, Inc.
 .. rtp documentation master
 
-Welcome to RTP O2 ducomentation
+Welcome to RTP O2 documentation
 ===============================
 
 
@@ -15,5 +15,7 @@ Welcome to RTP O2 ducomentation
    developer-guide.rst
    release-notes.rst
    installation-guide.rst
+   user-guide.rst
+   api.rst
 
 * :ref:`search`

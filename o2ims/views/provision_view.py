@@ -52,7 +52,7 @@ def configuration_create(configurationDto: SmoEndpointDTO.endpoint,
             len(configuration.events)))
         uow.commit()
     _handle_events(bus)
-    return {"configurationId": conf_uuid}
+    return {"id": conf_uuid}
 
 
 def configuration_delete(configurationId: str,

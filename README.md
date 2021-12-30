@@ -131,7 +131,10 @@ kubectl get pods -A
 ## setup local repo: o2imsrepo
 
 ```sh
-helm repo add chartmuseum https://chartmuseum.github.io/charts
+# helm repo add chartmuseum https://chartmuseum.github.io/charts
+# helm repo update
+helm pull chartmuseum/chartmuseum # download chartmuseum-3.4.0.tgz to local
+tar zxvf chartmuseum-3.4.0.tgz
 
 export NODE_IP=<INF OAM IP>
 
@@ -143,6 +146,7 @@ service:
   type: NodePort
   nodePort: 30330
 EOF
+
 helm install chartmuseumrepo chartmuseum/chartmuseum -f chartmuseum-override.yaml
 kubectl get pods
 Kubectl get services

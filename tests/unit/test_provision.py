@@ -35,13 +35,13 @@ def test_view_smo_endpoint(mock_uow):
     configuration_id1 = str(uuid.uuid4())
     conf1 = MagicMock()
     conf1.serialize_smo.return_value = {
-        "configurationId": configuration_id1,
+        "id": configuration_id1,
     }
     session.return_value.query.return_value = [conf1]
 
     configuration_list = provision_view.configurations(uow)
     assert str(configuration_list[0].get(
-        "configurationId")) == configuration_id1
+        "id")) == configuration_id1
 
 
 def test_view_smo_endpoint_one(mock_uow):
@@ -58,13 +58,13 @@ def test_view_smo_endpoint_one(mock_uow):
 
     session.return_value.query.return_value.filter_by.return_value.first.\
         return_value.serialize_smo.return_value = {
-            "configurationId": configuration_id1,
+            "id": configuration_id1,
         }
 
     configuration_res = provision_view.configuration_one(
         configuration_id1, uow)
     assert str(configuration_res.get(
-        "configurationId")) == configuration_id1
+        "id")) == configuration_id1
 
 
 def test_flask_get_list(mock_flask_uow):
@@ -106,7 +106,7 @@ def test_flask_post(mock_flask_uow):
             'endpoint': conf_callback
         })
         assert resp.status_code == 201
-        assert 'configurationId' in resp.get_json()
+        assert 'id' in resp.get_json()
 
 
 def test_flask_delete(mock_flask_uow):

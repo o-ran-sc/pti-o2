@@ -49,4 +49,5 @@ class Configuration(AgRoot, Serializer):
         d = Serializer.serialize(self)
 
         d['endpoint'] = d['callback']
+        d['id'] = d['configurationId']
         return d

@@ -87,7 +87,7 @@ The following instruction should be done outside of INF platform controller host
   source <(kubectl completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
   echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permanently to your bash shell.
 
-  curl https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz --output helm-v3.5.3-linux-amd64.tar.gz
+  curl -O https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz
   tar xvf helm-v3.5.3-linux-amd64.tar.gz
   sudo cp linux-amd64/helm /usr/local/bin/
 
@@ -128,9 +128,12 @@ The following instruction should be done outside of INF platform controller host
   export NAMESPACE=orano2
   kubectl create ns ${NAMESPACE}
 
-  export OS_AUTH_URL=<INF OAM Auth URL>
-  export OS_USERNAME=<INF username>
-  export OS_PASSWORD=<INF password for user>
+  # default kube config location is ~/.kube/config
+  cp ~/.kube/config o2/charts/resources/scripts/init/k8s_kube.conf
+
+  export OS_AUTH_URL=<INF OAM Auth URL e.g.: http://OAM_IP:5000/v3>
+  export OS_USERNAME=<INF username e.g.: admin>
+  export OS_PASSWORD=<INF password for user e.g.: adminpassword>
 
   cat <<EOF>o2service-override.yaml
   o2ims:
@@ -145,6 +148,7 @@ The following instruction should be done outside of INF platform controller host
     OS_AUTH_URL: "${OS_AUTH_URL}"
     OS_USERNAME: "${OS_USERNAME}"
     OS_PASSWORD: "${OS_PASSWORD}"
+    K8S_KUBECONFIG: "/opt/k8s_kube.conf"
   EOF
 
 
@@ -164,9 +168,14 @@ The following instruction should be done outside of INF platform controller host
 
 .. code:: shell
 
-  curl -k http(s)://<OAM IP>:30205
   curl -k http(s)://<OAM IP>:30205/o2ims_infrastructureInventory/v1/
 
+
+2.5 O2 Service API Swagger 
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Swagger UI can be found with URL: http(s)://<OAM IP>:30205
+                 
 
 3. Register O-Cloud to SMO
 --------------------------
@@ -176,11 +185,20 @@ The following instruction should be done outside of INF platform controller host
 
 .. code:: shell
 
+  curl -X 'GET' \
+  'http(s)://<OAM IP>:30205/provision/v1/smo-endpoint' \
+  -H 'accept: application/json'
+
   curl -k -X 'POST' \
     'http(s)://<OAM IP>:30205/provision/v1/smo-endpoint' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{"endpoint": "<SMO O2 endpoint for registration>"}'
+
+  # Confirm SMO endpoint provision status
+  curl -X 'GET' \
+  'http(s)://<OAM IP>:30205/provision/v1/smo-endpoint' \
+  -H 'accept: application/json'
 
 
 References

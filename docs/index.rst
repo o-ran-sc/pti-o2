@@ -1,9 +1,9 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
 .. Copyright (C) 2021 Wind River Systems, Inc.
-.. rtp documentation master
+.. INF documentation master
 
-Welcome to RTP O2 documentation
+Welcome to INF O2 documentation
 ===============================
 
 

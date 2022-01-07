@@ -108,8 +108,8 @@ The following instruction should be done outside of INF platform controller host
   kubectl get pods -A
 
 
-2. Deploy O2 service
---------------------
+2. Deploy INF O2 service
+------------------------
 
 2.1 Retrieve Helm chart for deploying of O2 service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -163,25 +163,25 @@ The following instruction should be done outside of INF platform controller host
   kubectl -n ${NAMESPACE} get services |grep o2service
 
 
-2.4 Verify O2 service
-~~~~~~~~~~~~~~~~~~~~~
+2.4 Verify INF O2 service
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: shell
 
   curl -k http(s)://<OAM IP>:30205/o2ims_infrastructureInventory/v1/
 
 
-2.5 O2 Service API Swagger 
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+2.5 INF O2 Service API Swagger 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Swagger UI can be found with URL: http(s)://<OAM IP>:30205
                  
 
-3. Register O-Cloud to SMO
---------------------------
+3. Register INF O2 Service to SMO
+---------------------------------
 
 - assumed you have setup SMO O2 endpoint for registration
-- O2 service will post the O-Cloud registration data to that SMO O2 endpoint
+- INF O2 service will post the O-Cloud registration data to that SMO O2 endpoint
 
 .. code:: shell
 

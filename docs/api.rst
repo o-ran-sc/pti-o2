@@ -2,7 +2,7 @@
 .. SPDX-License-Identifier: CC-BY-4.0
 .. Copyright (C) 2021 Wind River Systems, Inc.
 
-O-Cloud O2 Services API 1.0.0
+INF O2 Services API 1.0.0
 =============================
 
 .. toctree::
@@ -12,7 +12,7 @@ O-Cloud O2 Services API 1.0.0
 Description
 ~~~~~~~~~~~
 
-Swagger OpenAPI document for O-Cloud O2 Services
+Swagger OpenAPI document for INF O2 Services
 
 
 

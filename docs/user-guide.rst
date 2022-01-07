@@ -1,7 +1,3 @@
-.. This work is licensed under a Creative Commons Attribution 4.0 International License.
-.. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2021 Wind River Systems, Inc.
-
 O-Cloud O2 Service User Guide
 =============================
 
@@ -9,6 +5,10 @@ This guide will introduce the process that make O2 interface work with
 SMO.
 
 -  Assume you have an O-Cloud O2 environment
+
+   .. code:: bash
+
+      export OAM_IP=<INF_OAM_IP>
 
 -  Discover O-Cloud inventory
 
@@ -23,7 +23,7 @@ SMO.
       .. code:: shell
 
          curl -X 'GET' \
-           'http://<OAM IP>:30205/o2ims_infrastructureInventory/v1/' \
+           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/" \
            -H 'accept: application/json'
 
    -  Resource pool
@@ -36,8 +36,13 @@ SMO.
       .. code:: shell
 
          curl -X 'GET' \
-           'http://<OAM IP>:30205/o2ims_infrastructureInventory/v1/resourcePools' \
+           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/resourcePools" \
            -H 'accept: application/json'
+
+         # export resource pool id
+         export resourcePoolId=`curl -X 'GET'   "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/resourcePools"   -H 'accept: application/json' -H 'X-Fields: resourcePoolId' 2>/dev/null | jq .[].resourcePoolId | xargs echo`
+
+         echo ${resourcePoolId} # check the exported resource pool id
 
    -  Resource type
 
@@ -49,7 +54,7 @@ SMO.
       .. code:: shell
 
          curl -X 'GET' \
-           'http://<OAM IP>:30205/o2ims_infrastructureInventory/v1/resourceTypes' \
+           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/resourceTypes" \
            -H 'accept: application/json'
 
    -  Resource
@@ -60,15 +65,16 @@ SMO.
       .. code:: shell
 
          curl -X 'GET' \
-           "http://<OAM IP>:30205/o2ims_infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources" \
+           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources" \
            -H 'accept: application/json'
 
-      Get detail of one resource
+      Get detail of one resource, need to export one specific resource
+      id that wants to check
 
       .. code:: shell
 
          curl -X 'GET' \
-           "http://<OAM IP>:30205/o2ims_infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources/${resourceId}" \
+           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources/${resourceId}" \
            -H 'accept: application/json'
 
    -  Deployment manager services endpoint
@@ -79,7 +85,7 @@ SMO.
       .. code:: shell
 
          curl -X 'GET' \
-           'http://<OAM IP>:30205/o2ims_infrastructureInventory/v1/deploymentManagers' \
+           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" \
            -H 'accept: application/json'
 
 -  Subscribe to the O-Cloud resource change notification
@@ -92,7 +98,7 @@ SMO.
       .. code:: bash
 
          curl -X 'POST' \
-           'http://<OAM IP>:30205/o2ims_infrastructureInventory/v1/subscriptions' \
+           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/subscriptions" \
            -H 'accept: application/json' \
            -H 'Content-Type: application/json' \
            -d '{
@@ -119,23 +125,27 @@ SMO.
 
       .. code:: bash
 
-         curl --location --request GET 'http://<OAM IP>:30205/o2ims_infrastructureInventory/v1/deploymentManagers'
+         curl --location --request GET "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers"
 
-         export dmsId=`curl --location --request GET 'http://<OAM IP>:30205/o2ims_infrastructureInventory/v1/deploymentManagers' 2>/dev/null | jq .[].deploymentManagerId | xargs echo`
+         export dmsId=`curl --location --request GET "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" 2>/dev/null | jq .[].deploymentManagerId | xargs echo`
+
+         echo ${dmsId} # check the exported DMS id
 
       Using helm to deploy a chartmuseum to the INF
 
       .. code:: bash
 
+         helm repo add chartmuseum https://chartmuseum.github.io/charts
+         helm repo update
          helm pull chartmuseum/chartmuseum # download chartmuseum-3.4.0.tgz to local
          tar zxvf chartmuseum-3.4.0.tgz
          cat <<EOF>chartmuseum-override.yaml
          env:
-          open:
-            DISABLE_API: false
+           open:
+             DISABLE_API: false
          service:
-          type: NodePort
-          nodePort: 30330
+           type: NodePort
+           nodePort: 30330
          EOF
 
          helm install chartmuseumrepo chartmuseum/chartmuseum -f chartmuseum-override.yaml
@@ -155,27 +165,42 @@ SMO.
 
          git clone https://github.com/biny993/firewall-host-netdevice.git
          tar -zcvf firewall-host-netdevice-1.0.0.tgz firewall-host-netdevice/
-         helm push firewall-host-netdevice-1.0.0.tgz o2imsrepo
+         helm plugin install https://github.com/chartmuseum/helm-push.git
+         helm cm-push firewall-host-netdevice-1.0.0.tgz o2imsrepo
          helm repo update
          helm search repo firewall
+
+      Setup host net device over INF
+
+      .. code:: bash
+
+         ssh sysadmin@<INF OAM IP>
+         sudo ip link add name veth11 type veth peer name veth12
+         sudo ip link add name veth21 type veth peer name veth22
+         sudo ip link |grep veth
+         exit
 
    -  Create NfDeploymentDescriptor
 
       .. code:: bash
 
-         curl --location --request POST "http://<OAM IP>:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor" \
+         curl --location --request POST "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor" \
          --header 'Content-Type: application/json' \
          --data-raw '{
            "name": "cfwdesc1",
            "description": "demo nf deployment descriptor",
-           "artifactRepoUrl": "http://${NODE_IP}:30330",
+           "artifactRepoUrl": "http://'${NODE_IP}':30330",
            "artifactName": "firewall-host-netdevice",
            "inputParams": 
-           "{\n  \"image\": {\n    \"repository\": \"ubuntu\",\n    \"tag\": 18.04,\n    \"pullPolicy\": \"IfNotPresent\"\n  },\n  \"resources\": {\n    \"cpu\": 2,\n    \"memory\": \"2Gi\",\n    \"hugepage\": \"256Mi\",\n    \"unprotectedNetPortVpg\": \"veth11\",\n    \"unprotectedNetPortVfw\": \"veth12\",\n    \"unprotectedNetCidr\": \"10.10.1.0/24\",\n    \"unprotectedNetGwIp\": \"10.10.1.1\",\n    \"protectedNetPortVfw\": \"veth21\",\n    \"protectedNetPortVsn\": \"veth22\",\n    \"protectedNetCidr\": \"10.10.2.0/24\",\n    \"protectedNetGwIp\": \"10.10.2.1\",\n    \"vfwPrivateIp0\": \"10.10.1.1\",\n    \"vfwPrivateIp1\": \"10.10.2.1\",\n    \"vpgPrivateIp0\": \"10.10.1.2\",\n    \"vsnPrivateIp0\": \"10.10.2.2\"\n  }\n}",
+           "{\n  \"image\": {\n    \"repository\": \"ubuntu\",\n    \"tag\": 18.04,\n    \"pullPolicy\": \"IfNotPresent\"\n  },\n  \"resources\": {\n    \"cpu\": 2,\n    \"memory\": \"2Gi\",\n    \"hugepage\": \"0Mi\",\n    \"unprotectedNetPortVpg\": \"veth11\",\n    \"unprotectedNetPortVfw\": \"veth12\",\n    \"unprotectedNetCidr\": \"10.10.1.0/24\",\n    \"unprotectedNetGwIp\": \"10.10.1.1\",\n    \"protectedNetPortVfw\": \"veth21\",\n    \"protectedNetPortVsn\": \"veth22\",\n    \"protectedNetCidr\": \"10.10.2.0/24\",\n    \"protectedNetGwIp\": \"10.10.2.1\",\n    \"vfwPrivateIp0\": \"10.10.1.1\",\n    \"vfwPrivateIp1\": \"10.10.2.1\",\n    \"vpgPrivateIp0\": \"10.10.1.2\",\n    \"vsnPrivateIp0\": \"10.10.2.2\"\n  }\n}",
            "outputParams": "{\"output1\": 100}"
          }'
 
-         curl --location --request GET "http://<OAM IP>:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor"
+         curl --location --request GET "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor"
+
+         export descId=` curl -X 'GET'   "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor"   -H 'accept: application/json'   -H 'X-Fields: id' 2>/dev/null | jq .[].id | xargs echo`
+
+         echo ${descId} # check the exported descriptor id
 
    -  Create NfDeployment
 
@@ -185,16 +210,16 @@ SMO.
 
       .. code:: bash
 
-         curl --location --request POST "http://<OAM IP>:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment" \
+         curl --location --request POST "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment" \
          --header 'Content-Type: application/json' \
          --data-raw '{
            "name": "cfw100",
            "description": "demo nf deployment",
-           "descriptorId": "<Descriptor ID>",
+           "descriptorId": "'${descId}'",
            "parentDeploymentId": ""
          }'
 
-         curl --location --request GET "http://<OAM IP>:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment"
+         curl --location --request GET "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment"
 
    -  Check pods of the firewall sample
 
@@ -206,6 +231,8 @@ SMO.
 
       .. code:: shell
 
-         export NfDeploymentId=`curl --location --request GET 'http://<OAM IP>:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment' 2>/dev/null | jq .[].id | xargs echo`
+         export NfDeploymentId=`curl --location --request GET "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment" 2>/dev/null | jq .[].id | xargs echo`
 
-         curl --location --request DELETE "http://<OAM IP>:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment/${NfDeploymentId}"
+         echo ${NfDeploymentId} # Check the exported deployment id
+
+         curl --location --request DELETE "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment/${NfDeploymentId}"

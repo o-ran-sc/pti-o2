@@ -131,8 +131,8 @@ kubectl get pods -A
 ## setup local repo: o2imsrepo
 
 ```sh
-# helm repo add chartmuseum https://chartmuseum.github.io/charts
-# helm repo update
+helm repo add chartmuseum https://chartmuseum.github.io/charts
+helm repo update
 helm pull chartmuseum/chartmuseum # download chartmuseum-3.4.0.tgz to local
 tar zxvf chartmuseum-3.4.0.tgz
 

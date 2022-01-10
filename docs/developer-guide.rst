@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2019 Wind River Systems, Inc.
+.. Copyright (C) 2021 Wind River Systems, Inc.
 
 Developer-Guide
 ===============
@@ -49,7 +49,7 @@ To contribute to this project, you are supposed to be familiar with the INF plat
   $ docker-compose run --rm --no-deps --entrypoint=pytest api /tests/unit /tests/integration
 
 
-3, Test with INF platform
+3. Test with INF platform
 -------------------------
 
 * To test with INF platform, you should install INF platform first, by default you will be able to use the 'admin' user
@@ -62,9 +62,9 @@ To contribute to this project, you are supposed to be familiar with the INF plat
   $ export |grep OS_PASSWORD
   $ docker-compose run --rm --no-deps --entrypoint=pytest api /tests/integration-ocloud --log-level=DEBUG --log-file=/tests/debug.log
 
-4, Tear down docker containers
+4. Tear down docker containers
+------------------------------
 
 .. code:: shell
-
 
   $ docker-compose down --remove-orphans

@@ -25,7 +25,7 @@ def configure_namespace(app):
     apiims = config.get_o2ims_api_base()
     apiprovision = config.get_provision_api_base()
     logger.info(
-        "Expose IMS API:{}\nExpose Provision API: {}".
+        "Expose the O2 IMS API:{}\nExpose Provision API: {}".
         format(apiims, apiprovision))
 
     ocloud_route.configure_api_route()

@@ -1,24 +1,28 @@
-O-Cloud O2 Service User Guide
-=============================
+.. This work is licensed under a Creative Commons Attribution 4.0 International License.
+.. SPDX-License-Identifier: CC-BY-4.0
+.. Copyright (C) 2021 Wind River Systems, Inc.
 
-This guide will introduce the process that make O2 interface work with
+INF O2 Service User Guide
+=========================
+
+This guide will introduce the process that make INF O2 interface work with
 SMO.
 
--  Assume you have an O-Cloud O2 environment
+-  Assume you have an O2 service with INF platform environment
 
    .. code:: bash
 
       export OAM_IP=<INF_OAM_IP>
 
--  Discover O-Cloud inventory
+-  Discover INF platform inventory
 
-   -  O-Cloud auto discovery
+   -  INF platform auto discovery
 
-      After you installed the O-Cloud service, it will automatically
+      After you installed the INF O2 service, it will automatically
       discover the INF through the parameters that you give from the
       “*o2service-override.yaml*”
 
-      Below command can get the O-Cloud information
+      Below command can get the INF platform information as O-Cloud
 
       .. code:: shell
 
@@ -28,8 +32,8 @@ SMO.
 
    -  Resource pool
 
-      One O-Cloud have one resource pool, all the resources that belong
-      to this O-Cloud will be organized into this resource pool
+      One INF platform have one resource pool, all the resources that belong
+      to this INF platform will be organized into this resource pool
 
       Get the resource pool information through this interface
 
@@ -88,11 +92,11 @@ SMO.
            "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" \
            -H 'accept: application/json'
 
--  Provisioning O-Cloud with SMO endpoint configuration
+-  Provisioning INF platform with SMO endpoint configuration
 
-   Assume you have an SMO, then configure O-Cloud with SMO endpoint
-   address. This provisioning of O-Cloud will make a request from
-   O-Cloud to SMO, that make SMO know the O2 service is working.
+   Assume you have an SMO, then configure INF platform with SMO endpoint
+   address. This provisioning of INF O2 service will make a request from
+   INF O2 service to SMO, that make SMO know the O2 service is working.
 
    It needs SMO to have an API like
    “*http(s)://SMO_HOST:SMO_PORT/registration*”, which can accept JSON
@@ -108,12 +112,12 @@ SMO.
         "endpoint": "http://<SMO_HOST>:<SMO_PORT>/registration"
       }'
 
--  Subscribe to the O-Cloud resource change notification
+-  Subscribe to the INF platform resource change notification
 
    Assume you have an SMO, and the SMO have an API can be receive
    callback request
 
-   -  Create subscription in O-Cloud IMS
+   -  Create subscription in the INF O2 IMS
 
       .. code:: bash
 
@@ -130,7 +134,7 @@ SMO.
    -  Handle resource change notification
 
       When the SMO callback API get the notification that the resource
-      of O-Cloud changing, use the URL to get the latest resource
+      of INF platform changing, use the URL to get the latest resource
       information to update its database
 
 -  Orchestrate CNF in helm chart
@@ -141,7 +145,7 @@ SMO.
    We need to do some preparation to make the helm repo work and include
    our firewall chart inside of the repository.
 
-      Get the DMS Id in the O-Cloud, and set it into bash environment
+      Get the DMS Id in the INF O2 service, and set it into bash environment
 
       .. code:: bash
 
@@ -151,7 +155,7 @@ SMO.
 
          echo ${dmsId} # check the exported DMS id
 
-      Using helm to deploy a chartmuseum to the INF
+      Using helm to deploy a chartmuseum to the INF platform
 
       .. code:: bash
 
@@ -190,7 +194,7 @@ SMO.
          helm repo update
          helm search repo firewall
 
-      Setup host net device over INF
+      Setup host net device over INF node
 
       .. code:: bash
 
@@ -200,7 +204,7 @@ SMO.
          sudo ip link |grep veth
          exit
 
-   -  Create NfDeploymentDescriptor
+   -  Create NfDeploymentDescriptor on the INF O2 DMS
 
       .. code:: bash
 
@@ -222,7 +226,7 @@ SMO.
 
          echo ${descId} # check the exported descriptor id
 
-   -  Create NfDeployment
+   -  Create NfDeployment on the INF O2 DMS
 
       When you have an descriptor of deployment, you can create a
       NfDeployment, it will trigger an event inside of the IMS/DMS, and

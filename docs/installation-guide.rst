@@ -13,7 +13,7 @@ Installation Guide
 Abstract
 --------
 
-This document describes how to install O-RAN O2 service over O-RAN INF platform.
+This document describes how to install INF O2 service over O-RAN INF platform.
 
 The audience of this document is assumed to have basic knowledge in kubernetes cli, helm chart cli.
 
@@ -24,8 +24,8 @@ Preface
 Before starting the installation and deployment of O-RAN O2 service, you should have already deployed O-RAN INF platform, and you need to download the helm charts or build from source as described in developer-guide.
 
 
-ORAN O2 Service in E Release
-============================
+INF O2 Service in E Release
+===========================
 
 1. Provision remote cli for kubernetes over INF platform
 --------------------------------------------------------
@@ -111,8 +111,8 @@ The following instruction should be done outside of INF platform controller host
 2. Deploy INF O2 service
 ------------------------
 
-2.1 Retrieve Helm chart for deploying of O2 service
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2.1 Retrieve Helm chart for deploying of INF O2 service
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: shell
 
@@ -181,7 +181,8 @@ The following instruction should be done outside of INF platform controller host
 ---------------------------------
 
 - assumed you have setup SMO O2 endpoint for registration
-- INF O2 service will post the O-Cloud registration data to that SMO O2 endpoint
+- INF O2 service will post the INF platform registration data to that SMO O2 endpoint
+
 
 .. code:: shell
 

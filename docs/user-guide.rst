@@ -88,9 +88,29 @@ SMO.
            "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" \
            -H 'accept: application/json'
 
+-  Provisioning O-Cloud with SMO endpoint configuration
+
+   Assume you have an SMO, then configure O-Cloud with SMO endpoint
+   address. This provisioning of O-Cloud will make a request from
+   O-Cloud to SMO, that make SMO know the O2 service is working.
+
+   It needs SMO to have an API like
+   “*http(s)://SMO_HOST:SMO_PORT/registration*”, which can accept JSON
+   format data.
+
+   .. code:: bash
+
+      curl -X 'POST' \
+        'http://'${OAM_IP}':30205/provision/v1/smo-endpoint' \
+        -H 'accept: application/json' \
+        -H 'Content-Type: application/json' \
+        -d '{
+        "endpoint": "http://<SMO_HOST>:<SMO_PORT>/registration"
+      }'
+
 -  Subscribe to the O-Cloud resource change notification
 
-   Assume you have a SMO, and the SMO have an API can be receive
+   Assume you have an SMO, and the SMO have an API can be receive
    callback request
 
    -  Create subscription in O-Cloud IMS

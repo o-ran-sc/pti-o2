@@ -9,7 +9,7 @@ This project implements a reference O2 IMS and DMS service to expose INF platfor
 
 In the E release, the following APIs are supported by INF O2 service:
 
-1. O-Cloud Infrastructure Management Service
+1. O-Cloud Infrastructure Management Service (IMS)
 
    - O-Cloud provisioning API
 
@@ -37,7 +37,7 @@ In the E release, the following APIs are supported by INF O2 service:
 
       - O2 service enables lookup of O-Cloud DMS endpoints via DeploymentManagementService resource as part of inventory
 
-2. Deployment Management Service
+2. Deployment Management Service (DMS)
 
    - O2 service discovers kubernetes clusters hosted by INF platform, exposes them as Deployment Management Services via O-Cloud DMS endpoints
 

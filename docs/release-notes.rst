@@ -29,7 +29,7 @@ Version 1.0.0, 2021-12-15
 -------------------------
 - Initial version (E release)
 - Add O2 IMS for INF platform
-  - Enable O-Cloud registration to SMO
+  - Enable INF platform registration to SMO
   - Enable O2 infrastructure inventory service API
   - Enable O2 Subscription service API
   - Enable O2 Notification service to notify SMO about the resource changes

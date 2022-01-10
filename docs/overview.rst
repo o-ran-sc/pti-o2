@@ -5,41 +5,41 @@
 INF O2 Service Overview
 =======================
 
-This project implements a reference O2 IMS and DMS service to expose INF platform to SMO via O2 interface.
+This project implements a reference O-RAN O2 IMS and DMS service to expose the INF platform to SMO via the O-RAN O2 interface.
 
-In the E release, the following APIs are supported by INF O2 service:
+In the E release, the following APIs are supported by the INF O2 service:
 
-1. O-Cloud Infrastructure Management Service (IMS)
+1. INF O2 service Infrastructure Management Service (IMS)
 
-   - O-Cloud provisioning API
+   - INF O2 service provisioning API
 
      - Provision SMO O2 endpoint into INF O2 service
 
-     - O2 service discovers INF platform as O-Cloud and register INF as O-Cloud to SMO via the provisioned SMO O2 endpoint
+     - O2 service discovers INF platform and registers INF platform to SMO via the provisioned SMO O2 endpoint
 
-   - O-Cloud Inventory API
+   - INF O2 service Inventory API
 
      - O2 service discovers following resources of INF platform to answer queries from SMO
 
-       - O-Cloud information
+       - INF platform information
 
-       - Resource Pool of the O-Cloud
+       - Resource Pool of the INF platform
 
        - Resources of the Resource Pool, including pserver, cpu, memory, port, interface
 
        - Resource Types associated with Resources
 
-    - O-Cloud Subscription and Notification
+    - INF platform Subscription and Notification
 
-      - O2 service exposes Subscription API to enable SMO subscribes to Notification of changes of resources
+      - INF O2 service exposes Subscription API to enable SMO subscribes to Notification of changes of resources
 
-    - O-Cloud Deployment Management Service Endpoint discovery API
+    - INF platform Deployment Management Service Endpoint discovery API
 
-      - O2 service enables lookup of O-Cloud DMS endpoints via DeploymentManagementService resource as part of inventory
+      - INF O2 service enables lookup of INF O2 DMS endpoints via DeploymentManagementService resource as part of inventory
 
-2. Deployment Management Service (DMS)
+2. INF O2 service Deployment Management Service (DMS)
 
-   - O2 service discovers kubernetes clusters hosted by INF platform, exposes them as Deployment Management Services via O-Cloud DMS endpoints
+   - INF O2 service discovers kubernetes clusters hosted by INF platform, exposes them as Deployment Management Services via DMS endpoints
 
    - The exposed DMS endpoint supports Lifecycle Management of NfDeployment which represents CNF described in helm chart, the API supports APIs below:
 

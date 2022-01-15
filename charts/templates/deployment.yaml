@@ -50,6 +50,58 @@ spec:
           volumeMounts:
             - name: scripts
               mountPath: /opt
+        - name: redis
+          image: redis:alpine
+          ports:
+            - containerPort: 6379
+        - name: o2pubsub
+          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
+          command: ["/bin/bash", "/opt/o2pubsub_start.sh"]
+          env:
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PASSWORD
+              value: o2ims123
+            - name: LOGGING_CONFIG_LEVEL
+              value: {{ .Values.o2ims.logginglevel }}
+            - name: OS_AUTH_URL
+              value: {{ .Values.ocloud.OS_AUTH_URL }}
+            - name: OS_PASSWORD
+              value: {{ .Values.ocloud.OS_PASSWORD }}
+            - name: OS_USERNAME
+              value: {{ .Values.ocloud.OS_USERNAME }}
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: REDIS_HOST
+              value: redis
+            - name: K8S_KUBECONFIG
+              value: {{ .Values.ocloud.K8S_KUBECONFIG }}
+          volumeMounts:
+            - name: scripts
+              mountPath: /opt
+        - name: watcher
+          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
+          command: ["/bin/bash", "/opt/o2watcher_start.sh"]
+          env:
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PASSWORD
+              value: o2ims123
+            - name: LOGGING_CONFIG_LEVEL
+              value: {{ .Values.o2ims.logginglevel }}
+            - name: OS_AUTH_URL
+              value: {{ .Values.ocloud.OS_AUTH_URL }}
+            - name: OS_PASSWORD
+              value: {{ .Values.ocloud.OS_PASSWORD }}
+            - name: OS_USERNAME
+              value: {{ .Values.ocloud.OS_USERNAME }}
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: REDIS_HOST
+              value: redis
+          volumeMounts:
+            - name: scripts
+              mountPath: /opt
         - name: o2api
           image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
           ports:
@@ -77,58 +129,6 @@ spec:
             - name: REDIS_HOST
               value: redis
           command: ["/bin/bash", "/opt/o2api_start.sh"]
-          volumeMounts:
-            - name: scripts
-              mountPath: /opt
-        - name: redis
-          image: redis:alpine
-          ports:
-            - containerPort: 6379
-        - name: watcher
-          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
-          command: ["/bin/bash", "/opt/o2watcher_start.sh"]
-          env:
-            - name: DB_HOST
-              value: postgres
-            - name: DB_PASSWORD
-              value: o2ims123
-            - name: LOGGING_CONFIG_LEVEL
-              value: {{ .Values.o2ims.logginglevel }}
-            - name: OS_AUTH_URL
-              value: {{ .Values.ocloud.OS_AUTH_URL }}
-            - name: OS_PASSWORD
-              value: {{ .Values.ocloud.OS_PASSWORD }}
-            - name: OS_USERNAME
-              value: {{ .Values.ocloud.OS_USERNAME }}
-            - name: PYTHONDONTWRITEBYTECODE
-              value: "1"
-            - name: REDIS_HOST
-              value: redis
-          volumeMounts:
-            - name: scripts
-              mountPath: /opt
-        - name: o2pubsub
-          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
-          command: ["/bin/bash", "/opt/o2pubsub_start.sh"]
-          env:
-            - name: DB_HOST
-              value: postgres
-            - name: DB_PASSWORD
-              value: o2ims123
-            - name: LOGGING_CONFIG_LEVEL
-              value: {{ .Values.o2ims.logginglevel }}
-            - name: OS_AUTH_URL
-              value: {{ .Values.ocloud.OS_AUTH_URL }}
-            - name: OS_PASSWORD
-              value: {{ .Values.ocloud.OS_PASSWORD }}
-            - name: OS_USERNAME
-              value: {{ .Values.ocloud.OS_USERNAME }}
-            - name: PYTHONDONTWRITEBYTECODE
-              value: "1"
-            - name: REDIS_HOST
-              value: redis
-            - name: K8S_KUBECONFIG
-              value: {{ .Values.ocloud.K8S_KUBECONFIG }}
           volumeMounts:
             - name: scripts
               mountPath: /opt

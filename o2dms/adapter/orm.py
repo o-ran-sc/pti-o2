@@ -98,4 +98,4 @@ def start_o2dms_mappers(engine=None):
     mapper(dmsModel.NfOCloudVResource, nfOCloudVResource)
 
     if engine is not None:
-        metadata.create_all(engine)
+        metadata.create_all(engine, checkfirst=True)

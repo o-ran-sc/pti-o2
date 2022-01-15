@@ -186,4 +186,4 @@ def start_o2ims_mappers(engine=None):
     mapper(confModel.Configuration, configuration)
 
     if engine is not None:
-        metadata.create_all(engine)
+        metadata.create_all(engine, checkfirst=True)

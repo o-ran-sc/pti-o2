@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 # from typing_extensions import Required
+from tabnanny import check
 from sqlalchemy import (
     Table,
     MetaData,
@@ -186,4 +187,4 @@ def start_o2ims_mappers(engine=None):
     mapper(confModel.Configuration, configuration)
 
     if engine is not None:
-        metadata.create_all(engine)
+        metadata.create_all(engine, checkfirst=True)

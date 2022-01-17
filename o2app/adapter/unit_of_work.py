@@ -27,15 +27,21 @@ from o2dms.adapter import dms_repository
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
+
+engine = create_engine(
+    config.get_postgres_uri(),
+    isolation_level="REPEATABLE READ",
+    pool_size=200, max_overflow=0,
+    pool_recycle=3600
+)
+
 DEFAULT_SESSION_FACTORY = sessionmaker(
-    bind=create_engine(
-        config.get_postgres_uri(),
-        isolation_level="REPEATABLE READ",
-    )
+    autocommit=False, autoflush=False, bind=engine
 )
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
+
     def __init__(self, session_factory=DEFAULT_SESSION_FACTORY):
         self.session_factory = session_factory
 

@@ -54,6 +54,7 @@ def bootstrap(
         with uow:
             # get default engine if uow is by default
             engine = uow.session.get_bind()
+
             wait_for_db_ready(engine)
             o2ims_orm.start_o2ims_mappers(engine)
             o2dms_orm.start_o2dms_mappers(engine)

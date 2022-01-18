@@ -17,6 +17,8 @@
 # sed -i 's/huge_page=try/huge_page=off/' /usr/share/postgresql/postgresql.conf.sample
 cat <<EOF >> /usr/share/postgresql/postgresql.conf.sample
 huge_pages = off
+max_connections = 100
+shared_buffers = 24MB
 EOF
 
 /docker-entrypoint.sh postgres

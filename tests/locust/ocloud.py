@@ -31,5 +31,9 @@ class QuickstartUser(HttpUser):
             "/o2ims_infrastructureInventory/v1/resourcePools/%s/resources" %
             json_resp_dict[0]['resourcePoolId'])
 
+    @task
+    def dms(self):
+        self.client.get("/o2ims_infrastructureInventory/v1/deploymentManagers")
+
     def on_start(self):
         pass

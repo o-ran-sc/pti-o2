@@ -95,6 +95,9 @@ class Resource(AgRoot, Serializer):
     def set_children(self, children: list):
         self.children = children
 
+    def set_resource_type_name(self, resource_type_name: str):
+        self.resourceTypeName = resource_type_name
+
     def serialize(self):
         d = Serializer.serialize(self)
 

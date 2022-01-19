@@ -18,6 +18,9 @@ from o2common.service import unit_of_work
 from o2ims.views.ocloud_dto import SubscriptionDTO
 from o2ims.domain.subscription_obj import Subscription
 
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
+
 
 def oclouds(uow: unit_of_work.AbstractUnitOfWork):
     with uow:
@@ -57,9 +60,29 @@ def resource_pool_one(resourcePoolId: str,
         return first.serialize() if first is not None else None
 
 
-def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork):
+def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,
+              **kwargs):
+
+    filter_kwargs = {}  # filter key should be the same with database name
+    if 'resourceTypeName' in kwargs:
+        resource_type_name = kwargs['resourceTypeName']
+        with uow:
+            # res_types = uow.resource_types.list()
+            # restype_ids = [
+            #     restype.resourceTypeId for restype in res_types
+            #     if resourceTypeName == restype.name]
+            # restype_id = '' if len(restype_ids) == 0 else restype_ids[0]
+            res_type = uow.resource_types.get_by_name(resource_type_name)
+            restype_id = '' if res_type is None else res_type.resourceTypeId
+        filter_kwargs['resourceTypeId'] = restype_id
+
+        #     li = uow.resources.list(resourcePoolId)
+        # return [r.serialize() for r in li if r.resourceTypeId == restype_id]
+    if 'parentId' in kwargs:
+        filter_kwargs['parentId'] = kwargs['parentId']
+
     with uow:
-        li = uow.resources.list(resourcePoolId)
+        li = uow.resources.list(resourcePoolId, **filter_kwargs)
     return [r.serialize() for r in li]
 
 

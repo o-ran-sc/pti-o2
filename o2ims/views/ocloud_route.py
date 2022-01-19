@@ -13,12 +13,16 @@
 #  limitations under the License.
 
 from flask_restx import Resource
+from flask_restx import reqparse
 
 from o2common.service.messagebus import MessageBus
 from o2ims.views import ocloud_view
 from o2ims.views.api_ns import api_ims_inventory_v1
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
     ResourcePoolDTO, ResourceDTO, DeploymentManagerDTO, SubscriptionDTO
+
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
 
 
 def configure_api_route():
@@ -105,13 +109,26 @@ class ResourcePoolGetRouter(Resource):
 # ----------  Resources ---------- #
 @api_ims_inventory_v1.route("/resourcePools/<resourcePoolID>/resources")
 @api_ims_inventory_v1.param('resourcePoolID', 'ID of the resource pool')
+@api_ims_inventory_v1.param('resourceTypeName', 'filter resource type',
+                            location='args')
+@api_ims_inventory_v1.param('parentId', 'filter parentId',
+                            location='args')
 class ResourcesListRouter(Resource):
 
     model = ResourceDTO.resource_list
 
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self, resourcePoolID):
-        return ocloud_view.resources(resourcePoolID, bus.uow)
+        parser = reqparse.RequestParser()
+        parser.add_argument('resourceTypeName', location='args')
+        parser.add_argument('parentId', location='args')
+        args = parser.parse_args()
+        kwargs = {}
+        if args.resourceTypeName is not None:
+            kwargs['resourceTypeName'] = args.resourceTypeName
+        if args.parentId is not None:
+            kwargs['parentId'] = args.parentId
+        return ocloud_view.resources(resourcePoolID, bus.uow, **kwargs)
 
 
 @api_ims_inventory_v1.route(

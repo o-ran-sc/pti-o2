@@ -55,6 +55,10 @@ class ResouceTypeSqlAlchemyRepository(ResourceTypeRepository):
         return self.session.query(ocloud.ResourceType).filter_by(
             resourceTypeId=resource_type_id).first()
 
+    def _get_by_name(self, resource_type_name) -> ocloud.ResourceType:
+        return self.session.query(ocloud.ResourceType).filter_by(
+            name=resource_type_name).first()
+
     def _list(self) -> List[ocloud.ResourceType]:
         return self.session.query(ocloud.ResourceType)
 
@@ -112,9 +116,9 @@ class ResourceSqlAlchemyRepository(ResourceRepository):
             return res
         return recursive(resource_id)
 
-    def _list(self, resourcepool_id) -> List[ocloud.Resource]:
+    def _list(self, resourcepool_id, **kwargs) -> List[ocloud.Resource]:
         return self.session.query(ocloud.Resource).filter_by(
-            resourcePoolId=resourcepool_id)
+            resourcePoolId=resourcepool_id, **kwargs)
 
     def _update(self, resource: ocloud.Resource):
         self.session.add(resource)

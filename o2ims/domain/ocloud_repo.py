@@ -68,6 +68,12 @@ class ResourceTypeRepository(abc.ABC):
             self.seen.add(resource_type)
         return resource_type
 
+    def get_by_name(self, resource_type_name) -> ocloud.ResourceType:
+        resource_type = self._get_by_name(resource_type_name)
+        if resource_type:
+            self.seen.add(resource_type)
+        return resource_type
+
     def list(self) -> List[ocloud.ResourceType]:
         return self._list()
 
@@ -81,6 +87,10 @@ class ResourceTypeRepository(abc.ABC):
 
     @abc.abstractmethod
     def _get(self, resource_type_id) -> ocloud.ResourceType:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _get_by_name(self, resource_type_name) -> ocloud.ResourceType:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -136,8 +146,8 @@ class ResourceRepository(abc.ABC):
             self.seen.add(resource)
         return resource
 
-    def list(self, resourcepool_id) -> List[ocloud.Resource]:
-        return self._list(resourcepool_id)
+    def list(self, resourcepool_id, **kwargs) -> List[ocloud.Resource]:
+        return self._list(resourcepool_id, **kwargs)
 
     def update(self, resource: ocloud.Resource):
         self._update(resource)
@@ -149,6 +159,10 @@ class ResourceRepository(abc.ABC):
 
     @abc.abstractmethod
     def _get(self, resource_id) -> ocloud.Resource:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _list(self, resourcepool_id, **kwargs) -> ocloud.Resource:
         raise NotImplementedError
 
     @abc.abstractmethod

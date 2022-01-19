@@ -66,7 +66,8 @@ resourcetype = Table(
     Column("hash", String(255)),
 
     Column("resourceTypeId", String(255), primary_key=True),
-    Column("resourceTypeEnum", Enum(ResourceTypeEnum), nullable=False),
+    Column("resourceTypeEnum", Enum(
+        ResourceTypeEnum, native_enum=False), nullable=False),
     Column("oCloudId", ForeignKey("ocloud.oCloudId")),
     Column("name", String(255)),
     Column("vendor", String(255)),

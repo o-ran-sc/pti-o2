@@ -44,7 +44,7 @@ stxobject = Table(
     "stxcache",
     metadata,
     Column("id", String(255), primary_key=True),
-    Column("type", Enum(ResourceTypeEnum)),
+    Column("type", Enum(ResourceTypeEnum, native_enum=False)),
     Column("name", String(255)),
     Column("updatetime", DateTime),
     Column("createtime", DateTime),

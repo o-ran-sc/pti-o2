@@ -83,6 +83,8 @@ spec:
           image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
           command: ["/bin/bash", "/opt/o2watcher_start.sh"]
           env:
+            - name: API_HOST_EXTERNAL_FLOATING
+              value: {{ .Values.ocloud.API_HOST_EXTERNAL_FLOATING }}
             - name: DB_HOST
               value: postgres
             - name: DB_PASSWORD

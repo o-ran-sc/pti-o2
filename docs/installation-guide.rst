@@ -135,6 +135,10 @@ The following instruction should be done outside of INF platform controller host
   export OS_USERNAME=<INF username e.g.: admin>
   export OS_PASSWORD=<INF password for user e.g.: adminpassword>
 
+  # If the external OAM IP same as OS_AUTH_URL's IP address, you can use the below command to set the environment
+  # export API_HOST_EXTERNAL_FLOATING=$(echo ${OS_AUTH_URL/$(echo ${OS_AUTH_URL} | grep :// | sed -e's,^\(.*//\).*,\1,g')} | cut -d/ -f1 | sed -e 's,:.*,,g')
+  export API_HOST_EXTERNAL_FLOATING=<INF external_oam_floating_address e.g.: 128.10.10.10>
+
   cat <<EOF>o2service-override.yaml
   o2ims:
     imagePullSecrets: admin-orano2-registry-secret
@@ -149,6 +153,7 @@ The following instruction should be done outside of INF platform controller host
     OS_USERNAME: "${OS_USERNAME}"
     OS_PASSWORD: "${OS_PASSWORD}"
     K8S_KUBECONFIG: "/opt/k8s_kube.conf"
+    API_HOST_EXTERNAL_FLOATING: "${API_HOST_EXTERNAL_FLOATING}"
   EOF
 
 

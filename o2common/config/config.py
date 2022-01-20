@@ -28,8 +28,15 @@ def get_postgres_uri():
 
 
 def get_api_url():
-    host = os.environ.get("API_HOST", "localhost")
-    port = 5005 if host == "localhost" else 80
+    host_interal = os.environ.get("API_HOST", "localhost")
+    host_external = os.environ.get("API_HOST_EXTERNAL_FLOATING")
+    host = host_interal if host_external is None or host_external == '' \
+        else host_external
+
+    port_internal = 5005 if host == "localhost" else 80
+    port_external = 30205
+    port = port_internal if host_external is None or host_external == '' \
+        else port_external
     return f"http://{host}:{port}"
 
 
@@ -46,7 +53,7 @@ def get_provision_api_base():
 
 
 def get_o2dms_api_base():
-    return get_root_api_base() + "o2dms"
+    return get_root_api_base() + "o2dms/v1"
 
 
 def get_redis_host_and_port():

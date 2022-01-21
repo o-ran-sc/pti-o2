@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 # from typing_extensions import Required
+from retry import retry
 from sqlalchemy import (
     Table,
     MetaData,
@@ -27,6 +28,7 @@ from sqlalchemy import (
     # Boolean,
     # engine,
     # event,
+    exc,
 )
 
 from sqlalchemy.orm import mapper, relationship
@@ -161,6 +163,13 @@ configuration = Table(
 )
 
 
+@retry((exc.IntegrityError), tries=3, delay=2)
+def wait_for_metadata_ready(engine):
+    # wait for mapper ready
+    metadata.create_all(engine, checkfirst=True)
+    logger.info("metadata is ready")
+
+
 def start_o2ims_mappers(engine=None):
     logger.info("Starting O2 IMS mappers")
 
@@ -187,4 +196,4 @@ def start_o2ims_mappers(engine=None):
     mapper(confModel.Configuration, configuration)
 
     if engine is not None:
-        metadata.create_all(engine, checkfirst=True)
+        wait_for_metadata_ready(engine)

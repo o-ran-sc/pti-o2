@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from retry import retry
 from sqlalchemy import (
     Table,
     MetaData,
@@ -24,6 +25,7 @@ from sqlalchemy import (
     # ForeignKey,
     # engine,
     # event,
+    exc
 )
 
 from sqlalchemy.orm import mapper
@@ -90,6 +92,13 @@ nfOCloudVResource = Table(
 )
 
 
+@retry((exc.IntegrityError), tries=3, delay=2)
+def wait_for_metadata_ready(engine):
+    # wait for mapper ready
+    metadata.create_all(engine, checkfirst=True)
+    logger.info("metadata is ready")
+
+
 def start_o2dms_mappers(engine=None):
     logger.info("Starting O2 DMS mappers")
 
@@ -98,4 +107,4 @@ def start_o2dms_mappers(engine=None):
     mapper(dmsModel.NfOCloudVResource, nfOCloudVResource)
 
     if engine is not None:
-        metadata.create_all(engine, checkfirst=True)
+        wait_for_metadata_ready(engine)

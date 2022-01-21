@@ -40,6 +40,15 @@ def wait_for_db_ready(engine):
     logger.info("DB is ready")
 
 
+@retry(tries=3, delay=2)
+def wait_for_mappers_ready(engine):
+    # wait for mapper ready
+    logger.info("Wait for mapper ready ...")
+    o2ims_orm.start_o2ims_mappers(engine)
+    o2dms_orm.start_o2dms_mappers(engine)
+    logger.info("mapper is ready")
+
+
 def bootstrap(
     start_orm: bool = True,
     uow: unit_of_work.AbstractUnitOfWork = SqlAlchemyUnitOfWork(),
@@ -56,8 +65,7 @@ def bootstrap(
             engine = uow.session.get_bind()
 
             wait_for_db_ready(engine)
-            o2ims_orm.start_o2ims_mappers(engine)
-            o2dms_orm.start_o2dms_mappers(engine)
+            wait_for_mappers_ready(engine)
 
     dependencies = {"uow": uow, "notifications": notifications,
                     "publish": publish}

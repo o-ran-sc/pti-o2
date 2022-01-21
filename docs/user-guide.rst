@@ -208,7 +208,7 @@ SMO.
 
       .. code:: bash
 
-         curl --location --request POST "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor" \
+         curl --location --request POST "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor" \
          --header 'Content-Type: application/json' \
          --data-raw '{
            "name": "cfwdesc1",
@@ -220,9 +220,9 @@ SMO.
            "outputParams": "{\"output1\": 100}"
          }'
 
-         curl --location --request GET "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor"
+         curl --location --request GET "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor"
 
-         export descId=` curl -X 'GET'   "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor"   -H 'accept: application/json'   -H 'X-Fields: id' 2>/dev/null | jq .[].id | xargs echo`
+         export descId=` curl -X 'GET'   "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor"   -H 'accept: application/json'   -H 'X-Fields: id' 2>/dev/null | jq .[].id | xargs echo`
 
          echo ${descId} # check the exported descriptor id
 
@@ -234,7 +234,7 @@ SMO.
 
       .. code:: bash
 
-         curl --location --request POST "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment" \
+         curl --location --request POST "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment" \
          --header 'Content-Type: application/json' \
          --data-raw '{
            "name": "cfw100",
@@ -243,7 +243,7 @@ SMO.
            "parentDeploymentId": ""
          }'
 
-         curl --location --request GET "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment"
+         curl --location --request GET "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment"
 
    -  Check pods of the firewall sample
 
@@ -255,8 +255,8 @@ SMO.
 
       .. code:: shell
 
-         export NfDeploymentId=`curl --location --request GET "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment" 2>/dev/null | jq .[].id | xargs echo`
+         export NfDeploymentId=`curl --location --request GET "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment" 2>/dev/null | jq .[].id | xargs echo`
 
          echo ${NfDeploymentId} # Check the exported deployment id
 
-         curl --location --request DELETE "http://${OAM_IP}:30205/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment/${NfDeploymentId}"
+         curl --location --request DELETE "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment/${NfDeploymentId}"

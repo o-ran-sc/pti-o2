@@ -264,7 +264,7 @@ docker logs -f o2_redis_pubsub_1
 
 curl --location --request GET 'http://localhost:5005/o2ims_infrastructureInventory/v1/deploymentManagers'
 export dmsId=<DMS ID>
-curl --location --request POST 'http://localhost:5005/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor' \
+curl --location --request POST 'http://localhost:5005/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor' \
 --header 'Content-Type: application/json' \
 --data-raw '{
   "name": "cfwdesc1",
@@ -276,9 +276,9 @@ curl --location --request POST 'http://localhost:5005/o2dms/${dmsId}/O2dms_Deplo
   "outputParams": "{\"output1\": 100}"
 }'
 
-curl --location --request GET 'http://localhost:5005/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor'
+curl --location --request GET 'http://localhost:5005/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor'
 
-curl --location --request POST 'http://localhost:5005/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment' \
+curl --location --request POST 'http://localhost:5005/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment' \
 --header 'Content-Type: application/json' \
 --data-raw '{
   "name": "cfw100",
@@ -287,7 +287,7 @@ curl --location --request POST 'http://localhost:5005/o2dms/${dmsId}/O2dms_Deplo
   "parentDeploymentId": ""
 }'
 
-curl --location --request GET 'http://localhost:5005/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment'
+curl --location --request GET 'http://localhost:5005/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment'
 
 export NfDeploymentId=<NfDeployment Id>
 
@@ -309,5 +309,5 @@ open browswer with url: http://<NODE_IP>:30667
 ## bring down CFW
 
 ```sh
-curl --location --request DELETE 'http://localhost:5005/o2dms/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment/${NfDeploymentId}'
+curl --location --request DELETE 'http://localhost:5005/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment/${NfDeploymentId}'
 ```

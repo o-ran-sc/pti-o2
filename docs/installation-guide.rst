@@ -136,7 +136,7 @@ The following instruction should be done outside of INF platform controller host
   export OS_PASSWORD=<INF password for user e.g.: adminpassword>
 
   # If the external OAM IP same as OS_AUTH_URL's IP address, you can use the below command to set the environment
-  # export API_HOST_EXTERNAL_FLOATING=$(echo ${OS_AUTH_URL/$(echo ${OS_AUTH_URL} | grep :// | sed -e's,^\(.*//\).*,\1,g')} | cut -d/ -f1 | sed -e 's,:.*,,g')
+  # export API_HOST_EXTERNAL_FLOATING=$(echo ${OS_AUTH_URL} | sed -e s,`echo ${OS_AUTH_URL} | grep :// | sed -e's,^\(.*//\).*,\1,g'`,,g | cut -d/ -f1 | sed -e 's,:.*,,g')
   export API_HOST_EXTERNAL_FLOATING=<INF external_oam_floating_address e.g.: 128.10.10.10>
 
   cat <<EOF>o2service-override.yaml

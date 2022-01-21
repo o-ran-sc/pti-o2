@@ -12,7 +12,7 @@ INF O2 Services API 1.0.0
 Description
 ~~~~~~~~~~~
 
-Swagger OpenAPI document for INF O2 Services
+Swagger OpenAPI document for the INF O2 Services
 
 
 
@@ -33,8 +33,8 @@ DMS LCM related operations.
 
 
 
-POST ``/o2dms/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeployment``
-----------------------------------------------------------------------------
+POST ``/o2dms/v1/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeployment``
+-------------------------------------------------------------------------------
 
 
 
@@ -116,8 +116,8 @@ DMS LCM not found
 
 
 
-POST ``/o2dms/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor``
---------------------------------------------------------------------------------------
+POST ``/o2dms/v1/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor``
+-----------------------------------------------------------------------------------------
 
 
 
@@ -203,8 +203,8 @@ DMS LCM not found
 
 
 
-DELETE ``/o2dms/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeployment/{nfDeploymentId}``
------------------------------------------------------------------------------------------------
+DELETE ``/o2dms/v1/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeployment/{nfDeploymentId}``
+--------------------------------------------------------------------------------------------------
 
 
 
@@ -244,8 +244,8 @@ DMS LCM not found
 
 
 
-DELETE ``/o2dms/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor/{nfDeploymentDescriptorId}``
--------------------------------------------------------------------------------------------------------------------
+DELETE ``/o2dms/v1/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor/{nfDeploymentDescriptorId}``
+----------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -285,8 +285,8 @@ DMS LCM not found
 
 
 
-GET ``/o2dms/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeployment/{nfDeploymentId}``
---------------------------------------------------------------------------------------------
+GET ``/o2dms/v1/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeployment/{nfDeploymentId}``
+-----------------------------------------------------------------------------------------------
 
 
 
@@ -349,8 +349,8 @@ DMS LCM not found
 
 
 
-GET ``/o2dms/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor/{nfDeploymentDescriptorId}``
-----------------------------------------------------------------------------------------------------------------
+GET ``/o2dms/v1/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor/{nfDeploymentDescriptorId}``
+-------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -414,8 +414,8 @@ DMS LCM not found
 
 
 
-GET ``/o2dms/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeployment``
----------------------------------------------------------------------------
+GET ``/o2dms/v1/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeployment``
+------------------------------------------------------------------------------
 
 
 
@@ -488,8 +488,8 @@ DMS LCM not found
 
 
 
-GET ``/o2dms/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor``
--------------------------------------------------------------------------------------
+GET ``/o2dms/v1/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor``
+----------------------------------------------------------------------------------------
 
 
 
@@ -564,8 +564,8 @@ DMS LCM not found
 
 
 
-GET ``/o2dms/{deploymentManagerID}``
-------------------------------------
+GET ``/o2dms/v1/{deploymentManagerID}``
+---------------------------------------
 
 
 
@@ -627,8 +627,8 @@ Deployment manager not found
 
 
 
-PUT ``/o2dms/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeployment/{nfDeploymentId}``
---------------------------------------------------------------------------------------------
+PUT ``/o2dms/v1/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeployment/{nfDeploymentId}``
+-----------------------------------------------------------------------------------------------
 
 
 
@@ -685,8 +685,8 @@ DMS LCM not found
 
 
 
-PUT ``/o2dms/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor/{nfDeploymentDescriptorId}``
-----------------------------------------------------------------------------------------------------------------
+PUT ``/o2dms/v1/{deploymentManagerID}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor/{nfDeploymentDescriptorId}``
+-------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -1529,6 +1529,8 @@ Parameters
     :header: "Name", "Located in", "Required", "Type", "Format", "Properties", "Description"
     :widths: 20, 15, 10, 10, 10, 20, 30
 
+        parentId | query | No | string |  |  | filter parentId
+        resourceTypeName | query | No | string |  |  | filter resource type
         resourcePoolID | path | Yes | string |  |  | ID of the resource pool
 
 

@@ -52,19 +52,27 @@ def handle_nfdeployment_statechanged(
     uow: AbstractUnitOfWork
 ):
     if cmd.FromState == NfDeploymentState.Initial:
-        if cmd.ToState == NfDeploymentState.NotInstalled:
+        if cmd.ToState == NfDeploymentState.Installing:
             cmd2 = commands.InstallNfDeployment(cmd.NfDeploymentId)
             install_nfdeployment(cmd2, uow)
         else:
             logger.debug("Not insterested state change: {}".format(cmd))
-    elif cmd.FromState == NfDeploymentState.Installed:
+    elif cmd.FromState == NfDeploymentState.Installed \
+            or cmd.FromState == NfDeploymentState.Installing \
+            or cmd.FromState == NfDeploymentState.Updating \
+            or cmd.FromState == NfDeploymentState.Abnormal:
+
         if cmd.ToState == NfDeploymentState.Uninstalling:
             cmd2 = commands.UninstallNfDeployment(cmd.NfDeploymentId)
             uninstall_nfdeployment(cmd2, uow)
         else:
             logger.debug("Not insterested state change: {}".format(cmd))
-    elif cmd.FromState == NfDeploymentState.NotInstalled:
-        if cmd.ToState == NfDeploymentState.Initial:
+    elif cmd.FromState == NfDeploymentState.Initial \
+            or cmd.FromState == NfDeploymentState.Abnormal:
+
+        if cmd.ToState == NfDeploymentState.Deleting:
+            cmd2 = commands.UninstallNfDeployment(cmd.NfDeploymentId)
+            uninstall_nfdeployment(cmd2, uow)
             cmd2 = commands.DeleteNfDeployment(cmd.NfDeploymentId)
             delete_nfdeployment(cmd2, uow)
         else:
@@ -104,6 +112,8 @@ def install_nfdeployment(
             "Cannot find NfDeploymentDescriptor:{} for NfDeployment:{}".format(
                 nfdeployment.descriptorId, nfdeployment.id
             ))
+
+    nfdeployment.set_state(NfDeploymentState.Installing)
 
     # helm repo add
     repourl = desc.artifactRepoUrl
@@ -153,7 +163,9 @@ def install_nfdeployment(
     # in case success
     with uow:
         entity: NfDeployment = uow.nfdeployments.get(cmd.NfDeploymentId)
-        entity.transit_state(NfDeploymentState.Installed)
+        if entity:
+            entity.set_state(NfDeploymentState.Installed)
+            entity.transit_state(NfDeploymentState.Installed)
         uow.commit()
 
 
@@ -181,6 +193,7 @@ def uninstall_nfdeployment(
                 nfdeployment.descriptorId, nfdeployment.id
             ))
 
+    nfdeployment.set_state(NfDeploymentState.Uninstalling)
     helm = Helm(logger, LOCAL_HELM_BIN, environment_variables={})
 
     logger.debug('Try to helm del {}'.format(
@@ -198,7 +211,8 @@ def uninstall_nfdeployment(
 
     with uow:
         entity: NfDeployment = uow.nfdeployments.get(cmd.NfDeploymentId)
-        entity.transit_state(NfDeploymentState.Initial)
+        if entity:
+            entity.transit_state(NfDeploymentState.Initial)
         # uow.nfdeployments.update(
         #     cmd.NfDeploymentId, status=NfDeploymentState.Initial)
         uow.commit()

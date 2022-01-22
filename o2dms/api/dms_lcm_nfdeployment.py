@@ -56,7 +56,7 @@ def lcm_nfdeployment_create(
             id, input['name'], deploymentManagerId, input['description'],
             input['descriptorId'], input['parentDeploymentId'])
         uow.nfdeployments.add(entity)
-        entity.transit_state(NfDeploymentState.NotInstalled)
+        # entity.transit_state(NfDeploymentState.NotInstalled)
 
         # to be refactor later according to O2 DMS API design
         entity.transit_state(NfDeploymentState.Installing)
@@ -98,8 +98,20 @@ def lcm_nfdeployment_uninstall(
     uow = bus.uow
     with uow:
         entity: NfDeployment = uow.nfdeployments.get(nfdeploymentid)
-        if entity.status == NfDeploymentState.Installed:
+        if not entity:
+            pass
+        elif entity.status == NfDeploymentState.Initial:
+            bus.uow.nfdeployments.delete(nfdeploymentid)
+        # elif entity.status == NfDeploymentState.NotInstalled:
+        #     bus.uow.nfdeployments.delete(nfdeploymentid)
+        elif entity.status == NfDeploymentState.Installing:
             entity.transit_state(NfDeploymentState.Uninstalling)
+        elif entity.status == NfDeploymentState.Installed:
+            entity.transit_state(NfDeploymentState.Uninstalling)
+        elif entity.status == NfDeploymentState.Updating:
+            entity.transit_state(NfDeploymentState.Uninstalling)
+        elif entity.status == NfDeploymentState.Uninstalling:
+            pass
         elif entity.status == NfDeploymentState.Abnormal:
             bus.uow.nfdeployments.delete(nfdeploymentid)
         else:
@@ -121,7 +133,7 @@ def lcm_nfdeployment_uninstall(
 #                 "NfDeployment {} is not in status to delete".format(
 #                     nfdeploymentid))
 #         uow.nfdeployments.delete(nfdeploymentid)
-#         entity.transit_state(NfDeploymentState.Deleted)
+#         entity.transit_state(NfDeploymentState.Deleting)
 #         uow.commit()
 #     return True
 

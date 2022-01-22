@@ -20,10 +20,11 @@ from dataclasses import dataclass
 @dataclass
 class NfDeploymentState():
     Initial = 0
-    NotInstalled = 1
+    # NotInstalled = 1
     Installing = 2
     Installed = 3
     Updating = 4
     Uninstalling = 5
     Abnormal = 6
     Deleted = 7
+    # Aborting = 8

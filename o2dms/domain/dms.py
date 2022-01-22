@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 from __future__ import annotations
+# from os import stat
 from o2dms.domain import events
 from o2dms.domain.states import NfDeploymentState
 
@@ -53,6 +54,10 @@ class NfDeployment(AgRoot, Serializer):
     def transit_state(self, state: NfDeploymentState):
         if (self.status != state):
             self._append_event(self.status, state)
+            # self.status = state
+
+    def set_state(self, state: NfDeploymentState):
+        if (self.status != state):
             self.status = state
 
     def _append_event(self, fromState, toState):

@@ -1,5 +1,4 @@
-
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2022 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -13,18 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from __future__ import annotations
-from dataclasses import dataclass
+# pylint: disable=too-few-public-methods
 
-
-@dataclass
-class NfDeploymentState():
-    Initial = 0
-    # NotInstalled = 1
-    Installing = 2
-    Installed = 3
-    Updating = 4
-    Uninstalling = 5
-    Abnormal = 6
-    Deleting = 7
-    # Aborting = 8
+class Orano2Exception(Exception):
+    pass

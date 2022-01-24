@@ -17,4 +17,8 @@
 
 
 class Command:
+    # placeholder for retry feature
+    # tries: int = 1
+    # delay: int = 1
+    # backoff: int = 2
     pass

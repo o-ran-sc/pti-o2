@@ -56,6 +56,9 @@ def handle_nfdeployment_statechanged(
         if cmd.ToState == NfDeploymentState.Installing:
             cmd2 = commands.InstallNfDeployment(cmd.NfDeploymentId)
             install_nfdeployment(cmd2, uow)
+        elif cmd.ToState == NfDeploymentState.Deleting:
+            cmd2 = commands.DeleteNfDeployment(cmd.NfDeploymentId)
+            delete_nfdeployment(cmd2, uow)
         else:
             logger.debug("Not insterested state change: {}".format(cmd))
     elif cmd.FromState == NfDeploymentState.Installed \
@@ -68,9 +71,7 @@ def handle_nfdeployment_statechanged(
             uninstall_nfdeployment(cmd2, uow)
         else:
             logger.debug("Not insterested state change: {}".format(cmd))
-    elif cmd.FromState == NfDeploymentState.Initial \
-            or cmd.FromState == NfDeploymentState.Abnormal:
-
+    elif cmd.FromState == NfDeploymentState.Abnormal:
         if cmd.ToState == NfDeploymentState.Deleting:
             # cmd2 = commands.UninstallNfDeployment(cmd.NfDeploymentId)
             # uninstall_nfdeployment(cmd2, uow)

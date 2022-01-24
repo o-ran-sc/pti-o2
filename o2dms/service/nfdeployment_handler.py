@@ -20,6 +20,7 @@ from o2dms.domain.dms import NfDeployment, NfDeploymentDesc
 from o2dms.domain import commands
 from typing import Callable
 
+from o2dms.domain.exceptions import NfdeploymentNotFoundError
 from o2dms.domain import events
 from o2common.service.unit_of_work import AbstractUnitOfWork
 from helm_sdk import Helm
@@ -82,15 +83,19 @@ def handle_nfdeployment_statechanged(
 
 
 # retry 10 seconds
-@retry(tries=20, max_delay=10000)
+@retry(
+    (NfdeploymentNotFoundError),
+    tries=100,
+    delay=2, max_delay=10000, backoff=1)
 def _retry_get_nfdeployment(
         cmd: commands.InstallNfDeployment,
         uow: AbstractUnitOfWork):
     nfdeployment: NfDeployment = uow.nfdeployments.get(
         cmd.NfDeploymentId)
     if nfdeployment is None:
-        raise Exception("Cannot find NfDeployment: {}".format(
-            cmd.NfDeploymentId))
+        raise NfdeploymentNotFoundError(
+            "Cannot find NfDeployment: {}".format(
+                cmd.NfDeploymentId))
     return nfdeployment
 
 

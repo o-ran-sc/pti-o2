@@ -60,4 +60,4 @@ class EventState():
     Updating = 4
     Uninstalling = 5
     Abnormal = 6
-    Deleted = 7
+    Deleting = 7

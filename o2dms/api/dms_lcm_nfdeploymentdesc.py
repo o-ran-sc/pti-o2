@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import json
 from sqlalchemy import select
 import uuid
 from o2common.service import unit_of_work
@@ -58,9 +59,25 @@ def lcm_nfdeploymentdesc_create(
             id, input['name'], deploymentManagerId, input['description'],
             input['inputParams'], input['outputParams'],
             input['artifactRepoUrl'], input['artifactName'])
+        _nfdeploymentdesc_validate(entity)
         uow.nfdeployment_descs.add(entity)
         uow.commit()
     return id
+
+
+def _nfdeploymentdesc_validate(desc: NfDeploymentDesc):
+    try:
+        json.loads(
+            desc['inputParams']) if desc['inputParams'] else None
+        json.loads(
+            desc['outputParams']) if desc['outputParams'] else None
+        return
+    except json.decoder.JSONDecodeError as e:
+        logger.debug("NfDeploymentDesc validate error with: %s" % (str(e)))
+        raise e
+    except Exception as e:
+        logger.debug("NfDeploymentDesc validate error with: %s" % (str(e)))
+        raise e
 
 
 def lcm_nfdeploymentdesc_update(

@@ -67,13 +67,19 @@ def lcm_nfdeploymentdesc_create(
 
 def _nfdeploymentdesc_validate(desc: NfDeploymentDesc):
     try:
-        json.loads(
-            desc['inputParams']) if desc['inputParams'] else None
-        json.loads(
-            desc['outputParams']) if desc['outputParams'] else None
+        if desc.inputParams:
+            json.loads(desc.inputParams)
+        if desc.outputParams:
+            json.loads(desc.outputParams)
+        if not desc.deploymentManagerId:
+            raise Exception("Invalid deploymentManager Id")
+        if not desc.artifactRepoUrl:
+            raise Exception("Invalid artifactRepoUrl")
+        if not desc.artifactName:
+            raise Exception("Invalid artifactName")
         return
     except json.decoder.JSONDecodeError as e:
-        logger.debug("NfDeploymentDesc validate error with: %s" % (str(e)))
+        logger.debug("NfDeploymentDesc json error with: %s" % (str(e)))
         raise e
     except Exception as e:
         logger.debug("NfDeploymentDesc validate error with: %s" % (str(e)))

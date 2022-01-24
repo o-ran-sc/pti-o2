@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 # from os import stat
+import json
 from o2dms.domain import events
 from o2dms.domain.states import NfDeploymentState
 
@@ -30,11 +31,20 @@ class NfDeploymentDesc(AgRoot, Serializer):
         self.deploymentManagerId = dmsId
         self.name = name
         self.description = description
-        self.inputParams = inputParams
-        self.outputParams = outputParams
         self.artifactRepoUrl = artifactRepoUrl
         self.artifactName = artifactName
         self.status = 0
+
+        if type(inputParams) is str:
+            self.inputParams = inputParams
+        else:
+            self.inputParams = json.dumps(inputParams)
+
+        if type(outputParams) is str:
+            self.outputParams = outputParams
+        else:
+            self.outputParams = json.dumps(outputParams)
+
         # self.extensions = []
 
 

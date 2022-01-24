@@ -55,9 +55,11 @@ def lcm_nfdeploymentdesc_create(
     with uow:
         _check_duplication(input['name'], uow)
         id = str(uuid.uuid4())
+        inputParams = input.get('inputParams', '')
+        outputParams = input.get('outputParams', '')
         entity = NfDeploymentDesc(
             id, input['name'], deploymentManagerId, input['description'],
-            input['inputParams'], input['outputParams'],
+            inputParams, outputParams,
             input['artifactRepoUrl'], input['artifactName'])
         _nfdeploymentdesc_validate(entity)
         uow.nfdeployment_descs.add(entity)

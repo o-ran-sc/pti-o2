@@ -72,8 +72,8 @@ def handle_nfdeployment_statechanged(
             or cmd.FromState == NfDeploymentState.Abnormal:
 
         if cmd.ToState == NfDeploymentState.Deleting:
-            cmd2 = commands.UninstallNfDeployment(cmd.NfDeploymentId)
-            uninstall_nfdeployment(cmd2, uow)
+            # cmd2 = commands.UninstallNfDeployment(cmd.NfDeploymentId)
+            # uninstall_nfdeployment(cmd2, uow)
             cmd2 = commands.DeleteNfDeployment(cmd.NfDeploymentId)
             delete_nfdeployment(cmd2, uow)
         else:
@@ -198,7 +198,12 @@ def uninstall_nfdeployment(
                 nfdeployment.descriptorId, nfdeployment.id
             ))
 
-    nfdeployment.set_state(NfDeploymentState.Uninstalling)
+    with uow:
+        entity: NfDeployment = uow.nfdeployments.get(cmd.NfDeploymentId)
+        if entity:
+            entity.set_state(NfDeploymentState.Uninstalling)
+        uow.commit()
+
     helm = Helm(logger, LOCAL_HELM_BIN, environment_variables={})
 
     logger.debug('Try to helm del {}'.format(
@@ -217,7 +222,8 @@ def uninstall_nfdeployment(
     with uow:
         entity: NfDeployment = uow.nfdeployments.get(cmd.NfDeploymentId)
         if entity:
-            entity.transit_state(NfDeploymentState.Initial)
+            entity.set_state(NfDeploymentState.Initial)
+            entity.transit_state(NfDeploymentState.Deleting)
         # uow.nfdeployments.update(
         #     cmd.NfDeploymentId, status=NfDeploymentState.Initial)
         uow.commit()

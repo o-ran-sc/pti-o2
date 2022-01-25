@@ -97,7 +97,7 @@ def create_by(stxobj: StxGenericModel, parentid: str, resourcetype_id: str) \
     # content = json.loads(stxobj.content)
     resourcetype_id = resourcetype_id
     resourcepool_id = parentid
-    parent_id = parentid
+    parent_id = None  # the root of the resource has no parent id
     gAssetId = ''  # TODO: global ID
     description = "A physical server resource"
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,

@@ -128,6 +128,9 @@ class ResourcesListRouter(Resource):
             kwargs['resourceTypeName'] = args.resourceTypeName
         if args.parentId is not None:
             kwargs['parentId'] = args.parentId
+            if args.parentId.lower() == 'null':
+                kwargs['parentId'] = None
+
         return ocloud_view.resources(resourcePoolID, bus.uow, **kwargs)
 
 

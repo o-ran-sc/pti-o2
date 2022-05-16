@@ -12,8 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from flask_restx import Resource
-from flask_restx import reqparse
+from flask_restx import Resource, reqparse
 
 from o2common.service.messagebus import MessageBus
 from o2ims.views import ocloud_view
@@ -159,7 +158,7 @@ class ResourceGetRouter(Resource):
 @api_ims_inventory_v1.route("/deploymentManagers")
 class DeploymentManagersListRouter(Resource):
 
-    model = DeploymentManagerDTO.deployment_manager_get
+    model = DeploymentManagerDTO.deployment_manager_list
 
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self):
@@ -169,6 +168,8 @@ class DeploymentManagersListRouter(Resource):
 @api_ims_inventory_v1.route("/deploymentManagers/<deploymentManagerID>")
 @api_ims_inventory_v1.param('deploymentManagerID',
                             'ID of the deployment manager')
+@api_ims_inventory_v1.param('profile', 'DMS profile',
+                            location='args')
 @api_ims_inventory_v1.response(404, 'Deployment manager not found')
 class DeploymentManagerGetRouter(Resource):
 
@@ -177,8 +178,11 @@ class DeploymentManagerGetRouter(Resource):
     @api_ims_inventory_v1.doc('Get deployment manager')
     @api_ims_inventory_v1.marshal_with(model)
     def get(self, deploymentManagerID):
+        parser = reqparse.RequestParser()
+        parser.add_argument('profile', location='args')
+        args = parser.parse_args()
         result = ocloud_view.deployment_manager_one(
-            deploymentManagerID, bus.uow)
+            deploymentManagerID, args.profile, bus.uow)
         if result is not None:
             return result
         api_ims_inventory_v1.abort(

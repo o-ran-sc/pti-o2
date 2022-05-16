@@ -109,8 +109,8 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: API_HOST
-              value: api
+            - name: API_HOST_EXTERNAL_FLOATING
+              value: {{ .Values.ocloud.API_HOST_EXTERNAL_FLOATING }}
             - name: DB_HOST
               value: postgres
             - name: DB_PASSWORD

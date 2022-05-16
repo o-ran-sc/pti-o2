@@ -1,6 +1,6 @@
 FROM python:3.10-slim-buster
 
-RUN apt-get update; apt-get install -y git gcc
+RUN apt-get update && apt-get install -y git gcc procps vim curl
 
 # in case git repo is not accessable
 # RUN mkdir -p /cgtsclient
@@ -43,8 +43,6 @@ RUN pip install -e /src
 COPY configs/ /etc/o2/
 
 COPY tests/ /tests/
-
-RUN apt-get install -y procps vim curl
 
 RUN curl -O https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz;
 RUN tar -zxvf helm-v3.3.1-linux-amd64.tar.gz; cp linux-amd64/helm /usr/local/bin

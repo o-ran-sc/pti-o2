@@ -94,43 +94,68 @@ class ResourceDTO:
         return api_ims_inventory_v1.model(
             'ResourceGetDto' + str(iteration_number), resource_json_mapping)
 
-    def _recursive_resource_mapping(self, iteration_number=2):
-        resource_json_mapping = {
-            'resourceId': fields.String(required=True,
-                                        description='Resource ID'),
-            'resourceTypeId': fields.String,
-            'resourcePoolId': fields.String,
-            'name': fields.String,
-            'parentId': fields.String,
-            'description': fields.String,
-        }
-        if iteration_number:
-            resource_json_mapping['children'] = fields.List(
-                fields.Nested(self._recursive_resource_mapping(
-                    iteration_number-1)))
-            # print(type(resource_json_mapping['children']))
-            if resource_json_mapping['children'] is None:
-                del resource_json_mapping['children']
-        return resource_json_mapping
+    # def _recursive_resource_mapping(self, iteration_number=2):
+    #     resource_json_mapping = {
+    #         'resourceId': fields.String(required=True,
+    #                                     description='Resource ID'),
+    #         'resourceTypeId': fields.String,
+    #         'resourcePoolId': fields.String,
+    #         'name': fields.String,
+    #         'parentId': fields.String,
+    #         'description': fields.String,
+    #     }
+    #     if iteration_number:
+    #         resource_json_mapping['children'] = fields.List(
+    #             fields.Nested(self._recursive_resource_mapping(
+    #                 iteration_number-1)))
+    #         # print(type(resource_json_mapping['children']))
+    #         if resource_json_mapping['children'] is None:
+    #             del resource_json_mapping['children']
+    #     return resource_json_mapping
 
-    def get_resource_get(self):
-        return api_ims_inventory_v1.model(
-            'ResourceGetDto',
-            {
-                'resourceId': fields.String(required=True,
-                                            description='Resource ID'),
-                'resourceTypeId': fields.String,
-                'resourcePoolId': fields.String,
-                'name': fields.String,
-                'parentId': fields.String,
-                'description': fields.String,
-                'children': fields.List(fields.Nested(
-                    self._recursive_resource_mapping()))
-            }
-        )
+    # def get_resource_get(self):
+    #     return api_ims_inventory_v1.model(
+    #         'ResourceGetDto',
+    #         {
+    #             'resourceId': fields.String(required=True,
+    #                                         description='Resource ID'),
+    #             'resourceTypeId': fields.String,
+    #             'resourcePoolId': fields.String,
+    #             'name': fields.String,
+    #             'parentId': fields.String,
+    #             'description': fields.String,
+    #             'children': fields.List(fields.Nested(
+    #                 self._recursive_resource_mapping()))
+    #         }
+    #     )
 
 
 class DeploymentManagerDTO:
+
+    deployment_manager_list = api_ims_inventory_v1.model(
+        "DeploymentManagerListDto",
+        {
+            'deploymentManagerId': fields.String(
+                required=True,
+                description='Deployment manager ID'),
+            'name': fields.String,
+            'description': fields.String,
+            'deploymentManagementServiceEndpoint': fields.String,
+            'supportedLocations': fields.String,
+            'capabilities': fields.String,
+            'capacity': fields.String,
+        }
+    )
+
+    profile = api_ims_inventory_v1.model("DeploymentManagerGetDtoProfile", {
+        'cluster_api_endpoint': fields.String(
+            attributes='cluster_api_endpoint'),
+        'cluster_ca_cert': fields.String(attributes='cluster_ca_cert'),
+        'admin_user': fields.String(attributes='admin_user'),
+        'admin_client_cert': fields.String(attributes='admin_client_cert'),
+        'admin_client_key': fields.String(attributes='admin_client_key'),
+        'kube_config_file': fields.String(attributes='kube_config_file')
+    })
 
     deployment_manager_get = api_ims_inventory_v1.model(
         "DeploymentManagerGetDto",
@@ -144,6 +169,7 @@ class DeploymentManagerDTO:
             'supportedLocations': fields.String,
             'capabilities': fields.String,
             'capacity': fields.String,
+            'profile': fields.Nested(profile, False, True),
         }
     )
 

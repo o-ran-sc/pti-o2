@@ -42,7 +42,7 @@ services:
     environment:
       - DB_HOST=postgres
       - DB_PASSWORD=o2ims123
-      - API_HOST=api
+      - API_HOST_EXTERNAL_FLOATING=${API_HOST_EXTERNAL_FLOATING}
       - REDIS_HOST=redis
       - PYTHONDONTWRITEBYTECODE=1
       - FLASK_APP=/o2app/entrypoints/flask_application.py

@@ -27,7 +27,7 @@ class DeploymentManager(AgRoot, Serializer):
     def __init__(self, id: str, name: str, ocloudid: str,
                  dmsendpoint: str, description: str = '',
                  supportedLocations: str = '', capabilities: str = '',
-                 capacity: str = '') -> None:
+                 capacity: str = '', profile: str = '') -> None:
         super().__init__()
         self.deploymentManagerId = id
         self.version_number = 0
@@ -38,7 +38,16 @@ class DeploymentManager(AgRoot, Serializer):
         self.supportedLocations = supportedLocations
         self.capabilities = capabilities
         self.capacity = capacity
+        self.profile = profile
         self.extensions = []
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+
+        if 'profile' in d and d['profile'] != '':
+            d['profile'] = json.loads(d['profile'])
+
+        return d
 
 
 class ResourcePool(AgRoot, Serializer):

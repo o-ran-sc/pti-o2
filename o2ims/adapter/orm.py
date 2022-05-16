@@ -132,6 +132,7 @@ deploymentmanager = Table(
     Column("supportedLocations", String(255)),
     Column("capabilities", String(255)),
     Column("capacity", String(255)),
+    Column("profile", Text())
     # Column("extensions", String(1024))
 )
 

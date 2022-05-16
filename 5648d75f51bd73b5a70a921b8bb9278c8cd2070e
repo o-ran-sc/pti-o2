@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08378b50_6e810352",
+        "filename": "o2ims/views/ocloud_view.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000237
+      },
+      "writtenOn": "2022-05-16T10:04:22Z",
+      "side": 1,
+      "message": "Obviously, this file\u0027s endlines are changed from Unix(LF) to Windows(CRLF):\n\n$ file o2ims/views/ocloud_view.py\no2ims/views/ocloud_view.py: Python script, ASCII text executable, with CRLF line terminators\n\n$ endlines check o2ims/views/ocloud_view.py\nendlines : dry run, scanning files\n\nendlines : 1 file checked ; found :\n              - 1 Windows (CR-LF)",
+      "revId": "5648d75f51bd73b5a70a921b8bb9278c8cd2070e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

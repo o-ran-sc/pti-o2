@@ -31,7 +31,11 @@ class PServerIfPortWatcher(ResourceWatcher):
     def _targetname(self):
         return "pserver_if_port"
 
-    def _probe(self, parent: StxGenericModel):
+    def _probe(self, parent: StxGenericModel, tags):
+        # Set a tag for children resource
+        self._tags.pool = tags.pool
+        self._set_respool_client()
+
         interfaceid = parent.id
         newmodels = self._client.list(interfaceid=interfaceid)
         return [commands.UpdatePserverIfPort(data=m, parentid=interfaceid)

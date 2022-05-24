@@ -24,6 +24,7 @@ logger = o2logging.get_logger(__name__)
 
 
 class ResourcePoolWatcher(BaseWatcher):
+
     def __init__(self, client: BaseClient,
                  bus: MessageBus) -> None:
         super().__init__(client, bus)
@@ -31,7 +32,7 @@ class ResourcePoolWatcher(BaseWatcher):
     def _targetname(self):
         return "resourcepool"
 
-    def _probe(self, parent: StxGenericModel):
+    def _probe(self, parent: StxGenericModel, tags: object = None):
         ocloudid = parent.id
         newmodels = self._client.list(ocloudid=ocloudid)
         # for newmodel in newmodels:

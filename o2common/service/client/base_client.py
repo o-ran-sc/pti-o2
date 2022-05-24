@@ -19,7 +19,7 @@ import abc
 
 class BaseClient(abc.ABC):
     def __init__(self):
-        pass
+        self._pool_id = None
 
     def list(self, **filters):
         return self._list(**filters)
@@ -27,10 +27,18 @@ class BaseClient(abc.ABC):
     def get(self, id):
         return self._get(id)
 
+    def set_pool_driver(self, pool_id):
+        self._pool_id = pool_id
+        self._set_stx_client()
+
     @abc.abstractmethod
     def _get(self, id):
         raise NotImplementedError
 
     @abc.abstractmethod
     def _list(self, **filters):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _set_stx_client(self):
         raise NotImplementedError

@@ -31,7 +31,11 @@ class PServerWatcher(ResourceWatcher):
     def _targetname(self):
         return "pserver"
 
-    def _probe(self, parent: StxGenericModel):
+    def _probe(self, parent: StxGenericModel, tags=None):
+        # Set a tag for children resource
+        self._tags.pool = parent.res_pool_id
+        self._set_respool_client()
+
         resourcepoolid = parent.id
         newmodels = self._client.list(resourcepoolid=resourcepoolid)
         return [commands.UpdatePserver(data=m, parentid=resourcepoolid)

@@ -17,6 +17,7 @@ from o2common.service.client.base_client import BaseClient
 # from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2common.service.watcher.base import BaseWatcher
 from o2ims.domain import commands
+from o2common.domain import tags
 from o2common.service.messagebus import MessageBus
 
 from o2common.helper import o2logging
@@ -27,12 +28,18 @@ class ResourceWatcher(BaseWatcher):
     def __init__(self, client: BaseClient,
                  bus: MessageBus) -> None:
         super().__init__(client, bus)
+        self._tags = tags.Tag()
+        self.poolid = None
 
     def _targetname(self):
         return "resource"
 
-    def _probe(self, parent: StxGenericModel):
+    def _probe(self, parent: StxGenericModel, tags: object = None):
         parentid = parent.id
         newmodels = self._client.get(parentid=parentid)
         return [commands.UpdateResource(data=m, parentid=parentid)
                 for m in newmodels]
+
+    def _set_respool_client(self):
+        self.poolid = self._tags.pool
+        self._client.set_pool_driver(self.poolid)

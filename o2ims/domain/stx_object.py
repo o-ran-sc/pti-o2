@@ -39,6 +39,8 @@ class StxGenericModel(AgRoot):
             self.hash = content_hash if content_hash \
                 else str(hash((self.id, self.updatetime)))
             self.content = json.dumps(api_response.to_dict())
+            if ResourceTypeEnum.RESOURCE_POOL == type:
+                self.res_pool_id = self.id
 
     def is_outdated(self, newmodel) -> bool:
         # return self.updatetime < newmodel.updatetime

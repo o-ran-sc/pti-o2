@@ -31,7 +31,11 @@ class PServerIfWatcher(ResourceWatcher):
     def _targetname(self):
         return "pserver_if"
 
-    def _probe(self, parent: StxGenericModel):
+    def _probe(self, parent: StxGenericModel, tags):
+        # Set a tag for children resource
+        self._tags.pool = tags.pool
+        self._set_respool_client()
+
         hostid = parent.id
         newmodels = self._client.list(hostid=hostid)
         return [commands.UpdatePserverIf(data=m, parentid=hostid)

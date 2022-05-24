@@ -54,6 +54,9 @@ class FakeOcloudClient(BaseClient):
     def _list(self):
         return [self.fakeCloud]
 
+    def _set_stx_client(self):
+        pass
+
 
 class FakeOcloudRepo(OcloudRepository):
     def __init__(self):
@@ -169,7 +172,7 @@ def test_watchers_worker():
         def _targetname(self):
             return "fakeocloudwatcher"
 
-        def _probe(self, parent: object = None):
+        def _probe(self, parent: object = None, tags=None):
             # import pdb; pdb.set_trace()
             self.fakeOcloudWatcherCounter += 1
             # hacking to stop the blocking sched task

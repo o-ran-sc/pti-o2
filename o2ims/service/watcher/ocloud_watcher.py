@@ -32,7 +32,7 @@ class OcloudWatcher(BaseWatcher):
     def _targetname(self):
         return "ocloud"
 
-    def _probe(self, parent: object = None):
+    def _probe(self, parent: object = None, tags: object = None):
         newmodel = self._client.get(None)
         if newmodel:
             logger.debug("found ocloud: " + newmodel.name)
@@ -73,7 +73,7 @@ class DmsWatcher(BaseWatcher):
     def _targetname(self):
         return "dms"
 
-    def _probe(self, parent: StxGenericModel):
+    def _probe(self, parent: StxGenericModel, tags: object = None):
         ocloudid = parent.id
         newmodels = self._client.list(ocloudid=ocloudid)
         # for newmodel in newmodels:

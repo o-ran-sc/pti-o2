@@ -27,14 +27,16 @@ class BaseWatcher(object):
         super().__init__()
         self._client = client
         self._bus = bus
+        self._tags = None
         # self._uow = bus.uow
 
     def targetname(self) -> str:
         return self._targetname()
 
-    def probe(self, parent: commands.Command = None):
+    def probe(self, parent: commands.Command = None, tags: object = None):
         try:
-            cmds = self._probe(parent.data if parent else None)
+            cmds = self._probe(
+                parent.data if parent else None, tags)
             for cmd in cmds:
                 self._bus.handle(cmd)
 
@@ -44,7 +46,8 @@ class BaseWatcher(object):
             logger.warning("Failed to probe resource due to: " + str(ex))
             return []
 
-    def _probe(self, parent: object = None) -> commands.Command:
+    def _probe(self, parent: object = None, tags: object = None) \
+            -> commands.Command:
         raise NotImplementedError
 
     def _targetname(self):
@@ -70,6 +73,7 @@ class WatcherTree(object):
         super().__init__()
         self.watcher = watcher
         self.children = {}
+        self.tags = None
 
     def addchild(self, watcher: BaseWatcher) -> object:
         child = WatcherTree(watcher)
@@ -80,12 +84,14 @@ class WatcherTree(object):
         return self.children.pop(targetname)
 
     # probe all resources by parent, depth = 0 for indefinite recursive
-    def probe(self, parentresource=None, depth: int = 0):
+    def probe(self, parentresource=None, depth: int = 0, tags: object = None):
         logger.debug("probe resources with watcher: "
                      + self.watcher.targetname())
         childdepth = depth - 1 if depth > 0 else 0
-        resources = self.watcher.probe(parentresource)
+        resources = self.watcher.probe(parentresource, tags)
         logger.debug("probe returns " + str(len(resources)) + " resources")
+        if self.watcher._tags is not None:
+            tags = self.watcher._tags
 
         if depth == 1:
             # stop recursive
@@ -93,4 +99,4 @@ class WatcherTree(object):
 
         for res in resources:
             for targetname in self.children.keys():
-                self.children[targetname].probe(res, childdepth)
+                self.children[targetname].probe(res, childdepth, tags)

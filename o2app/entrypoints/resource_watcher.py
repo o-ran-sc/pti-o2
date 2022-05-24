@@ -21,27 +21,27 @@ from o2common.service.watcher.worker import PollWorker
 from o2ims.service.watcher.ocloud_watcher import OcloudWatcher
 from o2ims.service.watcher.ocloud_watcher import DmsWatcher
 from o2ims.service.watcher.resourcepool_watcher import ResourcePoolWatcher
-from o2ims.adapter.clients.ocloud_sa_client import StxSaDmsClient
-from o2ims.adapter.clients.ocloud_sa_client import StxSaOcloudClient
-from o2ims.adapter.clients.ocloud_sa_client import StxSaResourcePoolClient
+from o2ims.adapter.clients.ocloud_client import StxDmsClient
+from o2ims.adapter.clients.ocloud_client import StxOcloudClient
+from o2ims.adapter.clients.ocloud_client import StxResourcePoolClient
 
 from o2ims.service.watcher.pserver_watcher import PServerWatcher
-from o2ims.adapter.clients.ocloud_sa_client import StxPserverClient
+from o2ims.adapter.clients.ocloud_client import StxPserverClient
 
 from o2ims.service.watcher.pserver_cpu_watcher import PServerCpuWatcher
-from o2ims.adapter.clients.ocloud_sa_client import StxCpuClient
+from o2ims.adapter.clients.ocloud_client import StxCpuClient
 
 from o2ims.service.watcher.pserver_mem_watcher import PServerMemWatcher
-from o2ims.adapter.clients.ocloud_sa_client import StxMemClient
+from o2ims.adapter.clients.ocloud_client import StxMemClient
 
 from o2ims.service.watcher.pserver_if_watcher import PServerIfWatcher
-from o2ims.adapter.clients.ocloud_sa_client import StxIfClient
+from o2ims.adapter.clients.ocloud_client import StxIfClient
 
 from o2ims.service.watcher.pserver_port_watcher import PServerIfPortWatcher
-from o2ims.adapter.clients.ocloud_sa_client import StxIfPortClient
+from o2ims.adapter.clients.ocloud_client import StxIfPortClient
 
 from o2ims.service.watcher.pserver_eth_watcher import PServerEthWatcher
-from o2ims.adapter.clients.ocloud_sa_client import StxEthClient
+from o2ims.adapter.clients.ocloud_client import StxEthClient
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -59,12 +59,12 @@ class WatcherService(cotyledon.Service):
     def run(self):
         try:
             root = WatcherTree(OcloudWatcher(
-                StxSaOcloudClient(), self.bus))
+                StxOcloudClient(), self.bus))
             root.addchild(
-                DmsWatcher(StxSaDmsClient(), self.bus))
+                DmsWatcher(StxDmsClient(), self.bus))
 
             child_respool = root.addchild(
-                ResourcePoolWatcher(StxSaResourcePoolClient(),
+                ResourcePoolWatcher(StxResourcePoolClient(),
                                     self.bus))
             child_pserver = child_respool.addchild(
                 PServerWatcher(StxPserverClient(), self.bus))

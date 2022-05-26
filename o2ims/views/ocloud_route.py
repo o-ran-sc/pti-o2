@@ -168,8 +168,8 @@ class DeploymentManagersListRouter(Resource):
 @api_ims_inventory_v1.route("/deploymentManagers/<deploymentManagerID>")
 @api_ims_inventory_v1.param('deploymentManagerID',
                             'ID of the deployment manager')
-@api_ims_inventory_v1.param('profile', 'DMS profile',
-                            location='args')
+@api_ims_inventory_v1.param('profile', 'DMS profile: value supports "sol0018"',
+                            _in='query')
 @api_ims_inventory_v1.response(404, 'Deployment manager not found')
 class DeploymentManagerGetRouter(Resource):
 
@@ -181,8 +181,11 @@ class DeploymentManagerGetRouter(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('profile', location='args')
         args = parser.parse_args()
+        profile = (
+            args.profile if args.profile is not None and args.profile != ''
+            else 'default')
         result = ocloud_view.deployment_manager_one(
-            deploymentManagerID, bus.uow, args.profile)
+            deploymentManagerID, bus.uow, profile)
         if result is not None:
             return result
         api_ims_inventory_v1.abort(

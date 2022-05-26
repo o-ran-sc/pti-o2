@@ -144,6 +144,10 @@ class DeploymentManagerDTO:
             'supportedLocations': fields.String,
             'capabilities': fields.String,
             'capacity': fields.String,
+            'profileSupportList': fields.List(
+                fields.String,
+                description='Profile support list, use default for the return \
+                     endpoint'),
         }
     )
 
@@ -154,7 +158,7 @@ class DeploymentManagerDTO:
         'admin_user': fields.String(attributes='admin_user'),
         'admin_client_cert': fields.String(attributes='admin_client_cert'),
         'admin_client_key': fields.String(attributes='admin_client_key'),
-        'kube_config_file': fields.String(attributes='kube_config_file')
+        # 'kube_config_file': fields.String(attributes='kube_config_file')
     })
 
     deployment_manager_get = api_ims_inventory_v1.model(
@@ -169,7 +173,8 @@ class DeploymentManagerDTO:
             'supportedLocations': fields.String,
             'capabilities': fields.String,
             'capacity': fields.String,
-            'profile': fields.Nested(profile, False, True),
+            'profileName': fields.String,
+            'profileData': fields.Nested(profile, False, True),
         }
     )
 

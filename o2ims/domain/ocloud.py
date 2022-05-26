@@ -46,6 +46,7 @@ class DeploymentManager(AgRoot, Serializer):
 
         if 'profile' in d and d['profile'] != '':
             d['profile'] = json.loads(d['profile'])
+        d['profileSupportList'] = ['default', 'sol0018']
 
         return d
 

@@ -33,8 +33,8 @@ def configure_api_route():
 # ----------  DeploymentManagers ---------- #
 @api_dms_lcm_v1.route("/<deploymentManagerID>")
 @api_dms_lcm_v1.param('deploymentManagerID', 'ID of the deployment manager')
-@api_dms_lcm_v1.param('profile', 'DMS profile',
-                      location='args')
+@api_dms_lcm_v1.param('profile', 'DMS profile: value supports "params"',
+                      _in='query', default='params')
 @api_dms_lcm_v1.response(404, 'Deployment manager not found')
 class DmsGetRouter(Resource):
 

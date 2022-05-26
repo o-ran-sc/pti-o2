@@ -1,12 +1,12 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2021 Wind River Systems, Inc.
+.. Copyright (C) 2022 Wind River Systems, Inc.
 
 INF O2 Service User Guide
 =========================
 
-This guide will introduce the process that make INF O2 interface work with
-SMO.
+This guide will introduce the process that make INF O2 interface work
+with SMO.
 
 -  Assume you have an O2 service with INF platform environment
 
@@ -32,8 +32,9 @@ SMO.
 
    -  Resource pool
 
-      One INF platform have one resource pool, all the resources that belong
-      to this INF platform will be organized into this resource pool
+      One INF platform have one resource pool, all the resources that
+      belong to this INF platform will be organized into this resource
+      pool
 
       Get the resource pool information through this interface
 
@@ -145,7 +146,8 @@ SMO.
    We need to do some preparation to make the helm repo work and include
    our firewall chart inside of the repository.
 
-      Get the DMS Id in the INF O2 service, and set it into bash environment
+      Get the DMS Id in the INF O2 service, and set it into bash
+      environment
 
       .. code:: bash
 
@@ -260,3 +262,167 @@ SMO.
          echo ${NfDeploymentId} # Check the exported deployment id
 
          curl --location --request DELETE "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment/${NfDeploymentId}"
+
+-  Use Kubernetes Control Client through O2 DMS profile
+
+   Assume you have kubectl command tool installed on your Linux
+   environment.
+
+   And install the ‘jq’ command for your Linux bash terminal. If you are
+   use ubuntu, you can following below command to install it.
+
+   .. code:: bash
+
+      # install the 'jq' command
+      sudo apt-get install -y jq
+
+      # install 'kubectl' command
+      sudo apt-get install -y apt-transport-https
+      echo "deb http://mirrors.ustc.edu.cn/kubernetes/apt kubernetes-xenial main" | \
+      sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+      gpg --keyserver keyserver.ubuntu.com --recv-keys 836F4BEB
+      gpg --export --armor 836F4BEB | sudo apt-key add -
+      sudo apt-get update
+      sudo apt-get install -y kubectl
+
+   We need to get Kubernetes profile to set up the kubectl command tool.
+   There have two ways to set the kubectl configuration, set a context
+   with command, and it will automatically generate a configuration
+   file; or directly get a configuration file, and set bash environment
+   to use it.
+
+   Get the DMS Id in the INF O2 service, and set it into bash
+   environment.
+
+   .. code:: bash
+
+      # Get all DMS ID, and print them with command
+      dmsIDs=$(curl -s -X 'GET' \
+        'http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers' \
+        -H 'accept: application/json' | jq --raw-output '.[]["deploymentManagerId"]')
+      for i in $dmsIDs;do echo ${i};done;
+
+      # Choose one DMS and set it to bash environment, here I set the first one
+      export dmsID=$(curl -s -X 'GET' \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" \
+        -H 'accept: application/json' | jq --raw-output '.[0]["deploymentManagerId"]')
+
+      echo ${dmsID} # check the exported DMS Id
+
+   The profile of the ‘kubectl’ need the cluster name, I assume it set
+   to “o2dmsk8s1”.
+
+   It also need the server endpoint address, username and authority, and
+   for the environment that has Certificate Authority validation, it
+   needs the CA data to be set up.
+
+   .. code:: bash
+
+      CLUSTER_NAME="o2dmsk8s1" # set the cluster name
+
+      K8S_SERVER=$(curl -s -X 'GET' \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=params" \
+        -H 'accept: application/json' | jq --raw-output '.["profile"]["cluster_api_endpoint"]')
+      K8S_CA_DATA=$(curl -s -X 'GET' \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=params" \
+        -H 'accept: application/json' | jq --raw-output '.["profile"]["cluster_ca_cert"]')
+
+      K8S_USER_NAME=$(curl -s -X 'GET' \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=params" \
+        -H 'accept: application/json' | jq --raw-output '.["profile"]["admin_user"]')
+      K8S_USER_CLIENT_CERT_DATA=$(curl -s -X 'GET' \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=params" \
+        -H 'accept: application/json' | jq --raw-output '.["profile"]["admin_client_cert"]')
+      K8S_USER_CLIENT_KEY_DATA=$(curl -s -X 'GET' \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=params" \
+        -H 'accept: application/json' | jq --raw-output '.["profile"]["admin_client_key"]')
+
+
+      # If you do not want to set up the CA data, you can execute following command without the secure checking
+      # kubectl config set-cluster ${CLUSTER_NAME} --server=${K8S_SERVER} --insecure-skip-tls-verify
+
+      kubectl config set-cluster ${CLUSTER_NAME} --server=${K8S_SERVER}
+      kubectl config set clusters.${CLUSTER_NAME}.certificate-authority-data ${K8S_CA_DATA}
+
+      kubectl config set-credentials ${K8S_USER_NAME}
+      kubectl config set users.${K8S_USER_NAME}.client-certificate-data ${K8S_USER_CLIENT_CERT_DATA}
+      kubectl config set users.${K8S_USER_NAME}.client-key-data ${K8S_USER_CLIENT_KEY_DATA}
+
+      # set the context and use it
+      kubectl config set-context ${K8S_USER_NAME}@${CLUSTER_NAME} --cluster=${CLUSTER_NAME} --user ${K8S_USER_NAME}
+      kubectl config use-context ${K8S_USER_NAME}@${CLUSTER_NAME}
+
+      kubectl get ns # check the command working with this context
+
+   ..
+
+      If you already executed above command, you can skip this part.
+
+      Directly get kube config file, and make the “kubectl” can loading
+      this file as configuration.
+
+      .. code:: bash
+
+         dmsID=$(curl -s -X 'GET' \
+         "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" \
+         -H 'accept: application/json' | jq --raw-output '.[0]["deploymentManagerId"]')
+
+         K8S_CONF_FILE=$(curl -s -X 'GET' \
+         "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=file" \
+         -H 'accept: application/json' | jq --raw-output '.["profile"]["kube_config_file"]')
+
+         curl -s -X 'GET' \
+         "$K8S_CONF_FILE" -H 'accept: application/json' -o o2_dms1_k8s.conf
+         export KUBECONFIG=${PWD}/o2_dms1_k8s.conf
+
+   Now you can use “kubectl”, it means you set up successful of the
+   Kubernetes client. But, it use the default admin user, so I recommend
+   you create an account for yourself.
+
+   Create a new user and account for K8S with “cluster-admin” role. And,
+   set the token of this user to the base environment.
+
+   .. code:: bash
+
+      USER="admin-user"
+      NAMESPACE="kube-system"
+
+      cat <<EOF > admin-login.yaml
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: ${USER}
+        namespace: kube-system
+      ---
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: ClusterRoleBinding
+      metadata:
+        name: ${USER}
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: cluster-admin
+      subjects:
+      - kind: ServiceAccount
+        name: ${USER}
+        namespace: kube-system
+      EOF
+
+      kubectl apply -f admin-login.yaml
+      TOKEN_DATA=$(kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${USER} | awk '{print $1}') | grep "token:" | awk '{print $2}')
+      echo $TOKEN_DATA
+
+   Set the new user in ‘kubectl’ replace the original user, and set the
+   default namespace into the context.
+
+   .. code:: bash
+
+      NAMESPACE=default
+      TOKEN_DATA=<TOKEN_DATA from INF>
+
+      USER="admin-user"
+      CLUSTER_NAME="o2dmsk8s1"
+
+      kubectl config set-credentials ${USER} --token=$TOKEN_DATA
+      kubectl config set-context ${USER}@inf-cluster --cluster=${CLUSTER_NAME} --user ${USER} --namespace=${NAMESPACE}
+      kubectl config use-context ${USER}@inf-cluster

@@ -36,7 +36,7 @@ def deployment_managers(uow: unit_of_work.AbstractUnitOfWork):
 
 def deployment_manager_one(deploymentManagerId: str,
                            uow: unit_of_work.AbstractUnitOfWork,
-                           profile: str = 'params'):
+                           profile: str = 'sol0018'):
     # with uow:
     #     res = uow.session.execute(select(deploymentmanager).where(
     #         deploymentmanager.c.deploymentManagerId == deploymentManagerId))
@@ -51,11 +51,11 @@ def deployment_manager_one(deploymentManagerId: str,
             return first
         result = first.serialize()
 
-    if "params" == profile:
+    if "sol0018" == profile:
         pass
-    elif "file" == profile and result.hasattr("profile"):
-        p = result.pop("profile", None)
-        result["profile"] = _gen_kube_config(deploymentManagerId, p)
+    # elif "file" == profile and result.hasattr("profile"):
+    #     p = result.pop("profile", None)
+    #     result["profile"] = _gen_kube_config(deploymentManagerId, p)
     else:
         result.pop("profile", None)
 

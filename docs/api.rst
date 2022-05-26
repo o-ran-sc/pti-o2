@@ -1,9 +1,9 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2021 Wind River Systems, Inc.
+.. Copyright (C) 2022 Wind River Systems, Inc.
 
 INF O2 Services API 1.0.0
-=============================
+=========================
 
 .. toctree::
     :maxdepth: 3
@@ -578,6 +578,7 @@ Parameters
     :header: "Name", "Located in", "Required", "Type", "Format", "Properties", "Description"
     :widths: 20, 15, 10, 10, 10, 20, 30
 
+        profile | query | No | string |  | {"default": "sol0018"} | DMS profile: value supports "sol0018"
         deploymentManagerID | path | Yes | string |  |  | ID of the deployment manager
 
 
@@ -614,6 +615,13 @@ Type: :ref:`DmsGetDto <d_086ee84f2c2cf010478bfc73a87b5e80>`
         "deploymentManagerId": "somestring",
         "description": "somestring",
         "name": "somestring",
+        "profile": {
+            "admin_client_cert": "somestring",
+            "admin_client_key": "somestring",
+            "admin_user": "somestring",
+            "cluster_api_endpoint": "somestring",
+            "cluster_ca_cert": "somestring"
+        },
         "supportedLocations": "somestring"
     }
 
@@ -743,6 +751,41 @@ Responses
 ^^^^^^^
 
 DMS LCM not found
+
+
+
+
+
+
+GET ``/o2dms/v1/{deploymentManagerID}/download/{filename}``
+-----------------------------------------------------------
+
+
+
+
+Parameters
+++++++++++
+
+.. csv-table::
+    :delim: |
+    :header: "Name", "Located in", "Required", "Type", "Format", "Properties", "Description"
+    :widths: 20, 15, 10, 10, 10, 20, 30
+
+        filename | path | Yes | string |  |  | profile filename
+        deploymentManagerID | path | Yes | string |  |  | ID of the deployment manager
+
+
+Request
++++++++
+
+
+Responses
++++++++++
+
+**404**
+^^^^^^^
+
+profile not found
 
 
 
@@ -877,6 +920,7 @@ Parameters
     :header: "Name", "Located in", "Required", "Type", "Format", "Properties", "Description"
     :widths: 20, 15, 10, 10, 10, 20, 30
 
+        profile | query | No | string |  |  | DMS profile: value supports "sol0018"
         deploymentManagerID | path | Yes | string |  |  | ID of the deployment manager
 
 
@@ -914,6 +958,13 @@ Type: :ref:`DeploymentManagerGetDto <d_e936cc219a004ab92ac027b2690bdd5e>`
         "deploymentManagerId": "somestring",
         "description": "somestring",
         "name": "somestring",
+        "profile": {
+            "admin_client_cert": "somestring",
+            "admin_client_key": "somestring",
+            "admin_user": "somestring",
+            "cluster_api_endpoint": "somestring",
+            "cluster_ca_cert": "somestring"
+        },
         "supportedLocations": "somestring"
     }
 
@@ -1319,7 +1370,7 @@ Responses
 Success
 
 
-Type: array of :ref:`DeploymentManagerGetDto <d_e936cc219a004ab92ac027b2690bdd5e>`
+Type: array of :ref:`DeploymentManagerListDto <d_b50b514bc3afc99684dcf3a7c2fc8b60>`
 
 
 **Example:**
@@ -1812,10 +1863,61 @@ Type: array of :ref:`SmoEndpointGetDto <d_a6b61d9695be919cc22b2e700eeb7e27>`
 Data Structures
 ~~~~~~~~~~~~~~~
 
+.. _d_23ef9a619691cf191e0347e3bcb7cf59:
+
+DMSGetDtoProfile Model Structure
+--------------------------------
+
+.. csv-table::
+    :delim: |
+    :header: "Name", "Required", "Type", "Format", "Properties", "Description"
+    :widths: 20, 10, 15, 15, 30, 25
+
+        admin_client_cert | No | string |  |  | 
+        admin_client_key | No | string |  |  | 
+        admin_user | No | string |  |  | 
+        cluster_api_endpoint | No | string |  |  | 
+        cluster_ca_cert | No | string |  |  | 
+
 .. _d_e936cc219a004ab92ac027b2690bdd5e:
 
 DeploymentManagerGetDto Model Structure
 ---------------------------------------
+
+.. csv-table::
+    :delim: |
+    :header: "Name", "Required", "Type", "Format", "Properties", "Description"
+    :widths: 20, 10, 15, 15, 30, 25
+
+        capabilities | No | string |  |  | 
+        capacity | No | string |  |  | 
+        deploymentManagementServiceEndpoint | No | string |  |  | 
+        deploymentManagerId | Yes | string |  |  | Deployment manager ID
+        description | No | string |  |  | 
+        name | No | string |  |  | 
+        profile | No | :ref:`DeploymentManagerGetDtoProfile <d_51fed249638cf054f9cc4c7832c7cbe4>` |  |  | 
+        supportedLocations | No | string |  |  | 
+
+.. _d_51fed249638cf054f9cc4c7832c7cbe4:
+
+DeploymentManagerGetDtoProfile Model Structure
+----------------------------------------------
+
+.. csv-table::
+    :delim: |
+    :header: "Name", "Required", "Type", "Format", "Properties", "Description"
+    :widths: 20, 10, 15, 15, 30, 25
+
+        admin_client_cert | No | string |  |  | 
+        admin_client_key | No | string |  |  | 
+        admin_user | No | string |  |  | 
+        cluster_api_endpoint | No | string |  |  | 
+        cluster_ca_cert | No | string |  |  | 
+
+.. _d_b50b514bc3afc99684dcf3a7c2fc8b60:
+
+DeploymentManagerListDto Model Structure
+----------------------------------------
 
 .. csv-table::
     :delim: |
@@ -1845,6 +1947,7 @@ DmsGetDto Model Structure
         deploymentManagerId | Yes | string |  |  | Deployment manager ID
         description | No | string |  |  | 
         name | No | string |  |  | 
+        profile | No | :ref:`DMSGetDtoProfile <d_23ef9a619691cf191e0347e3bcb7cf59>` |  |  | 
         supportedLocations | No | string |  |  | 
 
 .. _d_1cdf8e618b9847878bed90d4897e6b4a:

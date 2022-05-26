@@ -26,7 +26,7 @@ class DmsDTO:
         'admin_user': fields.String(attributes='admin_user'),
         'admin_client_cert': fields.String(attributes='admin_client_cert'),
         'admin_client_key': fields.String(attributes='admin_client_key'),
-        'kube_config_file': fields.String(attributes='kube_config_file')
+        # 'kube_config_file': fields.String(attributes='kube_config_file')
     })
 
     dms_get = api_dms_lcm_v1.model(

@@ -73,7 +73,8 @@ def get_smo_o2endpoint():
     return smo_o2endpoint
 
 
-def get_stx_access_info(region_name="RegionOne", subcloud_hostname: str = ""):
+def get_stx_access_info(region_name="RegionOne", subcloud_hostname: str = "",
+                        sub_is_https: bool = False):
     # authurl = os.environ.get("STX_AUTH_URL", "http://192.168.204.1:5000/v3")
     # username = os.environ.get("STX_USERNAME", "admin")
     # pswd = os.environ.get("STX_PASSWORD", "passwd1")
@@ -85,15 +86,6 @@ def get_stx_access_info(region_name="RegionOne", subcloud_hostname: str = ""):
             api_key=os.environ.get('OS_PASSWORD', "fakepasswd1"),
             project_name=os.environ.get('OS_PROJECT_NAME', "admin"),
         )
-        # dc_client_args = dict(
-        #     auth_url=os.environ['OS_AUTH_URL'],
-        #     username=os.environ['OS_USERNAME'],
-        #     api_key=os.environ['OS_PASSWORD'],
-        #     project_name=os.environ['OS_PROJECT_NAME'],
-        #     user_domain_name=os.environ['OS_USER_DOMAIN_NAME'],
-        #     project_domain_name=os.environ['OS_PROJECT_NAME'],
-        #     project_domain_id=os.environ['OS_PROJECT_DOMAIN_ID']
-        # )
     except KeyError:
         logger.error('Please source your RC file before execution, '
                      'e.g.: `source ~/downloads/admin-rc.sh`')
@@ -110,12 +102,13 @@ def get_stx_access_info(region_name="RegionOne", subcloud_hostname: str = ""):
         # new_auth_url = new_auth_url._replace(
         #     netloc=new_auth_url.netloc.replace(str(new_auth_url.port),
         # "18002"))
-        new_auth_url = new_auth_url._replace(
-            scheme=new_auth_url.scheme.
-            replace(new_auth_url.scheme, 'https'))
+        if sub_is_https:
+            new_auth_url = new_auth_url._replace(
+                scheme=new_auth_url.scheme.
+                replace(new_auth_url.scheme, 'https'))
+            os_client_args['insecure'] = True
         os_client_args['os_auth_url'] = new_auth_url.geturl()
         os_client_args['os_endpoint_type'] = 'public'
-        os_client_args['insecure'] = True
     # os_client_args['system_url'] = os_client_args['os_auth_url']
     os_client_args['os_password'] = os_client_args.pop('os_api_key')
     os_client_args['os_region_name'] = region_name

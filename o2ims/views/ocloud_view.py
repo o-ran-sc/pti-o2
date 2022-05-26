@@ -105,64 +105,38 @@ def deployment_managers(uow: unit_of_work.AbstractUnitOfWork):
 
 def deployment_manager_one(deploymentManagerId: str,
                            uow: unit_of_work.AbstractUnitOfWork,
-                           profile: str = 'params'):
+                           profile: str = 'default'):
+    profile = profile.lower()
     with uow:
         first = uow.deployment_managers.get(deploymentManagerId)
         if first is None:
             return first
         result = first.serialize()
 
-    if "params" == profile:
-        pass
-    elif "file" == profile and result.hasattr("profile"):
-        p = result.pop("profile", None)
-        result["profile"] = _gen_kube_config(deploymentManagerId, p)
-    else:
-        result.pop("profile", None)
+    profile_data = result.pop("profile", None)
+    result['profileName'] = 'default'
+
+    if "sol0018" == profile:
+        result['profileName'] = profile
+        result['deploymentManagementServiceEndpoint'] = \
+            profile_data['cluster_api_endpoint']
+        result['profileData'] = profile_data
+    # elif "file" == profile and result.hasattr("profile"):
+        # p = result.pop("profile", None)
+        # result["profile"] = _gen_kube_config(deploymentManagerId, p)
 
     return result
 
 
 def _gen_kube_config(dmId: str, kubeconfig: dict) -> dict:
 
-    # KUBECONFIG environment variable
-    # reference:
-    # https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/
-    data = {
-        'apiVersion': 'v1',
-        'clusters': [
-            {
-                'cluster': {
-                    'server':
-                    kubeconfig.pop('cluster_api_endpoint', None),
-                    'certificate-authority-data':
-                    kubeconfig.pop('cluster_ca_cert', None),
-                },
-                'name': 'inf-cluster'
-            }],
-        'contexts': [
-            {
-                'context': {
-                    'cluster': 'inf-cluster',
-                    'user': 'kubernetes-admin'
-                },
-                'name': 'kubernetes-admin@inf-cluster'
-            }
-        ],
-        'current-context': 'kubernetes-admin@inf-cluster',
-        'kind': 'Config',
-        'preferences': {},
-        'users': [
-            {
-                'name': kubeconfig.pop('admin_user', None),
-                'user': {
-                    'client-certificate-data':
-                    kubeconfig.pop('admin_client_cert', None),
-                    'client-key-data':
-                    kubeconfig.pop('admin_client_key', None),
-                }
-            }]
-    }
+    data = config.gen_k8s_config_dict(
+        kubeconfig.pop('cluster_api_endpoint', None),
+        kubeconfig.pop('cluster_ca_cert', None),
+        kubeconfig.pop('admin_user', None),
+        kubeconfig.pop('admin_client_cert', None),
+        kubeconfig.pop('admin_client_key', None),
+    )
 
     # Generate a random key for tmp kube config file
     letters = string.ascii_uppercase

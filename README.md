@@ -10,7 +10,7 @@ git clone --depth 1 --branch master https://opendev.org/starlingx/config.git
 git clone --depth 1 --branch master https://opendev.org/starlingx/distcloud-client.git
 cd config
 git checkout bca406d1
-patch -p1 < ../../cgtsclient-insecure.patch 
+patch -p1 < ../../cgtsclient-insecure.patch
 cd -
 ```
 

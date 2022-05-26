@@ -24,10 +24,15 @@ from o2ims.domain.resource_type import ResourceTypeEnum
 
 # from dcmanagerclient.api import client
 from cgtsclient.client import get_client as get_stx_client
+from cgtsclient.exc import EndpointException
 from dcmanagerclient.api.client import client as get_dc_client
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
+
+
+CGTSCLIENT_ENDPOINT_ERROR_MSG = \
+    'Must provide Keystone credentials or user-defined endpoint and token'
 
 
 class StxOcloudClient(BaseClient):
@@ -191,10 +196,24 @@ class StxClientImp(object):
             subcloud_additional_details(subcloud_id)
         logger.debug('subcloud name: %s, oam_floating_ip: %s' %
                      (subcloud[0].name, subcloud[0].oam_floating_ip))
-        os_client_args = config.get_stx_access_info(
-            region_name=subcloud[0].name,
-            subcloud_hostname=subcloud[0].oam_floating_ip)
-        config_client = get_stx_client(**os_client_args)
+        try:
+            os_client_args = config.get_stx_access_info(
+                region_name=subcloud[0].name,
+                subcloud_hostname=subcloud[0].oam_floating_ip)
+            logger.warning(os_client_args)
+            config_client = get_stx_client(**os_client_args)
+        except EndpointException as e:
+            msg = e.format_message()
+            if CGTSCLIENT_ENDPOINT_ERROR_MSG in msg:
+                os_client_args = config.get_stx_access_info(
+                    region_name=subcloud[0].name, sub_is_https=True,
+                    subcloud_hostname=subcloud[0].oam_floating_ip)
+                logger.warning(os_client_args)
+                config_client = get_stx_client(**os_client_args)
+            else:
+                raise ValueError('Stx endpoint exception: %s' % msg)
+        else:
+            raise ValueError('cgtsclient get subcloud client failed')
         return config_client
 
     def setStxClient(self, resource_pool_id):
@@ -243,8 +262,9 @@ class StxClientImp(object):
         subclouds = self.getSubcloudList()
         logger.debug('subclouds numbers: %s' % len(subclouds))
         for subcloud in subclouds:
-            subcloud_stxclient = self.getSubcloudClient(subcloud.subcloud_id)
             try:
+                subcloud_stxclient = self.getSubcloudClient(
+                    subcloud.subcloud_id)
                 systems = subcloud_stxclient.isystem.list()
                 logger.debug('systems:' + str(systems[0].to_dict()))
                 pools.append(systems[0])

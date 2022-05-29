@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2a49f18_6fa926d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-05-29T06:43:42Z",
+      "side": 1,
+      "message": "One question, does insecure option works for dcmanager client sdk as well? if not, I would assume the patch should be applied to dcmanager client sdk as well",
+      "revId": "47dff35c8cdeda025f658bda6429e5fc04c795f3",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

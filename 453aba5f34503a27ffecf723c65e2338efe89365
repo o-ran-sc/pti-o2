@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b80225f3_8fc20657",
+        "filename": "docs/api.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-05-30T09:46:14Z",
+      "side": 1,
+      "message": "It is a string type, I add the default value and description of it.",
+      "parentUuid": "459b7810_bc7d8d62",
+      "range": {
+        "startLine": 581,
+        "startChar": 8,
+        "endLine": 581,
+        "endChar": 16
+      },
+      "revId": "453aba5f34503a27ffecf723c65e2338efe89365",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b20408bf_68f1dea2",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-05-29T06:41:52Z",
       "side": 1,
       "message": "where I can find the name of the profile?",
+      "range": {
+        "startLine": 618,
+        "startChar": 9,
+        "endLine": 618,
+        "endChar": 16
+      },
+      "revId": "453aba5f34503a27ffecf723c65e2338efe89365",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b432035a_db3383d6",
+        "filename": "docs/api.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-05-30T09:46:14Z",
+      "side": 1,
+      "message": "I use the \"system kube-cluster-show kubernets\" command to get these profiles.",
+      "parentUuid": "b20408bf_68f1dea2",
       "range": {
         "startLine": 618,
         "startChar": 9,

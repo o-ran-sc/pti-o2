@@ -93,6 +93,30 @@
       },
       "revId": "453aba5f34503a27ffecf723c65e2338efe89365",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "35d76367_28139d00",
+        "filename": "docs/api.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-05-30T12:21:28Z",
+      "side": 1,
+      "message": "this is profile of o2dms, e.g. sol018, sol003, you should name it for each profile.",
+      "parentUuid": "b432035a_db3383d6",
+      "range": {
+        "startLine": 618,
+        "startChar": 9,
+        "endLine": 618,
+        "endChar": 16
+      },
+      "revId": "453aba5f34503a27ffecf723c65e2338efe89365",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

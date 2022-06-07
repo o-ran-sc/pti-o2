@@ -16,6 +16,29 @@
       "message": "One question, does insecure option works for dcmanager client sdk as well? if not, I would assume the patch should be applied to dcmanager client sdk as well",
       "revId": "47dff35c8cdeda025f658bda6429e5fc04c795f3",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5efcdaa1_085f10b6",
+        "filename": "o2ims/adapter/clients/ocloud_client.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-06-07T12:15:12Z",
+      "side": 1,
+      "message": "I cannot understand how these 2 methods enumerate k8s cluster for each subcloud, I assume stxclient represents a specific to a single subcloud or systemcontroller, so the enumeration will only return the only 1 k8s cluster on the represented subcloud/systemcontroller.",
+      "range": {
+        "startLine": 281,
+        "startChar": 3,
+        "endLine": 304,
+        "endChar": 72
+      },
+      "revId": "47dff35c8cdeda025f658bda6429e5fc04c795f3",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

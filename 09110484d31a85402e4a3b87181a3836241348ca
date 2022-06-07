@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5f51825_e4b83bab",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-06-07T12:26:16Z",
+      "side": 1,
+      "message": "who should provide this param, and with what manner? I assume this is a env variable which apply to all subcloud of the single distributed cloud (based on the assumption is 1:1 between ims and distributed cloud instance)? if https mode varies from one subcloud to another in a single distributed cloud, then there must be some other way to resovle this issue, e.g. you mentioned you will use a try ... catch ... to try that out?",
+      "range": {
+        "startLine": 77,
+        "startChar": 24,
+        "endLine": 77,
+        "endChar": 51
+      },
+      "revId": "09110484d31a85402e4a3b87181a3836241348ca",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

@@ -22,6 +22,30 @@
       },
       "revId": "09110484d31a85402e4a3b87181a3836241348ca",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a4cfde2_f9bcc090",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-06-07T12:59:54Z",
+      "side": 1,
+      "message": "The try...catch part will provide this param, by default it will use the http, only if it not working with the http, it will try to do get another access info with this param.\nAnd, it will do the try...catch on to each of the distributed cloud.\n\nFor the central cloud, the address is provided by the bash environment so that it can keep the original code.",
+      "parentUuid": "b5f51825_e4b83bab",
+      "range": {
+        "startLine": 77,
+        "startChar": 24,
+        "endLine": 77,
+        "endChar": 51
+      },
+      "revId": "09110484d31a85402e4a3b87181a3836241348ca",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

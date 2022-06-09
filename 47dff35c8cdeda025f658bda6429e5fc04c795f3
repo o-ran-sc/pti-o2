@@ -18,6 +18,24 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "76578590_9111092d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-06-09T08:01:02Z",
+      "side": 1,
+      "message": "Dcmanager supports the insecure option.",
+      "parentUuid": "a2a49f18_6fa926d8",
+      "revId": "47dff35c8cdeda025f658bda6429e5fc04c795f3",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5efcdaa1_085f10b6",

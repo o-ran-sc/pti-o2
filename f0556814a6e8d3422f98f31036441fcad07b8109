@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e253fc1c_c5914c03",
+        "filename": "docs/user-guide.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-06-09T08:00:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a8929be1_8a249a6f",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "f0556814a6e8d3422f98f31036441fcad07b8109",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66e7764e_4ddbd47b",
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6749f285_a103b8df",
+        "filename": "o2dms/api/dms_lcm_view.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-06-09T08:00:18Z",
+      "side": 1,
+      "message": "All the profiles get from the watcher, the profile will store in DB when the watcher found it. And for the API side, it will get all the profiles from the DB while you search from DB, if there have no profile request, remove all the profiles from the Object.",
+      "parentUuid": "66e7764e_4ddbd47b",
+      "range": {
+        "startLine": 54,
+        "startChar": 1,
+        "endLine": 60,
+        "endChar": 35
+      },
+      "revId": "f0556814a6e8d3422f98f31036441fcad07b8109",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "08976e6e_ce46c796",
         "filename": "o2ims/views/ocloud_view.py",
         "patchSetId": 4
@@ -60,6 +108,30 @@
       "writtenOn": "2022-06-07T12:32:07Z",
       "side": 1,
       "message": "same question",
+      "range": {
+        "startLine": 114,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 35
+      },
+      "revId": "f0556814a6e8d3422f98f31036441fcad07b8109",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86b9e69b_1865d52a",
+        "filename": "o2ims/views/ocloud_view.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-06-09T08:00:18Z",
+      "side": 1,
+      "message": "It uses the same logic as the dms_lcm_view.py",
+      "parentUuid": "08976e6e_ce46c796",
       "range": {
         "startLine": 114,
         "startChar": 0,

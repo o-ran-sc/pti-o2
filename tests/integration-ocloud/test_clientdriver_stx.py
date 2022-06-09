@@ -81,6 +81,13 @@ def test_get_k8s_list(real_stx_aio_client):
     assert k8s1.name == k8s2.name
     assert k8s1.id == k8s2.id
 
+    if len(k8slist) > 1:
+        k8s3 = k8slist[1]
+        k8s4 = stxClientImp.getK8sDetail(k8s3.name)
+        assert k8s3 != k8s4
+        assert k8s3.name == k8s4.name
+        assert k8s3.id == k8s4.id
+
 
 def test_get_cpu_list(real_stx_aio_client):
     stxClientImp = StxClientImp(real_stx_aio_client)
@@ -155,9 +162,21 @@ def test_get_if_port_list(real_stx_aio_client):
     assert port1.id == port2.id
 
 
-def test_get_subcloud_list(real_stx_aio_client, real_stx_dc_client):
-    # dcClientImp = StxClientImp(real_stx_dc_client)
-    dcClientImp = StxClientImp(
-        stx_client=real_stx_aio_client, dc_client=real_stx_dc_client)
-    sa = dcClientImp.getSubcloudList()
-    assert len(sa) == 0
+def test_get_res_pool_list(real_stx_aio_client, real_stx_dc_client):
+    stxClientImp = StxClientImp(real_stx_aio_client, real_stx_dc_client)
+    assert stxClientImp is not None
+    reslist = stxClientImp.getResourcePoolList()
+    assert reslist is not None
+    assert len(reslist) > 0
+    res1 = reslist[0]
+    res2 = stxClientImp.getResourcePoolDetail(res1.id)
+    assert res1 != res2
+    assert res1.name == res2.name
+    assert res1.id == res2.id
+
+    if len(reslist) > 1:
+        res3 = reslist[1]
+        res4 = stxClientImp.getResourcePoolDetail(res3.id)
+        assert res3 != res4
+        assert res3.name == res4.name
+        assert res3.id == res4.id

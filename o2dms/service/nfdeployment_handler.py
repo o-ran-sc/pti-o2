@@ -14,20 +14,24 @@
 
 # pylint: disable=unused-argument
 from __future__ import annotations
+import os
+import json
+import random
+import string
+import yaml
+from datetime import datetime
+from helm_sdk import Helm
+from typing import Callable
+from retry import retry
+
 from o2dms.domain.states import NfDeploymentState
 # from o2common.service import messagebus
 from o2dms.domain.dms import NfDeployment, NfDeploymentDesc
 from o2dms.domain import commands
-from typing import Callable
-
 from o2dms.domain.exceptions import NfdeploymentNotFoundError
 from o2dms.domain import events
 from o2common.service.unit_of_work import AbstractUnitOfWork
-from helm_sdk import Helm
-from ruamel import yaml
-import json
 from o2common.config import config
-from retry import retry
 # if TYPE_CHECKING:
 #     from . import unit_of_work
 
@@ -121,6 +125,12 @@ def install_nfdeployment(
 
     nfdeployment.set_state(NfDeploymentState.Installing)
 
+    # Gen kube config file and set the path
+    dms = uow.deployment_managers.get(nfdeployment.deploymentManagerId)
+    dms_res = dms.serialize()
+    p = dms_res.pop("profile", None)
+    k8sconf_path = _get_kube_config_path(nfdeployment.deploymentManagerId, p)
+
     # helm repo add
     repourl = desc.artifactRepoUrl
     helm = Helm(logger, LOCAL_HELM_BIN, environment_variables={})
@@ -162,8 +172,8 @@ def install_nfdeployment(
     #     myflags = {"name": "version", "value": tokens[1]}
     result = helm.install(
         nfdeployment.name, "{}/{}".format(repoName, chartname), flags=myflags,
-        values_file=values_file_path, kubeconfig=K8S_KUBECONFIG,
-        token=K8S_TOKEN, apiserver=K8S_APISERVER)
+        values_file=values_file_path, kubeconfig=k8sconf_path)
+    # token=K8S_TOKEN, apiserver=K8S_APISERVER)
     logger.debug('result: {}'.format(result))
 
     # in case success
@@ -177,7 +187,7 @@ def install_nfdeployment(
 
 def _create_values_file(filePath: str, content: dict):
     with open(filePath, "w", encoding="utf-8") as f:
-        yaml.dump(content, f, Dumper=yaml.RoundTripDumper)
+        yaml.dump(content, f)
 
 
 def uninstall_nfdeployment(
@@ -205,6 +215,12 @@ def uninstall_nfdeployment(
             entity.set_state(NfDeploymentState.Uninstalling)
         uow.commit()
 
+    # Gen kube config file and set the path
+    dms = uow.deployment_managers.get(nfdeployment.deploymentManagerId)
+    dms_res = dms.serialize()
+    p = dms_res.pop("profile", None)
+    k8sconf_path = _get_kube_config_path(nfdeployment.deploymentManagerId, p)
+
     helm = Helm(logger, LOCAL_HELM_BIN, environment_variables={})
 
     logger.debug('Try to helm del {}'.format(
@@ -214,8 +230,8 @@ def uninstall_nfdeployment(
     #     myflags = {"name": "version", "value": tokens[1]}
     result = helm.uninstall(
         nfdeployment.name, flags=myflags,
-        kubeconfig=K8S_KUBECONFIG,
-        token=K8S_TOKEN, apiserver=K8S_APISERVER)
+        kubeconfig=k8sconf_path,)
+    # token=K8S_TOKEN, apiserver=K8S_APISERVER)
     logger.debug('result: {}'.format(result))
 
     # in case success
@@ -241,3 +257,43 @@ def delete_nfdeployment(
     with uow:
         uow.nfdeployments.delete(cmd.NfDeploymentId)
         uow.commit()
+
+
+def _get_kube_config_path(dmId: str, kubeconfig: dict) -> dict:
+
+    # TODO: update this kube file for each DMS k8s when it changes.
+
+    link_file_path = '/tmp/kubeconfig_' + dmId
+    if os.path.exists(link_file_path) and \
+            os.path.exists(os.readlink(link_file_path)):
+        return link_file_path
+
+    # Generate a random key for tmp kube config file
+    letters = string.ascii_uppercase
+    random_key = ''.join(random.choice(letters) for i in range(10))
+
+    # Get datetime of now as tag of the tmp file
+    current_time = datetime.now().strftime("%Y%m%d%H%M%S")
+    tmp_file_name = random_key + "_" + current_time
+    tmp_file_path = '/tmp/kubeconfig_' + tmp_file_name
+
+    data = config.gen_k8s_config_dict(
+        kubeconfig.pop('cluster_api_endpoint', None),
+        kubeconfig.pop('cluster_ca_cert', None),
+        kubeconfig.pop('admin_user', None),
+        kubeconfig.pop('admin_client_cert', None),
+        kubeconfig.pop('admin_client_key', None),
+    )
+
+    # write down the yaml file of kubectl into tmp folder
+    with open(tmp_file_path, 'w') as file:
+        yaml.dump(data, file)
+
+    # os.symlink(tmp_file_path, link_file_path)
+    os.symlink(tmp_file_path, '/tmp/tmp_'+tmp_file_name)
+    os.rename('/tmp/tmp_'+tmp_file_name, link_file_path)
+    if os.path.realpath(link_file_path) != tmp_file_path:
+        # Symlink was updated failed
+        logger.error('symlink update failed')
+
+    return link_file_path

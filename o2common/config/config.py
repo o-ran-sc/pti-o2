@@ -163,3 +163,47 @@ def get_helm_cli():
 
 def get_system_controller_as_respool():
     return True
+
+
+def gen_k8s_config_dict(cluster_api_endpoint, cluster_ca_cert, admin_user,
+                        admin_client_cert, admin_client_key):
+    # KUBECONFIG environment variable
+    # reference:
+    # https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/
+    data = {
+        'apiVersion': 'v1',
+        'clusters': [
+            {
+                'cluster': {
+                    'server':
+                    cluster_api_endpoint,
+                    'certificate-authority-data':
+                    cluster_ca_cert,
+                },
+                'name': 'inf-cluster'
+            }],
+        'contexts': [
+            {
+                'context': {
+                    'cluster': 'inf-cluster',
+                    'user': 'kubernetes-admin'
+                },
+                'name': 'kubernetes-admin@inf-cluster'
+            }
+        ],
+        'current-context': 'kubernetes-admin@inf-cluster',
+        'kind': 'Config',
+        'preferences': {},
+        'users': [
+            {
+                'name': admin_user,
+                'user': {
+                    'client-certificate-data':
+                    admin_client_cert,
+                    'client-key-data':
+                    admin_client_key,
+                }
+            }]
+    }
+
+    return data

@@ -299,22 +299,80 @@ class StxClientImp(object):
             ResourceTypeEnum.PSERVER, self._hostconverter(host))
 
     def getK8sList(self, **filters) -> List[ocloudModel.StxGenericModel]:
-        k8sclusters = self.stxclient.kube_cluster.list()
-        logger.debug('k8sresources[0]:' + str(k8sclusters[0].to_dict()))
-        # logger.debug('k8sresources[0] cluster_api_endpoint: ' +
-        #  str(k8sclusters[0].cluster_api_endpoint))
-        return [ocloudModel.StxGenericModel(
-            ResourceTypeEnum.DMS,
-            self._k8sconverter(k8sres), self._k8shasher(k8sres))
-            for k8sres in k8sclusters if k8sres]
+        systems = self.stxclient.isystem.list()
+        logger.debug('system controller distributed_cloud_role:' +
+                     str(systems[0].distributed_cloud_role))
+
+        if systems[0].distributed_cloud_role is None or \
+                systems[0].distributed_cloud_role != 'systemcontroller':
+            k8sclusters = self.stxclient.kube_cluster.list()
+            setattr(k8sclusters[0], 'cloud_name', systems[0].name)
+            logger.debug('k8sresources[0]:' + str(k8sclusters[0].to_dict()))
+            # logger.debug('k8sresources[0] cluster_api_endpoint: ' +
+            #  str(k8sclusters[0].cluster_api_endpoint))
+            return [ocloudModel.StxGenericModel(
+                ResourceTypeEnum.DMS,
+                self._k8sconverter(k8sres), self._k8shasher(k8sres))
+                for k8sres in k8sclusters if k8sres]
+
+        k8s_list = []
+        if config.get_system_controller_as_respool():
+            k8sclusters = self.stxclient.kube_cluster.list()
+            setattr(k8sclusters[0], 'cloud_name', systems[0].name)
+            logger.debug('k8sresources[0]:' + str(k8sclusters[0].to_dict()))
+            # logger.debug('k8sresources[0] cluster_api_endpoint: ' +
+            #  str(k8sclusters[0].cluster_api_endpoint))
+            k8s_list.append(k8sclusters[0])
+
+        subclouds = self.getSubcloudList()
+        logger.debug('subclouds numbers: %s' % len(subclouds))
+        for subcloud in subclouds:
+            try:
+                subcloud_stxclient = self.getSubcloudClient(
+                    subcloud.subcloud_id)
+                systems = subcloud_stxclient.isystem.list()
+                k8sclusters = subcloud_stxclient.kube_cluster.list()
+                setattr(k8sclusters[0], 'cloud_name', systems[0].name)
+                logger.debug('k8sresources[0]:' +
+                             str(k8sclusters[0].to_dict()))
+                # logger.debug('k8sresources[0] cluster_api_endpoint: ' +
+                #  str(k8sclusters[0].cluster_api_endpoint))
+                k8s_list.append(k8sclusters[0])
+            except Exception as ex:
+                logger.warning('Failed get cgstclient of subcloud %s: %s' %
+                               (subcloud.name, ex))
+                continue
+
+        return [ocloudModel.StxGenericModel(ResourceTypeEnum.DMS,
+                self._k8sconverter(k8sres), self._k8shasher(k8sres))
+                for k8sres in k8s_list if k8sres]
 
     def getK8sDetail(self, name) -> ocloudModel.StxGenericModel:
+        systems = self.stxclient.isystem.list()
         if not name:
             k8sclusters = self.stxclient.kube_cluster.list()
             # logger.debug("k8sresources[0]:" + str(k8sclusters[0].to_dict()))
+            setattr(k8sclusters[0], 'cloud_name', systems[0].name)
             k8scluster = k8sclusters.pop()
         else:
-            k8scluster = self.stxclient.kube_cluster.get(name)
+            sname = name.split('.')
+            cloud_name = '.'.join(sname[:-1])
+            k8s_name = sname[-1]
+            if cloud_name == systems[0].name:
+                k8scluster = self.stxclient.kube_cluster.get(k8s_name)
+                setattr(k8scluster, 'cloud_name', cloud_name)
+            else:
+                subclouds = self.getSubcloudList()
+                subcloud_id = [
+                    sub.subcloud_id for sub in subclouds
+                    if sub.name == cloud_name][0]
+                subcloud_stxclient = self.getSubcloudClient(subcloud_id)
+                k8scluster = subcloud_stxclient.kube_cluster.get(k8s_name)
+                setattr(k8scluster, 'cloud_name', cloud_name)
+                # logger.debug('k8sresources[0]:' +
+                #  str(k8sclusters[0].to_dict()))
+                # logger.debug('k8sresources[0] cluster_api_endpoint: ' +
+                #  str(k8sclusters[0].cluster_api_endpoint))
 
         if not k8scluster:
             return None
@@ -434,9 +492,10 @@ class StxClientImp(object):
 
     @ staticmethod
     def _k8sconverter(cluster):
-        setattr(cluster, 'name', cluster.cluster_name)
+        setattr(cluster, 'name', cluster.cloud_name +
+                '.' + cluster.cluster_name)
         setattr(cluster, 'uuid',
-                uuid.uuid3(uuid.NAMESPACE_URL, cluster.cluster_name))
+                uuid.uuid3(uuid.NAMESPACE_URL, cluster.name))
         setattr(cluster, 'updated_at', None)
         setattr(cluster, 'created_at', None)
         setattr(cluster, 'events', [])
@@ -446,5 +505,5 @@ class StxClientImp(object):
 
     @ staticmethod
     def _k8shasher(cluster):
-        return str(hash((cluster.cluster_name,
+        return str(hash((cluster.cluster_name, cluster.cloud_name,
                          cluster.cluster_api_endpoint, cluster.admin_user)))

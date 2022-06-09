@@ -57,6 +57,30 @@
       },
       "revId": "47dff35c8cdeda025f658bda6429e5fc04c795f3",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "81307593_ee2d88a0",
+        "filename": "o2ims/adapter/clients/ocloud_client.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-06-09T08:05:00Z",
+      "side": 1,
+      "message": "You\u0027re right. I update the k8s clusters on another commit with INF-276",
+      "parentUuid": "5efcdaa1_085f10b6",
+      "range": {
+        "startLine": 281,
+        "startChar": 3,
+        "endLine": 304,
+        "endChar": 72
+      },
+      "revId": "47dff35c8cdeda025f658bda6429e5fc04c795f3",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

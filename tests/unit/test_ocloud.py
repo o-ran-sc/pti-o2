@@ -14,6 +14,7 @@
 
 import uuid
 from unittest.mock import MagicMock
+from o2dms.domain import dms
 
 from o2ims.domain import ocloud, subscription_obj, configuration_obj
 from o2ims.domain import resource_type as rt
@@ -271,15 +272,36 @@ def test_view_deployment_manager_one(mock_uow):
         deployment_manager_id1, uow)
     assert deployment_manager_res is None
 
+    dms_endpoint = "http://o2:30205/o2dms/v1/uuid"
     session.return_value.query.return_value.filter_by.return_value.first.\
         return_value.serialize.return_value = {
             "deploymentManagerId": deployment_manager_id1,
+            "deploymentManagementServiceEndpoint": dms_endpoint,
+            "profile": {}
         }
 
+    # profile default
     deployment_manager_res = ocloud_view.deployment_manager_one(
         deployment_manager_id1, uow)
     assert str(deployment_manager_res.get(
         "deploymentManagerId")) == deployment_manager_id1
+    assert str(deployment_manager_res.get(
+        'deploymentManagementServiceEndpoint')) == dms_endpoint
+    assert deployment_manager_res.get('profile') is None
+
+    # profile sol0018
+    profileName = 'sol0018'
+    cluster_endpoint = "https://test_k8s:6443"
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value['profile'] = {
+            "cluster_api_endpoint": cluster_endpoint
+        }
+    deployment_manager_res = ocloud_view.deployment_manager_one(
+        deployment_manager_id1, uow, profile=profileName)
+    assert str(deployment_manager_res.get(
+        'deploymentManagementServiceEndpoint')) == cluster_endpoint
+    assert str(deployment_manager_res.get(
+        "profileName")) == profileName
 
 
 def test_view_subscriptions(mock_uow):

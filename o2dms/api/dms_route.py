@@ -13,9 +13,9 @@
 #  limitations under the License.
 
 # from flask import jsonify
-from os.path import exists
-from flask import send_file
-from flask_restx import Resource, reqparse
+# from os.path import exists
+# from flask import send_file
+from flask_restx import Resource
 
 from o2dms.api.dms_dto import DmsDTO
 from o2dms.api import dms_lcm_view
@@ -33,8 +33,8 @@ def configure_api_route():
 # ----------  DeploymentManagers ---------- #
 @api_dms_lcm_v1.route("/<deploymentManagerID>")
 @api_dms_lcm_v1.param('deploymentManagerID', 'ID of the deployment manager')
-@api_dms_lcm_v1.param('profile', 'DMS profile',
-                      location='args')
+# @api_dms_lcm_v1.param('profile', 'DMS profile: value supports "sol0018"',
+#                       _in='query', default='sol0018')
 @api_dms_lcm_v1.response(404, 'Deployment manager not found')
 class DmsGetRouter(Resource):
 
@@ -48,31 +48,33 @@ class DmsGetRouter(Resource):
         ))
         bus = MessageBus.get_instance()
 
-        parser = reqparse.RequestParser()
-        parser.add_argument('profile', location='args')
-        args = parser.parse_args()
+        # parser = reqparse.RequestParser()
+        # parser.add_argument('profile', location='args')
+        # args = parser.parse_args()
 
+        # result = dms_lcm_view.deployment_manager_one(
+        #     deploymentManagerID, bus.uow, args.profile)
         result = dms_lcm_view.deployment_manager_one(
-            deploymentManagerID, bus.uow, args.profile)
+            deploymentManagerID, bus.uow)
         if result is not None:
             return result
         api_dms_lcm_v1.abort(404, "Deployment manager {} doesn't exist".format(
             deploymentManagerID))
 
 
-@api_dms_lcm_v1.route("/<deploymentManagerID>/download/<filename>")
-@api_dms_lcm_v1.param('deploymentManagerID',
-                      'ID of the deployment manager')
-@api_dms_lcm_v1.param('filename',
-                      'profile filename')
-@api_dms_lcm_v1.response(404, 'profile not found')
-class DeploymentManagerGetFileRouter(Resource):
-    def get(self, deploymentManagerID, filename):
-        path = "/tmp/kubeconfig_" + filename
+# @api_dms_lcm_v1.route("/<deploymentManagerID>/download/<filename>")
+# @api_dms_lcm_v1.param('deploymentManagerID',
+#                       'ID of the deployment manager')
+# @api_dms_lcm_v1.param('filename',
+#                       'profile filename')
+# @api_dms_lcm_v1.response(404, 'profile not found')
+# class DeploymentManagerGetFileRouter(Resource):
+#     def get(self, deploymentManagerID, filename):
+#         path = "/tmp/kubeconfig_" + filename
 
-        if exists(path):
-            return send_file(path, as_attachment=True)
-        api_dms_lcm_v1.abort(
-            404,
-            "Deployment manager {}'s Kube config file doesn't exist".
-            format(deploymentManagerID))
+#         if exists(path):
+#             return send_file(path, as_attachment=True)
+#         api_dms_lcm_v1.abort(
+#             404,
+#             "Deployment manager {}'s Kube config file doesn't exist".
+#             format(deploymentManagerID))

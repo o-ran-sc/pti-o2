@@ -19,15 +19,15 @@ logger = o2logging.get_logger(__name__)
 
 
 class DmsDTO:
-    profile = api_dms_lcm_v1.model("DMSGetDtoProfile", {
-        'cluster_api_endpoint': fields.String(
-            attributes='cluster_api_endpoint'),
-        'cluster_ca_cert': fields.String(attributes='cluster_ca_cert'),
-        'admin_user': fields.String(attributes='admin_user'),
-        'admin_client_cert': fields.String(attributes='admin_client_cert'),
-        'admin_client_key': fields.String(attributes='admin_client_key'),
-        'kube_config_file': fields.String(attributes='kube_config_file')
-    })
+    # profile = api_dms_lcm_v1.model("DMSGetDtoProfile", {
+    #     'cluster_api_endpoint': fields.String(
+    #         attributes='cluster_api_endpoint'),
+    #     'cluster_ca_cert': fields.String(attributes='cluster_ca_cert'),
+    #     'admin_user': fields.String(attributes='admin_user'),
+    #     'admin_client_cert': fields.String(attributes='admin_client_cert'),
+    #     'admin_client_key': fields.String(attributes='admin_client_key'),
+    #     # 'kube_config_file': fields.String(attributes='kube_config_file')
+    # })
 
     dms_get = api_dms_lcm_v1.model(
         "DmsGetDto",
@@ -40,7 +40,8 @@ class DmsDTO:
             'supportedLocations': fields.String,
             'capabilities': fields.String,
             'capacity': fields.String,
-            'profile': fields.Nested(profile, False, True),
+            # 'profileName': fields.String,
+            # 'profileData': fields.Nested(profile, False, True),
         }
     )
 

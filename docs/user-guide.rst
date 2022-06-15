@@ -294,7 +294,7 @@ with SMO.
 
       # Get all DMS ID, and print them with command
       dmsIDs=$(curl -s -X 'GET' \
-        'http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers' \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" \
         -H 'accept: application/json' | jq --raw-output '.[]["deploymentManagerId"]')
       for i in $dmsIDs;do echo ${i};done;
 

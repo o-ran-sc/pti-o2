@@ -168,7 +168,7 @@ class DeploymentManagersListRouter(Resource):
 @api_ims_inventory_v1.route("/deploymentManagers/<deploymentManagerID>")
 @api_ims_inventory_v1.param('deploymentManagerID',
                             'ID of the deployment manager')
-@api_ims_inventory_v1.param('profile', 'DMS profile: value supports "sol0018"',
+@api_ims_inventory_v1.param('profile', 'DMS profile: value supports "sol018"',
                             _in='query')
 @api_ims_inventory_v1.response(404, 'Deployment manager not found')
 class DeploymentManagerGetRouter(Resource):

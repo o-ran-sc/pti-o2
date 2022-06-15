@@ -56,7 +56,7 @@ def deployment_manager_one(deploymentManagerId: str,
     # profile_data = result.pop("profile", None)
     # result['profileName'] = 'default'
 
-    # if "sol0018" == profile:
+    # if "sol018" == profile:
     #     result['profileName'] = profile
     #     result['profileData'] = profile_data
     # elif "file" == profile and result.hasattr("profile"):

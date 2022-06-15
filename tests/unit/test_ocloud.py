@@ -289,8 +289,8 @@ def test_view_deployment_manager_one(mock_uow):
         'deploymentManagementServiceEndpoint')) == dms_endpoint
     assert deployment_manager_res.get('profile') is None
 
-    # profile sol0018
-    profileName = 'sol0018'
+    # profile sol018
+    profileName = 'sol018'
     cluster_endpoint = "https://test_k8s:6443"
     session.return_value.query.return_value.filter_by.return_value.first.\
         return_value.serialize.return_value['profile'] = {

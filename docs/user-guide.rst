@@ -294,7 +294,7 @@ with SMO.
 
       # Get all DMS ID, and print them with command
       dmsIDs=$(curl -s -X 'GET' \
-        'http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers' \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" \
         -H 'accept: application/json' | jq --raw-output '.[]["deploymentManagerId"]')
       for i in $dmsIDs;do echo ${i};done;
 
@@ -317,20 +317,20 @@ with SMO.
       CLUSTER_NAME="o2dmsk8s1" # set the cluster name
 
       K8S_SERVER=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol0018" \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol018" \
         -H 'accept: application/json' | jq --raw-output '.["profileData"]["cluster_api_endpoint"]')
       K8S_CA_DATA=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol0018" \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol018" \
         -H 'accept: application/json' | jq --raw-output '.["profileData"]["cluster_ca_cert"]')
 
       K8S_USER_NAME=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol0018" \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol018" \
         -H 'accept: application/json' | jq --raw-output '.["profileData"]["admin_user"]')
       K8S_USER_CLIENT_CERT_DATA=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol0018" \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol018" \
         -H 'accept: application/json' | jq --raw-output '.["profileData"]["admin_client_cert"]')
       K8S_USER_CLIENT_KEY_DATA=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol0018" \
+        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol018" \
         -H 'accept: application/json' | jq --raw-output '.["profileData"]["admin_client_key"]')
 
 

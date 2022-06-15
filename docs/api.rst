@@ -877,7 +877,7 @@ Parameters
     :header: "Name", "Located in", "Required", "Type", "Format", "Properties", "Description"
     :widths: 20, 15, 10, 10, 10, 20, 30
 
-        profile | query | No | string |  |  | DMS profile: value supports "sol0018"
+        profile | query | No | string |  |  | DMS profile: value supports "sol018"
         deploymentManagerID | path | Yes | string |  |  | ID of the deployment manager
 
 

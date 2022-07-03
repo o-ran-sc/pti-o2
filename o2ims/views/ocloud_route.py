@@ -12,9 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from flask import request
 from flask_restx import Resource, reqparse
 
 from o2common.service.messagebus import MessageBus
+from o2common.views.pagination_route import link_header, PAGE_PARAM
 from o2ims.views import ocloud_view
 from o2ims.views.api_ns import api_ims_inventory_v1
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
@@ -51,13 +53,25 @@ class OcloudsListRouter(Resource):
 
 # ----------  ResourceTypes ---------- #
 @api_ims_inventory_v1.route("/resourceTypes")
+@api_ims_inventory_v1.param(PAGE_PARAM,
+                            'Page number of the results to fetch.' +
+                            ' Default: 1',
+                            _in='query', default=1)
 class ResourceTypesListRouter(Resource):
 
     model = ResourceTypeDTO.resource_type_get
 
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self):
-        return ocloud_view.resource_types(bus.uow)
+        parser = reqparse.RequestParser()
+        parser.add_argument(PAGE_PARAM, location='args')
+        args = parser.parse_args()
+        kwargs = {}
+        if args.nextpage_opaque_marker is not None:
+            kwargs['page'] = args.nextpage_opaque_marker
+
+        ret = ocloud_view.resource_types(bus.uow, **kwargs)
+        return link_header(request.full_path, ret)
 
 
 @api_ims_inventory_v1.route("/resourceTypes/<resourceTypeID>")
@@ -79,13 +93,25 @@ class ResourceTypeGetRouter(Resource):
 
 # ----------  ResourcePools ---------- #
 @api_ims_inventory_v1.route("/resourcePools")
+@api_ims_inventory_v1.param(PAGE_PARAM,
+                            'Page number of the results to fetch.' +
+                            ' Default: 1',
+                            _in='query', default=1)
 class ResourcePoolsListRouter(Resource):
 
     model = ResourcePoolDTO.resource_pool_get
 
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self):
-        return ocloud_view.resource_pools(bus.uow)
+        parser = reqparse.RequestParser()
+        parser.add_argument(PAGE_PARAM, location='args')
+        args = parser.parse_args()
+        kwargs = {}
+        if args.nextpage_opaque_marker is not None:
+            kwargs['page'] = args.nextpage_opaque_marker
+
+        ret = ocloud_view.resource_pools(bus.uow, **kwargs)
+        return link_header(request.full_path, ret)
 
 
 @api_ims_inventory_v1.route("/resourcePools/<resourcePoolID>")
@@ -109,9 +135,18 @@ class ResourcePoolGetRouter(Resource):
 @api_ims_inventory_v1.route("/resourcePools/<resourcePoolID>/resources")
 @api_ims_inventory_v1.param('resourcePoolID', 'ID of the resource pool')
 @api_ims_inventory_v1.param('resourceTypeName', 'filter resource type',
-                            location='args')
+                            _in='query')
 @api_ims_inventory_v1.param('parentId', 'filter parentId',
-                            location='args')
+                            _in='query')
+# @api_ims_inventory_v1.param('sort', 'sort by column name',
+#                             _in='query')
+# @api_ims_inventory_v1.param('per_page', 'The number of results per page ' +
+#                             '(max 100). Default: 30',
+#                             _in='query', default=30)
+@api_ims_inventory_v1.param(PAGE_PARAM,
+                            'Page number of the results to fetch.' +
+                            ' Default: 1',
+                            _in='query', default=1)
 class ResourcesListRouter(Resource):
 
     model = ResourceDTO.resource_list
@@ -121,6 +156,9 @@ class ResourcesListRouter(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('resourceTypeName', location='args')
         parser.add_argument('parentId', location='args')
+        # parser.add_argument('sort', location='args')
+        # parser.add_argument('per_page', location='args')
+        parser.add_argument(PAGE_PARAM, location='args')
         args = parser.parse_args()
         kwargs = {}
         if args.resourceTypeName is not None:
@@ -129,8 +167,15 @@ class ResourcesListRouter(Resource):
             kwargs['parentId'] = args.parentId
             if args.parentId.lower() == 'null':
                 kwargs['parentId'] = None
+        # if args.per_page is not None:
+        #     kwargs['per_page'] = args.per_page
+        #     base_url = base_url + 'per_page=' + args.per_page + '&'
+        if args.nextpage_opaque_marker is not None:
+            kwargs['page'] = args.nextpage_opaque_marker
 
-        return ocloud_view.resources(resourcePoolID, bus.uow, **kwargs)
+        ret = ocloud_view.resources(resourcePoolID, bus.uow, **kwargs)
+
+        return link_header(request.full_path, ret)
 
 
 @api_ims_inventory_v1.route(
@@ -156,13 +201,25 @@ class ResourceGetRouter(Resource):
 
 # ----------  DeploymentManagers ---------- #
 @api_ims_inventory_v1.route("/deploymentManagers")
+@api_ims_inventory_v1.param(PAGE_PARAM,
+                            'Page number of the results to fetch.' +
+                            ' Default: 1',
+                            _in='query', default=1)
 class DeploymentManagersListRouter(Resource):
 
     model = DeploymentManagerDTO.deployment_manager_list
 
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self):
-        return ocloud_view.deployment_managers(bus.uow)
+        parser = reqparse.RequestParser()
+        parser.add_argument(PAGE_PARAM, location='args')
+        args = parser.parse_args()
+        kwargs = {}
+        if args.nextpage_opaque_marker is not None:
+            kwargs['page'] = args.nextpage_opaque_marker
+
+        ret = ocloud_view.deployment_managers(bus.uow, **kwargs)
+        return link_header(request.full_path, ret)
 
 
 @api_ims_inventory_v1.route("/deploymentManagers/<deploymentManagerID>")
@@ -204,7 +261,15 @@ class SubscriptionsListRouter(Resource):
     @api_ims_inventory_v1.doc('List subscriptions')
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self):
-        return ocloud_view.subscriptions(bus.uow)
+        parser = reqparse.RequestParser()
+        parser.add_argument(PAGE_PARAM, location='args')
+        args = parser.parse_args()
+        kwargs = {}
+        if args.nextpage_opaque_marker is not None:
+            kwargs['page'] = args.nextpage_opaque_marker
+
+        ret = ocloud_view.subscriptions(bus.uow, **kwargs)
+        return link_header(request.full_path, ret)
 
     @api_ims_inventory_v1.doc('Create a subscription')
     @api_ims_inventory_v1.expect(expect)

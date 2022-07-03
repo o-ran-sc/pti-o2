@@ -18,7 +18,7 @@ from dataclasses import dataclass
 # from typing import List
 
 from o2ims.domain.stx_object import StxGenericModel
-from o2ims.domain.alarm_obj import AlarmEvent2SMO
+from o2ims.domain.alarm_obj import AlarmEvent2SMO, FaultGenericModel
 from o2ims.domain.subscription_obj import Message2SMO, RegistrationMessage
 # from o2ims.domain.resource_type import ResourceTypeEnum
 from o2common.domain.commands import Command
@@ -27,6 +27,11 @@ from o2common.domain.commands import Command
 @dataclass
 class UpdateStxObject(Command):
     data: StxGenericModel
+
+
+@dataclass
+class UpdateFaultObject(Command):
+    data: FaultGenericModel
 
 
 @dataclass
@@ -100,5 +105,5 @@ class UpdatePserverIfPort(UpdateResource):
 
 
 @dataclass
-class UpdateAlarm(UpdateStxObject):
+class UpdateAlarm(UpdateFaultObject):
     pass

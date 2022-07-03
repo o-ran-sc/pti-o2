@@ -19,6 +19,9 @@ import datetime
 
 from o2common.domain.base import AgRoot, Serializer
 
+from o2common.helper import o2logging
+logger = o2logging.get_logger(__name__)
+
 
 class FaultGenericModel(AgRoot):
     def __init__(self, type: str,
@@ -27,7 +30,10 @@ class FaultGenericModel(AgRoot):
         if api_response:
             self.id = str(api_response.uuid)
             self.name = self.id
-            self.type = type
+            self.alarm_type = api_response.alarm_type
+            self.alarm_def_name = api_response.alarm_id
+            self.alarm_def_id = api_response.alarm_def_id
+            self.probable_cause_id = api_response.probable_cause_id
             self.status = api_response.state
             # TODO: time less than second
             self.timestamp = datetime.datetime.strptime(
@@ -42,6 +48,8 @@ class FaultGenericModel(AgRoot):
             self.hash = content_hash if content_hash \
                 else str(hash((self.id, self.timestamp, self.status)))
             self.content = json.dumps(api_response.to_dict())
+            if EventTypeEnum.ALARM == type:
+                pass
 
     def is_outdated(self, newmodel) -> bool:
         # return self.updatetime < newmodel.updatetime
@@ -56,6 +64,11 @@ class FaultGenericModel(AgRoot):
         self.createtime = newmodel.createtime
         self.updatetime = newmodel.updatetime
         self.content = newmodel.content
+
+
+class EventTypeEnum(Enum):
+    ALARM = 'alarm'
+    EVENT = 'event'
 
 
 class PerceivedSeverityEnum(str, Enum):

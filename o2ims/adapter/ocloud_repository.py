@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from typing import List
+from typing import List, Tuple
 
 from o2ims.domain import ocloud, subscription_obj, configuration_obj
 from o2ims.domain.ocloud_repo import OcloudRepository, ResourceTypeRepository,\
@@ -116,9 +116,19 @@ class ResourceSqlAlchemyRepository(ResourceRepository):
             return res
         return recursive(resource_id)
 
-    def _list(self, resourcepool_id, **kwargs) -> List[ocloud.Resource]:
-        return self.session.query(ocloud.Resource).filter_by(
-            resourcePoolId=resourcepool_id, **kwargs)
+    def _list(self, resourcepool_id, **kwargs) -> \
+            Tuple[int, List[ocloud.Resource]]:
+        if 'sort' in kwargs:
+            kwargs.pop('sort')
+        size = kwargs.pop('limit') if 'limit' in kwargs else None
+        offset = kwargs.pop('start') if 'start' in kwargs else 0
+
+        result = self.session.query(ocloud.Resource).filter_by(
+            resourcePoolId=resourcepool_id, **kwargs).order_by('resourceId')
+        count = result.count()
+        if size is not None and size != -1:
+            return (count, result.limit(size).offset(offset))
+        return (count, result)
 
     def _update(self, resource: ocloud.Resource):
         self.session.add(resource)

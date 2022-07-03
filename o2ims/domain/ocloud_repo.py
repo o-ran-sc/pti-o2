@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 import abc
-from typing import List, Set
+from typing import List, Set, Tuple
 from o2ims.domain import ocloud
 
 
@@ -146,7 +146,8 @@ class ResourceRepository(abc.ABC):
             self.seen.add(resource)
         return resource
 
-    def list(self, resourcepool_id, **kwargs) -> List[ocloud.Resource]:
+    def list(self, resourcepool_id, **kwargs) -> \
+            Tuple[int, List[ocloud.Resource]]:
         return self._list(resourcepool_id, **kwargs)
 
     def update(self, resource: ocloud.Resource):

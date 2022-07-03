@@ -14,6 +14,7 @@
 
 import uuid
 import yaml
+import math
 import random
 import string
 from datetime import datetime
@@ -67,7 +68,6 @@ def resource_pool_one(resourcePoolId: str,
 
 def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,
               **kwargs):
-
     filter_kwargs = {}  # filter key should be the same with database name
     if 'resourceTypeName' in kwargs:
         resource_type_name = kwargs['resourceTypeName']
@@ -85,10 +85,30 @@ def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,
         # return [r.serialize() for r in li if r.resourceTypeId == restype_id]
     if 'parentId' in kwargs:
         filter_kwargs['parentId'] = kwargs['parentId']
+    if 'sort' in kwargs:
+        filter_kwargs['sort'] = kwargs['sort']
+
+    limit = int(kwargs['per_page']) if 'per_page' in kwargs else 30
+    page = int(kwargs['page']) if 'page' in kwargs else 1
+    start = (page - 1) * limit
+    filter_kwargs['limit'] = limit
+    filter_kwargs['start'] = start
 
     with uow:
-        li = uow.resources.list(resourcePoolId, **filter_kwargs)
-    return [r.serialize() for r in li]
+        ret = uow.resources.list(resourcePoolId, **filter_kwargs)
+
+    count = ret[0]
+    logger.info('Resources count: {}'.format(count))
+    page_total = int(math.ceil(count/limit)) if count > limit else 1
+    result = {
+        "count": count,
+        "page_total": page_total,
+        "page_current": page,
+        "page_num": page,
+        "per_page": limit,
+        "results": ret[1]
+    }
+    return result
 
 
 def resource_one(resourceId: str, uow: unit_of_work.AbstractUnitOfWork):

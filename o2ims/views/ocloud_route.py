@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from flask import request
 from flask_restx import Resource, reqparse
 
 from o2common.service.messagebus import MessageBus
@@ -109,28 +110,66 @@ class ResourcePoolGetRouter(Resource):
 @api_ims_inventory_v1.route("/resourcePools/<resourcePoolID>/resources")
 @api_ims_inventory_v1.param('resourcePoolID', 'ID of the resource pool')
 @api_ims_inventory_v1.param('resourceTypeName', 'filter resource type',
-                            location='args')
+                            _in='query')
 @api_ims_inventory_v1.param('parentId', 'filter parentId',
-                            location='args')
+                            _in='query')
+# @api_ims_inventory_v1.param('sort', 'sort by column name',
+#                             _in='query')
+@api_ims_inventory_v1.param('per_page', 'The number of results per page ' +
+                            '(max 100). Default: 30',
+                            _in='query', default=30)
+@api_ims_inventory_v1.param('page', 'Page number of the results to fetch.' +
+                            ' Default: 1',
+                            _in='query', default=1)
 class ResourcesListRouter(Resource):
 
-    model = ResourceDTO.resource_list
+    model = ResourceDTO.list_result
 
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self, resourcePoolID):
         parser = reqparse.RequestParser()
         parser.add_argument('resourceTypeName', location='args')
         parser.add_argument('parentId', location='args')
+        # parser.add_argument('sort', location='args')
+        parser.add_argument('per_page', location='args')
+        parser.add_argument('page', location='args')
         args = parser.parse_args()
+        base_url = request.base_url + '?'
         kwargs = {}
         if args.resourceTypeName is not None:
             kwargs['resourceTypeName'] = args.resourceTypeName
+            base_url = base_url + 'resourceTypeName=' + args.resourceTypeName \
+                + '&'
         if args.parentId is not None:
             kwargs['parentId'] = args.parentId
             if args.parentId.lower() == 'null':
                 kwargs['parentId'] = None
+            base_url = base_url + 'parentId=' + args.parentId + '&'
+        if args.per_page is not None:
+            kwargs['per_page'] = args.per_page
+            base_url = base_url + 'per_page=' + args.per_page + '&'
+        if args.page is not None:
+            kwargs['page'] = args.page
 
-        return ocloud_view.resources(resourcePoolID, bus.uow, **kwargs)
+        ret = ocloud_view.resources(resourcePoolID, bus.uow, **kwargs)
+        page_total = ret.pop('page_total')
+        page_current = ret.pop('page_current')
+        link_list = []
+        if (page_current > 1):
+            link_list.append('<' + base_url + 'page=1' + '>; rel="first"')
+        if (page_current > 1):
+            link_list.append('<' + base_url + 'page=' +
+                             str(page_current - 1) + '>; rel="prev"')
+        if (page_current < page_total):
+            link_list.append('<' + base_url + 'page=' +
+                             str(page_current + 1) + '>; rel="next"')
+        if (page_current < page_total):
+            link_list.append('<' + base_url + 'page=' +
+                             str(page_total) + '>; rel="last"')
+        link = ','.join(link_list)
+
+        return ret, \
+            {'Link': link}
 
 
 @api_ims_inventory_v1.route(

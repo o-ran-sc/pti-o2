@@ -13,6 +13,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, clear_mappers
 from tenacity import retry, stop_after_delay
 from unittest.mock import MagicMock
+from mock_alchemy.mocking import UnifiedAlchemyMagicMock
 
 from o2common.config import config
 
@@ -28,6 +29,13 @@ from o2app.bootstrap import bootstrap
 @pytest.fixture
 def mock_uow():
     session = MagicMock()
+    uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory=session)
+    return session, uow
+
+
+@pytest.fixture
+def mock_alchemy_uow():
+    session = UnifiedAlchemyMagicMock()
     uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory=session)
     return session, uow
 

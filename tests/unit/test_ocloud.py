@@ -14,7 +14,6 @@
 
 import uuid
 from unittest.mock import MagicMock
-from o2dms.domain import dms
 
 from o2ims.domain import ocloud, subscription_obj, configuration_obj
 from o2ims.domain import resource_type as rt
@@ -216,9 +215,16 @@ def test_view_resources(mock_uow):
         "resourceId": resource_id1,
         "resourcePoolId": resource_pool_id1
     }
-    session.return_value.query.return_value.filter_by.return_value = [res1]
 
-    resource_list = ocloud_view.resources(resource_pool_id1, uow)
+    order_by = MagicMock()
+    order_by.count.return_value = 1
+    order_by.limit.return_value.offset.return_value = [res1]
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
+
+    result = ocloud_view.resources(resource_pool_id1, uow)
+    assert result['count'] == 1
+    resource_list = result['results']
     assert str(resource_list[0].get("resourceId")) == resource_id1
     assert str(resource_list[0].get("resourcePoolId")) == resource_pool_id1
 
@@ -357,6 +363,11 @@ def test_flask_get_list(mock_flask_uow):
     session.query.return_value = []
     apibase = config.get_o2ims_api_base()
 
+    order_by = MagicMock()
+    order_by.count.return_value = 0
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
+
     with app.test_client() as client:
         # Get list and return empty list
         ##########################
@@ -369,7 +380,8 @@ def test_flask_get_list(mock_flask_uow):
         resource_pool_id1 = str(uuid.uuid4())
         resp = client.get(apibase+"/resourcePools/" +
                           resource_pool_id1+"/resources")
-        assert resp.get_data() == b'[]\n'
+        assert resp.get_data(
+        ) == b'{"count": 0, "page_num": 1, "results": []}\n'
 
         resp = client.get(apibase+"/deploymentManagers")
         assert resp.get_data() == b'[]\n'

@@ -47,7 +47,6 @@ class DeploymentManager(AgRoot, Serializer):
         self.extensions = []
 
     def serialize(self):
-        print(self.__dict__)
         d = Serializer.serialize(self)
 
         if 'profile' in d and d['profile'] != '':

@@ -27,7 +27,6 @@ from fmclient.common.exceptions import HTTPNotFound
 from o2common.service.client.base_client import BaseClient
 from o2common.config import config
 from o2ims.domain import alarm_obj as alarmModel
-from o2ims.domain.resource_type import ResourceTypeEnum
 from o2app.adapter import unit_of_work
 
 from o2common.helper import o2logging
@@ -126,7 +125,7 @@ class StxFaultClientImp(object):
         logger.debug('alarm 1:' + str(alarms[0].to_dict()))
         # [print('alarm:' + str(alarm.to_dict())) for alarm in alarms if alarm]
         return [alarmModel.FaultGenericModel(
-            ResourceTypeEnum.PSERVER, self._alarmconverter(alarm))
+            alarmModel.EventTypeEnum.ALARM, self._alarmconverter(alarm))
             for alarm in alarms if alarm]
 
     def getAlarmInfo(self, id) -> alarmModel.FaultGenericModel:
@@ -137,16 +136,17 @@ class StxFaultClientImp(object):
         except HTTPNotFound:
             event = self.fmclient.event_log.get(id)
             return alarmModel.FaultGenericModel(
-                ResourceTypeEnum.PSERVER, self._eventconverter(event, True))
+                alarmModel.EventTypeEnum.ALARM, self._eventconverter(event,
+                                                                     True))
         return alarmModel.FaultGenericModel(
-            ResourceTypeEnum.PSERVER, self._alarmconverter(alarm))
+            alarmModel.EventTypeEnum.ALARM, self._alarmconverter(alarm))
 
     def getEventList(self, **filters) -> List[alarmModel.FaultGenericModel]:
         events = self.fmclient.event_log.list(alarms=True, expand=True)
         logger.debug('event 1:' + str(events[0].to_dict()))
         # [print('alarm:' + str(event.to_dict())) for event in events if event]
         return [alarmModel.FaultGenericModel(
-            ResourceTypeEnum.PSERVER, self._eventconverter(event))
+            alarmModel.EventTypeEnum.EVENT, self._eventconverter(event))
             for event in events if event]
 
     def getEventInfo(self, id) -> alarmModel.FaultGenericModel:
@@ -154,20 +154,18 @@ class StxFaultClientImp(object):
         logger.debug('get event id ' + id + ':' + str(event.to_dict()))
         # print(event.to_dict())
         return alarmModel.FaultGenericModel(
-            ResourceTypeEnum.PSERVER, self._eventconverter(event))
+            alarmModel.EventTypeEnum.EVENT, self._eventconverter(event))
 
     @ staticmethod
     def _alarmconverter(alarm):
         # setattr(alarm, 'alarm_def_id', uuid.uuid3(
         #         uuid.NAMESPACE_URL, alarm.alarm_id))
         setattr(alarm, 'state', alarm.alarm_state)
-        setattr(alarm, 'event_log_type', alarm.alarm_type)
-        setattr(alarm, 'event_log_id', alarm.alarm_id)
 
-        setattr(alarm, 'alarm_def_id', uuid.uuid3(
-                uuid.NAMESPACE_URL, alarm.alarm_id))
-        setattr(alarm, 'probable_cause_id', uuid.uuid3(
-                uuid.NAMESPACE_URL, alarm.probale_cause))
+        setattr(alarm, 'alarm_def_id', str(uuid.uuid3(
+                uuid.NAMESPACE_URL, alarm.alarm_id)))
+        setattr(alarm, 'probable_cause_id', str(uuid.uuid3(
+                uuid.NAMESPACE_URL, alarm.probable_cause)))
         return alarm
 
     @ staticmethod
@@ -177,10 +175,10 @@ class StxFaultClientImp(object):
         if clear:
             logger.debug('alarm is clear')
             event.state = 'clear'
-        setattr(event, 'alarm_def_id', uuid.uuid3(
-                uuid.NAMESPACE_URL, event.alarm_id))
-        setattr(event, 'probable_cause_id', uuid.uuid3(
-                uuid.NAMESPACE_URL, event.probale_cause))
+        setattr(event, 'alarm_def_id', str(uuid.uuid3(
+                uuid.NAMESPACE_URL, event.alarm_id)))
+        setattr(event, 'probable_cause_id', str(uuid.uuid3(
+                uuid.NAMESPACE_URL, event.probable_cause)))
         return event
 
     @ staticmethod

@@ -12,9 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from flask_restx import Resource
+from flask import request
+from flask_restx import Resource, reqparse
 
 from o2common.service.messagebus import MessageBus
+from o2common.views.pagination_route import link_header, PAGE_PARAM
 from o2ims.views import alarm_view
 from o2ims.views.api_ns import api_monitoring_v1
 from o2ims.views.alarm_dto import AlarmDTO, SubscriptionDTO
@@ -31,13 +33,25 @@ def configure_api_route():
 
 # ----------  Alarm Event Record ---------- #
 @api_monitoring_v1.route("/alarms")
+@api_monitoring_v1.param(PAGE_PARAM,
+                         'Page number of the results to fetch.' +
+                         ' Default: 1',
+                         _in='query', default=1)
 class AlarmListRouter(Resource):
 
     model = AlarmDTO.alarm_event_record_get
 
     @api_monitoring_v1.marshal_list_with(model)
     def get(self):
-        return alarm_view.alarm_event_records(bus.uow)
+        parser = reqparse.RequestParser()
+        parser.add_argument(PAGE_PARAM, location='args')
+        args = parser.parse_args()
+        kwargs = {}
+        if args.nextpage_opaque_marker is not None:
+            kwargs['page'] = args.nextpage_opaque_marker
+
+        ret = alarm_view.alarm_event_records(bus.uow, **kwargs)
+        return link_header(request.full_path, ret)
 
 
 @api_monitoring_v1.route("/alarms/<alarmEventRecordId>")
@@ -68,7 +82,15 @@ class SubscriptionsListRouter(Resource):
     @api_monitoring_v1.doc('List alarm subscriptions')
     @api_monitoring_v1.marshal_list_with(model)
     def get(self):
-        return alarm_view.subscriptions(bus.uow)
+        parser = reqparse.RequestParser()
+        parser.add_argument(PAGE_PARAM, location='args')
+        args = parser.parse_args()
+        kwargs = {}
+        if args.nextpage_opaque_marker is not None:
+            kwargs['page'] = args.nextpage_opaque_marker
+
+        ret = alarm_view.subscriptions(bus.uow, **kwargs)
+        return link_header(request.full_path, ret)
 
     @api_monitoring_v1.doc('Create a alarm subscription')
     @api_monitoring_v1.expect(expect)

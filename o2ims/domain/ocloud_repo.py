@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 import abc
-from typing import List, Set
+from typing import List, Set, Tuple
 from o2ims.domain import ocloud
 
 
@@ -74,8 +74,12 @@ class ResourceTypeRepository(abc.ABC):
             self.seen.add(resource_type)
         return resource_type
 
-    def list(self) -> List[ocloud.ResourceType]:
-        return self._list()
+    def list(self, **kwargs) -> List[ocloud.ResourceType]:
+        return self._list(**kwargs)[1]
+
+    def list_with_count(self, **kwargs) -> \
+            Tuple[int, List[ocloud.ResourceType]]:
+        return self._list(**kwargs)
 
     def update(self, resource_type: ocloud.ResourceType):
         self._update(resource_type)
@@ -91,6 +95,10 @@ class ResourceTypeRepository(abc.ABC):
 
     @abc.abstractmethod
     def _get_by_name(self, resource_type_name) -> ocloud.ResourceType:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _list(self, **kwargs) -> Tuple[int, List[ocloud.ResourceType]]:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -112,8 +120,12 @@ class ResourcePoolRepository(abc.ABC):
             self.seen.add(resource_pool)
         return resource_pool
 
-    def list(self) -> List[ocloud.ResourcePool]:
-        return self._list()
+    def list(self, **kwargs) -> List[ocloud.ResourcePool]:
+        return self._list(**kwargs)[1]
+
+    def list_with_count(self, **kwargs) -> \
+            Tuple[int, List[ocloud.ResourcePool]]:
+        return self._list(**kwargs)
 
     def update(self, resource_pool: ocloud.ResourcePool):
         self._update(resource_pool)
@@ -125,6 +137,10 @@ class ResourcePoolRepository(abc.ABC):
 
     @abc.abstractmethod
     def _get(self, resource_pool_id) -> ocloud.ResourcePool:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _list(self, **kwargs) -> Tuple[int, List[ocloud.ResourcePool]]:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -147,6 +163,10 @@ class ResourceRepository(abc.ABC):
         return resource
 
     def list(self, resourcepool_id, **kwargs) -> List[ocloud.Resource]:
+        return self._list(resourcepool_id, **kwargs)[1]
+
+    def list_with_count(self, resourcepool_id, **kwargs) -> \
+            Tuple[int, List[ocloud.Resource]]:
         return self._list(resourcepool_id, **kwargs)
 
     def update(self, resource: ocloud.Resource):
@@ -162,7 +182,8 @@ class ResourceRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _list(self, resourcepool_id, **kwargs) -> ocloud.Resource:
+    def _list(self, resourcepool_id, **kwargs) -> \
+            Tuple[int, List[ocloud.Resource]]:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -184,8 +205,12 @@ class DeploymentManagerRepository(abc.ABC):
             self.seen.add(deployment_manager)
         return deployment_manager
 
-    def list(self) -> List[ocloud.DeploymentManager]:
-        return self._list()
+    def list(self, **kwargs) -> List[ocloud.DeploymentManager]:
+        return self._list(**kwargs)[1]
+
+    def list_with_count(self, **kwargs) -> \
+            Tuple[int, List[ocloud.DeploymentManager]]:
+        return self._list(**kwargs)
 
     def update(self, deployment_manager: ocloud.DeploymentManager):
         self._update(deployment_manager)
@@ -196,6 +221,10 @@ class DeploymentManagerRepository(abc.ABC):
 
     @abc.abstractmethod
     def _get(self, deployment_manager_id) -> ocloud.DeploymentManager:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _list(self, **kwargs) -> Tuple[int, List[ocloud.DeploymentManager]]:
         raise NotImplementedError
 
     @abc.abstractmethod

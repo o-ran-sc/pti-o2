@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 import abc
-from typing import List, Set
+from typing import List, Set, Tuple
 from o2ims.domain import subscription_obj as subobj
 
 
@@ -31,8 +31,12 @@ class SubscriptionRepository(abc.ABC):
             self.seen.add(subscription)
         return subscription
 
-    def list(self) -> List[subobj.Subscription]:
-        return self._list()
+    def list(self, **kwargs) -> List[subobj.Subscription]:
+        return self._list(**kwargs)[1]
+
+    def list_with_count(self, **kwargs) -> \
+            Tuple[int, List[subobj.Subscription]]:
+        return self._list(**kwargs)
 
     def update(self, subscription: subobj.Subscription):
         self._update(subscription)
@@ -50,6 +54,10 @@ class SubscriptionRepository(abc.ABC):
 
     @abc.abstractmethod
     def _update(self, subscription: subobj.Subscription):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _list(self, **kwargs) -> Tuple[int, List[subobj.Subscription]]:
         raise NotImplementedError
 
     @abc.abstractmethod

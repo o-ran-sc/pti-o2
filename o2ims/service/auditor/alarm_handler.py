@@ -114,7 +114,7 @@ def create_by(fmobj: FaultGenericModel) -> AlarmEventRecord:
         else:
             return alarm_obj.PerceivedSeverityEnum.WARNING
     alarm_event_record.perceivedSeverity = severity_switch(content['severity'])
-    alarm_event_record.probableCauseId = content['probable_cause_id']
+    alarm_event_record.probableCauseId = fmobj.probable_cause_id
     alarm_event_record.hash = fmobj.hash
     # logger.info('severity: ' + content['severity'])
     # logger.info('perceived severity: '

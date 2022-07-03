@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 import abc
-from typing import List, Set
+from typing import List, Set, Tuple
 from o2ims.domain import alarm_obj as obj
 
 
@@ -31,8 +31,12 @@ class AlarmEventRecordRepository(abc.ABC):
             self.seen.add(alarm_event_record)
         return alarm_event_record
 
-    def list(self) -> List[obj.AlarmEventRecord]:
-        return self._list()
+    def list(self, **kwargs) -> List[obj.AlarmEventRecord]:
+        return self._list(**kwargs)[1]
+
+    def list_with_count(self, **kwargs) -> \
+            Tuple[int, List[obj.AlarmEventRecord]]:
+        return self._list(**kwargs)
 
     def update(self, alarm_event_record: obj.AlarmEventRecord):
         self._update(alarm_event_record)
@@ -49,7 +53,7 @@ class AlarmEventRecordRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _list(self) -> List[obj.AlarmEventRecord]:
+    def _list(self, **kwargs) -> Tuple[int, List[obj.AlarmEventRecord]]:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -155,8 +159,12 @@ class AlarmSubscriptionRepository(abc.ABC):
             self.seen.add(subscription)
         return subscription
 
-    def list(self) -> List[obj.AlarmSubscription]:
-        return self._list()
+    def list(self, **kwargs) -> List[obj.AlarmSubscription]:
+        return self._list(**kwargs)[1]
+
+    def list_with_count(self, **kwargs) -> \
+            Tuple[int, List[obj.AlarmSubscription]]:
+        return self._list(**kwargs)
 
     def update(self, subscription: obj.AlarmSubscription):
         self._update(subscription)
@@ -170,6 +178,10 @@ class AlarmSubscriptionRepository(abc.ABC):
 
     @abc.abstractmethod
     def _get(self, subscription_id) -> obj.AlarmSubscription:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _list(self, **kwargs) -> Tuple[int, List[obj.AlarmSubscription]]:
         raise NotImplementedError
 
     @abc.abstractmethod

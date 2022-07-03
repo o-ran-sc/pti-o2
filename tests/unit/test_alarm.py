@@ -52,11 +52,17 @@ def test_view_alarm_event_records(mock_uow):
     alarm_event_record1 = MagicMock()
     alarm_event_record1.serialize.return_value = {
         "alarmEventRecordId": alarm_event_record_id1}
-    session.return_value.query.return_value = [alarm_event_record1]
 
-    alarm_event_record_list = alarm_view.alarm_event_records(uow)
-    assert str(alarm_event_record_list[0].get(
-        "alarmEventRecordId")) == alarm_event_record_id1
+    order_by = MagicMock()
+    order_by.count.return_value = 1
+    order_by.limit.return_value.offset.return_value = [alarm_event_record1]
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
+
+    result = alarm_view.alarm_event_records(uow)
+    assert result['count'] == 1
+    ret_list = result['results']
+    assert str(ret_list[0].get("alarmEventRecordId")) == alarm_event_record_id1
 
 
 def test_view_alarm_event_record_one(mock_uow):
@@ -81,6 +87,50 @@ def test_view_alarm_event_record_one(mock_uow):
         "alarmEventRecordId")) == alarm_event_record_id1
 
 
+def test_view_alarm_subscriptions(mock_uow):
+    session, uow = mock_uow
+
+    subscription_id1 = str(uuid.uuid4())
+    sub1 = MagicMock()
+    sub1.serialize.return_value = {
+        "alarmSubscriptionId": subscription_id1,
+    }
+
+    order_by = MagicMock()
+    order_by.count.return_value = 1
+    order_by.limit.return_value.offset.return_value = [sub1]
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
+
+    result = alarm_view.subscriptions(uow)
+    assert result['count'] == 1
+    ret_list = result['results']
+    assert str(ret_list[0].get("alarmSubscriptionId")) == subscription_id1
+
+
+def test_view_alarm_subscription_one(mock_uow):
+    session, uow = mock_uow
+
+    subscription_id1 = str(uuid.uuid4())
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = None
+
+    # Query return None
+    subscription_res = alarm_view.subscription_one(
+        subscription_id1, uow)
+    assert subscription_res is None
+
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value = {
+            "alarmSubscriptionId": subscription_id1,
+        }
+
+    subscription_res = alarm_view.subscription_one(
+        subscription_id1, uow)
+    assert str(subscription_res.get(
+        "alarmSubscriptionId")) == subscription_id1
+
+
 def test_alarm_dictionary(mock_uow):
     session, uow = mock_uow
     alarm_dict1 = alarm_obj.AlarmDictionary('test1')
@@ -97,7 +147,11 @@ def test_alarm_dictionary(mock_uow):
 
 def test_flask_get_list(mock_flask_uow):
     session, app = mock_flask_uow
-    session.query.return_value = []
+    order_by = MagicMock()
+    order_by.count.return_value = 0
+    order_by.limit.return_value.offset.return_value = []
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
     apibase = config.get_o2ims_monitoring_api_base()
 
     with app.test_client() as client:

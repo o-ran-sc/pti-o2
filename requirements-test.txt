@@ -8,6 +8,7 @@ pytest
 pytest-cov
 pytest-icdiff
 mock
+mock-alchemy>=0.1.0,<0.2.0
 
 tenacity
 pyOpenSSL

@@ -20,12 +20,13 @@ from datetime import datetime
 import shutil
 
 from o2common.service import unit_of_work
+from o2common.config import config
+from o2common.views.pagination_view import Pagination
 from o2ims.domain import ocloud
 from o2ims.views.ocloud_dto import SubscriptionDTO
 from o2ims.domain.subscription_obj import Subscription
 
 from o2common.helper import o2logging
-from o2common.config import config
 logger = o2logging.get_logger(__name__)
 
 
@@ -41,10 +42,12 @@ def ocloud_one(ocloudid: str, uow: unit_of_work.AbstractUnitOfWork):
         return first.serialize() if first is not None else None
 
 
-def resource_types(uow: unit_of_work.AbstractUnitOfWork):
+def resource_types(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
+    pagination = Pagination(**kwargs)
+    filter_kwargs = pagination.get_filter()
     with uow:
-        li = uow.resource_types.list()
-    return [r.serialize() for r in li]
+        li = uow.resource_types.list_with_count(**filter_kwargs)
+    return pagination.get_result(li)
 
 
 def resource_type_one(resourceTypeId: str,
@@ -54,10 +57,12 @@ def resource_type_one(resourceTypeId: str,
         return first.serialize() if first is not None else None
 
 
-def resource_pools(uow: unit_of_work.AbstractUnitOfWork):
+def resource_pools(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
+    pagination = Pagination(**kwargs)
+    filter_kwargs = pagination.get_filter()
     with uow:
-        li = uow.resource_pools.list()
-    return [r.serialize() for r in li]
+        li = uow.resource_pools.list_with_count(**filter_kwargs)
+    return pagination.get_result(li)
 
 
 def resource_pool_one(resourcePoolId: str,
@@ -69,8 +74,9 @@ def resource_pool_one(resourcePoolId: str,
 
 def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,
               **kwargs):
-
-    filter_kwargs = {}  # filter key should be the same with database name
+    pagination = Pagination(**kwargs)
+    # filter key should be the same with database name
+    filter_kwargs = pagination.get_filter()
     if 'resourceTypeName' in kwargs:
         resource_type_name = kwargs['resourceTypeName']
         with uow:
@@ -83,14 +89,15 @@ def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,
             restype_id = '' if res_type is None else res_type.resourceTypeId
         filter_kwargs['resourceTypeId'] = restype_id
 
-        #     li = uow.resources.list(resourcePoolId)
-        # return [r.serialize() for r in li if r.resourceTypeId == restype_id]
     if 'parentId' in kwargs:
         filter_kwargs['parentId'] = kwargs['parentId']
+    if 'sort' in kwargs:
+        filter_kwargs['sort'] = kwargs['sort']
 
     with uow:
-        li = uow.resources.list(resourcePoolId, **filter_kwargs)
-    return [r.serialize() for r in li]
+        ret = uow.resources.list_with_count(resourcePoolId, **filter_kwargs)
+
+    return pagination.get_result(ret)
 
 
 def resource_one(resourceId: str, uow: unit_of_work.AbstractUnitOfWork):
@@ -99,10 +106,12 @@ def resource_one(resourceId: str, uow: unit_of_work.AbstractUnitOfWork):
         return first.serialize() if first is not None else None
 
 
-def deployment_managers(uow: unit_of_work.AbstractUnitOfWork):
+def deployment_managers(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
+    pagination = Pagination(**kwargs)
+    filter_kwargs = pagination.get_filter()
     with uow:
-        li = uow.deployment_managers.list()
-    return [r.serialize() for r in li]
+        li = uow.deployment_managers.list_with_count(**filter_kwargs)
+    return pagination.get_result(li)
 
 
 def deployment_manager_one(deploymentManagerId: str,
@@ -177,10 +186,12 @@ def _gen_kube_config(dmId: str, kubeconfig: dict) -> dict:
     return '/configs/'+kube_config_name
 
 
-def subscriptions(uow: unit_of_work.AbstractUnitOfWork):
+def subscriptions(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
+    pagination = Pagination(**kwargs)
+    filter_kwargs = pagination.get_filter()
     with uow:
-        li = uow.subscriptions.list()
-    return [r.serialize() for r in li]
+        li = uow.subscriptions.list_with_count(**filter_kwargs)
+    return pagination.get_result(li)
 
 
 def subscription_one(subscriptionId: str,

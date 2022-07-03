@@ -14,7 +14,6 @@
 
 import uuid
 from unittest.mock import MagicMock
-# from o2dms.domain import dms
 
 from o2ims.domain import ocloud, subscription_obj
 from o2ims.domain import resource_type as rt
@@ -135,11 +134,17 @@ def test_view_resource_types(mock_uow):
     restype1 = MagicMock()
     restype1.serialize.return_value = {
         "resourceTypeId": resource_type_id1}
-    session.return_value.query.return_value = [restype1]
 
-    resource_type_list = ocloud_view.resource_types(uow)
-    assert str(resource_type_list[0].get(
-        "resourceTypeId")) == resource_type_id1
+    order_by = MagicMock()
+    order_by.count.return_value = 1
+    order_by.limit.return_value.offset.return_value = [restype1]
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
+
+    result = ocloud_view.resource_types(uow)
+    assert result['count'] == 1
+    ret_list = result['results']
+    assert str(ret_list[0].get("resourceTypeId")) == resource_type_id1
 
 
 def test_view_resource_type_one(mock_uow):
@@ -169,11 +174,17 @@ def test_view_resource_pools(mock_uow):
     respool1 = MagicMock()
     respool1.serialize.return_value = {
         "resourcePoolId": resource_pool_id1}
-    session.return_value.query.return_value = [respool1]
 
-    resource_pool_list = ocloud_view.resource_pools(uow)
-    assert str(resource_pool_list[0].get(
-        "resourcePoolId")) == resource_pool_id1
+    order_by = MagicMock()
+    order_by.count.return_value = 1
+    order_by.limit.return_value.offset.return_value = [respool1]
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
+
+    result = ocloud_view.resource_pools(uow)
+    assert result['count'] == 1
+    ret_list = result['results']
+    assert str(ret_list[0].get("resourcePoolId")) == resource_pool_id1
 
 
 def test_view_resource_pool_one(mock_uow):
@@ -207,9 +218,16 @@ def test_view_resources(mock_uow):
         "resourceId": resource_id1,
         "resourcePoolId": resource_pool_id1
     }
-    session.return_value.query.return_value.filter_by.return_value = [res1]
 
-    resource_list = ocloud_view.resources(resource_pool_id1, uow)
+    order_by = MagicMock()
+    order_by.count.return_value = 1
+    order_by.limit.return_value.offset.return_value = [res1]
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
+
+    result = ocloud_view.resources(resource_pool_id1, uow)
+    assert result['count'] == 1
+    resource_list = result['results']
     assert str(resource_list[0].get("resourceId")) == resource_id1
     assert str(resource_list[0].get("resourcePoolId")) == resource_pool_id1
 
@@ -244,11 +262,18 @@ def test_view_deployment_managers(mock_uow):
     dm1.serialize.return_value = {
         "deploymentManagerId": deployment_manager_id1,
     }
-    session.return_value.query.return_value = [dm1]
 
-    deployment_manager_list = ocloud_view.deployment_managers(uow)
-    assert str(deployment_manager_list[0].get(
-        "deploymentManagerId")) == deployment_manager_id1
+    order_by = MagicMock()
+    order_by.count.return_value = 1
+    order_by.limit.return_value.offset.return_value = [dm1]
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
+
+    result = ocloud_view.deployment_managers(uow)
+    assert result['count'] == 1
+    ret_list = result['results']
+    assert str(ret_list[0].get("deploymentManagerId")
+               ) == deployment_manager_id1
 
 
 def test_view_deployment_manager_one(mock_uow):
@@ -313,11 +338,17 @@ def test_view_subscriptions(mock_uow):
     sub1.serialize.return_value = {
         "subscriptionId": subscription_id1,
     }
-    session.return_value.query.return_value = [sub1]
 
-    subscription_list = ocloud_view.subscriptions(uow)
-    assert str(subscription_list[0].get(
-        "subscriptionId")) == subscription_id1
+    order_by = MagicMock()
+    order_by.count.return_value = 1
+    order_by.limit.return_value.offset.return_value = [sub1]
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
+
+    result = ocloud_view.subscriptions(uow)
+    assert result['count'] == 1
+    ret_list = result['results']
+    assert str(ret_list[0].get("subscriptionId")) == subscription_id1
 
 
 def test_view_subscription_one(mock_uow):
@@ -345,7 +376,11 @@ def test_view_subscription_one(mock_uow):
 
 def test_flask_get_list(mock_flask_uow):
     session, app = mock_flask_uow
-    session.query.return_value = []
+    order_by = MagicMock()
+    order_by.count.return_value = 0
+    order_by.limit.return_value.offset.return_value = []
+    session.return_value.query.return_value.filter_by.return_value.\
+        order_by.return_value = order_by
     apibase = config.get_o2ims_api_base()
 
     with app.test_client() as client:

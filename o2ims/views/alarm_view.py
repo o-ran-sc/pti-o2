@@ -15,6 +15,7 @@
 import uuid as uuid
 
 from o2common.service import unit_of_work
+from o2common.views.pagination_view import Pagination
 from o2ims.views.alarm_dto import SubscriptionDTO
 from o2ims.domain.alarm_obj import AlarmSubscription
 
@@ -23,10 +24,12 @@ from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
 
-def alarm_event_records(uow: unit_of_work.AbstractUnitOfWork):
+def alarm_event_records(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
+    pagination = Pagination(**kwargs)
+    filter_kwargs = pagination.get_filter()
     with uow:
-        li = uow.alarm_event_records.list()
-    return [r.serialize() for r in li]
+        li = uow.alarm_event_records.list_with_count(**filter_kwargs)
+    return pagination.get_result(li)
 
 
 def alarm_event_record_one(alarmEventRecordId: str,
@@ -36,10 +39,12 @@ def alarm_event_record_one(alarmEventRecordId: str,
         return first.serialize() if first is not None else None
 
 
-def subscriptions(uow: unit_of_work.AbstractUnitOfWork):
+def subscriptions(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
+    pagination = Pagination(**kwargs)
+    filter_kwargs = pagination.get_filter()
     with uow:
-        li = uow.alarm_subscriptions.list()
-    return [r.serialize() for r in li]
+        li = uow.alarm_subscriptions.list_with_count(**filter_kwargs)
+    return pagination.get_result(li)
 
 
 def subscription_one(subscriptionId: str,

@@ -19,9 +19,6 @@ services:
       - OS_AUTH_URL=${OS_AUTH_URL}
       - OS_USERNAME=${OS_USERNAME}
       - OS_PASSWORD=${OS_PASSWORD}
-      - K8S_KUBECONFIG=${K8S_KUBECONFIG}
-      - K8S_APISERVER=${K8S_APISERVER}
-      - K8S_TOKEN=${K8S_TOKEN}
       - LOGGING_CONFIG_LEVEL=DEBUG
     volumes:
       - ./configs:/configs
@@ -34,6 +31,23 @@ services:
     entrypoint:
       - /bin/sh
       - /tests/o2app-redis-entry.sh
+
+  helm_cli:
+    image: o2imsdms
+    depends_on:
+      - watcher
+    environment:
+      - LOGGING_CONFIG_LEVEL=DEBUG
+      - HELM_USER_PASSWD=St8rlingX*
+    volumes:
+      - ./configs:/configs
+      - ./helm_sdk:/helm_sdk
+      - ./tests:/tests
+    entrypoint:
+      - /bin/sh
+      - /tests/o2app-helmcli-entry.sh
+    ports:
+      - "10022:22"
 
   api:
     image: o2imsdms
@@ -52,6 +66,7 @@ services:
       - OS_USERNAME=${OS_USERNAME}
       - OS_PASSWORD=${OS_PASSWORD}
       - LOGGING_CONFIG_LEVEL=DEBUG
+      - HELM_USER_PASSWD=St8rlingX*
     volumes:
       - ./configs:/configs
       - ./o2ims:/o2ims
@@ -95,31 +110,6 @@ services:
       - /bin/sh
       - /tests/o2app-watcher-entry.sh
 
-  mock_smo:
-    build:
-      context: ./mock_smo
-      dockerfile: Dockerfile
-    image: mock-smo
-    depends_on:
-      - mock_smo_redis
-    environment:
-      - API_HOST=api
-      - REDIS_HOST=mock_smo_redis
-      - MOCK_SMO_HOST=mock_smo
-      - PYTHONDONTWRITEBYTECODE=1
-      - FLASK_APP=/mock_smo/entrypoints/mock_smo.py
-      - FLASK_DEBUG=1
-      - PYTHONUNBUFFERED=1
-      - LOGGING_CONFIG_LEVEL=DEBUG
-    volumes:
-      - ./mock_smo/etc:/tmp/etc
-      - ./mock_smo/mock_smo:/mock_smo
-    entrypoint:
-      - /bin/sh
-      - /src/o2app-mock-smo.sh
-    ports:
-      - "5001:80"
-
   postgres:
     image: postgres:9.6
     environment:
@@ -132,8 +122,3 @@ services:
     image: redis:alpine
     ports:
       - "63791:6379"
-
-  mock_smo_redis:
-    image: redis:alpine
-    ports:
-      - "63792:6379"

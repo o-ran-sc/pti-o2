@@ -12,11 +12,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import filecmp
+import os.path
 import uuid
 import yaml
-import random
-import string
 from datetime import datetime
+import shutil
 
 from o2common.service import unit_of_work
 from o2ims.views.ocloud_dto import SubscriptionDTO
@@ -116,16 +117,25 @@ def deployment_manager_one(deploymentManagerId: str,
             return None
 
     profile_data = result.pop("profile", None)
-    result['profileName'] = 'default'
+    result['profileName'] = profile
 
     if "sol018" == profile:
-        result['profileName'] = profile
         result['deploymentManagementServiceEndpoint'] = \
             profile_data['cluster_api_endpoint']
         result['profileData'] = profile_data
-    # elif "file" == profile and result.hasattr("profile"):
-        # p = result.pop("profile", None)
-        # result["profile"] = _gen_kube_config(deploymentManagerId, p)
+    elif "sol018_helmcli" == profile:
+        result['deploymentManagementServiceEndpoint'] = \
+            profile_data['cluster_api_endpoint']
+
+        helmcli_profile = dict()
+        helmcli_profile["helmcli_host_with_port"], helmcli_profile[
+            "helmcli_username"], helmcli_profile["helmcli_password"] = \
+            config.get_helmcli_access()
+        helmcli_profile["helmcli_kubeconfig"] = _gen_kube_config(
+            deploymentManagerId, profile_data)
+        result['profileData'] = helmcli_profile
+    else:
+        return None
 
     return result
 
@@ -141,21 +151,27 @@ def _gen_kube_config(dmId: str, kubeconfig: dict) -> dict:
     )
 
     # Generate a random key for tmp kube config file
-    letters = string.ascii_uppercase
-    random_key = ''.join(random.choice(letters) for i in range(10))
+    # letters = string.ascii_uppercase
+    # random_key = ''.join(random.choice(letters) for i in range(10))
+    name_key = dmId[:8]
 
     # Get datetime of now as tag of the tmp file
     current_time = datetime.now().strftime("%Y%m%d%H%M%S")
-    tmp_file_name = random_key + "_" + current_time
+    tmp_file_name = 'kubeconfig_' + name_key + "_" + current_time
+    kube_config_name = 'kubeconfig_' + name_key + '.config'
 
     # write down the yaml file of kubectl into tmp folder
-    with open('/tmp/kubeconfig_' + tmp_file_name, 'w') as file:
+    with open('/tmp/' + tmp_file_name, 'w') as file:
         yaml.dump(data, file)
 
-    kubeconfig["kube_config_file"] = config.get_api_url() + \
-        config.get_o2dms_api_base() + "/" + dmId + "/download/" + tmp_file_name
+    # generate the kube config file if not exist or update the file if it
+    # changes
+    if not os.path.exists('/configs/' + kube_config_name) or not \
+            filecmp.cmp('/tmp/'+tmp_file_name, '/configs/'+kube_config_name):
+        shutil.move(os.path.join('/tmp', tmp_file_name),
+                    os.path.join('/configs', kube_config_name))
 
-    return kubeconfig
+    return '/configs/'+kube_config_name
 
 
 def subscriptions(uow: unit_of_work.AbstractUnitOfWork):

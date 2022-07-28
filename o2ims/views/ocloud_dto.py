@@ -159,6 +159,11 @@ class DeploymentManagerDTO:
         'admin_client_cert': fields.String(attributes='admin_client_cert'),
         'admin_client_key': fields.String(attributes='admin_client_key'),
         # 'kube_config_file': fields.String(attributes='kube_config_file')
+        'helmcli_host_with_port': fields.String(
+            attributes='helmcli_host_with_port'),
+        'helmcli_username': fields.String(attributes='helmcli_username'),
+        'helmcli_password': fields.String(attributes='helmcli_password'),
+        'helmcli_kubeconfig': fields.String(attributes='helmcli_kubeconfig'),
     })
 
     deployment_manager_get = api_ims_inventory_v1.model(

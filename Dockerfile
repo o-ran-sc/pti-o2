@@ -1,6 +1,6 @@
 FROM python:3.10-slim-buster
 
-RUN apt-get update && apt-get install -y git gcc procps vim curl
+RUN apt-get update && apt-get install -y git gcc procps vim curl ssh
 
 # in case git repo is not accessable
 # RUN mkdir -p /cgtsclient

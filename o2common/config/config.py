@@ -207,3 +207,17 @@ def gen_k8s_config_dict(cluster_api_endpoint, cluster_ca_cert, admin_user,
     }
 
     return data
+
+
+def get_helmcli_access():
+    host_external = os.environ.get("API_HOST_EXTERNAL_FLOATING")
+    host = "127.0.0.1" if host_external is None or host_external == '' \
+        else host_external
+    port = "10022" if host_external is None or host_external == '' \
+        else "50022"
+
+    helm_host_with_port = host+':'+port
+    helm_user = 'helm'
+    helm_pass = os.environ.get("HELM_USER_PASSWD")
+
+    return helm_host_with_port, helm_user, helm_pass

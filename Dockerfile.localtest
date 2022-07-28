@@ -1,7 +1,7 @@
 FROM python:3.10-slim-buster
 
 RUN apt-get update && apt-get install -y git gcc \
-    vim curl procps
+    vim curl procps ssh
 
 # in case git repo is not accessable
 RUN mkdir -p /cgtsclient && mkdir -p /distcloud-client

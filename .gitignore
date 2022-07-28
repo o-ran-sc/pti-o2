@@ -9,3 +9,4 @@ __pycache__
 .coverage
 temp
 docs/_build/
+configs/kubeconfig_*.config

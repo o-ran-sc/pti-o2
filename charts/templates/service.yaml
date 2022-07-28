@@ -29,3 +29,19 @@ spec:
   selector:
     app: o2api
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: helmcli
+  namespace: {{ .Values.global.namespace }}
+spec:
+  type: NodePort
+  ports:
+  - name: helmcli
+    port: 10022
+    targetPort: 22
+    nodePort: 30022
+    protocol: TCP
+  selector:
+    app: o2api
+---

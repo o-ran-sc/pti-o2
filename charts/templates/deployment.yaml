@@ -130,12 +130,33 @@ spec:
               value: "1"
             - name: REDIS_HOST
               value: redis
+            - name: HELM_USER_PASSWD
+              value: {{ .Values.ocloud.HELM_USER_PASSWD }}
           command: ["/bin/bash", "/opt/o2api_start.sh"]
           volumeMounts:
             - name: scripts
               mountPath: /opt
+            - name: configs
+              mountPath: /configs
+        - name: helmcli
+          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
+          ports:
+            - containerPort: 22
+          env:
+            - name: API_HOST_EXTERNAL_FLOATING
+              value: {{ .Values.ocloud.API_HOST_EXTERNAL_FLOATING }}
+            - name: HELM_USER_PASSWD
+              value: {{ .Values.ocloud.HELM_USER_PASSWD }}
+          command: ["/bin/bash", "/opt/o2_helmcli_start.sh"]
+          volumeMounts:
+            - name: scripts
+              mountPath: /opt
+            - name: configs
+              mountPath: /configs
       volumes:
         - name: scripts
           configMap:
             name: {{ .Chart.Name }}-scripts-configmap
+        - name: configs
+          emptyDir: {}
 ---

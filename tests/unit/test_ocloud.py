@@ -303,6 +303,16 @@ def test_view_deployment_manager_one(mock_uow):
     assert str(deployment_manager_res.get(
         "profileName")) == profileName
 
+    # profile wrong name
+    profileName = 'wrong_profile'
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value['profile'] = {
+            "cluster_api_endpoint": cluster_endpoint
+        }
+    deployment_manager_res = ocloud_view.deployment_manager_one(
+        deployment_manager_id1, uow, profile=profileName)
+    assert deployment_manager_res is None
+
 
 def test_view_subscriptions(mock_uow):
     session, uow = mock_uow

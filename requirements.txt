@@ -8,10 +8,13 @@ PyYAML>=5.4.1
 
 Cython>=3.0a1
 
-
 httplib2
 babel
 PrettyTable<0.8,>=0.7.2
 
 retry
 ruamel.yaml==0.17.17
+
+# https://github.com/python-restx/flask-restx/issues/460
+# Workaround for this issue
+werkzeug<=2.1.2

@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 # pylint: disable=too-few-public-methods
+from typing import Tuple
 from dataclasses import dataclass
 from o2dms.domain.states import NfDeploymentState
 from o2common.domain.events import Event
@@ -21,8 +22,8 @@ from o2common.domain.events import Event
 @dataclass
 class NfDeploymentStateChanged(Event):
     NfDeploymentId: str
-    FromState: NfDeploymentState
-    ToState: NfDeploymentState
+    FromState: Tuple[int, NfDeploymentState]
+    ToState: Tuple[int, NfDeploymentState]
 
 
 # @dataclass

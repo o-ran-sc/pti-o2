@@ -23,6 +23,11 @@ from .resource_type import ResourceTypeEnum
 # from uuid import UUID
 
 
+DeploymentManagerProfileDefault = 'default'
+DeploymentManagerProfileSOL018 = 'sol018'
+DeploymentManagerProfileSOL018HelmCLI = 'sol018_helmcli'
+
+
 class DeploymentManager(AgRoot, Serializer):
     def __init__(self, id: str, name: str, ocloudid: str,
                  dmsendpoint: str, description: str = '',
@@ -42,11 +47,16 @@ class DeploymentManager(AgRoot, Serializer):
         self.extensions = []
 
     def serialize(self):
+        print(self.__dict__)
         d = Serializer.serialize(self)
 
         if 'profile' in d and d['profile'] != '':
             d['profile'] = json.loads(d['profile'])
-        d['profileSupportList'] = ['default', 'sol018']
+        d['profileSupportList'] = [
+            DeploymentManagerProfileDefault,
+            DeploymentManagerProfileSOL018,
+            DeploymentManagerProfileSOL018HelmCLI,
+        ]
 
         return d
 

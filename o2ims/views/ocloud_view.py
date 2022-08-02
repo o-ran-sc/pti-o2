@@ -20,6 +20,7 @@ from datetime import datetime
 import shutil
 
 from o2common.service import unit_of_work
+from o2ims.domain import ocloud
 from o2ims.views.ocloud_dto import SubscriptionDTO
 from o2ims.domain.subscription_obj import Subscription
 
@@ -119,13 +120,13 @@ def deployment_manager_one(deploymentManagerId: str,
     profile_data = result.pop("profile", None)
     result['profileName'] = profile
 
-    if "default" == profile:
+    if ocloud.DeploymentManagerProfileDefault == profile:
         pass
-    elif "sol018" == profile:
+    elif ocloud.DeploymentManagerProfileSOL018 == profile:
         result['deploymentManagementServiceEndpoint'] = \
             profile_data['cluster_api_endpoint']
         result['profileData'] = profile_data
-    elif "sol018_helmcli" == profile:
+    elif ocloud.DeploymentManagerProfileSOL018HelmCLI == profile:
         result['deploymentManagementServiceEndpoint'] = \
             profile_data['cluster_api_endpoint']
 

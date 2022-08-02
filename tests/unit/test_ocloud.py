@@ -290,7 +290,7 @@ def test_view_deployment_manager_one(mock_uow):
     assert deployment_manager_res.get('profile') is None
 
     # profile sol018
-    profileName = 'sol018'
+    profileName = ocloud.DeploymentManagerProfileSOL018
     cluster_endpoint = "https://test_k8s:6443"
     session.return_value.query.return_value.filter_by.return_value.first.\
         return_value.serialize.return_value['profile'] = {

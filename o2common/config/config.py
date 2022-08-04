@@ -214,7 +214,7 @@ def get_helmcli_access():
     host = "127.0.0.1" if host_external is None or host_external == '' \
         else host_external
     port = "10022" if host_external is None or host_external == '' \
-        else "50022"
+        else "30022"
 
     helm_host_with_port = host+':'+port
     helm_user = 'helm'

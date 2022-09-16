@@ -314,3 +314,4 @@ open browswer with url: http://<NODE_IP>:30667
 ```sh
 curl --location --request DELETE 'http://localhost:5005/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment/${NfDeploymentId}'
 ```
+

@@ -139,6 +139,48 @@ The following instruction should be done outside of INF platform controller host
   # export API_HOST_EXTERNAL_FLOATING=$(echo ${OS_AUTH_URL} | sed -e s,`echo ${OS_AUTH_URL} | grep :// | sed -e's,^\(.*//\).*,\1,g'`,,g | cut -d/ -f1 | sed -e 's,:.*,,g')
   export API_HOST_EXTERNAL_FLOATING=<INF external_oam_floating_address e.g.: 128.10.10.10>
 
+  # please specify the smo service account yaml file
+  export SMO_SERVICEACCOUNT=<your input here eg.: smo>
+  # service account and binding for smo yaml file
+
+  cat <<EOF >smo-serviceaccount.yaml
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    namespace: default
+    name: pod-reader
+  rules:
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+  ---
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: ${SMO_SERVICEACCOUNT}
+    namespace: default
+  ---
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: read-pods
+    namespace: default
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: Role
+    name: pod-reader
+  subjects:
+  - kind: ServiceAccount
+    name: ${SMO_SERVICEACCOUNT}
+    namespace: default
+
+  EOF
+
+  kubectl apply -f smo-serviceaccount.yaml
+
+  #export the smo account token data
+  export SMO_TOKEN_DATA=$(kubectl -n default describe secret $(kubectl -n default get secret | grep ${SMO_SERVICEACCOUNT} | awk '{print $1}') | grep "token:" | awk '{print $2}')
+
   cat <<EOF>o2service-override.yaml
   o2ims:
     imagePullSecrets: admin-orano2-registry-secret
@@ -154,6 +196,7 @@ The following instruction should be done outside of INF platform controller host
     OS_PASSWORD: "${OS_PASSWORD}"
     K8S_KUBECONFIG: "/opt/k8s_kube.conf"
     API_HOST_EXTERNAL_FLOATING: "${API_HOST_EXTERNAL_FLOATING}"
+
   EOF
 
 
@@ -164,8 +207,8 @@ The following instruction should be done outside of INF platform controller host
 
   helm install o2service o2/charts/ -f o2service-override.yaml
   helm list |grep o2service
-  kubectl -n ${NAMESPACE} get pods |grep o2service
-  kubectl -n ${NAMESPACE} get services |grep o2service
+  kubectl -n ${NAMESPACE} get pods |grep o2api
+  kubectl -n ${NAMESPACE} get services |grep o2api
 
 
 2.4 Verify INF O2 service

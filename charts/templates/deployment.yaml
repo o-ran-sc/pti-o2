@@ -30,6 +30,7 @@ spec:
       labels:
         app: o2api
     spec:
+      serviceAccountName: {{ .Values.o2ims.serviceaccountname }}
       imagePullSecrets:
         - name: {{ .Values.o2ims.imagePullSecrets }}
 {{- if .Values.o2ims.affinity }}

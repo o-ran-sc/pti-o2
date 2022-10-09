@@ -195,10 +195,10 @@ def test_watchers_worker():
 
     count1 = fakewatcher.fakeOcloudWatcherCounter
     testedworker.start()
-    time.sleep(20)
+    time.sleep(1)
     assert fakewatcher.fakeOcloudWatcherCounter > count1
 
     # assumed hacking: probe has stopped the sched task
     count3 = fakewatcher.fakeOcloudWatcherCounter
-    time.sleep(3)
+    time.sleep(1)
     assert fakewatcher.fakeOcloudWatcherCounter == count3

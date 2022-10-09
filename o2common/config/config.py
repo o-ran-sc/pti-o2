@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2022 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -270,3 +270,44 @@ def get_events_yaml_filename():
     if events_yaml_name is not None and os.path.isfile(events_yaml_name):
         return events_yaml_name
     return "/configs/events.yaml"
+
+# get k8s host from env:
+
+
+def get_k8s_host():
+    k8s_host = os.environ.get("KUBERNETES_SERVICE_HOST")
+    if k8s_host is None:
+        raise Exception('Get k8s host failed.')
+    return k8s_host
+
+# get k8s host port from env:
+
+
+def get_k8s_port():
+    k8s_port = os.environ.get("KUBERNETES_SERVICE_PORT_HTTPS", '443')
+    return k8s_port
+
+# token review url
+
+
+def get_review_url():
+    try:
+        api = '/apis/authentication.k8s.io/v1/tokenreviews'
+        return "{0}{1}:{2}{3}".format(
+            'https://', get_k8s_host(), get_k8s_port(), api)
+    except Exception:
+        raise Exception('Get k8s review url failed')
+
+# get reviewer token
+
+
+def get_reviewer_token():
+    # token path default is below.
+    token_path = '/var/run/secrets/kubernetes.io/serviceaccount/token'
+    with open(token_path, 'r') as f:
+        ctt = f.read()
+    return ctt
+
+
+def get_auth_provider():
+    return 'k8s'

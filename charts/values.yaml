@@ -30,7 +30,7 @@ global:
   namespace: orano2
 
 o2ims:
-  imagePullSecrets: admin-orano2-registry-secret
+  serviceaccountname: admin
   image:
     repository: registry.local:9001/admin/o2imsdms
     tag: 0.1.1

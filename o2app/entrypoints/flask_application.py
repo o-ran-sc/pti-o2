@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2022 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -21,9 +21,32 @@ from o2ims.views import configure_namespace as ims_route_configure_namespace
 from o2dms.api import configure_namespace as dms_route_configure_namespace
 
 from o2ims.adapter.clients.alarm_dict_client import load_alarm_definition
+from o2common.authmw import authmiddleware
+from o2common.authmw import authprov
+from o2common.config.config import get_review_url
+from o2common.helper import o2logging
 
 # apibase = config.get_o2ims_api_base()
+auth = True
 app = Flask(__name__)
+logger = o2logging.get_logger(__name__)
+
+
+def _get_k8s_url():
+    try:
+        token_review_url = get_review_url()
+        return token_review_url
+    except Exception:
+        raise Exception('Get k8s token review url failed')
+
+
+if auth:
+    # perform service account identity&privilege check.
+    _get_k8s_url()
+    ad = authprov.auth_definer('ad')
+    ad.sanity_check()
+    app.wsgi_app = authmiddleware.authmiddleware(app.wsgi_app)
+
 app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
 api = Api(app, version='1.0.0',
           title='INF O2 Services API',

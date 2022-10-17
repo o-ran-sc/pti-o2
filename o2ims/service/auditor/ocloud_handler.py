@@ -20,7 +20,7 @@ from __future__ import annotations
 # from typing import List, Dict, Callable, Type
 # TYPE_CHECKING
 
-from o2common.config import config
+from o2common.config import config, conf
 # from o2common.service.messagebus import MessageBus
 from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.domain import events, commands
@@ -82,13 +82,18 @@ def is_outdated(ocloud: Ocloud, stxobj: StxGenericModel):
 
 def create_by(stxobj: StxGenericModel) -> Ocloud:
     imsendpoint = config.get_api_url() + config.get_o2ims_api_base() + '/'
-    globalcloudId = stxobj.id  # to be updated
+    globalcloudId = conf.DEFAULT.ocloud_global_id
     description = "An ocloud"
     ocloud = Ocloud(stxobj.id, stxobj.name, imsendpoint,
                     globalcloudId, description, 1)
     ocloud.createtime = stxobj.createtime
     ocloud.updatetime = stxobj.updatetime
     ocloud.hash = stxobj.hash
+    ocloud.events.append(events.OcloudChanged(
+        id=stxobj.id,
+        notificationEventType=NotificationEventEnum.CREATE,
+        updatetime=stxobj.updatetime
+    ))
 
     return ocloud
 

@@ -24,6 +24,11 @@ _DEFAULT_DCMANAGER_URL = "http://192.168.204.1:8119/v1.0"
 _DEFAULT_STX_URL = "http://192.168.204.1:5000/v3"
 
 
+def get_config_path():
+    path = os.environ.get("O2APP_CONFIG", "/configs/o2app.conf")
+    return path
+
+
 def get_postgres_uri():
     host = os.environ.get("DB_HOST", "localhost")
     port = 54321 if host == "localhost" else 5432

@@ -136,12 +136,12 @@ def create_fake_bus(uow):
             publish: Callable):
         return
 
-    fakeuow = FakeUnitOfWork()
+    # fakeuow = FakeUnitOfWork()
     handlers.EVENT_HANDLERS = {}
     handlers.COMMAND_HANDLERS = {
         commands.UpdateOCloud: update_ocloud,
     }
-    bus = bootstrap.bootstrap(False, fakeuow)
+    bus = bootstrap.bootstrap(False, uow)
     return bus
 
 

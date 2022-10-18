@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from o2dms.service import nfdeployment_handler
 # from dataclasses import asdict
-from typing import List, Dict, Callable, Type
+from typing import Dict, Callable, Type
 # TYPE_CHECKING
 from o2ims.domain import commands, events
 
@@ -30,7 +30,7 @@ from o2ims.service.auditor import ocloud_handler, dms_handler, \
 from o2ims.service.command import notify_handler, registration_handler,\
     notify_alarm_handler
 from o2ims.service.event import ocloud_event, resource_event, \
-    resource_pool_event, configuration_event, alarm_event
+    resource_pool_event, alarm_event
 
 # if TYPE_CHECKING:
 #     from . import unit_of_work
@@ -56,8 +56,6 @@ EVENT_HANDLERS = {
     events.ResourceChanged: [resource_event.notify_resource_change],
     events.ResourcePoolChanged: [resource_pool_event.\
                                  notify_resourcepool_change],
-    events.ConfigurationChanged: [configuration_event.\
-                                  notify_configuration_change],
     events.AlarmEventChanged: [alarm_event.\
                                notify_alarm_event_change],
 }  # type: Dict[Type[events.Event], Callable]

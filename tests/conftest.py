@@ -1,4 +1,5 @@
 # pylint: disable=redefined-outer-name
+import os
 import shutil
 import subprocess
 import time
@@ -24,8 +25,8 @@ from o2ims.views import configure_namespace
 
 from o2app.bootstrap import bootstrap
 
-#import os
-#os.environ['ALARM_YAML'] = 'configs/alarm.yaml'
+# os.environ['ALARM_YAML'] = 'configs/alarm.yaml'
+os.environ['O2APP_CONFIG'] = 'configs/o2app.conf'
 
 
 @pytest.fixture

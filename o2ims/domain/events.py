@@ -50,12 +50,6 @@ class ResourceChanged(Event):
 
 
 @dataclass
-class ConfigurationChanged(Event):
-    id: str
-    updatetime: datetime.now()
-
-
-@dataclass
 class AlarmEventChanged(Event):
     id: str
     notificationEventType: AlarmNotificationEventEnum

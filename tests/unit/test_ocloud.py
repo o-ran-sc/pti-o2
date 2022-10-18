@@ -16,7 +16,7 @@ import uuid
 from unittest.mock import MagicMock
 # from o2dms.domain import dms
 
-from o2ims.domain import ocloud, subscription_obj, configuration_obj
+from o2ims.domain import ocloud, subscription_obj
 from o2ims.domain import resource_type as rt
 from o2ims.views import ocloud_view
 from o2common.config import config
@@ -93,15 +93,6 @@ def test_new_subscription():
         subscription_id1, "https://callback/uri/write/here")
     assert subscription_id1 is not None and\
         subscription1.subscriptionId == subscription_id1
-
-
-def test_new_configuration():
-    configuration_id1 = str(uuid.uuid4())
-    configuration1 = configuration_obj.Configuration(
-        configuration_id1, "https://callback/uri/write/here",
-        "SMO")
-    assert configuration_id1 is not None and\
-        configuration1.configurationId == configuration_id1
 
 
 def test_view_olcouds(mock_uow):

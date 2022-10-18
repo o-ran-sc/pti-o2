@@ -36,7 +36,6 @@ from sqlalchemy.orm import mapper, relationship
 
 from o2ims.domain import ocloud as ocloudModel
 from o2ims.domain import subscription_obj as subModel
-from o2ims.domain import configuration_obj as confModel
 from o2ims.domain import alarm_obj as alarmModel
 from o2ims.domain.resource_type import ResourceTypeEnum
 # from o2ims.domain.alarm_obj import AlarmLastChangeEnum, PerceivedSeverityEnum
@@ -58,7 +57,7 @@ ocloud = Table(
     Column("globalcloudId", String(255)),
     Column("name", String(255)),
     Column("description", String(255)),
-    Column("infrastructureManagementServiceEndpoint", String(255))
+    Column("serviceUri", String(255))
     # Column("extensions", String(1024))
 )
 
@@ -150,19 +149,6 @@ subscription = Table(
     Column("callback", String(255)),
     Column("consumerSubscriptionId", String(255)),
     Column("filter", String(255)),
-)
-
-configuration = Table(
-    "configuration",
-    metadata,
-    Column("updatetime", DateTime),
-    Column("createtime", DateTime),
-
-    Column("configurationId", String(255), primary_key=True),
-    Column("conftype", String(255)),
-    Column("callback", String(255)),
-    Column("status", String(255)),
-    Column("comments", String(255)),
 )
 
 alarm_definition = Table(
@@ -257,7 +243,6 @@ def start_o2ims_mappers(engine=None):
         }
     )
     mapper(subModel.Subscription, subscription)
-    mapper(confModel.Configuration, configuration)
 
     # IMS Infrastruture Monitoring Mappering
     mapper(alarmModel.AlarmEventRecord, alarm_event_record)

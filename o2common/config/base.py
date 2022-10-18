@@ -112,7 +112,6 @@ class Config:
         conf.read(file_path)
         default_group = self._set('DEFAULT')
         for option in conf['DEFAULT']:
-            print(option)
             default_group._set(option, conf['DEFAULT'][option])
         for section in conf.sections():
             group = self._set(section)

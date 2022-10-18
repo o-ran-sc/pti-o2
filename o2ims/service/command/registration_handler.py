@@ -21,10 +21,10 @@ from urllib.parse import urlparse
 from retry import retry
 
 from o2common.service.unit_of_work import AbstractUnitOfWork
-from o2common.config import config
+from o2common.config import config, conf
+
 from o2ims.domain import commands
-from o2ims.domain.configuration_obj import ConfigurationTypeEnum, \
-    RegistrationStatusEnum
+from o2ims.domain.subscription_obj import NotificationEventEnum
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -36,39 +36,22 @@ def registry_to_smo(
 ):
     logger.info('In registry_to_smo')
     data = cmd.data
-    logger.info('The Register2SMO all is {}'.format(data.all))
-    if data.all:
-        confs = uow.configrations.list()
-        for conf in confs:
-            if conf.conftype != ConfigurationTypeEnum.SMO:
-                continue
-            reg_data = conf.serialize()
-            logger.debug('Configuration: {}'.format(
-                reg_data['configurationId']))
-
-            register_smo(uow, reg_data)
-    else:
-        with uow:
-            conf = uow.configurations.get(data.id)
-            if conf is None:
-                return
-            logger.debug('Configuration: {}'.format(conf.configurationId))
-            conf_data = conf.serialize()
-            register_smo(uow, conf_data)
-
-
-def register_smo(uow, reg_data):
-    call_res = call_smo(reg_data)
-    logger.debug('Call SMO response is {}'.format(call_res))
-    if call_res:
-        reg = uow.configurations.get(reg_data['configurationId'])
-        if reg is None:
+    logger.info('The Register2SMO notificationEventType is {}'.format(
+        data.notificationEventType))
+    with uow:
+        ocloud = uow.oclouds.get(data.id)
+        if ocloud is None:
             return
-        reg.status = RegistrationStatusEnum.NOTIFIED
-        logger.debug('Updating Configurations: {}'.format(
-            reg.configurationId))
-        uow.configurations.update(reg)
-        uow.commit()
+        logger.debug('O-Cloud Global UUID: {}'.format(ocloud.globalcloudId))
+        ocloud_dict = ocloud.serialize()
+        if data.notificationEventType == NotificationEventEnum.CREATE:
+            register_smo(uow, ocloud_dict)
+
+
+def register_smo(uow, ocloud_data):
+    call_res = call_smo(ocloud_data)
+    logger.debug('Call SMO response is {}'.format(call_res))
+    # TODO: record the result for the smo register
 
 
 # def retry(fun, max_tries=2):
@@ -86,13 +69,15 @@ def register_smo(uow, reg_data):
 @retry((ConnectionRefusedError), tries=2, delay=2)
 def call_smo(reg_data: dict):
     callback_data = json.dumps({
-        'consumerSubscriptionId': reg_data['configurationId'],
-        'imsUrl': config.get_api_url()
+        'consumerSubscriptionId': reg_data['globalcloudId'],
+        'notificationEventType': 'CREATE',
+        'objectRef': config.get_api_url(),
+        'postObjectState': reg_data
     })
     logger.info('URL: {}, data: {}'.format(
-        reg_data['callback'], callback_data))
+        conf.DEFAULT.smo_register_url, callback_data))
 
-    o = urlparse(reg_data['callback'])
+    o = urlparse(conf.DEFAULT.smo_register_url)
     conn = http.client.HTTPConnection(o.netloc)
     headers = {'Content-type': 'application/json'}
     conn.request('POST', o.path, callback_data, headers)

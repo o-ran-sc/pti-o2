@@ -1,3 +1,17 @@
+# Copyright (C) 2022 Wind River Systems, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 # pylint: disable=redefined-outer-name
 import shutil
 import subprocess
@@ -14,18 +28,15 @@ from sqlalchemy.orm import sessionmaker, clear_mappers
 from tenacity import retry, stop_after_delay
 from unittest.mock import MagicMock
 
+from o2app.bootstrap import bootstrap
+from o2ims.views import configure_namespace
+from o2app.adapter import unit_of_work
+from o2ims.adapter.orm import metadata, start_o2ims_mappers
 from o2common.config import config
 
-from o2ims.adapter.orm import metadata, start_o2ims_mappers
-# from o2ims.adapter.clients.orm_stx import start_o2ims_stx_mappers
-
-from o2app.adapter import unit_of_work
-from o2ims.views import configure_namespace
-
-from o2app.bootstrap import bootstrap
-
-#import os
-#os.environ['ALARM_YAML'] = 'configs/alarm.yaml'
+# import os
+# os.environ['O2APP_CONFIG'] = 'configs/o2app.conf'
+# os.environ['ALARM_YAML'] = 'configs/alarm.yaml'
 
 
 @pytest.fixture

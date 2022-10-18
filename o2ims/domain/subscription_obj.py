@@ -46,8 +46,8 @@ class Message2SMO(Serializer):
 
 
 class RegistrationMessage(Serializer):
-    def __init__(self, is_all: bool = None, id: str = '') -> None:
-        self.all = is_all if is_all is not None else False
+    def __init__(self, eventtype: NotificationEventEnum, id: str = '') -> None:
+        self.notificationEventType = eventtype
         self.id = id
 
 

@@ -39,13 +39,13 @@ class Serializer(object):
 
     def serialize(self):
         try:
-            # d = {c: getattr(self, c) for c in inspect(self).attrs.keys()}
-            # if 'createtime' in d:
-            #     d['createtime'] = d['createtime'].isoformat()
-            # if 'updatetime' in d:
-            #     d['updatetime'] = d['updatetime'].isoformat()
-            # return d
-            return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+            d = {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+            if 'createtime' in d:
+                d['createtime'] = d['createtime'].isoformat()
+            if 'updatetime' in d:
+                d['updatetime'] = d['updatetime'].isoformat()
+            return d
+            # return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
         except NoInspectionAvailable:
             return self.__dict__
 

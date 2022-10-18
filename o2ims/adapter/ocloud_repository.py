@@ -14,11 +14,10 @@
 
 from typing import List
 
-from o2ims.domain import ocloud, subscription_obj, configuration_obj
+from o2ims.domain import ocloud, subscription_obj
 from o2ims.domain.ocloud_repo import OcloudRepository, ResourceTypeRepository,\
     ResourcePoolRepository, ResourceRepository, DeploymentManagerRepository
 from o2ims.domain.subscription_repo import SubscriptionRepository
-from o2ims.domain.configuration_repo import ConfigurationRepository
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -164,26 +163,3 @@ class SubscriptionSqlAlchemyRepository(SubscriptionRepository):
     def _delete(self, subscription_id):
         self.session.query(subscription_obj.Subscription).filter_by(
             subscriptionId=subscription_id).delete()
-
-
-class ConfigurationSqlAlchemyRepository(ConfigurationRepository):
-    def __init__(self, session):
-        super().__init__()
-        self.session = session
-
-    def _add(self, configuration: configuration_obj.Configuration):
-        self.session.add(configuration)
-
-    def _get(self, configuration_id) -> configuration_obj.Configuration:
-        return self.session.query(configuration_obj.Configuration).filter_by(
-            configurationId=configuration_id).first()
-
-    def _list(self) -> List[configuration_obj.Configuration]:
-        return self.session.query(configuration_obj.Configuration)
-
-    def _update(self, configuration: configuration_obj.Configuration):
-        self.session.add(configuration)
-
-    def _delete(self, configuration_id):
-        self.session.query(configuration_obj.Configuration).filter_by(
-            configurationId=configuration_id).delete()

@@ -144,7 +144,7 @@ class Ocloud(AgRoot, Serializer):
         self.version_number = version_number
         self.name = name
         self.description = description
-        self.infrastructureManagementServiceEndpoint = imsendpoint
+        self.serviceUri = imsendpoint
         self.resourcePools = []
         self.deploymentManagers = []
         self.resourceTypes = []

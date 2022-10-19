@@ -18,6 +18,7 @@ from datetime import datetime
 
 from o2common.domain.events import Event
 from o2ims.domain.subscription_obj import NotificationEventEnum
+from o2ims.domain.alarm_obj import AlarmNotificationEventEnum
 
 
 @dataclass
@@ -51,4 +52,11 @@ class ResourceChanged(Event):
 @dataclass
 class ConfigurationChanged(Event):
     id: str
+    updatetime: datetime.now()
+
+
+@dataclass
+class AlarmEventChanged(Event):
+    id: str
+    notificationEventType: AlarmNotificationEventEnum
     updatetime: datetime.now()

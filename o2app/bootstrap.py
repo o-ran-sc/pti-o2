@@ -21,12 +21,16 @@ from o2common.adapter.notifications import AbstractNotifications,\
 from o2common.adapter import redis_eventpublisher
 from o2common.service import unit_of_work
 from o2common.service import messagebus
+from o2common.config import config
 
 from o2app.service import handlers
 from o2app.adapter.unit_of_work import SqlAlchemyUnitOfWork
 
 from o2ims.adapter import orm as o2ims_orm
 from o2dms.adapter import orm as o2dms_orm
+
+from o2ims.adapter.clients import alarm_dict_client
+
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)

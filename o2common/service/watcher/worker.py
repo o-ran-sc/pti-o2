@@ -48,7 +48,8 @@ class PollWorker(object):
                 # logger.debug("about to probe:"+w)
                 w.probe(None)
             except Exception as ex:
-                logger.warning("Worker raises exception:" + str(ex))
+                logger.warning("Worker raises exception %s: %s -  %s "
+                               % (w, type(ex), str(ex)))
                 continue
 
         # handle events

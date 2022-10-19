@@ -15,10 +15,12 @@
 from flask import Flask
 from flask_restx import Api
 
+
 from o2app import bootstrap
 from o2ims.views import configure_namespace as ims_route_configure_namespace
 from o2dms.api import configure_namespace as dms_route_configure_namespace
 
+from o2ims.adapter.clients.alarm_dict_client import load_alarm_definition
 
 # apibase = config.get_o2ims_api_base()
 app = Flask(__name__)
@@ -31,3 +33,5 @@ bus = bootstrap.bootstrap()
 
 ims_route_configure_namespace(api)
 dms_route_configure_namespace(api)
+
+load_alarm_definition(bus.uow)

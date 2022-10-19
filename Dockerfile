@@ -15,6 +15,8 @@ RUN pip install -e /distcloud-client/distributedcloud-client
 # in case git repo is not accessable
 
 # RUN git clone --depth 1 --branch master https://github.com/cloudify-incubator/cloudify-helm-plugin.git /helmsdk
+RUN git clone --depth 1 --branch master https://opendev.org/starlingx/fault.git /faultclient
+RUN pip install -e /faultclient/python-fmclient/fmclient/
 
 
 COPY requirements.txt /tmp/

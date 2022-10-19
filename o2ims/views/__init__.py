@@ -14,7 +14,7 @@
 
 
 from o2common.config import config
-from . import ocloud_route, provision_route
+from . import ocloud_route, provision_route, alarm_route
 from . import api_ns
 
 from o2common.helper import o2logging
@@ -24,11 +24,15 @@ logger = o2logging.get_logger(__name__)
 def configure_namespace(app):
     apiims = config.get_o2ims_api_base()
     apiprovision = config.get_provision_api_base()
+    apimonitoring = config.get_o2ims_monitoring_api_base()
     logger.info(
-        "Expose the O2 IMS API:{}\nExpose Provision API: {}".
-        format(apiims, apiprovision))
+        "Expose the O2 IMS API:{}\nExpose Provision API: {} \
+        \nExpose Monitoring API: {}".
+        format(apiims, apiprovision, apimonitoring))
 
     ocloud_route.configure_api_route()
     provision_route.configure_api_route()
+    alarm_route.configure_api_route()
     app.add_namespace(api_ns.api_ims_inventory_v1, path=apiims)
     app.add_namespace(api_ns.api_provision_v1, path=apiprovision)
+    app.add_namespace(api_ns.api_monitoring_v1, path=apimonitoring)

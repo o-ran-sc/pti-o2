@@ -43,7 +43,8 @@ class BaseWatcher(object):
             # return self._probe(parent)
             return cmds
         except Exception as ex:
-            logger.warning("Failed to probe resource due to: " + str(ex))
+            logger.warning("Failed to probe %s watcher due to: %s - %s" %
+                           (self._targetname(), type(ex), str(ex)))
             return []
 
     def _probe(self, parent: object = None, tags: object = None) \

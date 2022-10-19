@@ -14,7 +14,7 @@
 
 import uuid
 from unittest.mock import MagicMock
-from o2dms.domain import dms
+# from o2dms.domain import dms
 
 from o2ims.domain import ocloud, subscription_obj, configuration_obj
 from o2ims.domain import resource_type as rt

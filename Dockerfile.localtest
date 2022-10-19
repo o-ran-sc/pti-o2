@@ -7,9 +7,11 @@ RUN apt-get update && apt-get install -y git gcc \
 RUN mkdir -p /cgtsclient && mkdir -p /distcloud-client
 COPY temp/config /cgtsclient/
 COPY temp/distcloud-client /distcloud-client/
+COPY temp/fault /faultclient/
 
 RUN pip install -e cgtsclient/sysinv/cgts-client/cgts-client/ \
-    && pip install -e /distcloud-client/distributedcloud-client
+    && pip install -e /distcloud-client/distributedcloud-client \
+    && pip install -e /faultclient/python-fmclient/fmclient/
 # in case git repo is not accessable
 
 COPY requirements.txt constraints.txt requirements-test.txt /tmp/

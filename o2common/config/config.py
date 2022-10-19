@@ -50,7 +50,11 @@ def get_root_api_base():
 
 
 def get_o2ims_api_base():
-    return get_root_api_base() + 'o2ims_infrastructureInventory/v1'
+    return get_root_api_base() + 'o2ims-infrastructureInventory/v1'
+
+
+def get_o2ims_monitoring_api_base():
+    return get_root_api_base() + 'o2ims-infrastructureMonitoring/v1'
 
 
 def get_provision_api_base():
@@ -150,6 +154,36 @@ def get_dc_access_info():
     return os_client_args
 
 
+def get_fm_access_info():
+    try:
+        client_args = dict(
+            auth_url=os.environ.get('OS_AUTH_URL', _DEFAULT_STX_URL),
+            username=os.environ.get('OS_USERNAME', "admin"),
+            api_key=os.environ.get('OS_PASSWORD', "fakepasswd1"),
+            project_name=os.environ.get('OS_PROJECT_NAME', "admin"),
+        )
+    except KeyError:
+        logger.error('Please source your RC file before execution, '
+                     'e.g.: `source ~/downloads/admin-rc.sh`')
+        sys.exit(1)
+
+    os_client_args = {}
+    for key, val in client_args.items():
+        os_client_args['os_{key}'.format(key=key)] = val
+    auth_url = urlparse(os_client_args.pop('os_auth_url'))
+
+    os_client_args['insecure'] = True
+
+    os_client_args['auth_url'] = auth_url.geturl()
+    os_client_args['username'] = os_client_args.pop('os_username')
+    os_client_args['password'] = os_client_args.pop('os_api_key')
+    os_client_args['project_name'] = os_client_args.pop('os_project_name')
+    os_client_args['user_domain_name'] = 'Default'
+    os_client_args['project_domain_name'] = 'Default'
+
+    return os_client_args
+
+
 def get_k8s_api_endpoint():
     K8S_KUBECONFIG = os.environ.get("K8S_KUBECONFIG", None)
     K8S_APISERVER = os.environ.get("K8S_APISERVER", None)
@@ -221,3 +255,17 @@ def get_helmcli_access():
     helm_pass = os.environ.get("HELM_USER_PASSWD")
 
     return helm_host_with_port, helm_user, helm_pass
+
+
+def get_alarm_yaml_filename():
+    alarm_yaml_name = os.environ.get("ALARM_YAML")
+    if alarm_yaml_name is not None and os.path.isfile(alarm_yaml_name):
+        return alarm_yaml_name
+    return "/configs/alarm.yaml"
+
+
+def get_events_yaml_filename():
+    events_yaml_name = os.environ.get("EVENTS_YAML")
+    if events_yaml_name is not None and os.path.isfile(events_yaml_name):
+        return events_yaml_name
+    return "/configs/events.yaml"

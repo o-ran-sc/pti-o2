@@ -94,19 +94,19 @@ def test_flask_get_one(mock_flask_uow):
         assert resp.status_code == 404
 
 
-def test_flask_post(mock_flask_uow):
-    session, app = mock_flask_uow
-    apibase = config.get_provision_api_base()
+# def test_flask_post(mock_flask_uow):
+#     session, app = mock_flask_uow
+#     apibase = config.get_provision_api_base()
 
-    with app.test_client() as client:
-        session.return_value.execute.return_value = []
+#     with app.test_client() as client:
+#         session.return_value.execute.return_value = []
 
-        conf_callback = 'http://registration/callback/url'
-        resp = client.post(apibase+'/smo-endpoint', json={
-            'endpoint': conf_callback
-        })
-        assert resp.status_code == 201
-        assert 'id' in resp.get_json()
+#         conf_callback = 'http://registration/callback/url'
+#         resp = client.post(apibase+'/smo-endpoint', json={
+#             'endpoint': conf_callback
+#         })
+#         assert resp.status_code == 201
+#         assert 'id' in resp.get_json()
 
 
 def test_flask_delete(mock_flask_uow):

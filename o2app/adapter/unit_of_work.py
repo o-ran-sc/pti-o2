@@ -21,7 +21,7 @@ from sqlalchemy.orm.session import Session
 from o2common.config import config
 from o2common.service.unit_of_work import AbstractUnitOfWork
 
-from o2ims.adapter import ocloud_repository
+from o2ims.adapter import ocloud_repository, alarm_repository, alarm_loader
 from o2dms.adapter import dms_repository
 
 from o2common.helper import o2logging
@@ -67,6 +67,18 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
             .NfDeploymentSqlAlchemyRepository(self.session)
         self.ocloudvresources = dms_repository\
             .NfOCloudVResourceSqlAlchemyRepository(self.session)
+        self.alarm_event_records = alarm_repository\
+            .AlarmEventRecordSqlAlchemyRepository(self.session)
+        self.alarm_definitions = alarm_repository\
+            .AlarmDefinitionSqlAlchemyRepository(self.session)
+        self.alarm_subscriptions = alarm_repository\
+            .AlarmSubscriptionSqlAlchemyRepository(self.session)
+        self.alarm_probable_causes = alarm_repository\
+            .AlarmProbableCauseSqlAlchemyRepository(self.session)
+
+        # config file
+        self.alarm_dictionaries = alarm_loader\
+            .AlarmDictionaryConfigFileRepository()
         return super().__enter__()
 
     def __exit__(self, *args):
@@ -109,5 +121,11 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
             while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)
         for entry in self.ocloudvresources.seen:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
+                yield entry.events.pop(0)
+        for entry in self.alarm_event_records.seen:
+            while hasattr(entry, 'events') and len(entry.events) > 0:
+                yield entry.events.pop(0)
+        for entry in self.alarm_subscriptions.seen:
             while hasattr(entry, 'events') and len(entry.events) > 0:
                 yield entry.events.pop(0)

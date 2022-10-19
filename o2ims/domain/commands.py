@@ -14,12 +14,13 @@
 
 # pylint: disable=too-few-public-methods
 # from datetime import date
-# from typing import Optional
 from dataclasses import dataclass
-# from datetime import datetime
-# from o2ims.domain.resource_type import ResourceTypeEnum
+# from typing import List
+
 from o2ims.domain.stx_object import StxGenericModel
+from o2ims.domain.alarm_obj import AlarmEvent2SMO
 from o2ims.domain.subscription_obj import Message2SMO, RegistrationMessage
+# from o2ims.domain.resource_type import ResourceTypeEnum
 from o2common.domain.commands import Command
 
 
@@ -31,6 +32,11 @@ class UpdateStxObject(Command):
 @dataclass
 class PubMessage2SMO(Command):
     data: Message2SMO
+
+
+@dataclass
+class PubAlarm2SMO(Command):
+    data: AlarmEvent2SMO
 
 
 @dataclass
@@ -90,4 +96,9 @@ class UpdatePserverIf(UpdateResource):
 
 @dataclass
 class UpdatePserverIfPort(UpdateResource):
+    pass
+
+
+@dataclass
+class UpdateAlarm(UpdateStxObject):
     pass

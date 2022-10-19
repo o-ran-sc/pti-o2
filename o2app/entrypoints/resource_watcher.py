@@ -21,9 +21,12 @@ from o2common.service.watcher.worker import PollWorker
 from o2ims.service.watcher.ocloud_watcher import OcloudWatcher
 from o2ims.service.watcher.ocloud_watcher import DmsWatcher
 from o2ims.service.watcher.resourcepool_watcher import ResourcePoolWatcher
+from o2ims.service.watcher.alarm_watcher import AlarmWatcher
+
 from o2ims.adapter.clients.ocloud_client import StxDmsClient
 from o2ims.adapter.clients.ocloud_client import StxOcloudClient
 from o2ims.adapter.clients.ocloud_client import StxResourcePoolClient
+from o2ims.adapter.clients.fault_client import StxAlarmClient
 
 from o2ims.service.watcher.pserver_watcher import PServerWatcher
 from o2ims.adapter.clients.ocloud_client import StxPserverClient
@@ -62,6 +65,8 @@ class WatcherService(cotyledon.Service):
                 StxOcloudClient(), self.bus))
             root.addchild(
                 DmsWatcher(StxDmsClient(), self.bus))
+            # root.addchild(
+            #     AlarmWatcher(StxFaultClient(), self.bus))
 
             child_respool = root.addchild(
                 ResourcePoolWatcher(StxResourcePoolClient(),
@@ -79,6 +84,11 @@ class WatcherService(cotyledon.Service):
             # child_if.addchild(
             #     PServerIfPortWatcher(StxIfPortClient(), self.bus))
 
+            self.worker.add_watcher(root)
+
+            # Add Alarm watch
+            root = WatcherTree(
+                AlarmWatcher(StxAlarmClient(self.bus.uow), self.bus))
             self.worker.add_watcher(root)
 
             self.worker.start()

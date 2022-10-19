@@ -26,10 +26,11 @@ from o2dms.domain import events as o2dms_events
 from o2ims.service.auditor import ocloud_handler, dms_handler, \
     resourcepool_handler, pserver_handler, pserver_cpu_handler, \
     pserver_mem_handler, pserver_port_handler, pserver_if_handler,\
-    pserver_eth_handler
-from o2ims.service.command import notify_handler, registration_handler
+    pserver_eth_handler, alarm_handler
+from o2ims.service.command import notify_handler, registration_handler,\
+    notify_alarm_handler
 from o2ims.service.event import ocloud_event, resource_event, \
-    resource_pool_event, configuration_event
+    resource_pool_event, configuration_event, alarm_event
 
 # if TYPE_CHECKING:
 #     from . import unit_of_work
@@ -57,12 +58,15 @@ EVENT_HANDLERS = {
                                  notify_resourcepool_change],
     events.ConfigurationChanged: [configuration_event.\
                                   notify_configuration_change],
+    events.AlarmEventChanged: [alarm_event.\
+                               notify_alarm_event_change],
 }  # type: Dict[Type[events.Event], Callable]
 
 
 COMMAND_HANDLERS = {
     commands.UpdateOCloud: ocloud_handler.update_ocloud,
     commands.UpdateDms: dms_handler.update_dms,
+    commands.UpdateAlarm: alarm_handler.update_alarm,
     commands.UpdateResourcePool: resourcepool_handler.update_resourcepool,
     commands.UpdatePserver: pserver_handler.update_pserver,
     commands.UpdatePserverCpu: pserver_cpu_handler.update_pserver_cpu,
@@ -79,5 +83,6 @@ COMMAND_HANDLERS = {
     o2dms_cmmands.DeleteNfDeployment:
     nfdeployment_handler.delete_nfdeployment,
     commands.PubMessage2SMO: notify_handler.notify_change_to_smo,
+    commands.PubAlarm2SMO: notify_alarm_handler.notify_alarm_to_smo,
     commands.Register2SMO: registration_handler.registry_to_smo,
 }  # type: Dict[Type[commands.Command], Callable]

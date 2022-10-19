@@ -24,11 +24,13 @@ from o2ims.domain import commands as imscmd
 from o2common.helper import o2logging
 from o2ims.domain.subscription_obj import Message2SMO, NotificationEventEnum,\
     RegistrationMessage
+from o2ims.domain.alarm_obj import AlarmEvent2SMO
 logger = o2logging.get_logger(__name__)
 
 r = redis.Redis(**config.get_redis_host_and_port())
 
 apibase = config.get_o2ims_api_base()
+api_monitoring_base = config.get_o2ims_monitoring_api_base()
 
 
 def main():
@@ -39,16 +41,17 @@ def main():
     pubsub.subscribe('ResourceChanged')
     pubsub.subscribe('ConfigurationChanged')
     pubsub.subscribe('OcloudChanged')
+    pubsub.subscribe('AlarmEventChanged')
 
     for m in pubsub.listen():
         try:
-            handle_dms_changed(m, bus)
+            handle_changed(m, bus)
         except Exception as ex:
             logger.warning("{}".format(str(ex)))
             continue
 
 
-def handle_dms_changed(m, bus):
+def handle_changed(m, bus):
     logger.info("handling %s", m)
     channel = m['channel'].decode("UTF-8")
     if channel == "NfDeploymentStateChanged":
@@ -85,6 +88,16 @@ def handle_dms_changed(m, bus):
         if data['notificationEventType'] == NotificationEventEnum.CREATE:
             cmd = imscmd.Register2SMO(data=RegistrationMessage(is_all=True))
             bus.handle(cmd)
+    elif channel == 'AlarmEventChanged':
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('AlarmEventChanged with cmd:{}'.format(data))
+        ref = api_monitoring_base + '/alarms/' + data['id']
+        cmd = imscmd.PubAlarm2SMO(data=AlarmEvent2SMO(
+            id=data['id'], ref=ref,
+            eventtype=data['notificationEventType'],
+            updatetime=data['updatetime']))
+        bus.handle(cmd)
     else:
         logger.info("unhandled:{}".format(channel))
 

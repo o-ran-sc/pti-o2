@@ -6,8 +6,9 @@ cloned into temp before docker building
 ```sh
 mkdir -p temp
 cd temp
-git clone --depth 1 --branch master https://opendev.org/starlingx/config.git
-git clone --depth 1 --branch master https://opendev.org/starlingx/distcloud-client.git
+git clone --branch master https://opendev.org/starlingx/config.git
+git clone --depth 1 --branch r/stx.7.0 https://opendev.org/starlingx/distcloud-client.git
+git clone --depth 1 --branch master https://opendev.org/starlingx/fault.git
 cd config
 git checkout bca406d1
 patch -p1 < ../../cgtsclient-insecure.patch

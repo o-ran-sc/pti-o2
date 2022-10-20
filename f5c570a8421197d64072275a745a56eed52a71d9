@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3400cf87_17590950",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000237
+      },
+      "writtenOn": "2022-10-20T02:50:44Z",
+      "side": 1,
+      "message": "It\u0027s better to add Issu-ID in the commit message.",
+      "revId": "f5c570a8421197d64072275a745a56eed52a71d9",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

@@ -22,6 +22,12 @@ replicaCount: 1
 nameOverride: ""
 fullnameOverride: ""
 
+applicationconfig:
+
+caconfig:
+
+serverkeyconfig:
+
 resources:
   cpu: 1
   memory: 2Gi
@@ -32,8 +38,8 @@ global:
 o2ims:
   serviceaccountname: admin
   image:
-    repository: registry.local:9001/admin/o2imsdms
-    tag: 0.1.1
+    repository: dliu2023/oran
+    tag: latest
     pullPolicy: IfNotPresent
   logginglevel: "WARNING"
 

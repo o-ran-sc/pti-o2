@@ -181,6 +181,57 @@ The following instruction should be done outside of INF platform controller host
   #export the smo account token data
   export SMO_TOKEN_DATA=$(kubectl -n default describe secret $(kubectl -n default get secret | grep ${SMO_SERVICEACCOUNT} | awk '{print $1}') | grep "token:" | awk '{print $2}')
 
+  #prepare the application config file
+  cat <<EOF >app.conf
+  [DEFAULT]
+
+  ocloud_global_id = 4e24b97c-8c49-4c4f-b53e-3de5235a4e37
+  smo_register_url = http://127.0.0.1:8090/register
+  smo_token_data = ${SMO_TOKEN_DATA}
+
+  [API]
+  test = "hello"
+
+  [WATCHER]
+
+  [PUBSUB]
+
+  EOF
+
+  #prepare the ssl cert files or generate with below command.
+
+  PARENT="imsserver"
+  openssl req \
+  -x509 \
+  -newkey rsa:4096 \
+  -sha256 \
+  -days 365 \
+  -nodes \
+  -keyout $PARENT.key \
+  -out $PARENT.crt \
+  -subj "/CN=${PARENT}" \
+  -extensions v3_ca \
+  -extensions v3_req \
+  -config <( \
+    echo '[req]'; \
+    echo 'default_bits= 4096'; \
+    echo 'distinguished_name=req'; \
+    echo 'x509_extension = v3_ca'; \
+    echo 'req_extensions = v3_req'; \
+    echo '[v3_req]'; \
+    echo 'basicConstraints = CA:FALSE'; \
+    echo 'keyUsage = nonRepudiation, digitalSignature, keyEncipherment'; \
+    echo 'subjectAltName = @alt_names'; \
+    echo '[ alt_names ]'; \
+    echo "DNS.1 = www.${PARENT}"; \
+    echo "DNS.2 = ${PARENT}"; \
+    echo '[ v3_ca ]'; \
+    echo 'subjectKeyIdentifier=hash'; \
+    echo 'authorityKeyIdentifier=keyid:always,issuer'; \
+    echo 'basicConstraints = critical, CA:TRUE, pathlen:0'; \
+    echo 'keyUsage = critical, cRLSign, keyCertSign'; \
+    echo 'extendedKeyUsage = serverAuth, clientAuth')
+
   cat <<EOF>o2service-override.yaml
   o2ims:
     imagePullSecrets: admin-orano2-registry-secret
@@ -205,7 +256,7 @@ The following instruction should be done outside of INF platform controller host
 
 .. code:: shell
 
-  helm install o2service o2/charts/ -f o2service-override.yaml
+  helm install o2service o2/charts --set-file caconfig="./imsserver.cert"  --set-file applicationconfig="./app.conf"  --set-file serverkeyconfig="./imsserver.key" -f o2service-override.yaml
   helm list |grep o2service
   kubectl -n ${NAMESPACE} get pods |grep o2api
   kubectl -n ${NAMESPACE} get services |grep o2api
@@ -219,11 +270,11 @@ The following instruction should be done outside of INF platform controller host
   curl -k http(s)://<OAM IP>:30205/o2ims_infrastructureInventory/v1/
 
 
-2.5 INF O2 Service API Swagger 
+2.5 INF O2 Service API Swagger
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Swagger UI can be found with URL: http(s)://<OAM IP>:30205
-                 
+
 
 3. Register INF O2 Service to SMO
 ---------------------------------

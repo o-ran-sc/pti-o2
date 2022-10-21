@@ -141,6 +141,18 @@ spec:
               mountPath: /opt
             - name: configs
               mountPath: /configs
+            - name: applicationconfig
+              mountPath: /configs/o2app.conf
+              subPath: config.json
+              readOnly: true
+            - name: caconfig
+              mountPath: /configs/ca.cert
+              subPath: config.json
+              readOnly: true
+            - name: serverkeyconfig
+              mountPath: /configs/server.key
+              subPath: config.json
+              readOnly: true
         - name: helmcli
           image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
           ports:
@@ -154,12 +166,20 @@ spec:
           volumeMounts:
             - name: scripts
               mountPath: /opt
-            - name: configs
-              mountPath: /configs
       volumes:
         - name: scripts
           configMap:
             name: {{ .Chart.Name }}-scripts-configmap
         - name: configs
           emptyDir: {}
+        - configMap:
+            name: {{ .Chart.Name }}-application-config
+          name: applicationconfig
+        - configMap:
+            name: {{ .Chart.Name }}-serverkeyconfig
+          name: serverkeyconfig
+        - configMap:
+            name: {{ .Chart.Name }}-caconfig
+          name: caconfig
 ---
+

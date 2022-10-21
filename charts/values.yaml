@@ -22,6 +22,12 @@ replicaCount: 1
 nameOverride: ""
 fullnameOverride: ""
 
+applicationconfig:
+
+caconfig:
+
+serverkeyconfig:
+
 resources:
   cpu: 1
   memory: 2Gi

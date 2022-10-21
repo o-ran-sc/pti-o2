@@ -31,8 +31,8 @@ spec:
         app: o2api
     spec:
       serviceAccountName: {{ .Values.o2ims.serviceaccountname }}
-      imagePullSecrets:
-        - name: {{ .Values.o2ims.imagePullSecrets }}
+      # imagePullSecrets:
+      #   - name: {{ .Values.o2ims.imagePullSecrets }}
 {{- if .Values.o2ims.affinity }}
       affinity:
 {{ toYaml .Values.o2ims.affinity | indent 8 }}
@@ -117,7 +117,7 @@ spec:
             - name: DB_PASSWORD
               value: o2ims123
             - name: FLASK_APP
-              value: /root/o2/o2app/entrypoints/flask_application.py
+              value: /src/o2app/entrypoints/flask_application.py
             - name: FLASK_DEBUG
               value: {{ .Values.o2ims.logginglevel }}
             - name: LOGGING_CONFIG_LEVEL

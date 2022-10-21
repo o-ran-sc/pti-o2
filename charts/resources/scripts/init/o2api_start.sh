@@ -15,14 +15,14 @@
 #!/bin/bash
 
 # pull latest code to debug
-cd /root/
-git clone "https://gerrit.o-ran-sc.org/r/pti/o2"
+# cd /root/
+# git clone "https://gerrit.o-ran-sc.org/r/pti/o2"
 # cd o2
 # git pull https://gerrit.o-ran-sc.org/r/pti/o2 refs/changes/85/7085/5
 # pip install retry
 
-pip install -e /root/o2
-
+# pip install -e /root/o2
+pip install -e /src
 
 cat <<EOF>>/etc/hosts
 127.0.0.1  api

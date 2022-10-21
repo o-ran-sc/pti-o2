@@ -15,10 +15,11 @@
 #!/bin/bash
 
 # pull latest code to debug
-cd /root/
-git clone "https://gerrit.o-ran-sc.org/r/pti/o2"
-pip install -e /root/o2
+# cd /root/
+# git clone "https://gerrit.o-ran-sc.org/r/pti/o2"
+# pip install -e /root/o2
 
-python /root/o2/o2app/entrypoints/resource_watcher.py
+# python /root/o2/o2app/entrypoints/resource_watcher.py
+python /src/o2app/entrypoints/resource_watcher.py
 
 sleep infinity

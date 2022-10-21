@@ -36,6 +36,12 @@ COPY o2ims/ /src/o2ims/
 COPY o2dms/ /src/o2dms/
 COPY o2common/ /src/o2common/
 
+RUN mkdir -p /src/helm_sdk/
+COPY helm_sdk/ /src/helm_sdk/
+
+RUN mkdir -p /configs/
+COPY configs/ /configs/
+
 RUN mkdir -p /src/o2app/
 COPY o2app/ /src/o2app/
 COPY setup.py /src/

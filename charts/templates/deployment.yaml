@@ -139,8 +139,8 @@ spec:
           volumeMounts:
             - name: scripts
               mountPath: /opt
-            - name: configs
-              mountPath: /configs
+            # - name: configs
+            #   mountPath: /configs
             - name: applicationconfig
               mountPath: /configs/o2app.conf
               subPath: config.json
@@ -170,8 +170,8 @@ spec:
         - name: scripts
           configMap:
             name: {{ .Chart.Name }}-scripts-configmap
-        - name: configs
-          emptyDir: {}
+        # - name: configs
+        #   emptyDir: {}
         - configMap:
             name: {{ .Chart.Name }}-application-config
           name: applicationconfig

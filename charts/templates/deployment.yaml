@@ -82,6 +82,10 @@ spec:
           volumeMounts:
             - name: scripts
               mountPath: /opt
+            - name: applicationconfig
+              mountPath: /configs/o2app.conf
+              subPath: config.json
+              readOnly: true
         - name: watcher
           image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
           command: ["/bin/bash", "/opt/o2watcher_start.sh"]
@@ -107,6 +111,10 @@ spec:
           volumeMounts:
             - name: scripts
               mountPath: /opt
+            - name: applicationconfig
+              mountPath: /configs/o2app.conf
+              subPath: config.json
+              readOnly: true
         - name: o2api
           image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
           ports:

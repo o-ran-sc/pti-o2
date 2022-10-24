@@ -5,17 +5,17 @@ RUN apt-get update && apt-get install -y git gcc procps vim curl ssh
 # in case git repo is not accessable
 # RUN mkdir -p /cgtsclient
 # COPY temp/config /cgtsclient/
-RUN git clone --depth 1 --branch master https://opendev.org/starlingx/config.git /cgtsclient
+RUN git clone --depth 1 --branch r/stx.7.0 https://opendev.org/starlingx/config.git /cgtsclient
 RUN pip install -e /cgtsclient/sysinv/cgts-client/cgts-client/
 
 # RUN mkdir -p /distcloud-client
 # COPY temp/distcloud-client /distcloud-client/
-RUN git clone --depth 1 --branch master https://opendev.org/starlingx/distcloud-client.git /distcloud-client/
+RUN git clone --depth 1 --branch r/stx.7.0 https://opendev.org/starlingx/distcloud-client.git /distcloud-client/
 RUN pip install -e /distcloud-client/distributedcloud-client
 # in case git repo is not accessable
 
 # RUN git clone --depth 1 --branch master https://github.com/cloudify-incubator/cloudify-helm-plugin.git /helmsdk
-RUN git clone --depth 1 --branch master https://opendev.org/starlingx/fault.git /faultclient
+RUN git clone --depth 1 --branch r/stx.7.0 https://opendev.org/starlingx/fault.git /faultclient
 RUN pip install -e /faultclient/python-fmclient/fmclient/
 
 

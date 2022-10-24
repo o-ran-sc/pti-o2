@@ -68,15 +68,23 @@ def register_smo(uow, ocloud_data):
 
 @retry((ConnectionRefusedError), tries=2, delay=2)
 def call_smo(reg_data: dict):
+    smo_token_data = conf.DEFAULT.smo_token_data
+    smo_token_info = {
+        'smo_token_data': smo_token_data,
+        'smo_token_type': 'jwt',
+        'smo_token_expiration': '',
+        'smo_token_algo': 'RS256'
+    }
+
     callback_data = json.dumps({
         'consumerSubscriptionId': reg_data['globalcloudId'],
         'notificationEventType': 'CREATE',
         'objectRef': config.get_api_url(),
-        'postObjectState': reg_data
+        'postObjectState': reg_data,
+        'smo_token_data': smo_token_info
     })
     logger.info('URL: {}, data: {}'.format(
         conf.DEFAULT.smo_register_url, callback_data))
-
     o = urlparse(conf.DEFAULT.smo_register_url)
     conn = http.client.HTTPConnection(o.netloc)
     headers = {'Content-type': 'application/json'}

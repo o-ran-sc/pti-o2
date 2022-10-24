@@ -31,6 +31,6 @@ cat <<EOF>>/etc/hosts
 EOF
 
 
-flask run --host=0.0.0.0 --port=80
+flask run --host=0.0.0.0 --port=80 --cert /configs/ca.cert  --key /configs/server.key
 
 sleep infinity

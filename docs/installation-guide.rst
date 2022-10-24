@@ -255,8 +255,10 @@ The following instruction should be done outside of INF platform controller host
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: shell
-
-  helm install o2service o2/charts --set-file caconfig="./imsserver.crt"  --set-file applicationconfig="./app.conf"  --set-file serverkeyconfig="./imsserver.key" -f o2service-override.yaml
+  config_data=`cat ./path/to/app.conf`
+  certification_data=`cat ./path/to/imsserver.crt`
+  key_data=`cat ./path/to/imsserver.key`
+  helm install o2service o2/charts --set caconfig="$certification_data"  --set applicationconfig="$config_data"  --set serverkeyconfig="$key_data" -f o2service-override.yaml
   helm list |grep o2service
   kubectl -n ${NAMESPACE} get pods |grep o2api
   kubectl -n ${NAMESPACE} get services |grep o2api

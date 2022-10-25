@@ -79,10 +79,9 @@ def call_smo(reg_data: dict):
     }
 
     callback_data = json.dumps({
-        'consumerSubscriptionId': reg_data['globalcloudId'],
-        'notificationEventType': 'CREATE',
-        'objectRef': config.get_api_url(),
-        'postObjectState': reg_data,
+        'globalCloudId': reg_data['globalcloudId'],
+        'oCloudId': reg_data['oCloudId'],
+        'IMS_EP': config.get_api_url(),
         'smo_token_data': smo_token_info
     })
     logger.info('URL: {}, data: {}'.format(

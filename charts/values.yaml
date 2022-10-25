@@ -22,11 +22,11 @@ replicaCount: 1
 nameOverride: ""
 fullnameOverride: ""
 
-applicationconfig:
+applicationconfig: ""
 
-caconfig:
+caconfig: ""
 
-serverkeyconfig:
+serverkeyconfig: ""
 
 resources:
   cpu: 1

@@ -35,6 +35,26 @@ def configure_api_route():
 # ----------  OClouds ---------- #
 @api_ims_inventory_v1.route("/")
 @api_ims_inventory_v1.response(404, 'oCloud not found')
+@api_ims_inventory_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover "exculde_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class OcloudsListRouter(Resource):
     """Ocloud get endpoint
     O2 interface ocloud endpoint
@@ -57,6 +77,26 @@ class OcloudsListRouter(Resource):
                             'Page number of the results to fetch.' +
                             ' Default: 1',
                             _in='query', default=1)
+@api_ims_inventory_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover "exculde_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class ResourceTypesListRouter(Resource):
 
     model = ResourceTypeDTO.resource_type_get
@@ -77,6 +117,26 @@ class ResourceTypesListRouter(Resource):
 @api_ims_inventory_v1.route("/resourceTypes/<resourceTypeID>")
 @api_ims_inventory_v1.param('resourceTypeID', 'ID of the resource type')
 @api_ims_inventory_v1.response(404, 'Resource type not found')
+@api_ims_inventory_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover "exculde_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class ResourceTypeGetRouter(Resource):
 
     model = ResourceTypeDTO.resource_type_get
@@ -97,6 +157,26 @@ class ResourceTypeGetRouter(Resource):
                             'Page number of the results to fetch.' +
                             ' Default: 1',
                             _in='query', default=1)
+@api_ims_inventory_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover "exculde_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class ResourcePoolsListRouter(Resource):
 
     model = ResourcePoolDTO.resource_pool_get
@@ -117,6 +197,26 @@ class ResourcePoolsListRouter(Resource):
 @api_ims_inventory_v1.route("/resourcePools/<resourcePoolID>")
 @api_ims_inventory_v1.param('resourcePoolID', 'ID of the resource pool')
 @api_ims_inventory_v1.response(404, 'Resource pool not found')
+@api_ims_inventory_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover "exculde_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class ResourcePoolGetRouter(Resource):
 
     model = ResourcePoolDTO.resource_pool_get
@@ -147,6 +247,26 @@ class ResourcePoolGetRouter(Resource):
                             'Page number of the results to fetch.' +
                             ' Default: 1',
                             _in='query', default=1)
+@api_ims_inventory_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover "exculde_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class ResourcesListRouter(Resource):
 
     model = ResourceDTO.resource_list
@@ -156,8 +276,6 @@ class ResourcesListRouter(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('resourceTypeName', location='args')
         parser.add_argument('parentId', location='args')
-        # parser.add_argument('sort', location='args')
-        # parser.add_argument('per_page', location='args')
         parser.add_argument(PAGE_PARAM, location='args')
         args = parser.parse_args()
         kwargs = {}
@@ -174,7 +292,6 @@ class ResourcesListRouter(Resource):
             kwargs['page'] = args.nextpage_opaque_marker
 
         ret = ocloud_view.resources(resourcePoolID, bus.uow, **kwargs)
-
         return link_header(request.full_path, ret)
 
 
@@ -183,6 +300,26 @@ class ResourcesListRouter(Resource):
 @api_ims_inventory_v1.param('resourcePoolID', 'ID of the resource pool')
 @api_ims_inventory_v1.param('resourceID', 'ID of the resource')
 @api_ims_inventory_v1.response(404, 'Resource not found')
+@api_ims_inventory_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover "exculde_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class ResourceGetRouter(Resource):
 
     # dto = ResourceDTO()
@@ -205,6 +342,26 @@ class ResourceGetRouter(Resource):
                             'Page number of the results to fetch.' +
                             ' Default: 1',
                             _in='query', default=1)
+@api_ims_inventory_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover "exculde_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class DeploymentManagersListRouter(Resource):
 
     model = DeploymentManagerDTO.deployment_manager_list
@@ -228,6 +385,26 @@ class DeploymentManagersListRouter(Resource):
 @api_ims_inventory_v1.param('profile', 'DMS profile: value supports "sol018"',
                             _in='query')
 @api_ims_inventory_v1.response(404, 'Deployment manager not found')
+@api_ims_inventory_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover "exculde_fields".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class DeploymentManagerGetRouter(Resource):
 
     model = DeploymentManagerDTO.deployment_manager_get
@@ -260,6 +437,31 @@ class SubscriptionsListRouter(Resource):
 
     @api_ims_inventory_v1.doc('List subscriptions')
     @api_ims_inventory_v1.marshal_list_with(model)
+    @api_ims_inventory_v1.param(
+        PAGE_PARAM,
+        'Page number of the results to fetch. Default: 1',
+        _in='query', default=1)
+    @api_ims_inventory_v1.param(
+        'all_fields',
+        'Set any value for show all fields. This value will cover "fields" ' +
+        'and "all_fields".',
+        _in='query')
+    @api_ims_inventory_v1.param(
+        'fields',
+        'Set fields to show, split by comman, "/" for parent and children.' +
+        ' Like "name,parent/children". This value will cover' +
+        ' "exculde_fields".',
+        _in='query')
+    @api_ims_inventory_v1.param(
+        'exclude_fields',
+        'Set fields to exclude showing, split by comman, "/" for parent and ' +
+        'children. Like "name,parent/children". This value will cover ' +
+        '"exclude_default".',
+        _in='query')
+    @api_ims_inventory_v1.param(
+        'exclude_default',
+        'Exclude showing all default fields, Set "true" to enable.',
+        _in='query')
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument(PAGE_PARAM, location='args')
@@ -289,6 +491,27 @@ class SubscriptionGetDelRouter(Resource):
 
     @api_ims_inventory_v1.doc('Get subscription by ID')
     @api_ims_inventory_v1.marshal_with(model)
+    @api_ims_inventory_v1.param(
+        'all_fields',
+        'Set any value for show all fields. This value will cover "fields" ' +
+        'and "all_fields".',
+        _in='query')
+    @api_ims_inventory_v1.param(
+        'fields',
+        'Set fields to show, split by comman, "/" for parent and children.' +
+        ' Like "name,parent/children". This value will cover' +
+        ' "exculde_fields".',
+        _in='query')
+    @api_ims_inventory_v1.param(
+        'exclude_fields',
+        'Set fields to exclude showing, split by comman, "/" for parent and ' +
+        'children. Like "name,parent/children". This value will cover ' +
+        '"exclude_default".',
+        _in='query')
+    @api_ims_inventory_v1.param(
+        'exclude_default',
+        'Exclude showing all default fields, Set "true" to enable.',
+        _in='query')
     def get(self, subscriptionID):
         result = ocloud_view.subscription_one(
             subscriptionID, bus.uow)

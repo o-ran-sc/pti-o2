@@ -37,6 +37,27 @@ def configure_api_route():
                          'Page number of the results to fetch.' +
                          ' Default: 1',
                          _in='query', default=1)
+@api_monitoring_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_monitoring_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover' +
+    ' "exculde_fields".',
+    _in='query')
+@api_monitoring_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_monitoring_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class AlarmListRouter(Resource):
 
     model = AlarmDTO.alarm_event_record_get
@@ -57,6 +78,27 @@ class AlarmListRouter(Resource):
 @api_monitoring_v1.route("/alarms/<alarmEventRecordId>")
 @api_monitoring_v1.param('alarmEventRecordId', 'ID of the alarm event record')
 @api_monitoring_v1.response(404, 'Alarm Event Record not found')
+@api_monitoring_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_monitoring_v1.param(
+    'fields',
+    'Set fields to show, split by comman, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover' +
+    ' "exculde_fields".',
+    _in='query')
+@api_monitoring_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_monitoring_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
 class AlarmGetRouter(Resource):
 
     model = AlarmDTO.alarm_event_record_get
@@ -81,6 +123,31 @@ class SubscriptionsListRouter(Resource):
 
     @api_monitoring_v1.doc('List alarm subscriptions')
     @api_monitoring_v1.marshal_list_with(model)
+    @api_monitoring_v1.param(
+        PAGE_PARAM,
+        'Page number of the results to fetch. Default: 1',
+        _in='query', default=1)
+    @api_monitoring_v1.param(
+        'all_fields',
+        'Set any value for show all fields. This value will cover "fields" ' +
+        'and "all_fields".',
+        _in='query')
+    @api_monitoring_v1.param(
+        'fields',
+        'Set fields to show, split by comman, "/" for parent and children.' +
+        ' Like "name,parent/children". This value will cover' +
+        ' "exculde_fields".',
+        _in='query')
+    @api_monitoring_v1.param(
+        'exclude_fields',
+        'Set fields to exclude showing, split by comman, "/" for parent and ' +
+        'children. Like "name,parent/children". This value will cover ' +
+        '"exclude_default".',
+        _in='query')
+    @api_monitoring_v1.param(
+        'exclude_default',
+        'Exclude showing all default fields, Set "true" to enable.',
+        _in='query')
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument(PAGE_PARAM, location='args')
@@ -110,6 +177,27 @@ class SubscriptionGetDelRouter(Resource):
 
     @api_monitoring_v1.doc('Get Alarm Subscription by ID')
     @api_monitoring_v1.marshal_with(model)
+    @api_monitoring_v1.param(
+        'all_fields',
+        'Set any value for show all fields. This value will cover "fields" ' +
+        'and "all_fields".',
+        _in='query')
+    @api_monitoring_v1.param(
+        'fields',
+        'Set fields to show, split by comman, "/" for parent and children.' +
+        ' Like "name,parent/children". This value will cover' +
+        ' "exculde_fields".',
+        _in='query')
+    @api_monitoring_v1.param(
+        'exclude_fields',
+        'Set fields to exclude showing, split by comman, "/" for parent and ' +
+        'children. Like "name,parent/children". This value will cover ' +
+        '"exclude_default".',
+        _in='query')
+    @api_monitoring_v1.param(
+        'exclude_default',
+        'Exclude showing all default fields, Set "true" to enable.',
+        _in='query')
     def get(self, alarmSubscriptionID):
         result = alarm_view.subscription_one(
             alarmSubscriptionID, bus.uow)

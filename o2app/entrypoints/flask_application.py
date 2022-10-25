@@ -48,6 +48,8 @@ if auth:
     app.wsgi_app = authmiddleware.authmiddleware(app.wsgi_app)
 
 app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
+# app.config['RESTX_MASK_HEADER'] = 'fields'
+app.config['RESTX_MASK_SWAGGER'] = False
 api = Api(app, version='1.0.0',
           title='INF O2 Services API',
           description='Swagger OpenAPI document for the INF O2 Services',

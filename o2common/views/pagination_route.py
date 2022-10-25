@@ -37,7 +37,6 @@ def link_header(full_path: str, ret):
         '&') if q.split('=')[0] != PAGE_PARAM])
     if query != '':
         query = query + '&'
-    logger.warning(query)
 
     link_list = []
     if (page_current > 1):

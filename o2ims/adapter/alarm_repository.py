@@ -34,12 +34,13 @@ class AlarmEventRecordSqlAlchemyRepository(AlarmEventRecordRepository):
         return self.session.query(alarm_obj.AlarmEventRecord).filter_by(
             alarmEventRecordId=alarm_event_record_id).first()
 
-    def _list(self, **kwargs) -> Tuple[int, List[alarm_obj.AlarmEventRecord]]:
+    def _list(self, *args, **kwargs) -> Tuple[
+            int, List[alarm_obj.AlarmEventRecord]]:
         size = kwargs.pop('limit') if 'limit' in kwargs else None
         offset = kwargs.pop('start') if 'start' in kwargs else 0
 
-        result = self.session.query(alarm_obj.AlarmEventRecord).filter_by(
-            **kwargs).order_by('alarmEventRecordId')
+        result = self.session.query(alarm_obj.AlarmEventRecord).filter(
+            *args).order_by('alarmEventRecordId')
         count = result.count()
         if size is not None and size != -1:
             return (count, result.limit(size).offset(offset))
@@ -88,12 +89,13 @@ class AlarmSubscriptionSqlAlchemyRepository(AlarmSubscriptionRepository):
         return self.session.query(alarm_obj.AlarmSubscription).filter_by(
             alarmSubscriptionId=subscription_id).first()
 
-    def _list(self, **kwargs) -> Tuple[int, List[alarm_obj.AlarmSubscription]]:
+    def _list(self, *args, **kwargs) -> Tuple[
+            int, List[alarm_obj.AlarmSubscription]]:
         size = kwargs.pop('limit') if 'limit' in kwargs else None
         offset = kwargs.pop('start') if 'start' in kwargs else 0
 
-        result = self.session.query(alarm_obj.AlarmSubscription).filter_by(
-            **kwargs).order_by('alarmSubscriptionId')
+        result = self.session.query(alarm_obj.AlarmSubscription).filter(
+            *args).order_by('alarmEventRecordId')
         count = result.count()
         if size is not None and size != -1:
             return (count, result.limit(size).offset(offset))

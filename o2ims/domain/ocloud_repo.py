@@ -75,11 +75,11 @@ class ResourceTypeRepository(abc.ABC):
         return resource_type
 
     def list(self, **kwargs) -> List[ocloud.ResourceType]:
-        return self._list(**kwargs)[1]
+        return self._list(*[], **kwargs)[1]
 
-    def list_with_count(self, **kwargs) -> \
+    def list_with_count(self, *args, **kwargs) -> \
             Tuple[int, List[ocloud.ResourceType]]:
-        return self._list(**kwargs)
+        return self._list(*args, **kwargs)
 
     def update(self, resource_type: ocloud.ResourceType):
         self._update(resource_type)
@@ -121,11 +121,11 @@ class ResourcePoolRepository(abc.ABC):
         return resource_pool
 
     def list(self, **kwargs) -> List[ocloud.ResourcePool]:
-        return self._list(**kwargs)[1]
+        return self._list(*[], **kwargs)[1]
 
-    def list_with_count(self, **kwargs) -> \
+    def list_with_count(self, *args, **kwargs) -> \
             Tuple[int, List[ocloud.ResourcePool]]:
-        return self._list(**kwargs)
+        return self._list(*args, **kwargs)
 
     def update(self, resource_pool: ocloud.ResourcePool):
         self._update(resource_pool)
@@ -163,11 +163,11 @@ class ResourceRepository(abc.ABC):
         return resource
 
     def list(self, resourcepool_id, **kwargs) -> List[ocloud.Resource]:
-        return self._list(resourcepool_id, **kwargs)[1]
+        return self._list(resourcepool_id, *[], **kwargs)[1]
 
-    def list_with_count(self, resourcepool_id, **kwargs) -> \
+    def list_with_count(self, resourcepool_id, *args, **kwargs) -> \
             Tuple[int, List[ocloud.Resource]]:
-        return self._list(resourcepool_id, **kwargs)
+        return self._list(resourcepool_id, *args, **kwargs)
 
     def update(self, resource: ocloud.Resource):
         self._update(resource)
@@ -206,11 +206,11 @@ class DeploymentManagerRepository(abc.ABC):
         return deployment_manager
 
     def list(self, **kwargs) -> List[ocloud.DeploymentManager]:
-        return self._list(**kwargs)[1]
+        return self._list(*[], **kwargs)[1]
 
-    def list_with_count(self, **kwargs) -> \
+    def list_with_count(self, *args, **kwargs) -> \
             Tuple[int, List[ocloud.DeploymentManager]]:
-        return self._list(**kwargs)
+        return self._list(*args, **kwargs)
 
     def update(self, deployment_manager: ocloud.DeploymentManager):
         self._update(deployment_manager)

@@ -32,11 +32,11 @@ class SubscriptionRepository(abc.ABC):
         return subscription
 
     def list(self, **kwargs) -> List[subobj.Subscription]:
-        return self._list(**kwargs)[1]
+        return self._list(*[], **kwargs)[1]
 
-    def list_with_count(self, **kwargs) -> \
+    def list_with_count(self, *args, **kwargs) -> \
             Tuple[int, List[subobj.Subscription]]:
-        return self._list(**kwargs)
+        return self._list(*args, **kwargs)
 
     def update(self, subscription: subobj.Subscription):
         self._update(subscription)

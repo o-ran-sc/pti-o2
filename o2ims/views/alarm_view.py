@@ -16,8 +16,9 @@ import uuid as uuid
 
 from o2common.service import unit_of_work
 from o2common.views.pagination_view import Pagination
+from o2common.views.view import gen_filter
 from o2ims.views.alarm_dto import SubscriptionDTO
-from o2ims.domain.alarm_obj import AlarmSubscription
+from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEventRecord
 
 from o2common.helper import o2logging
 # from o2common.config import config
@@ -27,8 +28,10 @@ logger = o2logging.get_logger(__name__)
 def alarm_event_records(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
     pagination = Pagination(**kwargs)
     filter_kwargs = pagination.get_filter()
+    args = gen_filter(AlarmEventRecord,
+                      kwargs['filter']) if 'filter' in kwargs else []
     with uow:
-        li = uow.alarm_event_records.list_with_count(**filter_kwargs)
+        li = uow.alarm_event_records.list_with_count(*args, **filter_kwargs)
     return pagination.get_result(li)
 
 
@@ -42,8 +45,10 @@ def alarm_event_record_one(alarmEventRecordId: str,
 def subscriptions(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
     pagination = Pagination(**kwargs)
     filter_kwargs = pagination.get_filter()
+    args = gen_filter(AlarmSubscription,
+                      kwargs['filter']) if 'filter' in kwargs else []
     with uow:
-        li = uow.alarm_subscriptions.list_with_count(**filter_kwargs)
+        li = uow.alarm_subscriptions.list_with_count(*args, **filter_kwargs)
     return pagination.get_result(li)
 
 

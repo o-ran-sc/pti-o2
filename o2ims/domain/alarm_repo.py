@@ -32,11 +32,11 @@ class AlarmEventRecordRepository(abc.ABC):
         return alarm_event_record
 
     def list(self, **kwargs) -> List[obj.AlarmEventRecord]:
-        return self._list(**kwargs)[1]
+        return self._list(*[], **kwargs)[1]
 
-    def list_with_count(self, **kwargs) -> \
+    def list_with_count(self, *args, **kwargs) -> \
             Tuple[int, List[obj.AlarmEventRecord]]:
-        return self._list(**kwargs)
+        return self._list(*args, **kwargs)
 
     def update(self, alarm_event_record: obj.AlarmEventRecord):
         self._update(alarm_event_record)
@@ -160,11 +160,11 @@ class AlarmSubscriptionRepository(abc.ABC):
         return subscription
 
     def list(self, **kwargs) -> List[obj.AlarmSubscription]:
-        return self._list(**kwargs)[1]
+        return self._list(*[], **kwargs)[1]
 
-    def list_with_count(self, **kwargs) -> \
+    def list_with_count(self, *args, **kwargs) -> \
             Tuple[int, List[obj.AlarmSubscription]]:
-        return self._list(**kwargs)
+        return self._list(*args, **kwargs)
 
     def update(self, subscription: obj.AlarmSubscription):
         self._update(subscription)

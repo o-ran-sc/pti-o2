@@ -22,6 +22,7 @@ import shutil
 from o2common.service import unit_of_work
 from o2common.config import config
 from o2common.views.pagination_view import Pagination
+from o2common.views.view import gen_filter
 from o2ims.domain import ocloud
 from o2ims.views.ocloud_dto import SubscriptionDTO
 from o2ims.domain.subscription_obj import Subscription
@@ -45,8 +46,10 @@ def ocloud_one(ocloudid: str, uow: unit_of_work.AbstractUnitOfWork):
 def resource_types(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
     pagination = Pagination(**kwargs)
     filter_kwargs = pagination.get_filter()
+    args = gen_filter(ocloud.ResourceType,
+                      kwargs['filter']) if 'filter' in kwargs else []
     with uow:
-        li = uow.resource_types.list_with_count(**filter_kwargs)
+        li = uow.resource_types.list_with_count(*args, **filter_kwargs)
     return pagination.get_result(li)
 
 
@@ -60,8 +63,10 @@ def resource_type_one(resourceTypeId: str,
 def resource_pools(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
     pagination = Pagination(**kwargs)
     filter_kwargs = pagination.get_filter()
+    args = gen_filter(ocloud.ResourcePool,
+                      kwargs['filter']) if 'filter' in kwargs else []
     with uow:
-        li = uow.resource_pools.list_with_count(**filter_kwargs)
+        li = uow.resource_pools.list_with_count(*args, **filter_kwargs)
     return pagination.get_result(li)
 
 
@@ -88,6 +93,10 @@ def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,
             res_type = uow.resource_types.get_by_name(resource_type_name)
             restype_id = '' if res_type is None else res_type.resourceTypeId
         filter_kwargs['resourceTypeId'] = restype_id
+    args = gen_filter(
+        ocloud.Resource, kwargs['filter']) if 'filter' in kwargs else []
+    args.append(ocloud.Resource.resourcePoolId == resourcePoolId)
+    # args.append(ocloud.Resource.parentId == None)
 
     if 'parentId' in kwargs:
         filter_kwargs['parentId'] = kwargs['parentId']
@@ -95,7 +104,8 @@ def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,
         filter_kwargs['sort'] = kwargs['sort']
 
     with uow:
-        ret = uow.resources.list_with_count(resourcePoolId, **filter_kwargs)
+        ret = uow.resources.list_with_count(
+            resourcePoolId, *args, **filter_kwargs)
 
     return pagination.get_result(ret)
 
@@ -109,8 +119,10 @@ def resource_one(resourceId: str, uow: unit_of_work.AbstractUnitOfWork):
 def deployment_managers(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
     pagination = Pagination(**kwargs)
     filter_kwargs = pagination.get_filter()
+    args = gen_filter(ocloud.DeploymentManager,
+                      kwargs['filter']) if 'filter' in kwargs else []
     with uow:
-        li = uow.deployment_managers.list_with_count(**filter_kwargs)
+        li = uow.deployment_managers.list_with_count(*args, **filter_kwargs)
     return pagination.get_result(li)
 
 
@@ -189,8 +201,10 @@ def _gen_kube_config(dmId: str, kubeconfig: dict) -> dict:
 def subscriptions(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
     pagination = Pagination(**kwargs)
     filter_kwargs = pagination.get_filter()
+    args = gen_filter(ocloud.DeploymentManager,
+                      kwargs['filter']) if 'filter' in kwargs else []
     with uow:
-        li = uow.subscriptions.list_with_count(**filter_kwargs)
+        li = uow.subscriptions.list_with_count(**args, **filter_kwargs)
     return pagination.get_result(li)
 
 

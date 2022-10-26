@@ -57,14 +57,14 @@ sudo docker image push registry.local:9001/admin/o2imsdms:0.1.4
 ## Deploy O2 services with helm chart over O-Cloud controller node (with auth user admin)
 
 ```sh
-export NAMESPACE=orano2
+export NAMESPACE=oran-o2
 kubectl create ns ${NAMESPACE}
 
 cd /home/sysadmin/
 source /etc/platform/openrc
 cat <<EOF>ocloud-override.yaml
 o2ims:
-  imagePullSecrets: admin-orano2-registry-secret
+  serviceaccountname: admin-oran-o2
   image:
     repository: registry.local:9001/admin/o2imsdms
     tag: 0.1.4

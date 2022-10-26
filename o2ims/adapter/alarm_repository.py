@@ -95,7 +95,7 @@ class AlarmSubscriptionSqlAlchemyRepository(AlarmSubscriptionRepository):
         offset = kwargs.pop('start') if 'start' in kwargs else 0
 
         result = self.session.query(alarm_obj.AlarmSubscription).filter(
-            *args).order_by('alarmEventRecordId')
+            *args).order_by('alarmSubscriptionId')
         count = result.count()
         if size is not None and size != -1:
             return (count, result.limit(size).offset(offset))

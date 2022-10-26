@@ -138,7 +138,7 @@ def test_view_resource_types(mock_uow):
     order_by = MagicMock()
     order_by.count.return_value = 1
     order_by.limit.return_value.offset.return_value = [restype1]
-    session.return_value.query.return_value.filter_by.return_value.\
+    session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
 
     result = ocloud_view.resource_types(uow)
@@ -178,7 +178,7 @@ def test_view_resource_pools(mock_uow):
     order_by = MagicMock()
     order_by.count.return_value = 1
     order_by.limit.return_value.offset.return_value = [respool1]
-    session.return_value.query.return_value.filter_by.return_value.\
+    session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
 
     result = ocloud_view.resource_pools(uow)
@@ -222,8 +222,10 @@ def test_view_resources(mock_uow):
     order_by = MagicMock()
     order_by.count.return_value = 1
     order_by.limit.return_value.offset.return_value = [res1]
-    session.return_value.query.return_value.filter_by.return_value.\
+    session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
+    # TODO: workaround for sqlalchemy not mapping with resource object
+    setattr(ocloud.Resource, 'resourcePoolId', '')
 
     result = ocloud_view.resources(resource_pool_id1, uow)
     assert result['count'] == 1
@@ -266,7 +268,7 @@ def test_view_deployment_managers(mock_uow):
     order_by = MagicMock()
     order_by.count.return_value = 1
     order_by.limit.return_value.offset.return_value = [dm1]
-    session.return_value.query.return_value.filter_by.return_value.\
+    session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
 
     result = ocloud_view.deployment_managers(uow)
@@ -342,7 +344,7 @@ def test_view_subscriptions(mock_uow):
     order_by = MagicMock()
     order_by.count.return_value = 1
     order_by.limit.return_value.offset.return_value = [sub1]
-    session.return_value.query.return_value.filter_by.return_value.\
+    session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
 
     result = ocloud_view.subscriptions(uow)
@@ -379,9 +381,11 @@ def test_flask_get_list(mock_flask_uow):
     order_by = MagicMock()
     order_by.count.return_value = 0
     order_by.limit.return_value.offset.return_value = []
-    session.return_value.query.return_value.filter_by.return_value.\
+    session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
     apibase = config.get_o2ims_api_base()
+    # TODO: workaround for sqlalchemy not mapping with resource object
+    setattr(ocloud.Resource, 'resourcePoolId', '')
 
     with app.test_client() as client:
         # Get list and return empty list

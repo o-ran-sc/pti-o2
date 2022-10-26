@@ -42,12 +42,12 @@ def configure_api_route():
     _in='query')
 @api_ims_inventory_v1.param(
     'fields',
-    'Set fields to show, split by comman, "/" for parent and children.' +
+    'Set fields to show, split by comma, "/" for parent and children.' +
     ' Like "name,parent/children". This value will cover "exculde_fields".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_fields',
-    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'Set fields to exclude showing, split by comma, "/" for parent and ' +
     'children. Like "name,parent/children". This value will cover ' +
     '"exclude_default".',
     _in='query')
@@ -84,18 +84,22 @@ class OcloudsListRouter(Resource):
     _in='query')
 @api_ims_inventory_v1.param(
     'fields',
-    'Set fields to show, split by comman, "/" for parent and children.' +
+    'Set fields to show, split by comma, "/" for parent and children.' +
     ' Like "name,parent/children". This value will cover "exculde_fields".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_fields',
-    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'Set fields to exclude showing, split by comma, "/" for parent and ' +
     'children. Like "name,parent/children". This value will cover ' +
     '"exclude_default".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_default',
     'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'filter',
+    'Filter of the query.',
     _in='query')
 class ResourceTypesListRouter(Resource):
 
@@ -105,10 +109,12 @@ class ResourceTypesListRouter(Resource):
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument(PAGE_PARAM, location='args')
+        parser.add_argument('filter', location='args')
         args = parser.parse_args()
         kwargs = {}
         if args.nextpage_opaque_marker is not None:
             kwargs['page'] = args.nextpage_opaque_marker
+        kwargs['filter'] = args.filter if args.filter is not None else ''
 
         ret = ocloud_view.resource_types(bus.uow, **kwargs)
         return link_header(request.full_path, ret)
@@ -124,12 +130,12 @@ class ResourceTypesListRouter(Resource):
     _in='query')
 @api_ims_inventory_v1.param(
     'fields',
-    'Set fields to show, split by comman, "/" for parent and children.' +
+    'Set fields to show, split by comma, "/" for parent and children.' +
     ' Like "name,parent/children". This value will cover "exculde_fields".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_fields',
-    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'Set fields to exclude showing, split by comma, "/" for parent and ' +
     'children. Like "name,parent/children". This value will cover ' +
     '"exclude_default".',
     _in='query')
@@ -164,18 +170,22 @@ class ResourceTypeGetRouter(Resource):
     _in='query')
 @api_ims_inventory_v1.param(
     'fields',
-    'Set fields to show, split by comman, "/" for parent and children.' +
+    'Set fields to show, split by comma, "/" for parent and children.' +
     ' Like "name,parent/children". This value will cover "exculde_fields".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_fields',
-    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'Set fields to exclude showing, split by comma, "/" for parent and ' +
     'children. Like "name,parent/children". This value will cover ' +
     '"exclude_default".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_default',
     'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'filter',
+    'Filter of the query.',
     _in='query')
 class ResourcePoolsListRouter(Resource):
 
@@ -185,10 +195,12 @@ class ResourcePoolsListRouter(Resource):
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument(PAGE_PARAM, location='args')
+        parser.add_argument('filter', location='args')
         args = parser.parse_args()
         kwargs = {}
         if args.nextpage_opaque_marker is not None:
             kwargs['page'] = args.nextpage_opaque_marker
+        kwargs['filter'] = args.filter if args.filter is not None else ''
 
         ret = ocloud_view.resource_pools(bus.uow, **kwargs)
         return link_header(request.full_path, ret)
@@ -204,12 +216,12 @@ class ResourcePoolsListRouter(Resource):
     _in='query')
 @api_ims_inventory_v1.param(
     'fields',
-    'Set fields to show, split by comman, "/" for parent and children.' +
+    'Set fields to show, split by comma, "/" for parent and children.' +
     ' Like "name,parent/children". This value will cover "exculde_fields".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_fields',
-    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'Set fields to exclude showing, split by comma, "/" for parent and ' +
     'children. Like "name,parent/children". This value will cover ' +
     '"exclude_default".',
     _in='query')
@@ -234,10 +246,6 @@ class ResourcePoolGetRouter(Resource):
 # ----------  Resources ---------- #
 @api_ims_inventory_v1.route("/resourcePools/<resourcePoolID>/resources")
 @api_ims_inventory_v1.param('resourcePoolID', 'ID of the resource pool')
-@api_ims_inventory_v1.param('resourceTypeName', 'filter resource type',
-                            _in='query')
-@api_ims_inventory_v1.param('parentId', 'filter parentId',
-                            _in='query')
 # @api_ims_inventory_v1.param('sort', 'sort by column name',
 #                             _in='query')
 # @api_ims_inventory_v1.param('per_page', 'The number of results per page ' +
@@ -254,18 +262,22 @@ class ResourcePoolGetRouter(Resource):
     _in='query')
 @api_ims_inventory_v1.param(
     'fields',
-    'Set fields to show, split by comman, "/" for parent and children.' +
+    'Set fields to show, split by comma, "/" for parent and children.' +
     ' Like "name,parent/children". This value will cover "exculde_fields".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_fields',
-    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'Set fields to exclude showing, split by comma, "/" for parent and ' +
     'children. Like "name,parent/children". This value will cover ' +
     '"exclude_default".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_default',
     'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'filter',
+    'Filter of the query.',
     _in='query')
 class ResourcesListRouter(Resource):
 
@@ -274,22 +286,16 @@ class ResourcesListRouter(Resource):
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self, resourcePoolID):
         parser = reqparse.RequestParser()
-        parser.add_argument('resourceTypeName', location='args')
-        parser.add_argument('parentId', location='args')
         parser.add_argument(PAGE_PARAM, location='args')
+        parser.add_argument('filter', location='args')
         args = parser.parse_args()
         kwargs = {}
-        if args.resourceTypeName is not None:
-            kwargs['resourceTypeName'] = args.resourceTypeName
-        if args.parentId is not None:
-            kwargs['parentId'] = args.parentId
-            if args.parentId.lower() == 'null':
-                kwargs['parentId'] = None
         # if args.per_page is not None:
         #     kwargs['per_page'] = args.per_page
         #     base_url = base_url + 'per_page=' + args.per_page + '&'
         if args.nextpage_opaque_marker is not None:
             kwargs['page'] = args.nextpage_opaque_marker
+        kwargs['filter'] = args.filter if args.filter is not None else ''
 
         ret = ocloud_view.resources(resourcePoolID, bus.uow, **kwargs)
         return link_header(request.full_path, ret)
@@ -307,12 +313,12 @@ class ResourcesListRouter(Resource):
     _in='query')
 @api_ims_inventory_v1.param(
     'fields',
-    'Set fields to show, split by comman, "/" for parent and children.' +
+    'Set fields to show, split by comma, "/" for parent and children.' +
     ' Like "name,parent/children". This value will cover "exculde_fields".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_fields',
-    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'Set fields to exclude showing, split by comma, "/" for parent and ' +
     'children. Like "name,parent/children". This value will cover ' +
     '"exclude_default".',
     _in='query')
@@ -349,18 +355,22 @@ class ResourceGetRouter(Resource):
     _in='query')
 @api_ims_inventory_v1.param(
     'fields',
-    'Set fields to show, split by comman, "/" for parent and children.' +
+    'Set fields to show, split by comma, "/" for parent and children.' +
     ' Like "name,parent/children". This value will cover "exculde_fields".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_fields',
-    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'Set fields to exclude showing, split by comma, "/" for parent and ' +
     'children. Like "name,parent/children". This value will cover ' +
     '"exclude_default".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_default',
     'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
+@api_ims_inventory_v1.param(
+    'filter',
+    'Filter of the query.',
     _in='query')
 class DeploymentManagersListRouter(Resource):
 
@@ -370,10 +380,12 @@ class DeploymentManagersListRouter(Resource):
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument(PAGE_PARAM, location='args')
+        parser.add_argument('filter', location='args')
         args = parser.parse_args()
         kwargs = {}
         if args.nextpage_opaque_marker is not None:
             kwargs['page'] = args.nextpage_opaque_marker
+        kwargs['filter'] = args.filter if args.filter is not None else ''
 
         ret = ocloud_view.deployment_managers(bus.uow, **kwargs)
         return link_header(request.full_path, ret)
@@ -392,12 +404,12 @@ class DeploymentManagersListRouter(Resource):
     _in='query')
 @api_ims_inventory_v1.param(
     'fields',
-    'Set fields to show, split by comman, "/" for parent and children.' +
+    'Set fields to show, split by comma, "/" for parent and children.' +
     ' Like "name,parent/children". This value will cover "exculde_fields".',
     _in='query')
 @api_ims_inventory_v1.param(
     'exclude_fields',
-    'Set fields to exclude showing, split by comman, "/" for parent and ' +
+    'Set fields to exclude showing, split by comma, "/" for parent and ' +
     'children. Like "name,parent/children". This value will cover ' +
     '"exclude_default".',
     _in='query')
@@ -448,13 +460,13 @@ class SubscriptionsListRouter(Resource):
         _in='query')
     @api_ims_inventory_v1.param(
         'fields',
-        'Set fields to show, split by comman, "/" for parent and children.' +
+        'Set fields to show, split by comma, "/" for parent and children.' +
         ' Like "name,parent/children". This value will cover' +
         ' "exculde_fields".',
         _in='query')
     @api_ims_inventory_v1.param(
         'exclude_fields',
-        'Set fields to exclude showing, split by comman, "/" for parent and ' +
+        'Set fields to exclude showing, split by comma, "/" for parent and ' +
         'children. Like "name,parent/children". This value will cover ' +
         '"exclude_default".',
         _in='query')
@@ -462,13 +474,19 @@ class SubscriptionsListRouter(Resource):
         'exclude_default',
         'Exclude showing all default fields, Set "true" to enable.',
         _in='query')
+    @api_ims_inventory_v1.param(
+        'filter',
+        'Filter of the query.',
+        _in='query')
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument(PAGE_PARAM, location='args')
+        parser.add_argument('filter', location='args')
         args = parser.parse_args()
         kwargs = {}
         if args.nextpage_opaque_marker is not None:
             kwargs['page'] = args.nextpage_opaque_marker
+        kwargs['filter'] = args.filter if args.filter is not None else ''
 
         ret = ocloud_view.subscriptions(bus.uow, **kwargs)
         return link_header(request.full_path, ret)
@@ -498,13 +516,13 @@ class SubscriptionGetDelRouter(Resource):
         _in='query')
     @api_ims_inventory_v1.param(
         'fields',
-        'Set fields to show, split by comman, "/" for parent and children.' +
+        'Set fields to show, split by comma, "/" for parent and children.' +
         ' Like "name,parent/children". This value will cover' +
         ' "exculde_fields".',
         _in='query')
     @api_ims_inventory_v1.param(
         'exclude_fields',
-        'Set fields to exclude showing, split by comman, "/" for parent and ' +
+        'Set fields to exclude showing, split by comma, "/" for parent and ' +
         'children. Like "name,parent/children". This value will cover ' +
         '"exclude_default".',
         _in='query')

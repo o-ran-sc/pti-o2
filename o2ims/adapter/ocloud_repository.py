@@ -58,12 +58,12 @@ class ResouceTypeSqlAlchemyRepository(ResourceTypeRepository):
         return self.session.query(ocloud.ResourceType).filter_by(
             name=resource_type_name).first()
 
-    def _list(self, **kwargs) -> Tuple[int, List[ocloud.ResourceType]]:
+    def _list(self, *args, **kwargs) -> Tuple[int, List[ocloud.ResourceType]]:
         size = kwargs.pop('limit') if 'limit' in kwargs else None
         offset = kwargs.pop('start') if 'start' in kwargs else 0
 
-        result = self.session.query(ocloud.ResourceType).filter_by(
-            **kwargs).order_by('resourceTypeId')
+        result = self.session.query(ocloud.ResourceType).filter(
+            *args).order_by('resourceTypeId')
         count = result.count()
         if size is not None and size != -1:
             return (count, result.limit(size).offset(offset))
@@ -85,12 +85,12 @@ class ResourcePoolSqlAlchemyRepository(ResourcePoolRepository):
         return self.session.query(ocloud.ResourcePool).filter_by(
             resourcePoolId=resource_pool_id).first()
 
-    def _list(self, **kwargs) -> Tuple[int, List[ocloud.ResourcePool]]:
+    def _list(self, *args, **kwargs) -> Tuple[int, List[ocloud.ResourcePool]]:
         size = kwargs.pop('limit') if 'limit' in kwargs else None
         offset = kwargs.pop('start') if 'start' in kwargs else 0
 
-        result = self.session.query(ocloud.ResourcePool).filter_by(
-            **kwargs).order_by('resourcePoolId')
+        result = self.session.query(ocloud.ResourcePool).filter(
+            *args).order_by('resourcePoolId')
         count = result.count()
         if size is not None and size != -1:
             return (count, result.limit(size).offset(offset))
@@ -131,15 +131,15 @@ class ResourceSqlAlchemyRepository(ResourceRepository):
             return res
         return recursive(resource_id)
 
-    def _list(self, resourcepool_id, **kwargs) -> \
+    def _list(self, resourcepool_id, *args, **kwargs) -> \
             Tuple[int, List[ocloud.Resource]]:
         if 'sort' in kwargs:
             kwargs.pop('sort')
         size = kwargs.pop('limit') if 'limit' in kwargs else None
         offset = kwargs.pop('start') if 'start' in kwargs else 0
 
-        result = self.session.query(ocloud.Resource).filter_by(
-            resourcePoolId=resourcepool_id, **kwargs).order_by('resourceId')
+        result = self.session.query(ocloud.Resource).filter(
+            *args).order_by('resourceId')
         count = result.count()
         if size is not None and size != -1:
             return (count, result.limit(size).offset(offset))
@@ -161,12 +161,13 @@ class DeploymentManagerSqlAlchemyRepository(DeploymentManagerRepository):
         return self.session.query(ocloud.DeploymentManager).filter_by(
             deploymentManagerId=deployment_manager_id).first()
 
-    def _list(self, **kwargs) -> Tuple[int, List[ocloud.DeploymentManager]]:
+    def _list(self, *args, **kwargs) -> Tuple[int,
+                                              List[ocloud.DeploymentManager]]:
         size = kwargs.pop('limit') if 'limit' in kwargs else None
         offset = kwargs.pop('start') if 'start' in kwargs else 0
 
-        result = self.session.query(ocloud.DeploymentManager).filter_by(
-            **kwargs).order_by('deploymentManagerId')
+        result = self.session.query(ocloud.DeploymentManager).filter(
+            *args).order_by('deploymentManagerId')
         count = result.count()
         if size is not None and size != -1:
             return (count, result.limit(size).offset(offset))
@@ -188,13 +189,13 @@ class SubscriptionSqlAlchemyRepository(SubscriptionRepository):
         return self.session.query(subscription_obj.Subscription).filter_by(
             subscriptionId=subscription_id).first()
 
-    def _list(self, **kwargs) -> \
+    def _list(self, *args, **kwargs) -> \
             Tuple[int, List[subscription_obj.Subscription]]:
         size = kwargs.pop('limit') if 'limit' in kwargs else None
         offset = kwargs.pop('start') if 'start' in kwargs else 0
 
-        result = self.session.query(subscription_obj.Subscription).filter_by(
-            **kwargs).order_by('subscriptionId')
+        result = self.session.query(subscription_obj.Subscription).filter(
+            *args).order_by('subscriptionId')
         count = result.count()
         if size is not None and size != -1:
             return (count, result.limit(size).offset(offset))

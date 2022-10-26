@@ -56,7 +56,7 @@ def test_view_alarm_event_records(mock_uow):
     order_by = MagicMock()
     order_by.count.return_value = 1
     order_by.limit.return_value.offset.return_value = [alarm_event_record1]
-    session.return_value.query.return_value.filter_by.return_value.\
+    session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
 
     result = alarm_view.alarm_event_records(uow)
@@ -99,7 +99,7 @@ def test_view_alarm_subscriptions(mock_uow):
     order_by = MagicMock()
     order_by.count.return_value = 1
     order_by.limit.return_value.offset.return_value = [sub1]
-    session.return_value.query.return_value.filter_by.return_value.\
+    session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
 
     result = alarm_view.subscriptions(uow)
@@ -150,7 +150,7 @@ def test_flask_get_list(mock_flask_uow):
     order_by = MagicMock()
     order_by.count.return_value = 0
     order_by.limit.return_value.offset.return_value = []
-    session.return_value.query.return_value.filter_by.return_value.\
+    session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
     apibase = config.get_o2ims_monitoring_api_base()
 

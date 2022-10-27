@@ -95,7 +95,7 @@ class o2_marshal_with(marshal_with):
             resp = f(*args, **kwargs)
 
             req_args = request.args
-            mask = self._gen_mask_from_filter(**req_args)
+            mask = self._gen_mask_from_selector(**req_args)
 
             # mask = self.mask
 
@@ -124,7 +124,7 @@ class o2_marshal_with(marshal_with):
 
         return wrapper
 
-    def _gen_mask_from_filter(self, **kwargs) -> str:
+    def _gen_mask_from_selector(self, **kwargs) -> str:
         mask_val = ''
         if 'all_fields' in kwargs:
             all_fields_without_space = kwargs['all_fields'].replace(" ", "")
@@ -145,24 +145,23 @@ class o2_marshal_with(marshal_with):
             #         continue
             #     mask_val_list.append(f)
             # mask_val = '{%s}' % ','.join(mask_val_list)
-            default_fields = {}
+            selector = {}
 
-            self.__update_filter_value(
-                default_fields, fields_without_space, True)
+            self.__update_selector_value(selector, fields_without_space, True)
 
-            mask_val = self.__gen_mask_from_filter_tree(default_fields)
+            mask_val = self.__gen_mask_from_selector(selector)
 
         elif 'exclude_fields' in kwargs and kwargs['exclude_fields'] != '':
             exclude_fields_without_space = kwargs['exclude_fields'].replace(
                 " ", "")
 
-            default_fields = self.__gen_filter_tree_from_model_with_value(
+            selector = self.__gen_selector_from_model_with_value(
                 self.fields)
 
-            self.__update_filter_value(
-                default_fields, exclude_fields_without_space, False)
+            self.__update_selector_value(
+                selector, exclude_fields_without_space, False)
 
-            mask_val = self.__gen_mask_from_filter_tree(default_fields)
+            mask_val = self.__gen_mask_from_selector(selector)
         elif 'exclude_default' in kwargs and kwargs['exclude_default'] != '':
             exclude_default_without_space = kwargs['exclude_default'].replace(
                 " ", "")
@@ -184,47 +183,47 @@ class o2_marshal_with(marshal_with):
         else:
             return '{%s}' % f[0]
 
-    def __gen_filter_tree_from_model_with_value(
+    def __gen_selector_from_model_with_value(
             self, model: Model, default_val: bool = True) -> dict:
-        filter = dict()
+        selector = dict()
         for i in model:
             if type(model[i]) is List:
                 if type(model[i].container) is String:
-                    filter[i] = default_val
+                    selector[i] = default_val
                     continue
-                filter[i] = self.__gen_filter_tree_from_model_with_value(
+                selector[i] = self.__gen_selector_from_model_with_value(
                     model[i].container.model, default_val)
                 continue
             elif type(model[i]) is Nested:
-                filter[i] = self.__gen_filter_tree_from_model_with_value(
+                selector[i] = self.__gen_selector_from_model_with_value(
                     model[i].model, default_val)
-            filter[i] = default_val
-        return filter
+            selector[i] = default_val
+        return selector
 
-    def __update_filter_value(self, default_fields: dict, filter: str,
-                              val: bool):
+    def __update_selector_value(self, default_selector: dict, filter: str,
+                                val: bool):
         fields = filter.split(',')
         for f in fields:
             if '/' in f:
-                self.__update_filter_tree_value(default_fields, f, val)
+                self.__update_selector_tree_value(default_selector, f, val)
                 continue
-            default_fields[f] = val
+            default_selector[f] = val
 
-    def __update_filter_tree_value(self, m: dict, filter: str, val: bool):
+    def __update_selector_tree_value(self, m: dict, filter: str, val: bool):
         filter_list = filter.split('/', 1)
         if filter_list[0] not in m:
             m[filter_list[0]] = dict()
         if len(filter_list) > 1:
-            self.__update_filter_tree_value(
+            self.__update_selector_tree_value(
                 m[filter_list[0]], filter_list[1], val)
             return
         m[filter_list[0]] = val
 
-    def __gen_mask_from_filter_tree(self, fields: dict) -> str:
+    def __gen_mask_from_selector(self, fields: dict) -> str:
         mask_li = list()
         for k, v in fields.items():
             if type(v) is dict:
-                s = self.__gen_mask_from_filter_tree(v)
+                s = self.__gen_mask_from_selector(v)
                 mask_li.append('%s%s' % (k, s))
                 continue
             if v:

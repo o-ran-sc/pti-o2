@@ -24,17 +24,17 @@ logger = o2logging.get_logger(__name__)
 class Pagination:
     def __init__(self, **kwargs) -> None:
         # filter key should be the same with database name
-        self.filter_kwargs = {}
+        self.pagination_kwargs = {}
         self.limit = int(kwargs['per_page']) if 'per_page' in kwargs else 30
         self.page = int(kwargs['page']) if 'page' in kwargs else 1
         if self.page < 1:
             self.page = 1
         self.start = (self.page - 1) * self.limit
-        self.filter_kwargs['limit'] = self.limit
-        self.filter_kwargs['start'] = self.start
+        self.pagination_kwargs['limit'] = self.limit
+        self.pagination_kwargs['start'] = self.start
 
-    def get_filter(self):
-        return self.filter_kwargs
+    def get_pagination(self):
+        return self.pagination_kwargs
 
     def get_result(self, ret: Tuple[int, List[Serializer]]):
         count = ret[0]

@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 from sqlalchemy.sql.elements import ColumnElement
+from sqlalchemy import or_
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -48,38 +49,50 @@ def toFilterArgs(operation: str, obj: ColumnElement, key: str, values: list):
                        (key, str(obj)))
         return []
 
-    ll = list()
-    if operation == 'eq':
-        for val in values:
-            if val.lower() == 'null':
-                val = None
-            ll.append(getattr(obj, key) == val)
-    elif operation == 'neq':
-        for val in values:
-            if val.lower() == 'null':
-                val = None
-            ll.append(getattr(obj, key) != val)
-    elif operation == 'gt':
-        for val in values:
-            ll.append(getattr(obj, key) > val)
-    elif operation == 'lt':
-        for val in values:
-            ll.append(getattr(obj, key) < val)
-    elif operation == 'gte':
-        for val in values:
-            ll.append(getattr(obj, key) >= val)
-    elif operation == 'lte':
-        for val in values:
-            ll.append(getattr(obj, key) <= val)
-    elif operation == 'in':
-        pass
-    elif operation == 'nin':
-        pass
-    elif operation == 'count':
-        pass
-    elif operation == 'ncount':
-        pass
+    if operation in ['eq', 'neq', 'gt', 'lt', 'gte', 'lte']:
+        if len(values) != 1:
+            raise KeyError('Filter operation one is only support one value.')
+    elif operation in ['in', 'nin', 'cont', 'ncont']:
+        if len(values) == 0:
+            raise KeyError('Filter operation value is needed.')
     else:
         raise KeyError('Filter operation value not support.')
 
+    ll = list()
+    if operation == 'eq':
+        val = values[0]
+        if val.lower() == 'null':
+            val = None
+        ll.append(getattr(obj, key) == val)
+    elif operation == 'neq':
+        val = values[0]
+        if val.lower() == 'null':
+            val = None
+        ll.append(getattr(obj, key) != val)
+    elif operation == 'gt':
+        val = values[0]
+        ll.append(getattr(obj, key) > val)
+    elif operation == 'lt':
+        val = values[0]
+        ll.append(getattr(obj, key) < val)
+    elif operation == 'gte':
+        val = values[0]
+        ll.append(getattr(obj, key) >= val)
+    elif operation == 'lte':
+        val = values[0]
+        ll.append(getattr(obj, key) <= val)
+    elif operation == 'in':
+        ll.append(getattr(obj, key).in_(values))
+    elif operation == 'nin':
+        ll.append(~getattr(obj, key).in_(values))
+    elif operation == 'cont':
+        val_list = list()
+        for val in values:
+            val_list.append(getattr(obj, key).contains(val))
+        ll.append(or_(*val_list))
+    elif operation == 'ncont':
+        val_list = list()
+        for val in values:
+            val_list.append(getattr(obj, key).contains(val))
+        ll.append(~or_(*val_list))
     return ll

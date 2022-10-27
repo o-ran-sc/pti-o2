@@ -23,6 +23,5 @@ metadata:
     app: {{ include "orano2.name" . }}
     chart: {{ .Chart.Name }}
 # ...
-data:
-  config.json: |
-{{ .Values.caconfig | indent 4 }}
+binaryData:
+  config.json: {{ .Values.caconfig }}

@@ -232,12 +232,22 @@ The following instruction should be done outside of INF platform controller host
     echo 'keyUsage = critical, cRLSign, keyCertSign'; \
     echo 'extendedKeyUsage = serverAuth, clientAuth')
 
+
+  applicationconfig=`base64 app.conf -w 0`
+  caconfig=`base64 imsserver.crt -w 0`
+  serverkeyconfig=`base64 imsserver.key -w 0`
+
+  echo $applicationconfig
+  echo $caconfig
+  echo $serverkeyconfig
+
+
   cat <<EOF>o2service-override.yaml
   o2ims:
     serviceaccountname: admin-oran-o2
     image:
       repository: nexus3.o-ran-sc.org:10004/o-ran-sc/pti-o2imsdms
-      tag: 1.0.0
+      tag: 2.0.0
       pullPolicy: IfNotPresent
     logginglevel: "DEBUG"
 
@@ -245,10 +255,15 @@ The following instruction should be done outside of INF platform controller host
     OS_AUTH_URL: "${OS_AUTH_URL}"
     OS_USERNAME: "${OS_USERNAME}"
     OS_PASSWORD: "${OS_PASSWORD}"
-    K8S_KUBECONFIG: "/opt/k8s_kube.conf"
     API_HOST_EXTERNAL_FLOATING: "${API_HOST_EXTERNAL_FLOATING}"
 
+  applicationconfig: ${applicationconfig}
+  caconfig: ${caconfig}
+  serverkeyconfig: ${serverkeyconfig}
+
   EOF
+
+  cat o2service-override.yaml
 
 
 2.3 Deploy by helm cli
@@ -256,10 +271,7 @@ The following instruction should be done outside of INF platform controller host
 
 .. code:: shell
 
-  config_data=`cat ./path/to/app.conf`
-  certification_data=`cat ./path/to/imsserver.crt`
-  key_data=`cat ./path/to/imsserver.key`
-  helm install o2service o2/charts --set caconfig="$certification_data"  --set applicationconfig="$config_data"  --set serverkeyconfig="$key_data" -f o2service-override.yaml
+  helm install o2service o2/charts -f o2service-override.yaml
   helm list |grep o2service
   kubectl -n ${NAMESPACE} get pods |grep o2api
   kubectl -n ${NAMESPACE} get services |grep o2api

@@ -27,11 +27,11 @@ logger = o2logging.get_logger(__name__)
 
 def alarm_event_records(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
     pagination = Pagination(**kwargs)
-    filter_kwargs = pagination.get_filter()
+    query_kwargs = pagination.get_pagination()
     args = gen_filter(AlarmEventRecord,
                       kwargs['filter']) if 'filter' in kwargs else []
     with uow:
-        li = uow.alarm_event_records.list_with_count(*args, **filter_kwargs)
+        li = uow.alarm_event_records.list_with_count(*args, **query_kwargs)
     return pagination.get_result(li)
 
 
@@ -44,11 +44,11 @@ def alarm_event_record_one(alarmEventRecordId: str,
 
 def subscriptions(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
     pagination = Pagination(**kwargs)
-    filter_kwargs = pagination.get_filter()
+    query_kwargs = pagination.get_pagination()
     args = gen_filter(AlarmSubscription,
                       kwargs['filter']) if 'filter' in kwargs else []
     with uow:
-        li = uow.alarm_subscriptions.list_with_count(*args, **filter_kwargs)
+        li = uow.alarm_subscriptions.list_with_count(*args, **query_kwargs)
     return pagination.get_result(li)
 
 

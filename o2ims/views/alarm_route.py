@@ -59,8 +59,8 @@ def configure_api_route():
     'Exclude showing all default fields, Set "true" to enable.',
     _in='query')
 @api_monitoring_v1.param(
-    'exclude_default',
-    'Exclude showing all default fields, Set "true" to enable.',
+    'filter',
+    'Filter of the query.',
     _in='query')
 class AlarmListRouter(Resource):
 
@@ -155,8 +155,8 @@ class SubscriptionsListRouter(Resource):
         'Exclude showing all default fields, Set "true" to enable.',
         _in='query')
     @api_monitoring_v1.param(
-        'exclude_default',
-        'Exclude showing all default fields, Set "true" to enable.',
+        'filter',
+        'Filter of the query.',
         _in='query')
     def get(self):
         parser = reqparse.RequestParser()

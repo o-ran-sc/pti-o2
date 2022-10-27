@@ -95,7 +95,7 @@ The following instruction should be done outside of INF platform controller host
   echo "source <(helm completion bash)" >> ~/.bashrc
 
   OAM_IP=<INF OAM IP>
-  NAMESPACE=orano2
+  NAMESPACE=oran-o2
   TOKEN_DATA=<TOKEN_DATA from INF>
 
   USER="admin-user"
@@ -125,7 +125,7 @@ The following instruction should be done outside of INF platform controller host
 
 .. code:: shell
 
-  export NAMESPACE=orano2
+  export NAMESPACE=oran-o2
   kubectl create ns ${NAMESPACE}
 
   # default kube config location is ~/.kube/config
@@ -234,7 +234,7 @@ The following instruction should be done outside of INF platform controller host
 
   cat <<EOF>o2service-override.yaml
   o2ims:
-    imagePullSecrets: admin-orano2-registry-secret
+    serviceaccountname: admin-oran-o2
     image:
       repository: nexus3.o-ran-sc.org:10004/o-ran-sc/pti-o2imsdms
       tag: 1.0.0

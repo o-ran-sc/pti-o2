@@ -33,10 +33,10 @@ resources:
   memory: 2Gi
 
 global:
-  namespace: orano2
+  namespace: oran-o2
 
 o2ims:
-  serviceaccountname: admin-orano2
+  serviceaccountname: admin-oran-o2
   image:
     repository: registry.local:9001/admin/o2imsdms
     tag: 0.1.1

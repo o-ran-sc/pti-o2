@@ -131,20 +131,6 @@ def test_view_alarm_subscription_one(mock_uow):
         "alarmSubscriptionId")) == subscription_id1
 
 
-def test_alarm_dictionary(mock_uow):
-    session, uow = mock_uow
-    alarm_dict1 = alarm_obj.AlarmDictionary('test1')
-    alarm_dict1.entityType = 'test1'
-    with uow:
-        uow.alarm_dictionaries.add(alarm_dict1)
-
-        alarm_dict2 = uow.alarm_dictionaries.get('test1')
-        assert alarm_dict1 == alarm_dict2
-
-        dict_list = uow.alarm_dictionaries.list()
-        assert len(dict_list) > 0
-
-
 def test_flask_get_list(mock_flask_uow):
     session, app = mock_flask_uow
     order_by = MagicMock()
@@ -152,7 +138,7 @@ def test_flask_get_list(mock_flask_uow):
     order_by.limit.return_value.offset.return_value = []
     session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
-    apibase = config.get_o2ims_monitoring_api_base()
+    apibase = config.get_o2ims_monitoring_api_base() + '/v1'
 
     with app.test_client() as client:
         # Get list and return empty list
@@ -169,7 +155,7 @@ def test_flask_get_one(mock_flask_uow):
 
     session.return_value.query.return_value.filter_by.return_value.\
         first.return_value = None
-    apibase = config.get_o2ims_monitoring_api_base()
+    apibase = config.get_o2ims_monitoring_api_base() + '/v1'
 
     with app.test_client() as client:
         # Get one and return 404
@@ -185,7 +171,7 @@ def test_flask_get_one(mock_flask_uow):
 
 def test_flask_post(mock_flask_uow):
     session, app = mock_flask_uow
-    apibase = config.get_o2ims_monitoring_api_base()
+    apibase = config.get_o2ims_monitoring_api_base() + '/v1'
 
     with app.test_client() as client:
         session.return_value.execute.return_value = []
@@ -202,7 +188,7 @@ def test_flask_post(mock_flask_uow):
 
 def test_flask_delete(mock_flask_uow):
     session, app = mock_flask_uow
-    apibase = config.get_o2ims_monitoring_api_base()
+    apibase = config.get_o2ims_monitoring_api_base() + '/v1'
 
     with app.test_client() as client:
         session.return_value.execute.return_value.first.return_value = {}
@@ -214,7 +200,7 @@ def test_flask_delete(mock_flask_uow):
 
 def test_flask_not_allowed(mock_flask_uow):
     _, app = mock_flask_uow
-    apibase = config.get_o2ims_monitoring_api_base()
+    apibase = config.get_o2ims_monitoring_api_base() + '/v1'
 
     with app.test_client() as client:
         # Testing resource type not support method

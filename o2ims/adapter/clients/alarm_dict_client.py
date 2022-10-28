@@ -20,15 +20,14 @@ import collections
 import uuid as uuid_gen
 
 from o2common.service import unit_of_work
-from o2common.config import config
+from o2common.config import config, conf
 from o2ims.domain import alarm_obj as alarm
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
 
-def load_alarm_dictionary_from_conf_file(conf_path: str,
-                                         uow: unit_of_work.AbstractUnitOfWork):
+def load_alarm_dictionary_from_conf_file(conf_path: str):
 
     logger.info("Converting alarm.yaml to dict: ")
 
@@ -48,16 +47,15 @@ def load_alarm_dictionary_from_conf_file(conf_path: str,
         raise RuntimeError(exp)
 
     for dictionary in list(dictionaries.keys()):
-        with uow:
-            # res_type = uow.resource_types.get_by_name(dictionary)
-            # logger.info('res_type: ' + res_type.resourceTypeName)
-            alarm_dict = alarm.AlarmDictionary(dictionary)
-            alarm_dict.entityType = dictionary
-            alarm_dict.alarmDictionaryVersion = \
-                dictionaries[dictionary]['version']
-            alarm_dict.alarmDefinition = \
-                dictionaries[dictionary]['alarmDefinition']
-            uow.alarm_dictionaries.add(alarm_dict)
+        # res_type = uow.resource_types.get_by_name(dictionary)
+        # logger.info('res_type: ' + res_type.resourceTypeName)
+        alarm_dict = alarm.AlarmDictionary(dictionary)
+        alarm_dict.entityType = dictionary
+        alarm_dict.alarmDictionaryVersion = \
+            dictionaries[dictionary]['version']
+        alarm_dict.alarmDefinition = \
+            dictionaries[dictionary]['alarmDefinition']
+        conf.alarm_dictionaries.add(alarm_dict)
 
 
 def prettyDict(dict):

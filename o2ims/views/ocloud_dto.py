@@ -14,7 +14,7 @@
 
 from flask_restx import fields
 
-from o2ims.views.api_ns import api_ims_inventory_v1
+from o2ims.views.api_ns import api_ims_inventory as api_ims_inventory_v1
 
 
 class OcloudDTO:
@@ -23,15 +23,37 @@ class OcloudDTO:
         "OcloudDto",
         {
             'oCloudId': fields.String(required=True),
-            'globalCloudId': fields.String,
+            'globalcloudId': fields.String(attribute='globalCloudId'),
             'name': fields.String,
             'description': fields.String,
-            'infrastructureManagementServiceEndpoint': fields.String,
+            'serviceUri': fields.String(attribute='serviceUri'),
+            # 'infrastructureManagementServiceEndpoint': fields.String(
+            # attribute='serviceUri'),
+            # 'infrastructureMangementServiceEndPoint': fields.String(
+            # attribute='serviceUri'),
+            # 'resourceTypes': fields.String,
+            # 'resourcePools': fields.String,
+            # 'deploymentManagers': fields.String,
+            # 'smoRegistrationService': fields.String
+            'extensions': fields.String
         }
     )
 
 
 class ResourceTypeDTO:
+    alarm_dictionary = api_ims_inventory_v1.model(
+        "AlarmDictionaryDto",
+        {
+            'id': fields.String,
+            'alarmDictionaryVersion': fields.String,
+            'alarmDictionarySchemVersion': fields.String,
+            'entityType': fields.String,
+            'vendor': fields.String,
+            'managementInterfaceId': fields.String,
+            'pkNotificationField': fields.String,
+            'alarmDefinition': fields.String,
+        }
+    )
 
     resource_type_get = api_ims_inventory_v1.model(
         "ResourceTypeGetDto",
@@ -39,9 +61,14 @@ class ResourceTypeDTO:
             'resourceTypeId': fields.String(required=True,
                                             description='Resource type ID'),
             'name': fields.String,
-            'vendor': fields.String,
-            'version': fields.String,
             'description': fields.String,
+            'vendor': fields.String,
+            'model': fields.String,
+            'version': fields.String,
+            'alarmDictionary': fields.Nested(alarm_dictionary, False, True),
+            # 'resourceKind': fields.String,
+            # 'resourceClass': fields.String,
+            'extensions': fields.String
         }
     )
 
@@ -53,10 +80,13 @@ class ResourcePoolDTO:
         {
             'resourcePoolId': fields.String(required=True,
                                             description='Resource pool ID'),
-            'name': fields.String,
             'globalLocationId': fields.String,
-            'location': fields.String,
+            'name': fields.String,
             'description': fields.String,
+            'oCloudId': fields.String,
+            'location': fields.String,
+            # 'resources': fields.String,
+            'extensions': fields.String
         }
     )
 
@@ -69,9 +99,12 @@ class ResourceDTO:
                                         description='Resource ID'),
             'resourceTypeId': fields.String,
             'resourcePoolId': fields.String,
-            'name': fields.String,
+            'globalAssetId': fields.String,
+            # 'name': fields.String,
             'parentId': fields.String,
             'description': fields.String,
+            # 'elements': fields.String,
+            'extensions': fields.String
         }
     )
 
@@ -81,52 +114,19 @@ class ResourceDTO:
                                         description='Resource ID'),
             'resourceTypeId': fields.String,
             'resourcePoolId': fields.String,
-            'name': fields.String,
+            'globalAssetId': fields.String,
+            # 'name': fields.String,
             'parentId': fields.String,
             'description': fields.String,
-            'elements': fields.String,
+            # 'elements': fields.String,
+            'extensions': fields.String
         }
         if iteration_number:
-            resource_json_mapping['children'] = fields.List(
+            resource_json_mapping['elements'] = fields.List(
                 fields.Nested(ResourceDTO.recursive_resource_mapping(
-                    iteration_number-1)))
+                    iteration_number-1)), attribute='children')
         return api_ims_inventory_v1.model(
             'ResourceGetDto' + str(iteration_number), resource_json_mapping)
-
-    # def _recursive_resource_mapping(self, iteration_number=2):
-    #     resource_json_mapping = {
-    #         'resourceId': fields.String(required=True,
-    #                                     description='Resource ID'),
-    #         'resourceTypeId': fields.String,
-    #         'resourcePoolId': fields.String,
-    #         'name': fields.String,
-    #         'parentId': fields.String,
-    #         'description': fields.String,
-    #     }
-    #     if iteration_number:
-    #         resource_json_mapping['children'] = fields.List(
-    #             fields.Nested(self._recursive_resource_mapping(
-    #                 iteration_number-1)))
-    #         # print(type(resource_json_mapping['children']))
-    #         if resource_json_mapping['children'] is None:
-    #             del resource_json_mapping['children']
-    #     return resource_json_mapping
-
-    # def get_resource_get(self):
-    #     return api_ims_inventory_v1.model(
-    #         'ResourceGetDto',
-    #         {
-    #             'resourceId': fields.String(required=True,
-    #                                         description='Resource ID'),
-    #             'resourceTypeId': fields.String,
-    #             'resourcePoolId': fields.String,
-    #             'name': fields.String,
-    #             'parentId': fields.String,
-    #             'description': fields.String,
-    #             'children': fields.List(fields.Nested(
-    #                 self._recursive_resource_mapping()))
-    #         }
-    #     )
 
 
 class DeploymentManagerDTO:
@@ -139,30 +139,33 @@ class DeploymentManagerDTO:
                 description='Deployment manager ID'),
             'name': fields.String,
             'description': fields.String,
-            'deploymentManagementServiceEndpoint': fields.String,
-            'supportedLocations': fields.String,
-            'capabilities': fields.String,
-            'capacity': fields.String,
+            'serviceUri': fields.String(attribute='serviceUri'),
+            # 'deploymentManagementServiceEndpoint': fields.String(
+            # attribute='serviceUri'),
+            # 'supportedLocations': fields.String,
+            # 'capabilities': fields.String,
+            # 'capacity': fields.String,
             'profileSupportList': fields.List(
                 fields.String,
                 description='Profile support list, use default for the return \
                      endpoint'),
+            'extensions': fields.String
         }
     )
 
     profile = api_ims_inventory_v1.model("DeploymentManagerGetDtoProfile", {
         'cluster_api_endpoint': fields.String(
-            attributes='cluster_api_endpoint'),
-        'cluster_ca_cert': fields.String(attributes='cluster_ca_cert'),
-        'admin_user': fields.String(attributes='admin_user'),
-        'admin_client_cert': fields.String(attributes='admin_client_cert'),
-        'admin_client_key': fields.String(attributes='admin_client_key'),
-        # 'kube_config_file': fields.String(attributes='kube_config_file')
+            attribute='cluster_api_endpoint'),
+        'cluster_ca_cert': fields.String(attribute='cluster_ca_cert'),
+        'admin_user': fields.String(attribute='admin_user'),
+        'admin_client_cert': fields.String(attribute='admin_client_cert'),
+        'admin_client_key': fields.String(attribute='admin_client_key'),
+        # 'kube_config_file': fields.String(attribute='kube_config_file')
         'helmcli_host_with_port': fields.String(
-            attributes='helmcli_host_with_port'),
-        'helmcli_username': fields.String(attributes='helmcli_username'),
-        'helmcli_password': fields.String(attributes='helmcli_password'),
-        'helmcli_kubeconfig': fields.String(attributes='helmcli_kubeconfig'),
+            attribute='helmcli_host_with_port'),
+        'helmcli_username': fields.String(attribute='helmcli_username'),
+        'helmcli_password': fields.String(attribute='helmcli_password'),
+        'helmcli_kubeconfig': fields.String(attribute='helmcli_kubeconfig'),
     })
 
     deployment_manager_get = api_ims_inventory_v1.model(
@@ -173,12 +176,15 @@ class DeploymentManagerDTO:
                 description='Deployment manager ID'),
             'name': fields.String,
             'description': fields.String,
-            'deploymentManagementServiceEndpoint': fields.String,
-            'supportedLocations': fields.String,
-            'capabilities': fields.String,
-            'capacity': fields.String,
+            'serviceUri': fields.String(attribute='serviceUri'),
+            # 'deploymentManagementServiceEndpoint': fields.String(
+            # attribute='serviceUri'),
+            # 'supportedLocations': fields.String,
+            # 'capabilities': fields.String,
+            # 'capacity': fields.String,
             'profileName': fields.String,
             'profileData': fields.Nested(profile, False, True),
+            'extensions': fields.String
         }
     )
 

@@ -12,10 +12,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from flask import request
+from flask_restx import Resource
 from o2common.views.route import O2Namespace
 
 
-api_ims_inventory_v1 = O2Namespace(
+api_ims_inventory = O2Namespace(
     "O2IMS_Inventory",
     description='IMS Inventory related operations.')
 
@@ -23,6 +25,32 @@ api_provision_v1 = O2Namespace(
     "PROVISION",
     description='Provision related operations.')
 
-api_monitoring_v1 = O2Namespace(
+api_ims_monitoring = O2Namespace(
     "O2IMS_InfrastructureMonitoring",
     description='O2 IMS Monitoring related operations.')
+
+
+@api_ims_inventory.route('/api_versions')
+class InventoryVersion(Resource):
+    def get():
+        return {
+            'uriPrefix': request.base_url.rsplit('/', 1)[0],
+            'apiVersions': [{
+                'version': '1',
+                # 'isDeprecated': 'False',
+                # 'retirementDate': ''
+            }]
+        }
+
+
+@api_ims_monitoring.route('/api_versions')
+class MonitoringVersion(Resource):
+    def get():
+        return {
+            'uriPrefix': request.base_url.rsplit('/', 1)[0],
+            'apiVersions': [{
+                'version': '1',
+                # 'isDeprecated': 'False',
+                # 'retirementDate': ''
+            }]
+        }

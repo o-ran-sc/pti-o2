@@ -31,5 +31,5 @@ def configure_namespace(app):
 
     ocloud_route.configure_api_route()
     alarm_route.configure_api_route()
-    app.add_namespace(api_ns.api_ims_inventory_v1, path=apiims)
-    app.add_namespace(api_ns.api_monitoring_v1, path=apimonitoring)
+    app.add_namespace(api_ns.api_ims_inventory, path=apiims)
+    app.add_namespace(api_ns.api_ims_monitoring, path=apimonitoring)

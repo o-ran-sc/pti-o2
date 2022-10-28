@@ -18,7 +18,7 @@ from flask_restx import Resource, reqparse
 from o2common.service.messagebus import MessageBus
 from o2common.views.pagination_route import link_header, PAGE_PARAM
 from o2ims.views import alarm_view
-from o2ims.views.api_ns import api_monitoring_v1
+from o2ims.views.api_ns import api_ims_monitoring as api_monitoring_v1
 from o2ims.views.alarm_dto import AlarmDTO, SubscriptionDTO
 
 from o2common.helper import o2logging
@@ -31,8 +31,22 @@ def configure_api_route():
     bus = MessageBus.get_instance()
 
 
+# ----------  API versions ---------- #
+@api_monitoring_v1.route("/v1/api_versions")
+class VersionRouter(Resource):
+    def get(self):
+        return {
+            'uriPrefix': request.base_url.rsplit('/', 1)[0],
+            'apiVersions': [{
+                'version': '1',
+                # 'isDeprecated': 'False',
+                # 'retirementDate': ''
+            }]
+        }
+
+
 # ----------  Alarm Event Record ---------- #
-@api_monitoring_v1.route("/alarms")
+@api_monitoring_v1.route("/v1/alarms")
 @api_monitoring_v1.param(PAGE_PARAM,
                          'Page number of the results to fetch.' +
                          ' Default: 1',
@@ -81,7 +95,7 @@ class AlarmListRouter(Resource):
         return link_header(request.full_path, ret)
 
 
-@api_monitoring_v1.route("/alarms/<alarmEventRecordId>")
+@api_monitoring_v1.route("/v1/alarms/<alarmEventRecordId>")
 @api_monitoring_v1.param('alarmEventRecordId', 'ID of the alarm event record')
 @api_monitoring_v1.response(404, 'Alarm Event Record not found')
 @api_monitoring_v1.param(
@@ -120,7 +134,7 @@ class AlarmGetRouter(Resource):
 
 
 # ----------  Alarm Subscriptions ---------- #
-@api_monitoring_v1.route("/alarmSubscriptions")
+@api_monitoring_v1.route("/v1/alarmSubscriptions")
 class SubscriptionsListRouter(Resource):
 
     model = SubscriptionDTO.subscription_get
@@ -180,7 +194,7 @@ class SubscriptionsListRouter(Resource):
         return result, 201
 
 
-@api_monitoring_v1.route("/alarmSubscriptions/<alarmSubscriptionID>")
+@api_monitoring_v1.route("/v1/alarmSubscriptions/<alarmSubscriptionID>")
 @api_monitoring_v1.param('alarmSubscriptionID', 'ID of the Alarm Subscription')
 @api_monitoring_v1.response(404, 'Alarm Subscription not found')
 class SubscriptionGetDelRouter(Resource):

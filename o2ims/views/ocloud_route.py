@@ -18,7 +18,7 @@ from flask_restx import Resource, reqparse
 from o2common.service.messagebus import MessageBus
 from o2common.views.pagination_route import link_header, PAGE_PARAM
 from o2ims.views import ocloud_view
-from o2ims.views.api_ns import api_ims_inventory_v1
+from o2ims.views.api_ns import api_ims_inventory as api_ims_inventory_v1
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
     ResourcePoolDTO, ResourceDTO, DeploymentManagerDTO, SubscriptionDTO
 
@@ -32,8 +32,22 @@ def configure_api_route():
     bus = MessageBus.get_instance()
 
 
+# ----------  API versions ---------- #
+@api_ims_inventory_v1.route("/v1/api_versions")
+class VersionRouter(Resource):
+    def get(self):
+        return {
+            'uriPrefix': request.base_url.rsplit('/', 1)[0],
+            'apiVersions': [{
+                'version': '1',
+                # 'isDeprecated': 'False',
+                # 'retirementDate': ''
+            }]
+        }
+
+
 # ----------  OClouds ---------- #
-@api_ims_inventory_v1.route("/")
+@api_ims_inventory_v1.route("/v1/")
 @api_ims_inventory_v1.response(404, 'oCloud not found')
 @api_ims_inventory_v1.param(
     'all_fields',
@@ -72,7 +86,7 @@ class OcloudsListRouter(Resource):
 
 
 # ----------  ResourceTypes ---------- #
-@api_ims_inventory_v1.route("/resourceTypes")
+@api_ims_inventory_v1.route("/v1/resourceTypes")
 @api_ims_inventory_v1.param(PAGE_PARAM,
                             'Page number of the results to fetch.' +
                             ' Default: 1',
@@ -120,7 +134,7 @@ class ResourceTypesListRouter(Resource):
         return link_header(request.full_path, ret)
 
 
-@api_ims_inventory_v1.route("/resourceTypes/<resourceTypeID>")
+@api_ims_inventory_v1.route("/v1/resourceTypes/<resourceTypeID>")
 @api_ims_inventory_v1.param('resourceTypeID', 'ID of the resource type')
 @api_ims_inventory_v1.response(404, 'Resource type not found')
 @api_ims_inventory_v1.param(
@@ -158,7 +172,7 @@ class ResourceTypeGetRouter(Resource):
 
 
 # ----------  ResourcePools ---------- #
-@api_ims_inventory_v1.route("/resourcePools")
+@api_ims_inventory_v1.route("/v1/resourcePools")
 @api_ims_inventory_v1.param(PAGE_PARAM,
                             'Page number of the results to fetch.' +
                             ' Default: 1',
@@ -206,7 +220,7 @@ class ResourcePoolsListRouter(Resource):
         return link_header(request.full_path, ret)
 
 
-@api_ims_inventory_v1.route("/resourcePools/<resourcePoolID>")
+@api_ims_inventory_v1.route("/v1/resourcePools/<resourcePoolID>")
 @api_ims_inventory_v1.param('resourcePoolID', 'ID of the resource pool')
 @api_ims_inventory_v1.response(404, 'Resource pool not found')
 @api_ims_inventory_v1.param(
@@ -244,7 +258,7 @@ class ResourcePoolGetRouter(Resource):
 
 
 # ----------  Resources ---------- #
-@api_ims_inventory_v1.route("/resourcePools/<resourcePoolID>/resources")
+@api_ims_inventory_v1.route("/v1/resourcePools/<resourcePoolID>/resources")
 @api_ims_inventory_v1.param('resourcePoolID', 'ID of the resource pool')
 # @api_ims_inventory_v1.param('sort', 'sort by column name',
 #                             _in='query')
@@ -302,7 +316,7 @@ class ResourcesListRouter(Resource):
 
 
 @api_ims_inventory_v1.route(
-    "/resourcePools/<resourcePoolID>/resources/<resourceID>")
+    "/v1/resourcePools/<resourcePoolID>/resources/<resourceID>")
 @api_ims_inventory_v1.param('resourcePoolID', 'ID of the resource pool')
 @api_ims_inventory_v1.param('resourceID', 'ID of the resource')
 @api_ims_inventory_v1.response(404, 'Resource not found')
@@ -343,7 +357,7 @@ class ResourceGetRouter(Resource):
 
 
 # ----------  DeploymentManagers ---------- #
-@api_ims_inventory_v1.route("/deploymentManagers")
+@api_ims_inventory_v1.route("/v1/deploymentManagers")
 @api_ims_inventory_v1.param(PAGE_PARAM,
                             'Page number of the results to fetch.' +
                             ' Default: 1',
@@ -391,7 +405,7 @@ class DeploymentManagersListRouter(Resource):
         return link_header(request.full_path, ret)
 
 
-@api_ims_inventory_v1.route("/deploymentManagers/<deploymentManagerID>")
+@api_ims_inventory_v1.route("/v1/deploymentManagers/<deploymentManagerID>")
 @api_ims_inventory_v1.param('deploymentManagerID',
                             'ID of the deployment manager')
 @api_ims_inventory_v1.param('profile', 'DMS profile: value supports "sol018"',
@@ -440,7 +454,7 @@ class DeploymentManagerGetRouter(Resource):
 
 
 # ----------  Subscriptions ---------- #
-@api_ims_inventory_v1.route("/subscriptions")
+@api_ims_inventory_v1.route("/v1/subscriptions")
 class SubscriptionsListRouter(Resource):
 
     model = SubscriptionDTO.subscription_get
@@ -500,7 +514,7 @@ class SubscriptionsListRouter(Resource):
         return result, 201
 
 
-@api_ims_inventory_v1.route("/subscriptions/<subscriptionID>")
+@api_ims_inventory_v1.route("/v1/subscriptions/<subscriptionID>")
 @api_ims_inventory_v1.param('subscriptionID', 'ID of the subscription')
 @api_ims_inventory_v1.response(404, 'Subscription not found')
 class SubscriptionGetDelRouter(Resource):

@@ -21,7 +21,7 @@ from sqlalchemy.orm.session import Session
 from o2common.config import config
 from o2common.service.unit_of_work import AbstractUnitOfWork
 
-from o2ims.adapter import ocloud_repository, alarm_repository, alarm_loader
+from o2ims.adapter import ocloud_repository, alarm_repository
 from o2dms.adapter import dms_repository
 
 from o2common.helper import o2logging
@@ -74,9 +74,6 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
         self.alarm_probable_causes = alarm_repository\
             .AlarmProbableCauseSqlAlchemyRepository(self.session)
 
-        # config file
-        self.alarm_dictionaries = alarm_loader\
-            .AlarmDictionaryConfigFileRepository()
         return super().__enter__()
 
     def __exit__(self, *args):

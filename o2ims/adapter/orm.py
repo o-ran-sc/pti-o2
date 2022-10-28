@@ -37,7 +37,7 @@ from sqlalchemy.orm import mapper, relationship
 from o2ims.domain import ocloud as ocloudModel
 from o2ims.domain import subscription_obj as subModel
 from o2ims.domain import alarm_obj as alarmModel
-from o2ims.domain.resource_type import ResourceTypeEnum
+from o2ims.domain.resource_type import ResourceTypeEnum, ResourceKindEnum
 # from o2ims.domain.alarm_obj import AlarmLastChangeEnum, PerceivedSeverityEnum
 
 from o2common.helper import o2logging
@@ -54,34 +54,39 @@ ocloud = Table(
     Column("version_number", Integer),
 
     Column("oCloudId", String(255), primary_key=True),
-    Column("globalcloudId", String(255)),
+    Column("globalCloudId", String(255)),
     Column("name", String(255)),
     Column("description", String(255)),
-    Column("serviceUri", String(255))
+    Column("serviceUri", String(255)),
+    Column("smoRegistrationService", String(255))
     # Column("extensions", String(1024))
 )
 
 resourcetype = Table(
-    "resourcetype",
+    "resourceType",
     metadata,
     Column("updatetime", DateTime),
     Column("createtime", DateTime),
     Column("hash", String(255)),
+    Column("version_number", Integer),
 
     Column("resourceTypeId", String(255), primary_key=True),
     Column("resourceTypeEnum", Enum(
         ResourceTypeEnum, native_enum=False), nullable=False),
-    Column("oCloudId", ForeignKey("ocloud.oCloudId")),
     Column("name", String(255)),
+    Column("description", String(255)),
     Column("vendor", String(255)),
     Column("model", String(255)),
     Column("version", String(255)),
-    Column("description", String(255)),
+    Column("resourceKind", Enum(ResourceKindEnum)),
+    Column("resourceClass", Enum(ResourceTypeEnum)),
     # Column("extensions", String(1024))
+
+    Column("oCloudId", ForeignKey("ocloud.oCloudId")),
 )
 
 resourcepool = Table(
-    "resourcepool",
+    "resourcePool",
     metadata,
     Column("updatetime", DateTime),
     Column("createtime", DateTime),
@@ -107,10 +112,10 @@ resource = Table(
     Column("version_number", Integer),
 
     Column("resourceId", String(255), primary_key=True),
-    Column("resourceTypeId", ForeignKey("resourcetype.resourceTypeId")),
-    Column("resourcePoolId", ForeignKey("resourcepool.resourcePoolId")),
+    Column("resourceTypeId", ForeignKey("resourceType.resourceTypeId")),
+    Column("resourcePoolId", ForeignKey("resourcePool.resourcePoolId")),
     Column("name", String(255)),
-    # Column("globalAssetId", String(255)),
+    Column("globalAssetId", String(255)),
     Column("parentId", String(255)),
     Column("description", String(255)),
     Column("elements", Text())
@@ -118,7 +123,7 @@ resource = Table(
 )
 
 deploymentmanager = Table(
-    "deploymentmanager",
+    "deploymentManager",
     metadata,
     Column("updatetime", DateTime),
     Column("createtime", DateTime),
@@ -129,7 +134,7 @@ deploymentmanager = Table(
     Column("oCloudId", ForeignKey("ocloud.oCloudId")),
     Column("name", String(255)),
     Column("description", String(255)),
-    Column("deploymentManagementServiceEndpoint", String(255)),
+    Column("serviceUri", String(255)),
     Column("supportedLocations", String(255)),
     Column("capabilities", String(255)),
     Column("capacity", String(255)),
@@ -175,7 +180,7 @@ alarm_event_record = Table(
     Column("hash", String(255)),
 
     Column("alarmEventRecordId", String(255), primary_key=True),
-    Column("resourceTypeId", ForeignKey("resourcetype.resourceTypeId")),
+    Column("resourceTypeId", ForeignKey("resourceType.resourceTypeId")),
     Column("resourceId", ForeignKey("resource.resourceId")),
     Column("alarmDefinitionId", ForeignKey(
         "alarmDefinition.alarmDefinitionId")),

@@ -24,10 +24,11 @@ class Subscription(AgRoot, Serializer):
                  filter: str = '') -> None:
         super().__init__()
         self.subscriptionId = id
-        self.version_number = 0
         self.callback = callback
         self.consumerSubscriptionId = consumersubid
         self.filter = filter
+
+        self.version_number = 0
 
 
 class NotificationEventEnum(str, Enum):

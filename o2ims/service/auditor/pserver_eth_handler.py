@@ -44,7 +44,7 @@ def update_pserver_eth(
         res = uow.session.execute(
             '''
             SELECT "resourceTypeId", "oCloudId", "name"
-            FROM resourcetype
+            FROM "resourceType"
             WHERE "resourceTypeEnum" = :resource_type_enum
             ''',
             dict(resource_type_enum=stxobj.type.name)

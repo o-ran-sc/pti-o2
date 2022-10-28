@@ -14,7 +14,7 @@
 
 from flask_restx import fields
 
-from o2ims.views.api_ns import api_monitoring_v1
+from o2ims.views.api_ns import api_ims_monitoring as api_monitoring_v1
 
 
 class AlarmDTO:

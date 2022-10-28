@@ -144,11 +144,11 @@ def deployment_manager_one(deploymentManagerId: str,
     if ocloud.DeploymentManagerProfileDefault == profile:
         pass
     elif ocloud.DeploymentManagerProfileSOL018 == profile:
-        result['deploymentManagementServiceEndpoint'] = \
+        result['serviceUri'] = \
             profile_data['cluster_api_endpoint']
         result['profileData'] = profile_data
     elif ocloud.DeploymentManagerProfileSOL018HelmCLI == profile:
-        result['deploymentManagementServiceEndpoint'] = \
+        result['serviceUri'] = \
             profile_data['cluster_api_endpoint']
 
         helmcli_profile = dict()

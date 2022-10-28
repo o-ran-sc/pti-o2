@@ -16,10 +16,11 @@ from __future__ import annotations
 import json
 
 from o2common.domain.base import AgRoot, Serializer
+from o2common.config import conf as CONF
 # from dataclasses import dataclass
 # from datetime import date
 # from typing import Optional, List, Set
-from .resource_type import ResourceTypeEnum
+from .resource_type import ResourceKindEnum, ResourceTypeEnum
 # from uuid import UUID
 
 
@@ -35,16 +36,17 @@ class DeploymentManager(AgRoot, Serializer):
                  capacity: str = '', profile: str = '') -> None:
         super().__init__()
         self.deploymentManagerId = id
-        self.version_number = 0
-        self.oCloudId = ocloudid
         self.name = name
         self.description = description
-        self.deploymentManagementServiceEndpoint = dmsendpoint
+        self.oCloudId = ocloudid
+        self.serviceUri = dmsendpoint
         self.supportedLocations = supportedLocations
         self.capabilities = capabilities
         self.capacity = capacity
         self.profile = profile
         self.extensions = []
+
+        self.version_number = 0
 
     def serialize(self):
         d = Serializer.serialize(self)
@@ -66,13 +68,15 @@ class ResourcePool(AgRoot, Serializer):
                  description: str = '') -> None:
         super().__init__()
         self.resourcePoolId = id
-        self.version_number = 0
-        self.oCloudId = ocloudid
         self.globalLocationId = gLocationId
         self.name = name
-        self.location = location
         self.description = description
+        self.oCloudId = ocloudid
+        self.location = location
+        self.resources = ''
         self.extensions = []
+
+        self.version_number = 0
 
 
 class ResourceType(AgRoot, Serializer):
@@ -82,15 +86,25 @@ class ResourceType(AgRoot, Serializer):
                  description: str = '') -> None:
         super().__init__()
         self.resourceTypeId = typeid
-        self.version_number = 0
-        self.oCloudId = ocloudid
         self.resourceTypeEnum = typeEnum
         self.name = name
+        self.description = description
         self.vender = vender
         self.model = model
         self.version = version
-        self.description = description
+        self.alarmDictionary = {}
+        self.resourceKind = ResourceKindEnum.UNDEFINED
+        self.resourceClass = ResourceTypeEnum.UNDEFINED
         self.extensions = []
+
+        self.version_number = 0
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+
+        d["alarmDictionary"] = CONF.alarm_dictionaries.get(
+            d['name']).serialize()
+        return d
 
 
 class Resource(AgRoot, Serializer):
@@ -100,16 +114,18 @@ class Resource(AgRoot, Serializer):
                  description: str = '') -> None:
         super().__init__()
         self.resourceId = resourceId
-        self.version_number = 0
-        self.resourceTypeId = resourceTypeId
-        self.resourcePoolId = resourcePoolId
-        self.name = name
-        self.globalAssetId = gAssetId
-        self.parentId = parentId
-        self.elements = elements
         self.description = description
-        self.children = []
+        self.resourceTypeId = resourceTypeId
+        self.globalAssetId = gAssetId
+        self.resourcePoolId = resourcePoolId
+        self.elements = elements
         self.extensions = []
+
+        self.name = name
+        self.parentId = parentId
+        self.children = []
+
+        self.version_number = 0
 
     def set_children(self, children: list):
         self.children = children
@@ -139,15 +155,17 @@ class Ocloud(AgRoot, Serializer):
                  description: str = '', version_number: int = 0) -> None:
         super().__init__()
         self.oCloudId = ocloudid
-        self.globalcloudId = globalcloudId
-        self.version_number = version_number
+        self.globalCloudId = globalcloudId
         self.name = name
         self.description = description
         self.serviceUri = imsendpoint
+        self.resourceTypes = []
         self.resourcePools = []
         self.deploymentManagers = []
-        self.resourceTypes = []
+        self.smoRegistrationService = ''
         self.extensions = []
+
+        self.version_number = version_number
 
     # def addDeploymentManager(self,
     #                          deploymentManager: DeploymentManager):

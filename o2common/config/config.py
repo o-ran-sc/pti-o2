@@ -55,11 +55,11 @@ def get_root_api_base():
 
 
 def get_o2ims_api_base():
-    return get_root_api_base() + 'o2ims-infrastructureInventory/v1'
+    return get_root_api_base() + 'o2ims-infrastructureInventory'
 
 
 def get_o2ims_monitoring_api_base():
-    return get_root_api_base() + 'o2ims-infrastructureMonitoring/v1'
+    return get_root_api_base() + 'o2ims-infrastructureMonitoring'
 
 
 def get_o2dms_api_base():

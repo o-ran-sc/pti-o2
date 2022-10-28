@@ -294,7 +294,7 @@ def test_view_deployment_manager_one(mock_uow):
     session.return_value.query.return_value.filter_by.return_value.first.\
         return_value.serialize.return_value = {
             "deploymentManagerId": deployment_manager_id1,
-            "deploymentManagementServiceEndpoint": dms_endpoint,
+            "serviceUri": dms_endpoint,
             "profile": {}
         }
 
@@ -304,7 +304,7 @@ def test_view_deployment_manager_one(mock_uow):
     assert str(deployment_manager_res.get(
         "deploymentManagerId")) == deployment_manager_id1
     assert str(deployment_manager_res.get(
-        'deploymentManagementServiceEndpoint')) == dms_endpoint
+        'serviceUri')) == dms_endpoint
     assert deployment_manager_res.get('profile') is None
 
     # profile sol018
@@ -317,7 +317,7 @@ def test_view_deployment_manager_one(mock_uow):
     deployment_manager_res = ocloud_view.deployment_manager_one(
         deployment_manager_id1, uow, profile=profileName)
     assert str(deployment_manager_res.get(
-        'deploymentManagementServiceEndpoint')) == cluster_endpoint
+        'serviceUri')) == cluster_endpoint
     assert str(deployment_manager_res.get(
         "profileName")) == profileName
 
@@ -383,7 +383,7 @@ def test_flask_get_list(mock_flask_uow):
     order_by.limit.return_value.offset.return_value = []
     session.return_value.query.return_value.filter.return_value.\
         order_by.return_value = order_by
-    apibase = config.get_o2ims_api_base()
+    apibase = config.get_o2ims_api_base() + '/v1'
     # TODO: workaround for sqlalchemy not mapping with resource object
     setattr(ocloud.Resource, 'resourcePoolId', '')
 
@@ -413,7 +413,7 @@ def test_flask_get_one(mock_flask_uow):
 
     session.return_value.query.return_value.filter_by.return_value.\
         first.return_value = None
-    apibase = config.get_o2ims_api_base()
+    apibase = config.get_o2ims_api_base() + '/v1'
 
     with app.test_client() as client:
         # Get one and return 404
@@ -446,7 +446,7 @@ def test_flask_get_one(mock_flask_uow):
 
 def test_flask_post(mock_flask_uow):
     session, app = mock_flask_uow
-    apibase = config.get_o2ims_api_base()
+    apibase = config.get_o2ims_api_base() + '/v1'
 
     with app.test_client() as client:
         session.return_value.execute.return_value = []
@@ -463,7 +463,7 @@ def test_flask_post(mock_flask_uow):
 
 def test_flask_delete(mock_flask_uow):
     session, app = mock_flask_uow
-    apibase = config.get_o2ims_api_base()
+    apibase = config.get_o2ims_api_base() + '/v1'
 
     with app.test_client() as client:
         session.return_value.execute.return_value.first.return_value = {}
@@ -475,7 +475,7 @@ def test_flask_delete(mock_flask_uow):
 
 def test_flask_not_allowed(mock_flask_uow):
     _, app = mock_flask_uow
-    apibase = config.get_o2ims_api_base()
+    apibase = config.get_o2ims_api_base() + '/v1'
 
     with app.test_client() as client:
         # Testing resource type not support method

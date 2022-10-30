@@ -18,7 +18,6 @@ from flask_restx import Api
 
 from o2app import bootstrap
 from o2ims.views import configure_namespace as ims_route_configure_namespace
-from o2dms.api import configure_namespace as dms_route_configure_namespace
 
 from o2ims.adapter.clients.alarm_dict_client import load_alarm_definition
 from o2common.authmw import authmiddleware
@@ -40,6 +39,8 @@ def _get_k8s_url():
         raise Exception('Get k8s token review url failed')
 
 
+FLASK_API_VERSION = '1.0.0'
+
 if auth:
     # perform service account identity&privilege check.
     _get_k8s_url()
@@ -50,13 +51,12 @@ if auth:
 app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
 # app.config['RESTX_MASK_HEADER'] = 'fields'
 app.config['RESTX_MASK_SWAGGER'] = False
-api = Api(app, version='1.0.0',
+api = Api(app, version=FLASK_API_VERSION,
           title='INF O2 Services API',
           description='Swagger OpenAPI document for the INF O2 Services',
           )
 bus = bootstrap.bootstrap()
 
 ims_route_configure_namespace(api)
-dms_route_configure_namespace(api)
 
 load_alarm_definition(bus.uow)

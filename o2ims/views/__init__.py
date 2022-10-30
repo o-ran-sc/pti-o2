@@ -26,7 +26,7 @@ def configure_namespace(app):
     apimonitoring = config.get_o2ims_monitoring_api_base()
     logger.info(
         "Expose the O2 IMS API:{}\n \
-        \nExpose Monitoring API: {}".
+        Expose Monitoring API: {}".
         format(apiims, apimonitoring))
 
     ocloud_route.configure_api_route()

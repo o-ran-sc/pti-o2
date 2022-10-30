@@ -32,7 +32,7 @@ api_ims_monitoring = O2Namespace(
 
 @api_ims_inventory.route('/api_versions')
 class InventoryVersion(Resource):
-    def get():
+    def get(self):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
             'apiVersions': [{
@@ -45,7 +45,7 @@ class InventoryVersion(Resource):
 
 @api_ims_monitoring.route('/api_versions')
 class MonitoringVersion(Resource):
-    def get():
+    def get(self):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
             'apiVersions': [{

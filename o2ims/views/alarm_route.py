@@ -20,6 +20,7 @@ from o2common.views.pagination_route import link_header, PAGE_PARAM
 from o2ims.views import alarm_view
 from o2ims.views.api_ns import api_ims_monitoring as api_monitoring_v1
 from o2ims.views.alarm_dto import AlarmDTO, SubscriptionDTO
+from o2app.entrypoints.flask_application import FLASK_API_VERSION
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -38,7 +39,7 @@ class VersionRouter(Resource):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
             'apiVersions': [{
-                'version': '1',
+                'version': FLASK_API_VERSION,
                 # 'isDeprecated': 'False',
                 # 'retirementDate': ''
             }]

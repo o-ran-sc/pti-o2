@@ -21,6 +21,7 @@ from o2ims.views import ocloud_view
 from o2ims.views.api_ns import api_ims_inventory as api_ims_inventory_v1
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
     ResourcePoolDTO, ResourceDTO, DeploymentManagerDTO, SubscriptionDTO
+from o2app.entrypoints.flask_application import FLASK_API_VERSION
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -39,7 +40,7 @@ class VersionRouter(Resource):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
             'apiVersions': [{
-                'version': '1',
+                'version': FLASK_API_VERSION,
                 # 'isDeprecated': 'False',
                 # 'retirementDate': ''
             }]

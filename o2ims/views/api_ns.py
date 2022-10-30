@@ -14,7 +14,9 @@
 
 from flask import request
 from flask_restx import Resource
+
 from o2common.views.route import O2Namespace
+from o2app.entrypoints.flask_application import FLASK_API_VERSION
 
 
 api_ims_inventory = O2Namespace(
@@ -32,11 +34,11 @@ api_ims_monitoring = O2Namespace(
 
 @api_ims_inventory.route('/api_versions')
 class InventoryVersion(Resource):
-    def get():
+    def get(self):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
             'apiVersions': [{
-                'version': '1',
+                'version': FLASK_API_VERSION,
                 # 'isDeprecated': 'False',
                 # 'retirementDate': ''
             }]
@@ -45,11 +47,11 @@ class InventoryVersion(Resource):
 
 @api_ims_monitoring.route('/api_versions')
 class MonitoringVersion(Resource):
-    def get():
+    def get(self):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
             'apiVersions': [{
-                'version': '1',
+                'version': FLASK_API_VERSION,
                 # 'isDeprecated': 'False',
                 # 'retirementDate': ''
             }]

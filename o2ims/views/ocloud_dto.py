@@ -139,6 +139,7 @@ class DeploymentManagerDTO:
                 description='Deployment manager ID'),
             'name': fields.String,
             'description': fields.String,
+            'oCloudId': fields.String,
             'serviceUri': fields.String(attribute='serviceUri'),
             # 'deploymentManagementServiceEndpoint': fields.String(
             # attribute='serviceUri'),
@@ -176,6 +177,7 @@ class DeploymentManagerDTO:
                 description='Deployment manager ID'),
             'name': fields.String,
             'description': fields.String,
+            'oCloudId': fields.String,
             'serviceUri': fields.String(attribute='serviceUri'),
             # 'deploymentManagementServiceEndpoint': fields.String(
             # attribute='serviceUri'),

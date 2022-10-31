@@ -24,9 +24,11 @@ fullnameOverride: ""
 
 applicationconfig: ""
 
-caconfig: ""
+servercrt: ""
 
-serverkeyconfig: ""
+serverkey: ""
+
+smocacrt: ""
 
 resources:
   cpu: 1

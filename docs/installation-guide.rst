@@ -179,7 +179,8 @@ The following instruction should be done outside of INF platform controller host
   kubectl apply -f smo-serviceaccount.yaml
 
   #export the smo account token data
-  export SMO_TOKEN_DATA=$(kubectl -n default describe secret $(kubectl -n default get secret | grep ${SMO_SERVICEACCOUNT} | awk '{print $1}') | grep "token:" | awk '{print $2}')
+  export SMO_SECRET=$(kubectl -n default get serviceaccounts $SMO_SERVICEACCOUNT -o jsonpath='{.secrets[0].name}')
+  export SMO_TOKEN_DATA=$(kubectl -n default get secrets $SMO_SECRET -o jsonpath='{.data.token}')
 
   #prepare the application config file
   cat <<EOF >app.conf
@@ -234,12 +235,14 @@ The following instruction should be done outside of INF platform controller host
 
 
   applicationconfig=`base64 app.conf -w 0`
-  caconfig=`base64 imsserver.crt -w 0`
-  serverkeyconfig=`base64 imsserver.key -w 0`
+  servercrt=`base64 imsserver.crt -w 0`
+  serverkey=`base64 imsserver.key -w 0`
+  smocacrt=`base64 smoca.crt -w 0`
 
   echo $applicationconfig
-  echo $caconfig
-  echo $serverkeyconfig
+  echo $servercrt
+  echo $serverkey
+  echo $smocacrt
 
 
   cat <<EOF>o2service-override.yaml
@@ -258,8 +261,9 @@ The following instruction should be done outside of INF platform controller host
     API_HOST_EXTERNAL_FLOATING: "${API_HOST_EXTERNAL_FLOATING}"
 
   applicationconfig: ${applicationconfig}
-  caconfig: ${caconfig}
-  serverkeyconfig: ${serverkeyconfig}
+  servercrt: ${servercrt}
+  serverkey: ${serverkey}
+  smocacrt: ${smocacrt}
 
   EOF
 

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ca701f0_99abd857",
+        "filename": "o2ims/views/api_ns.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-10-31T01:04:18Z",
+      "side": 1,
+      "message": "should be \"1.0.0\" \nreference:\n7.1.6 Type: ApiVersionInformation\nidentifies a supported version. The value of the version attribute \nshall be a version identifier as specified in clause 9.1.\n\n9.1.1 Version identifiers\nAPI version identifiers shall consist of 3 numerical fields, following a MAJOR.MINOR.PATCH pattern",
+      "range": {
+        "startLine": 52,
+        "startChar": 17,
+        "endLine": 52,
+        "endChar": 24
+      },
+      "revId": "1735bc4ef49e88c5f525b088602232e0287809eb",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

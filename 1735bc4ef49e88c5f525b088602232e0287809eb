@@ -22,6 +22,30 @@
       },
       "revId": "1735bc4ef49e88c5f525b088602232e0287809eb",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef468de8_a96f4267",
+        "filename": "o2ims/views/api_ns.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-10-31T02:08:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ca701f0_99abd857",
+      "range": {
+        "startLine": 52,
+        "startChar": 17,
+        "endLine": 52,
+        "endChar": 24
+      },
+      "revId": "1735bc4ef49e88c5f525b088602232e0287809eb",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

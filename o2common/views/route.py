@@ -29,6 +29,7 @@ from flask_restx.mask import Mask  # , apply as apply_mask
 from flask_restx.model import Model
 from flask_restx.fields import List, Nested, String
 from flask_restx.utils import unpack
+from o2common.domain.base import Serializer
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -230,3 +231,31 @@ class o2_marshal_with(marshal_with):
                 mask_li.append(k)
 
         return '{%s}' % ','.join(mask_li)
+
+
+class ProblemDetails(Serializer):
+    def __init__(self, namespace: O2Namespace, code: int, detail: str,
+                 title=None, instance=None
+                 ) -> None:
+        self.ns = namespace
+        self.status = code
+        self.detail = detail
+        self.type = request.path
+        self.title = title if title is not None else self.getTitle(code)
+        self.instance = instance if instance is not None else []
+
+    def getTitle(self, code):
+        return HTTPStatus(code).phrase
+
+    def abort(self):
+        self.ns.abort(self.status, self.detail, **self.serialize())
+
+    def serialize(self):
+        details = {}
+        for key in dir(self):
+            if key == 'ns' or key.startswith('__') or\
+                    callable(getattr(self, key)):
+                continue
+            else:
+                details[key] = getattr(self, key)
+        return details

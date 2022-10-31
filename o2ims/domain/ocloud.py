@@ -81,7 +81,7 @@ class ResourcePool(AgRoot, Serializer):
 
 class ResourceType(AgRoot, Serializer):
     def __init__(self, typeid: str, name: str, typeEnum: ResourceTypeEnum,
-                 ocloudid: str, vender: str = '', model: str = '',
+                 ocloudid: str, vendor: str = '', model: str = '',
                  version: str = '',
                  description: str = '') -> None:
         super().__init__()
@@ -89,7 +89,7 @@ class ResourceType(AgRoot, Serializer):
         self.resourceTypeEnum = typeEnum
         self.name = name
         self.description = description
-        self.vender = vender
+        self.vendor = vendor
         self.model = model
         self.version = version
         self.alarmDictionary = {}

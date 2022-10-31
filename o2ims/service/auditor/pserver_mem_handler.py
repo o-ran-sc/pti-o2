@@ -56,6 +56,14 @@ def update_pserver_mem(
                 resourcetype_id,
                 'pserver_mem', stxobj.type,
                 resourcepool.oCloudId))
+            res_type_name = 'pserver_mem'
+            resourcetype_id = str(uuid.uuid3(
+                uuid.NAMESPACE_URL, res_type_name))
+            uow.resource_types.add(ResourceType(
+                resourcetype_id,
+                res_type_name, stxobj.type,
+                resourcepool.oCloudId,
+                description='A Memory resource type of Physical Server'))
         else:
             resourcetype_id = first['resourceTypeId']
 
@@ -96,7 +104,8 @@ def create_by(stxobj: StxGenericModel, parent: Resource, resourcetype_id: str)\
     resourcepool_id = parent.resourcePoolId
     parent_id = parent.resourceId
     gAssetId = ''  # TODO: global ID
-    description = "A memory resource of the physical server"
+    description = "%s : A memory resource of the physical server"\
+        % stxobj.name
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
                         stxobj.name, parent_id, gAssetId, stxobj.content,
                         description)

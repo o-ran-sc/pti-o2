@@ -42,7 +42,7 @@ def registry_to_smo(
         ocloud = uow.oclouds.get(data.id)
         if ocloud is None:
             return
-        logger.debug('O-Cloud Global UUID: {}'.format(ocloud.globalcloudId))
+        logger.debug('O-Cloud Global UUID: {}'.format(ocloud.globalCloudId))
         ocloud_dict = ocloud.serialize()
         if data.notificationEventType == NotificationEventEnum.CREATE:
             register_smo(uow, ocloud_dict)
@@ -79,7 +79,7 @@ def call_smo(reg_data: dict):
     }
 
     callback_data = json.dumps({
-        'globalCloudId': reg_data['globalcloudId'],
+        'globalCloudId': reg_data['globalCloudId'],
         'oCloudId': reg_data['oCloudId'],
         'IMS_EP': config.get_api_url(),
         'smo_token_data': smo_token_info

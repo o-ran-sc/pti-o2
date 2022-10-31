@@ -186,11 +186,11 @@ The following instruction should be done outside of INF platform controller host
   [DEFAULT]
 
   ocloud_global_id = 4e24b97c-8c49-4c4f-b53e-3de5235a4e37
+
   smo_register_url = http://127.0.0.1:8090/register
   smo_token_data = ${SMO_TOKEN_DATA}
 
   [API]
-  test = "hello"
 
   [WATCHER]
 

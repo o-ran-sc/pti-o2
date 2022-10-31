@@ -51,11 +51,14 @@ def update_pserver_cpu(
         )
         first = res.first()
         if first is None:
-            resourcetype_id = str(uuid.uuid4())
+            res_type_name = 'pserver_cpu'
+            resourcetype_id = str(uuid.uuid3(
+                uuid.NAMESPACE_URL, res_type_name))
             uow.resource_types.add(ResourceType(
                 resourcetype_id,
-                'pserver_cpu', stxobj.type,
-                resourcepool.oCloudId))
+                res_type_name, stxobj.type,
+                resourcepool.oCloudId,
+                description='A CPU resource type of the Physical Server'))
         else:
             resourcetype_id = first['resourceTypeId']
 
@@ -96,7 +99,7 @@ def create_by(stxobj: StxGenericModel, parent: Resource, resourcetype_id: str)\
     resourcepool_id = parent.resourcePoolId
     parent_id = parent.resourceId
     gAssetId = ''  # TODO: global ID
-    description = "A CPU resource of the physical server"
+    description = "%s : A CPU resource of the physical server" % stxobj.name
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
                         stxobj.name, parent_id, gAssetId, stxobj.content,
                         description)

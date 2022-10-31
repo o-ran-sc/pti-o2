@@ -75,11 +75,12 @@ def is_outdated(resourcepool: ResourcePool, stxobj: StxGenericModel):
 
 def create_by(stxobj: StxGenericModel, parentid: str) -> ResourcePool:
     content = json.loads(stxobj.content)
-    globalcloudId = stxobj.id  # to be updated
+    globalLocationId = ''  # to be updated
     description = "A Resource Pool"
+    location = content['location'] if content['location'] is not None else ''
     resourcepool = ResourcePool(stxobj.id, stxobj.name,
-                                content['location'],
-                                parentid, globalcloudId, description)
+                                location,
+                                parentid, globalLocationId, description)
     resourcepool.createtime = stxobj.createtime
     resourcepool.updatetime = stxobj.updatetime
     resourcepool.hash = stxobj.hash
@@ -93,7 +94,8 @@ def update_by(target: ResourcePool, stxobj: StxGenericModel,
         raise MismatchedModel("Mismatched Id")
     content = json.loads(stxobj.content)
     target.name = stxobj.name
-    target.location = content['location']
+    target.location = content['location'] if content['location'] is not None \
+        else ''
     target.createtime = stxobj.createtime
     target.updatetime = stxobj.updatetime
     target.hash = stxobj.hash

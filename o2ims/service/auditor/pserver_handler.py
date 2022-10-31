@@ -54,11 +54,14 @@ def update_pserver(
         )
         first = res.first()
         if first is None:
-            resourcetype_id = str(uuid.uuid4())
+            res_type_name = 'pserver'
+            resourcetype_id = str(uuid.uuid3(
+                uuid.NAMESPACE_URL, res_type_name))
             uow.resource_types.add(ResourceType(
                 resourcetype_id,
-                'pserver', stxobj.type,
-                resourcepool.oCloudId))
+                res_type_name, stxobj.type,
+                resourcepool.oCloudId,
+                description='The Physical Server resource type'))
         else:
             resourcetype_id = first['resourceTypeId']
 
@@ -99,7 +102,7 @@ def create_by(stxobj: StxGenericModel, parentid: str, resourcetype_id: str) \
     resourcepool_id = parentid
     parent_id = None  # the root of the resource has no parent id
     gAssetId = ''  # TODO: global ID
-    description = "A physical server resource"
+    description = "%s : A physical server resource" % stxobj.name
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
                         stxobj.name, parent_id, gAssetId, stxobj.content,
                         description)

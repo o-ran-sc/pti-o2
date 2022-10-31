@@ -37,8 +37,6 @@ def update_alarm(
                 + " id: " + str(fmobj.id)
                 + " hash: " + str(fmobj.hash))
     with uow:
-        logger.debug('+++test alarm dict:' +
-                     str(len(uow.alarm_dictionaries.list())))
         alarm_event_record = uow.alarm_event_records.get(fmobj.id)
         if not alarm_event_record:
             logger.info("add alarm event record:" + fmobj.name

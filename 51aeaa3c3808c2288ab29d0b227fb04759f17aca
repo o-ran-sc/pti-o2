@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "458b0d56_b3a1d899",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000237
+      },
+      "writtenOn": "2022-10-31T13:14:25Z",
+      "side": 1,
+      "message": "The change looks good to me, but the summary of the commit msg is too long and there is no Issue-ID, it\u0027s better to rephrase and add Issue-ID.",
+      "revId": "51aeaa3c3808c2288ab29d0b227fb04759f17aca",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

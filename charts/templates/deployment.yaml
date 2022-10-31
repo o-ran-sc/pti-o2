@@ -153,12 +153,16 @@ spec:
               mountPath: /configs/o2app.conf
               subPath: config.json
               readOnly: true
-            - name: caconfig
-              mountPath: /configs/ca.cert
+            - name: servercrt
+              mountPath: /configs/server.crt
               subPath: config.json
               readOnly: true
-            - name: serverkeyconfig
+            - name: serverkey
               mountPath: /configs/server.key
+              subPath: config.json
+              readOnly: true
+            - name: smocrt
+              mountPath: /configs/smoca.crt
               subPath: config.json
               readOnly: true
         - name: helmcli
@@ -184,10 +188,12 @@ spec:
             name: {{ .Chart.Name }}-application-config
           name: applicationconfig
         - configMap:
-            name: {{ .Chart.Name }}-serverkeyconfig
-          name: serverkeyconfig
+            name: {{ .Chart.Name }}-serverkey
+          name: serverkey
         - configMap:
-            name: {{ .Chart.Name }}-caconfig
-          name: caconfig
+            name: {{ .Chart.Name }}-servercrt
+          name: servercrt
+        - configMap:
+            name: {{ .Chart.Name }}-smocacrt
+          name: smocacrt
 ---
-

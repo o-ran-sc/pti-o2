@@ -16,7 +16,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Chart.Name }}-serverkeyconfig
+  name: {{ .Chart.Name }}-servercrt
   namespace: {{ .Values.global.namespace }}
   labels:
     release: {{ .Release.Name }}
@@ -24,4 +24,4 @@ metadata:
     chart: {{ .Chart.Name }}
 # ...
 binaryData:
-  config.json: {{ .Values.serverkeyconfig }}
+  config.json: {{ .Values.servercrt }}

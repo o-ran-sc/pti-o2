@@ -16,6 +16,7 @@ import os
 import sys
 from urllib.parse import urlparse
 
+from o2common import config
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -40,6 +41,9 @@ def get_postgres_uri():
 def get_api_url():
     host_interal = os.environ.get("API_HOST", "localhost")
     host_external = os.environ.get("API_HOST_EXTERNAL_FLOATING")
+    if config.conf.OCLOUD.API_HOST_EXTERNAL_FLOATING is not None and \
+            config.conf.OCLOUD.API_HOST_EXTERNAL_FLOATING != '':
+        host_external = config.conf.OCLOUD.API_HOST_EXTERNAL_FLOATING
     host = host_interal if host_external is None or host_external == '' \
         else host_external
 
@@ -78,6 +82,28 @@ def get_smo_o2endpoint():
     return smo_o2endpoint
 
 
+def get_stx_client_args():
+    client_args = dict(
+        auth_url=os.environ.get('OS_AUTH_URL', _DEFAULT_STX_URL),
+        username=os.environ.get('OS_USERNAME', "admin"),
+        api_key=os.environ.get('OS_PASSWORD', "fakepasswd1"),
+        project_name=os.environ.get('OS_PROJECT_NAME', "admin"),
+    )
+    if config.conf.OCLOUD.OS_AUTH_URL is not None and \
+            config.conf.OCLOUD.OS_AUTH_URL != '':
+        client_args['auth_url'] = config.conf.OCLOUD.OS_AUTH_URL
+    if config.conf.OCLOUD.OS_USERNAME is not None and \
+            config.conf.OCLOUD.OS_USERNAME != '':
+        client_args['username'] = config.conf.OCLOUD.OS_USERNAME
+    if config.conf.OCLOUD.OS_PASSWORD is not None and \
+            config.conf.OCLOUD.OS_PASSWORD != '':
+        client_args['api_key'] = config.conf.OCLOUD.OS_PASSWORD
+    if config.conf.OCLOUD.OS_PROJECT_NAME is not None and \
+            config.conf.OCLOUD.OS_PROJECT_NAME != '':
+        client_args['project_name'] = config.conf.OCLOUD.OS_PROJECT_NAME
+    return client_args
+
+
 def get_stx_access_info(region_name="RegionOne", subcloud_hostname: str = "",
                         sub_is_https: bool = False):
     # authurl = os.environ.get("STX_AUTH_URL", "http://192.168.204.1:5000/v3")
@@ -85,12 +111,13 @@ def get_stx_access_info(region_name="RegionOne", subcloud_hostname: str = "",
     # pswd = os.environ.get("STX_PASSWORD", "passwd1")
     # stx_access_info = (authurl, username, pswd)
     try:
-        client_args = dict(
-            auth_url=os.environ.get('OS_AUTH_URL', _DEFAULT_STX_URL),
-            username=os.environ.get('OS_USERNAME', "admin"),
-            api_key=os.environ.get('OS_PASSWORD', "fakepasswd1"),
-            project_name=os.environ.get('OS_PROJECT_NAME', "admin"),
-        )
+        # client_args = dict(
+        #     auth_url=os.environ.get('OS_AUTH_URL', _DEFAULT_STX_URL),
+        #     username=os.environ.get('OS_USERNAME', "admin"),
+        #     api_key=os.environ.get('OS_PASSWORD', "fakepasswd1"),
+        #     project_name=os.environ.get('OS_PROJECT_NAME', "admin"),
+        # )
+        client_args = get_stx_client_args()
     except KeyError:
         logger.error('Please source your RC file before execution, '
                      'e.g.: `source ~/downloads/admin-rc.sh`')
@@ -125,12 +152,13 @@ def get_stx_access_info(region_name="RegionOne", subcloud_hostname: str = "",
 
 def get_dc_access_info():
     try:
-        client_args = dict(
-            auth_url=os.environ.get('OS_AUTH_URL', _DEFAULT_STX_URL),
-            username=os.environ.get('OS_USERNAME', "admin"),
-            api_key=os.environ.get('OS_PASSWORD', "fakepasswd1"),
-            project_name=os.environ.get('OS_PROJECT_NAME', "admin"),
-        )
+        # client_args = dict(
+        #     auth_url=os.environ.get('OS_AUTH_URL', _DEFAULT_STX_URL),
+        #     username=os.environ.get('OS_USERNAME', "admin"),
+        #     api_key=os.environ.get('OS_PASSWORD', "fakepasswd1"),
+        #     project_name=os.environ.get('OS_PROJECT_NAME', "admin"),
+        # )
+        client_args = get_stx_client_args()
     except KeyError:
         logger.error('Please source your RC file before execution, '
                      'e.g.: `source ~/downloads/admin-rc.sh`')
@@ -157,12 +185,13 @@ def get_dc_access_info():
 
 def get_fm_access_info():
     try:
-        client_args = dict(
-            auth_url=os.environ.get('OS_AUTH_URL', _DEFAULT_STX_URL),
-            username=os.environ.get('OS_USERNAME', "admin"),
-            api_key=os.environ.get('OS_PASSWORD', "fakepasswd1"),
-            project_name=os.environ.get('OS_PROJECT_NAME', "admin"),
-        )
+        # client_args = dict(
+        #     auth_url=os.environ.get('OS_AUTH_URL', _DEFAULT_STX_URL),
+        #     username=os.environ.get('OS_USERNAME', "admin"),
+        #     api_key=os.environ.get('OS_PASSWORD', "fakepasswd1"),
+        #     project_name=os.environ.get('OS_PROJECT_NAME', "admin"),
+        # )
+        client_args = get_stx_client_args()
     except KeyError:
         logger.error('Please source your RC file before execution, '
                      'e.g.: `source ~/downloads/admin-rc.sh`')
@@ -246,6 +275,9 @@ def gen_k8s_config_dict(cluster_api_endpoint, cluster_ca_cert, admin_user,
 
 def get_helmcli_access():
     host_external = os.environ.get("API_HOST_EXTERNAL_FLOATING")
+    if config.conf.OCLOUD.API_HOST_EXTERNAL_FLOATING is not None and \
+            config.conf.OCLOUD.API_HOST_EXTERNAL_FLOATING != '':
+        host_external = config.conf.OCLOUD.API_HOST_EXTERNAL_FLOATING
     host = "127.0.0.1" if host_external is None or host_external == '' \
         else host_external
     port = "10022" if host_external is None or host_external == '' \

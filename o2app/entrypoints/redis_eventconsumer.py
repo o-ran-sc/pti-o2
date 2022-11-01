@@ -22,6 +22,7 @@ from o2dms.domain import commands
 from o2ims.domain import commands as imscmd
 from o2ims.domain.subscription_obj import Message2SMO, RegistrationMessage
 from o2ims.domain.alarm_obj import AlarmEvent2SMO
+import sys
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)

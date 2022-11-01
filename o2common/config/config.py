@@ -30,6 +30,11 @@ def get_config_path():
     return path
 
 
+def get_smo_ca_config_path():
+    path = os.environ.get("SMO_CA_CONFIG", "/configs/smoca.crt")
+    return path
+
+
 def get_postgres_uri():
     host = os.environ.get("DB_HOST", "localhost")
     port = 54321 if host == "localhost" else 5432

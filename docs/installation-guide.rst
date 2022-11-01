@@ -191,6 +191,12 @@ The following instruction should be done outside of INF platform controller host
   smo_register_url = http://127.0.0.1:8090/register
   smo_token_data = ${SMO_TOKEN_DATA}
 
+  [OCLOUD]
+  OS_AUTH_URL: ${OS_AUTH_URL}
+  OS_USERNAME: ${OS_USERNAME}
+  OS_PASSWORD: ${OS_PASSWORD}
+  API_HOST_EXTERNAL_FLOATING: ${API_HOST_EXTERNAL_FLOATING}
+
   [API]
 
   [WATCHER]
@@ -253,12 +259,6 @@ The following instruction should be done outside of INF platform controller host
       tag: 2.0.0
       pullPolicy: IfNotPresent
     logginglevel: "DEBUG"
-
-  ocloud:
-    OS_AUTH_URL: "${OS_AUTH_URL}"
-    OS_USERNAME: "${OS_USERNAME}"
-    OS_PASSWORD: "${OS_PASSWORD}"
-    API_HOST_EXTERNAL_FLOATING: "${API_HOST_EXTERNAL_FLOATING}"
 
   applicationconfig: ${applicationconfig}
   servercrt: ${servercrt}

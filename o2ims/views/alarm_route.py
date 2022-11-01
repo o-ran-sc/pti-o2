@@ -17,6 +17,7 @@ from flask_restx import Resource, reqparse
 
 from o2common.service.messagebus import MessageBus
 from o2common.views.pagination_route import link_header, PAGE_PARAM
+from o2common.views.route_exception import NotFoundException
 from o2ims.views import alarm_view
 from o2ims.views.api_ns import api_ims_monitoring as api_monitoring_v1
 from o2ims.views.alarm_dto import AlarmDTO, SubscriptionDTO
@@ -123,14 +124,14 @@ class AlarmGetRouter(Resource):
 
     model = AlarmDTO.alarm_event_record_get
 
-    @api_monitoring_v1.doc('Get resource type')
+    @api_monitoring_v1.doc('Get AlarmEventRecord')
     @api_monitoring_v1.marshal_with(model)
     def get(self, alarmEventRecordId):
         result = alarm_view.alarm_event_record_one(alarmEventRecordId, bus.uow)
         if result is not None:
             return result
-        api_monitoring_v1.abort(
-            404, "Resource type {} doesn't exist".format(alarmEventRecordId))
+        raise NotFoundException(
+            "Alarm Event Record {} doesn't exist".format(alarmEventRecordId))
 
 
 # ----------  Alarm Subscriptions ---------- #
@@ -229,11 +230,11 @@ class SubscriptionGetDelRouter(Resource):
             alarmSubscriptionID, bus.uow)
         if result is not None:
             return result
-        api_monitoring_v1.abort(404, "Subscription {} doesn't exist".format(
-            alarmSubscriptionID))
+        raise NotFoundException(
+            "Subscription {} doesn't exist".format(alarmSubscriptionID))
 
     @api_monitoring_v1.doc('Delete subscription by ID')
-    @api_monitoring_v1.response(204, 'Subscription deleted')
+    @api_monitoring_v1.response(200, 'Subscription deleted')
     def delete(self, alarmSubscriptionID):
         result = alarm_view.subscription_delete(alarmSubscriptionID, bus.uow)
-        return result, 204
+        return result, 200

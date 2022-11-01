@@ -15,6 +15,8 @@
 from sqlalchemy.sql.elements import ColumnElement
 from sqlalchemy import or_
 
+from o2common.views.route_exception import BadRequestException
+
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -47,7 +49,8 @@ def toFilterArgs(operation: str, obj: ColumnElement, key: str, values: list):
     if not hasattr(obj, key):
         logger.warning('Filter attrName %s not in Object %s.' %
                        (key, str(obj)))
-        return []
+        raise BadRequestException(
+            'Filter attrName {} not in the Object'.format(key))
 
     if operation in ['eq', 'neq', 'gt', 'lt', 'gte', 'lte']:
         if len(values) != 1:

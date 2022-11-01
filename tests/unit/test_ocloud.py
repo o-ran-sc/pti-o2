@@ -470,7 +470,7 @@ def test_flask_delete(mock_flask_uow):
 
         subscription_id1 = str(uuid.uuid4())
         resp = client.delete(apibase+"/subscriptions/"+subscription_id1)
-        assert resp.status_code == 204
+        assert resp.status_code == 200
 
 
 def test_flask_not_allowed(mock_flask_uow):

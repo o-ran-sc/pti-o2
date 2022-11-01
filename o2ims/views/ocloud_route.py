@@ -17,7 +17,7 @@ from flask_restx import Resource, reqparse
 
 from o2common.service.messagebus import MessageBus
 from o2common.views.pagination_route import link_header, PAGE_PARAM
-from o2common.views.route import ProblemDetails
+from o2common.views.route_exception import NotFoundException
 from o2ims.views import ocloud_view
 from o2ims.views.api_ns import api_ims_inventory as api_ims_inventory_v1
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
@@ -82,9 +82,7 @@ class OcloudsListRouter(Resource):
         res = ocloud_view.oclouds(bus.uow)
         if len(res) > 0:
             return res[0]
-        ProblemDetails(
-            api_ims_inventory_v1,
-            404, "oCloud doesn't exist").abort()
+        raise NotFoundException("oCloud doesn't exist")
 
 
 # ----------  ResourceTypes ---------- #
@@ -169,10 +167,8 @@ class ResourceTypeGetRouter(Resource):
         result = ocloud_view.resource_type_one(resourceTypeID, bus.uow)
         if result is not None:
             return result
-        ProblemDetails(
-            api_ims_inventory_v1,
-            404, "Resource type {} doesn't exist".format(
-                resourceTypeID)).abort()
+        raise NotFoundException("Resource type {} doesn't exist".format(
+            resourceTypeID))
 
 
 # ----------  ResourcePools ---------- #
@@ -257,10 +253,8 @@ class ResourcePoolGetRouter(Resource):
         result = ocloud_view.resource_pool_one(resourcePoolID, bus.uow)
         if result is not None:
             return result
-        ProblemDetails(
-            api_ims_inventory_v1,
-            404, "Resource pool {} doesn't exist".format(
-                resourcePoolID)).abort()
+        raise NotFoundException("Resource pool {} doesn't exist".format(
+            resourcePoolID))
 
 
 # ----------  Resources ---------- #
@@ -358,10 +352,8 @@ class ResourceGetRouter(Resource):
         result = ocloud_view.resource_one(resourceID, bus.uow)
         if result is not None:
             return result
-        ProblemDetails(
-            api_ims_inventory_v1,
-            404, "Resource {} doesn't exist".format(
-                resourceID)).abort()
+        raise NotFoundException("Resource {} doesn't exist".format(
+            resourceID))
 
 
 # ----------  DeploymentManagers ---------- #
@@ -456,11 +448,8 @@ class DeploymentManagerGetRouter(Resource):
             deploymentManagerID, bus.uow, profile)
         if result is not None:
             return result
-
-        ProblemDetails(
-            api_ims_inventory_v1,
-            404, "Deployment manager {} doesn't exist".format(
-                deploymentManagerID)).abort()
+        raise NotFoundException("Deployment manager {} doesn't exist".format(
+            deploymentManagerID))
 
 
 # ----------  Subscriptions ---------- #
@@ -559,13 +548,11 @@ class SubscriptionGetDelRouter(Resource):
             subscriptionID, bus.uow)
         if result is not None:
             return result
-        ProblemDetails(
-            api_ims_inventory_v1,
-            404, "Subscription {} doesn't exist".format(
-                subscriptionID)).abort()
+        raise NotFoundException("Subscription {} doesn't exist".format(
+            subscriptionID))
 
     @api_ims_inventory_v1.doc('Delete subscription by ID')
-    @api_ims_inventory_v1.response(204, 'Subscription deleted')
+    @api_ims_inventory_v1.response(200, 'Subscription deleted')
     def delete(self, subscriptionID):
         result = ocloud_view.subscription_delete(subscriptionID, bus.uow)
-        return result, 204
+        return result, 200

@@ -29,6 +29,7 @@ from flask_restx.mask import Mask  # , apply as apply_mask
 from flask_restx.model import Model
 from flask_restx.fields import List, Nested, String
 from flask_restx.utils import unpack
+
 from o2common.domain.base import Serializer
 
 from o2common.helper import o2logging
@@ -131,7 +132,9 @@ class o2_marshal_with(marshal_with):
             all_fields_without_space = kwargs['all_fields'].replace(" ", "")
             all_fields = all_fields_without_space.lower()
             if 'true' == all_fields:
-                mask_val = ''
+                selector = self.__gen_selector_from_model_with_value(
+                    self.fields)
+                mask_val = self.__gen_mask_from_selector(selector)
 
         elif 'fields' in kwargs and kwargs['fields'] != '':
             fields_without_space = kwargs['fields'].replace(" ", "")
@@ -149,6 +152,7 @@ class o2_marshal_with(marshal_with):
             selector = {}
 
             self.__update_selector_value(selector, fields_without_space, True)
+            self.__set_default_mask(selector)
 
             mask_val = self.__gen_mask_from_selector(selector)
 
@@ -161,6 +165,7 @@ class o2_marshal_with(marshal_with):
 
             self.__update_selector_value(
                 selector, exclude_fields_without_space, False)
+            self.__set_default_mask(selector)
 
             mask_val = self.__gen_mask_from_selector(selector)
         elif 'exclude_default' in kwargs and kwargs['exclude_default'] != '':
@@ -201,14 +206,14 @@ class o2_marshal_with(marshal_with):
             selector[i] = default_val
         return selector
 
-    def __update_selector_value(self, default_selector: dict, filter: str,
+    def __update_selector_value(self, selector: dict, filter: str,
                                 val: bool):
         fields = filter.split(',')
         for f in fields:
             if '/' in f:
-                self.__update_selector_tree_value(default_selector, f, val)
+                self.__update_selector_tree_value(selector, f, val)
                 continue
-            default_selector[f] = val
+            selector[f] = val
 
     def __update_selector_tree_value(self, m: dict, filter: str, val: bool):
         filter_list = filter.split('/', 1)
@@ -232,30 +237,6 @@ class o2_marshal_with(marshal_with):
 
         return '{%s}' % ','.join(mask_li)
 
-
-class ProblemDetails(Serializer):
-    def __init__(self, namespace: O2Namespace, code: int, detail: str,
-                 title=None, instance=None
-                 ) -> None:
-        self.ns = namespace
-        self.status = code
-        self.detail = detail
-        self.type = request.path
-        self.title = title if title is not None else self.getTitle(code)
-        self.instance = instance if instance is not None else []
-
-    def getTitle(self, code):
-        return HTTPStatus(code).phrase
-
-    def abort(self):
-        self.ns.abort(self.status, self.detail, **self.serialize())
-
-    def serialize(self):
-        details = {}
-        for key in dir(self):
-            if key == 'ns' or key.startswith('__') or\
-                    callable(getattr(self, key)):
-                continue
-            else:
-                details[key] = getattr(self, key)
-        return details
+    def __set_default_mask(self, selector: dict, val: bool = True):
+        default_selector = str(getattr(self.fields, "__mask__"))[1:-1]
+        self.__update_selector_value(selector, default_selector, val)

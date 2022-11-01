@@ -36,7 +36,8 @@ class OcloudDTO:
             # 'deploymentManagers': fields.String,
             # 'smoRegistrationService': fields.String
             'extensions': fields.String
-        }
+        },
+        mask='{oCloudId,globalcloudId,name,description,serviceUri}'
     )
 
 
@@ -69,7 +70,8 @@ class ResourceTypeDTO:
             # 'resourceKind': fields.String,
             # 'resourceClass': fields.String,
             'extensions': fields.String
-        }
+        },
+        mask='{resourceTypeId,name,description,model,vendor,version}'
     )
 
 
@@ -87,7 +89,8 @@ class ResourcePoolDTO:
             'location': fields.String,
             # 'resources': fields.String,
             'extensions': fields.String
-        }
+        },
+        mask='{resourcePoolId,oCloudId,globalLocationId,name,description}'
     )
 
 
@@ -105,7 +108,8 @@ class ResourceDTO:
             'description': fields.String,
             # 'elements': fields.String,
             'extensions': fields.String
-        }
+        },
+        mask='{resourceId,resourcePoolId,resourceTypeId,description,parentId}'
     )
 
     def recursive_resource_mapping(iteration_number=2):
@@ -126,7 +130,9 @@ class ResourceDTO:
                 fields.Nested(ResourceDTO.recursive_resource_mapping(
                     iteration_number-1)), attribute='children')
         return api_ims_inventory_v1.model(
-            'ResourceGetDto' + str(iteration_number), resource_json_mapping)
+            'ResourceGetDto' + str(iteration_number), resource_json_mapping,
+            mask='{resourceId,resourcePoolId,resourceTypeId,description,' +
+            'parentId}')
 
 
 class DeploymentManagerDTO:
@@ -151,7 +157,9 @@ class DeploymentManagerDTO:
                 description='Profile support list, use default for the return \
                      endpoint'),
             'extensions': fields.String
-        }
+        },
+        mask='{deploymentManagerId,name,description,oCloudId,serviceUri,' + \
+        'profileSupportList}'
     )
 
     profile = api_ims_inventory_v1.model("DeploymentManagerGetDtoProfile", {
@@ -187,7 +195,9 @@ class DeploymentManagerDTO:
             'profileName': fields.String,
             'profileData': fields.Nested(profile, False, True),
             'extensions': fields.String
-        }
+        },
+        mask='{deploymentManagerId,name,description,oCloudId,serviceUri,' +\
+        'profileName,profileData}'
     )
 
 
@@ -201,7 +211,8 @@ class SubscriptionDTO:
             'callback': fields.String,
             'consumerSubscriptionId': fields.String,
             'filter': fields.String,
-        }
+        },
+        mask='{subscriptionId,callback}'
     )
 
     subscription = api_ims_inventory_v1.model(

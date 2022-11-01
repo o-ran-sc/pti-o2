@@ -11,11 +11,9 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
+from . import api_ns, ocloud_route, alarm_route
 
 from o2common.config import config
-from . import ocloud_route, alarm_route
-from . import api_ns
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)

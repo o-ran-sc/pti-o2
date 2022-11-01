@@ -86,6 +86,9 @@ spec:
               mountPath: /configs/o2app.conf
               subPath: config.json
               readOnly: true
+            - name: smocacrt
+              mountPath: /configs/smoca.crt
+              subPath: config.json
         - name: watcher
           image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
           command: ["/bin/bash", "/opt/o2watcher_start.sh"]
@@ -159,10 +162,6 @@ spec:
               readOnly: true
             - name: serverkey
               mountPath: /configs/server.key
-              subPath: config.json
-              readOnly: true
-            - name: smocacrt
-              mountPath: /configs/smoca.crt
               subPath: config.json
               readOnly: true
         - name: helmcli

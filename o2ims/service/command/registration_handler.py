@@ -17,6 +17,7 @@ import json
 # import asyncio
 # import requests
 import http.client
+import ssl
 from urllib.parse import urlparse
 from retry import retry
 
@@ -48,9 +49,16 @@ def registry_to_smo(
             register_smo(uow, ocloud_dict)
 
 
+class RegIMSToSMOExp(Exception):
+    def __init__(self, value):
+        self.value = value
+
+
 def register_smo(uow, ocloud_data):
     call_res = call_smo(ocloud_data)
     logger.debug('Call SMO response is {}'.format(call_res))
+    if call_res is not True:
+        raise RegIMSToSMOExp('Register o2ims to SMO failed')
     # TODO: record the result for the smo register
 
 
@@ -87,9 +95,36 @@ def call_smo(reg_data: dict):
     logger.info('URL: {}, data: {}'.format(
         conf.DEFAULT.smo_register_url, callback_data))
     o = urlparse(conf.DEFAULT.smo_register_url)
-    conn = http.client.HTTPConnection(o.netloc)
+    if o.scheme == 'https':
+        sslctx = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH)
+        sslctx.check_hostname = True
+        sslctx.verify_mode = ssl.CERT_REQUIRED
+        sslctx.load_default_certs()
+        conn = http.client.HTTPSConnection(o.netloc, context=sslctx)
+    else:
+        conn = http.client.HTTPConnection(o.netloc)
+
+    try:
+        return post_data(conn, o.path, callback_data)
+    except ssl.SSLCertVerificationError as e:
+        logger.info('post data except: {}'.format(e))
+        if 'self signed' in str(e):
+            sslctx = ssl.create_default_context(
+                purpose=ssl.Purpose.SERVER_AUTH)
+            smo_ca_path = config.get_smo_ca_config_path()
+            sslctx.load_verify_locations(smo_ca_path)
+            sslctx.check_hostname = False
+            sslctx.verify_mode = ssl.CERT_REQUIRED
+            conn = http.client.HTTPSConnection(o.netloc, context=sslctx)
+            return post_data(conn, o.path, callback_data)
+    except Exception as e:
+        logger.info('except: {}'.format(e))
+        return False
+
+
+def post_data(conn, path, data):
     headers = {'Content-type': 'application/json'}
-    conn.request('POST', o.path, callback_data, headers)
+    conn.request('POST', path, data, headers)
     resp = conn.getresponse()
     data = resp.read().decode('utf-8')
     # json_data = json.loads(data)

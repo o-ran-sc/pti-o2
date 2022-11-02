@@ -13,7 +13,8 @@
 #  limitations under the License.
 
 from urllib.parse import urlparse
-from flask import abort
+
+from o2common.views.route_exception import BadRequestException
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -28,7 +29,8 @@ def link_header(full_path: str, ret):
     page_current = ret.pop('page_current')
 
     if page_current > page_total:
-        abort(400, "Page size {} bad request.".format(page_current))
+        raise BadRequestException(
+            "Page size {} bad request.".format(page_current))
 
     if 0 == count:
         return [], {'X-Total-Count': count}

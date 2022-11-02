@@ -30,6 +30,8 @@ from flask_restx.model import Model
 from flask_restx.fields import List, Nested, String
 from flask_restx.utils import unpack
 
+from o2common.views.route_exception import BadRequestException
+
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -128,11 +130,13 @@ class o2_marshal_with(marshal_with):
         mask_val = ''
         if 'all_fields' in kwargs:
             all_fields_without_space = kwargs['all_fields'].replace(" ", "")
-            all_fields = all_fields_without_space.lower()
-            if 'true' == all_fields:
-                selector = self.__gen_selector_from_model_with_value(
-                    self.fields)
-                mask_val = self.__gen_mask_from_selector(selector)
+            logger.info('all_fields selector value is {}'.format(
+                all_fields_without_space))
+            # all_fields = all_fields_without_space.lower()
+            # if 'true' == all_fields:
+            selector = self.__gen_selector_from_model_with_value(
+                self.fields)
+            mask_val = self.__gen_mask_from_selector(selector)
 
         elif 'fields' in kwargs and kwargs['fields'] != '':
             fields_without_space = kwargs['fields'].replace(" ", "")
@@ -211,6 +215,9 @@ class o2_marshal_with(marshal_with):
             if '/' in f:
                 self.__update_selector_tree_value(selector, f, val)
                 continue
+            if f not in self.fields:
+                raise BadRequestException(
+                    'Selector attribute {} not found'.format(f))
             selector[f] = val
 
     def __update_selector_tree_value(self, m: dict, filter: str, val: bool):

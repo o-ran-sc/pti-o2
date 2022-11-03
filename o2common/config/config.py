@@ -303,25 +303,22 @@ def get_events_yaml_filename():
         return events_yaml_name
     return "/configs/events.yaml"
 
+
 # get k8s host from env:
-
-
 def get_k8s_host():
     k8s_host = os.environ.get("KUBERNETES_SERVICE_HOST")
     if k8s_host is None:
         raise Exception('Get k8s host failed.')
     return k8s_host
 
+
 # get k8s host port from env:
-
-
 def get_k8s_port():
     k8s_port = os.environ.get("KUBERNETES_SERVICE_PORT_HTTPS", '443')
     return k8s_port
 
+
 # token review url
-
-
 def get_review_url():
     try:
         api = '/apis/authentication.k8s.io/v1/tokenreviews'
@@ -330,9 +327,8 @@ def get_review_url():
     except Exception:
         raise Exception('Get k8s review url failed')
 
+
 # get reviewer token
-
-
 def get_reviewer_token():
     # token path default is below.
     token_path = '/var/run/secrets/kubernetes.io/serviceaccount/token'
@@ -343,3 +339,13 @@ def get_reviewer_token():
 
 def get_auth_provider():
     return 'k8s'
+
+
+def get_dms_support_profiles():
+    profiles = config.conf.API.DMS_SUPPORT_PROFILES
+    profiles = profiles.replace("'", "").replace(
+        '"', "").replace('[', "").replace(']', "")
+    profiles = profiles.split(',')
+    if 'native_k8sapi' not in profiles:
+        profiles.append('native_k8sapi')
+    return profiles

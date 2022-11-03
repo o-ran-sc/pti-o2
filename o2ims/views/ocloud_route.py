@@ -18,6 +18,7 @@ from flask_restx import Resource, reqparse
 from o2common.service.messagebus import MessageBus
 from o2common.views.pagination_route import link_header, PAGE_PARAM
 from o2common.views.route_exception import NotFoundException
+from o2ims.domain import ocloud
 from o2ims.views import ocloud_view
 from o2ims.views.api_ns import api_ims_inventory as api_ims_inventory_v1
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
@@ -408,8 +409,9 @@ class DeploymentManagersListRouter(Resource):
 @api_ims_inventory_v1.route("/v1/deploymentManagers/<deploymentManagerID>")
 @api_ims_inventory_v1.param('deploymentManagerID',
                             'ID of the deployment manager')
-@api_ims_inventory_v1.param('profile', 'DMS profile: value supports "sol018"',
-                            _in='query')
+@api_ims_inventory_v1.param(
+    'profile', 'DMS profile: value supports "native_k8sapi"',
+    _in='query')
 @api_ims_inventory_v1.response(404, 'Deployment manager not found')
 @api_ims_inventory_v1.param(
     'all_fields',
@@ -443,11 +445,16 @@ class DeploymentManagerGetRouter(Resource):
         args = parser.parse_args()
         profile = (
             args.profile if args.profile is not None and args.profile != ''
-            else 'default')
+            else ocloud.DeploymentManagerProfileDefault)
         result = ocloud_view.deployment_manager_one(
             deploymentManagerID, bus.uow, profile)
-        if result is not None:
+        if result is not None and result != "":
             return result
+        elif result == "":
+            raise NotFoundException(
+                "Profile {} doesn't support".format(
+                    args.profile))
+
         raise NotFoundException("Deployment manager {} doesn't exist".format(
             deploymentManagerID))
 

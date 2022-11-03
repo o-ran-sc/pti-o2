@@ -140,10 +140,12 @@ def deployment_manager_one(deploymentManagerId: str,
 
     profile_data = result.pop("profile", None)
     result['profileName'] = profile
+    profiles = config.get_dms_support_profiles()
+    if profile not in profiles:
+        return ""
 
-    if ocloud.DeploymentManagerProfileDefault == profile:
-        pass
-    elif ocloud.DeploymentManagerProfileSOL018 == profile:
+    if ocloud.DeploymentManagerProfileDefault == profile \
+            or ocloud.DeploymentManagerProfileSOL018 == profile:
         result['serviceUri'] = \
             profile_data['cluster_api_endpoint']
         result['profileData'] = profile_data
@@ -159,7 +161,7 @@ def deployment_manager_one(deploymentManagerId: str,
             deploymentManagerId, profile_data)
         result['profileData'] = helmcli_profile
     else:
-        return None
+        return ""
 
     return result
 

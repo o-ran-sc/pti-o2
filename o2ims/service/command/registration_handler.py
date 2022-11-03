@@ -55,9 +55,11 @@ class RegIMSToSMOExp(Exception):
 
 
 def register_smo(uow, ocloud_data):
-    call_res = call_smo(ocloud_data)
+    call_res, status = call_smo(ocloud_data)
     logger.debug('Call SMO response is {}'.format(call_res))
-    if call_res is not True:
+    if call_res is True:
+        logger.info('Register to smo success response is {}'.format(status))
+    else:
         raise RegIMSToSMOExp('Register o2ims to SMO failed')
     # TODO: record the result for the smo register
 
@@ -96,30 +98,26 @@ def call_smo(reg_data: dict):
         conf.DEFAULT.smo_register_url, callback_data))
     o = urlparse(conf.DEFAULT.smo_register_url)
     if o.scheme == 'https':
-        sslctx = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH)
-        sslctx.check_hostname = True
-        sslctx.verify_mode = ssl.CERT_REQUIRED
-        sslctx.load_default_certs()
-        conn = http.client.HTTPSConnection(o.netloc, context=sslctx)
+        conn = get_https_conn_default(o.netloc)
     else:
-        conn = http.client.HTTPConnection(o.netloc)
+        conn = get_http_conn(o.netloc)
 
     try:
         return post_data(conn, o.path, callback_data)
     except ssl.SSLCertVerificationError as e:
-        logger.info('post data except: {}'.format(e))
+        logger.critical('Register to smo except: {}'.format(e))
         if 'self signed' in str(e):
-            sslctx = ssl.create_default_context(
-                purpose=ssl.Purpose.SERVER_AUTH)
-            smo_ca_path = config.get_smo_ca_config_path()
-            sslctx.load_verify_locations(smo_ca_path)
-            sslctx.check_hostname = False
-            sslctx.verify_mode = ssl.CERT_REQUIRED
-            conn = http.client.HTTPSConnection(o.netloc, context=sslctx)
-            return post_data(conn, o.path, callback_data)
+            conn = get_https_conn_selfsigned(o.netloc)
+            try:
+                return post_data(conn, o.path, callback_data)
+            except Exception as e:
+                logger.critical('Register to smo except: {}'.format(e))
+                # TODO: write the status to extension db table.
+                return False, None
+        return False, None
     except Exception as e:
-        logger.info('except: {}'.format(e))
-        return False
+        logger.critical('Register to smo except: {}'.format(e))
+        return False, None
 
 
 def post_data(conn, path, data):
@@ -129,8 +127,35 @@ def post_data(conn, path, data):
     data = resp.read().decode('utf-8')
     # json_data = json.loads(data)
     if resp.status == 202 or resp.status == 200:
-        logger.info('Registrer to SMO successed, response code {} {}, data {}'.
+        logger.info('Post data to SMO successed, response code {} {}, data {}'.
                     format(resp.status, resp.reason, data))
-        return True
+        return True, resp.status
     logger.error('Response code is: {}'.format(resp.status))
-    return False
+    return False, resp.status
+
+
+def get_http_conn(callbackurl):
+    conn = http.client.HTTPConnection(callbackurl)
+    return conn
+
+
+# with default CA
+def get_https_conn_default(callbackurl):
+    sslctx = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH)
+    sslctx.check_hostname = True
+    sslctx.verify_mode = ssl.CERT_REQUIRED
+    sslctx.load_default_certs()
+    conn = http.client.HTTPSConnection(callbackurl, context=sslctx)
+    return conn
+
+
+# with self signed ca
+def get_https_conn_selfsigned(callbackurl):
+    sslctx = ssl.create_default_context(
+        purpose=ssl.Purpose.SERVER_AUTH)
+    smo_ca_path = config.get_smo_ca_config_path()
+    sslctx.load_verify_locations(smo_ca_path)
+    sslctx.check_hostname = False
+    sslctx.verify_mode = ssl.CERT_REQUIRED
+    conn = http.client.HTTPSConnection(callbackurl, context=sslctx)
+    return conn

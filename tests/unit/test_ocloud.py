@@ -18,7 +18,7 @@ from unittest.mock import MagicMock
 from o2ims.domain import ocloud, subscription_obj
 from o2ims.domain import resource_type as rt
 from o2ims.views import ocloud_view
-from o2common.config import config
+from o2common.config import config, conf as CONF
 
 
 def setup_ocloud():
@@ -298,18 +298,24 @@ def test_view_deployment_manager_one(mock_uow):
             "profile": {}
         }
 
+    CONF.API.DMS_SUPPORT_PROFILES = 'native_k8sapi,sol018,sol018_helmcli'
+    cluster_endpoint = "https://test_k8s:6443"
+    session.return_value.query.return_value.filter_by.return_value.first.\
+        return_value.serialize.return_value['profile'] = {
+            "cluster_api_endpoint": cluster_endpoint
+        }
+
     # profile default
     deployment_manager_res = ocloud_view.deployment_manager_one(
         deployment_manager_id1, uow)
     assert str(deployment_manager_res.get(
         "deploymentManagerId")) == deployment_manager_id1
     assert str(deployment_manager_res.get(
-        'serviceUri')) == dms_endpoint
+        'serviceUri')) == cluster_endpoint
     assert deployment_manager_res.get('profile') is None
 
     # profile sol018
     profileName = ocloud.DeploymentManagerProfileSOL018
-    cluster_endpoint = "https://test_k8s:6443"
     session.return_value.query.return_value.filter_by.return_value.first.\
         return_value.serialize.return_value['profile'] = {
             "cluster_api_endpoint": cluster_endpoint
@@ -323,13 +329,9 @@ def test_view_deployment_manager_one(mock_uow):
 
     # profile wrong name
     profileName = 'wrong_profile'
-    session.return_value.query.return_value.filter_by.return_value.first.\
-        return_value.serialize.return_value['profile'] = {
-            "cluster_api_endpoint": cluster_endpoint
-        }
     deployment_manager_res = ocloud_view.deployment_manager_one(
         deployment_manager_id1, uow, profile=profileName)
-    assert deployment_manager_res is None
+    assert deployment_manager_res == ""
 
 
 def test_view_subscriptions(mock_uow):

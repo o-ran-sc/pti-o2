@@ -51,11 +51,6 @@ def update_pserver_mem(
         )
         first = res.first()
         if first is None:
-            resourcetype_id = str(uuid.uuid4())
-            uow.resource_types.add(ResourceType(
-                resourcetype_id,
-                'pserver_mem', stxobj.type,
-                resourcepool.oCloudId))
             res_type_name = 'pserver_mem'
             resourcetype_id = str(uuid.uuid3(
                 uuid.NAMESPACE_URL, res_type_name))

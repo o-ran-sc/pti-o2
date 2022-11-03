@@ -16,15 +16,14 @@ from __future__ import annotations
 import json
 
 from o2common.domain.base import AgRoot, Serializer
-from o2common.config import conf as CONF
+from o2common.config import config, conf as CONF
 # from dataclasses import dataclass
 # from datetime import date
 # from typing import Optional, List, Set
 from .resource_type import ResourceKindEnum, ResourceTypeEnum
-# from uuid import UUID
 
 
-DeploymentManagerProfileDefault = 'default'
+DeploymentManagerProfileDefault = 'native_k8sapi'
 DeploymentManagerProfileSOL018 = 'sol018'
 DeploymentManagerProfileSOL018HelmCLI = 'sol018_helmcli'
 
@@ -55,9 +54,13 @@ class DeploymentManager(AgRoot, Serializer):
             d['profile'] = json.loads(d['profile'])
         d['profileSupportList'] = [
             DeploymentManagerProfileDefault,
-            DeploymentManagerProfileSOL018,
-            DeploymentManagerProfileSOL018HelmCLI,
         ]
+        profiles = config.get_dms_support_profiles()
+        for profile in profiles:
+            if profile == DeploymentManagerProfileSOL018:
+                d['profileSupportList'].append(profile)
+            elif profile == DeploymentManagerProfileSOL018HelmCLI:
+                d['profileSupportList'].append(profile)
 
         return d
 

@@ -128,7 +128,8 @@ def deployment_managers(uow: unit_of_work.AbstractUnitOfWork, **kwargs):
 
 def deployment_manager_one(deploymentManagerId: str,
                            uow: unit_of_work.AbstractUnitOfWork,
-                           profile: str = 'default'):
+                           profile: str =
+                           ocloud.DeploymentManagerProfileDefault):
     profile = profile.lower()
     with uow:
         first = uow.deployment_managers.get(deploymentManagerId)
@@ -140,10 +141,12 @@ def deployment_manager_one(deploymentManagerId: str,
 
     profile_data = result.pop("profile", None)
     result['profileName'] = profile
+    profiles = config.get_dms_support_profiles()
+    if profile not in profiles:
+        return ""
 
-    if ocloud.DeploymentManagerProfileDefault == profile:
-        pass
-    elif ocloud.DeploymentManagerProfileSOL018 == profile:
+    if ocloud.DeploymentManagerProfileDefault == profile \
+            or ocloud.DeploymentManagerProfileSOL018 == profile:
         result['serviceUri'] = \
             profile_data['cluster_api_endpoint']
         result['profileData'] = profile_data
@@ -159,7 +162,7 @@ def deployment_manager_one(deploymentManagerId: str,
             deploymentManagerId, profile_data)
         result['profileData'] = helmcli_profile
     else:
-        return None
+        return ""
 
     return result
 

@@ -22,7 +22,12 @@ from urllib.parse import urlparse
 from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.domain import commands
 from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEvent2SMO
-
+from o2ims.service.command.registration_handler import get_http_conn, \
+    post_data
+from o2ims.service.command.registration_handler \
+    import get_https_conn_selfsigned
+from o2ims.service.command.registration_handler import get_https_conn_default
+import ssl
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -54,14 +59,27 @@ def callback_smo(sub: AlarmSubscription, msg: AlarmEvent2SMO):
     logger.info('URL: {}, data: {}'.format(
         sub_data['callback'], callback_data))
     o = urlparse(sub_data['callback'])
-    conn = http.client.HTTPConnection(o.netloc)
-    headers = {'Content-type': 'application/json'}
-    conn.request('POST', o.path, callback_data, headers)
-    resp = conn.getresponse()
-    data = resp.read().decode('utf-8')
-    # json_data = json.loads(data)
-    if resp.status == 202 or resp.status == 200:
-        logger.info('Notify to SMO successed, response code {} {}, data {}'.
-                    format(resp.status, resp.reason, data))
-        return
-    logger.error('Response code is: {}'.format(resp.status))
+    if o.scheme == 'https':
+        conn = get_https_conn_default(o.netloc)
+    else:
+        conn = get_http_conn(o.netloc)
+    try:
+        rst, status = post_data(conn, o.path, callback_data)
+        if rst is True:
+            logger.info('Notify alarm to SMO successed with 202 or 200')
+            return
+        logger.error('Notify alarm Response code is: {}'.format(status))
+    except ssl.SSLCertVerificationError as e:
+        logger.critical('Notify alarm post data except: {}'.format(e))
+        if 'self signed' in str(e):
+            conn = get_https_conn_selfsigned(o.netloc)
+            try:
+                return post_data(conn, o.path, callback_data)
+            except Exception as e:
+                logger.critical('Notify alarm except: {}'.format(e))
+                # TODO: write the status to extension db table.
+                return False
+        return False
+    except Exception as e:
+        logger.critical('Notify alarm except: {}'.format(e))
+        return False

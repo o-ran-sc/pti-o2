@@ -45,6 +45,9 @@ o2ims:
     pullPolicy: IfNotPresent
   logginglevel: "WARNING"
 
+o2dms:
+  helm_cli_enable: false
+
 ocloud:
   OS_AUTH_URL: ""
   OS_USERNAME: ""

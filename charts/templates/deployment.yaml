@@ -49,10 +49,14 @@ spec:
               value: o2ims123
             - name: POSTGRES_USER
               value: o2ims
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
           command: ["/bin/bash", "/opt/postgres_start.sh"]
           volumeMounts:
             - name: scripts
               mountPath: /opt
+            - name: db-pv
+              mountPath: /var/lib/postgresql/data
         - name: redis
           image: redis:alpine
           ports:
@@ -164,6 +168,7 @@ spec:
               mountPath: /configs/server.key
               subPath: config.json
               readOnly: true
+        {{- if .Values.o2dms.helm_cli_enable }}
         - name: helmcli
           image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
           ports:
@@ -177,6 +182,7 @@ spec:
           volumeMounts:
             - name: scripts
               mountPath: /opt
+        {{- end }}
       volumes:
         - name: scripts
           configMap:
@@ -195,4 +201,7 @@ spec:
         - configMap:
             name: {{ .Chart.Name }}-smocacrt
           name: smocacrt
+        - name: db-pv
+          persistentVolumeClaim:
+            claimName: {{ .Chart.Name }}-db-pv
 ---

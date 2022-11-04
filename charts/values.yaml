@@ -37,6 +37,9 @@ resources:
 global:
   namespace: oran-o2
 
+db:
+  storageSize: 10Gi
+
 o2ims:
   serviceaccountname: admin-oran-o2
   image:
@@ -44,6 +47,9 @@ o2ims:
     tag: 0.1.1
     pullPolicy: IfNotPresent
   logginglevel: "WARNING"
+
+o2dms:
+  helm_cli_enable: false
 
 ocloud:
   OS_AUTH_URL: ""

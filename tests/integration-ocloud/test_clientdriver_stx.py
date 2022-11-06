@@ -162,6 +162,20 @@ def test_get_if_port_list(real_stx_aio_client):
     assert port1.id == port2.id
 
 
+def test_get_device_list(real_stx_aio_client):
+    stxClientImp = StxClientImp(real_stx_aio_client)
+    assert stxClientImp is not None
+    hostlist = stxClientImp.getPserverList()
+    assert len(hostlist) > 0
+
+    devicelist = stxClientImp.getDeviceList(hostid=hostlist[0].id)
+    assert len(devicelist) > 0
+    dev1 = devicelist[0]
+    dev2 = stxClientImp.getDevice(dev1.id)
+    assert dev1 != dev2
+    assert dev1.id == dev2.id
+
+
 def test_get_res_pool_list(real_stx_aio_client, real_stx_dc_client):
     stxClientImp = StxClientImp(real_stx_aio_client, real_stx_dc_client)
     assert stxClientImp is not None

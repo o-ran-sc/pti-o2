@@ -26,7 +26,8 @@ from o2dms.domain import events as o2dms_events
 from o2ims.service.auditor import ocloud_handler, dms_handler, \
     resourcepool_handler, pserver_handler, pserver_cpu_handler, \
     pserver_mem_handler, pserver_port_handler, pserver_if_handler,\
-    pserver_eth_handler, alarm_handler
+    pserver_eth_handler, pserver_acc_handler, alarm_handler, \
+    pserver_dev_handler
 from o2ims.service.command import notify_handler, registration_handler,\
     notify_alarm_handler
 from o2ims.service.event import ocloud_event, resource_event, \
@@ -72,6 +73,8 @@ COMMAND_HANDLERS = {
     commands.UpdatePserverIf: pserver_if_handler.update_pserver_if,
     commands.UpdatePserverIfPort: pserver_port_handler.update_pserver_port,
     commands.UpdatePserverEth: pserver_eth_handler.update_pserver_eth,
+    commands.UpdatePserverDev: pserver_dev_handler.update_pserver_dev,
+    commands.UpdatePserverAcc: pserver_acc_handler.update_pserver_acc,
     o2dms_cmmands.HandleNfDeploymentStateChanged:
     nfdeployment_handler.handle_nfdeployment_statechanged,
     o2dms_cmmands.InstallNfDeployment:

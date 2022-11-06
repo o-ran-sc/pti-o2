@@ -29,7 +29,8 @@ class AlarmDictionaryConfigFileRepository(AlarmDictionaryRepository):
         self.dictionary[alarm_dict.entityType] = alarm_dict
 
     def _get(self, alarm_entity_type) -> alarm_obj.AlarmDictionary:
-        return self.dictionary[alarm_entity_type]
+        return self.dictionary[alarm_entity_type] \
+            if alarm_entity_type in self.dictionary else None
 
     def _list(self) -> List[alarm_obj.AlarmDictionary]:
         return [alarm_dict for alarm_dict in self.dictionary.items()]

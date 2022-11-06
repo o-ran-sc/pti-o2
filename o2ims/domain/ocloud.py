@@ -105,8 +105,10 @@ class ResourceType(AgRoot, Serializer):
     def serialize(self):
         d = Serializer.serialize(self)
 
-        d["alarmDictionary"] = CONF.alarm_dictionaries.get(
-            d['name']).serialize()
+        if CONF.alarm_dictionaries.get(d['name']) is not None:
+            d["alarmDictionary"] = CONF.alarm_dictionaries.get(
+                d['name']).serialize()
+
         return d
 
 

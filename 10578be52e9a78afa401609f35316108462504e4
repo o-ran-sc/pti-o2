@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21d1bfef_0f48a39f",
+        "filename": "o2common/authmw/authmiddleware.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-07T11:53:32Z",
+      "side": 1,
+      "message": "typo, and again, you don\u0027t know where the exception comes from, it might be api handling exception, or authentication exception.",
+      "range": {
+        "startLine": 81,
+        "startChar": 29,
+        "endLine": 82,
+        "endChar": 31
+      },
+      "revId": "10578be52e9a78afa401609f35316108462504e4",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

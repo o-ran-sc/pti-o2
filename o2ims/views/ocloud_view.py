@@ -218,7 +218,7 @@ def subscription_one(subscriptionId: str,
         return first.serialize() if first is not None else None
 
 
-def subscription_create(subscriptionDto: SubscriptionDTO.subscription,
+def subscription_create(subscriptionDto: SubscriptionDTO.subscription_create,
                         uow: unit_of_work.AbstractUnitOfWork):
 
     sub_uuid = str(uuid.uuid4())
@@ -229,7 +229,8 @@ def subscription_create(subscriptionDto: SubscriptionDTO.subscription,
     with uow:
         uow.subscriptions.add(subscription)
         uow.commit()
-    return {"subscriptionId": sub_uuid}
+        first = uow.subscriptions.get(sub_uuid)
+        return first.serialize()
 
 
 def subscription_delete(subscriptionId: str,

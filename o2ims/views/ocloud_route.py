@@ -464,8 +464,7 @@ class DeploymentManagerGetRouter(Resource):
 class SubscriptionsListRouter(Resource):
 
     model = SubscriptionDTO.subscription_get
-    expect = SubscriptionDTO.subscription
-    post_resp = SubscriptionDTO.subscription_post_resp
+    expect = SubscriptionDTO.subscription_create
 
     @api_ims_inventory_v1.doc('List subscriptions')
     @api_ims_inventory_v1.marshal_list_with(model)
@@ -513,7 +512,9 @@ class SubscriptionsListRouter(Resource):
 
     @api_ims_inventory_v1.doc('Create a subscription')
     @api_ims_inventory_v1.expect(expect)
-    @api_ims_inventory_v1.marshal_with(post_resp, code=201)
+    @api_ims_inventory_v1.marshal_with(
+        model, code=201,
+        mask='{subscriptionId,callback,consumerSubscriptionId,filter}')
     def post(self):
         data = api_ims_inventory_v1.payload
         result = ocloud_view.subscription_create(data, bus.uow)

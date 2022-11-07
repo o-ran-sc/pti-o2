@@ -98,8 +98,8 @@ class o2_marshal_with(marshal_with):
 
             req_args = request.args
             mask = self._gen_mask_from_selector(**req_args)
-
-            # mask = self.mask
+            if mask == '':
+                mask = self.mask
 
             # if has_request_context():
             # mask_header = current_app.config["RESTX_MASK_HEADER"]

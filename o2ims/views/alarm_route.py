@@ -139,8 +139,7 @@ class AlarmGetRouter(Resource):
 class SubscriptionsListRouter(Resource):
 
     model = SubscriptionDTO.subscription_get
-    expect = SubscriptionDTO.subscription
-    post_resp = SubscriptionDTO.subscription_post_resp
+    expect = SubscriptionDTO.subscription_create
 
     @api_monitoring_v1.doc('List alarm subscriptions')
     @api_monitoring_v1.marshal_list_with(model)
@@ -188,7 +187,9 @@ class SubscriptionsListRouter(Resource):
 
     @api_monitoring_v1.doc('Create a alarm subscription')
     @api_monitoring_v1.expect(expect)
-    @api_monitoring_v1.marshal_with(post_resp, code=201)
+    @api_monitoring_v1.marshal_with(
+        model, code=201,
+        mask='{alarmSubscriptionId,callback,consumerSubscriptionId,filter}')
     def post(self):
         data = api_monitoring_v1.payload
         result = alarm_view.subscription_create(data, bus.uow)

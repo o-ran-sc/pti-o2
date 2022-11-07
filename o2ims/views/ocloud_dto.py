@@ -215,20 +215,12 @@ class SubscriptionDTO:
         mask='{subscriptionId,callback}'
     )
 
-    subscription = api_ims_inventory_v1.model(
+    subscription_create = api_ims_inventory_v1.model(
         "SubscriptionCreateDto",
         {
             'callback': fields.String(
                 required=True, description='Subscription callback address'),
             'consumerSubscriptionId': fields.String,
             'filter': fields.String,
-        }
-    )
-
-    subscription_post_resp = api_ims_inventory_v1.model(
-        "SubscriptionCreatedRespDto",
-        {
-            'subscriptionId': fields.String(required=True,
-                                            description='Subscription ID'),
         }
     )

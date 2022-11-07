@@ -45,10 +45,11 @@ class SubscriptionDTO:
             'callback': fields.String,
             'consumerSubscriptionId': fields.String,
             'filter': fields.String,
-        }
+        },
+        mask='{alarmSubscriptionId,callback}'
     )
 
-    subscription = api_monitoring_v1.model(
+    subscription_create = api_monitoring_v1.model(
         "AlarmSubscriptionCreateDto",
         {
             'callback': fields.String(
@@ -56,14 +57,5 @@ class SubscriptionDTO:
                 description='Alarm Subscription callback address'),
             'consumerSubscriptionId': fields.String,
             'filter': fields.String,
-        }
-    )
-
-    subscription_post_resp = api_monitoring_v1.model(
-        "AlarmSubscriptionCreatedRespDto",
-        {
-            'alarmSubscriptionId': fields.String(
-                required=True,
-                description='Alarm Subscription ID'),
         }
     )

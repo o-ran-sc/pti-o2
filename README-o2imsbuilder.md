@@ -49,8 +49,8 @@ exit
 ### Push O2 service images to local registry (with auth user admin)
 
 ```sh
-sudo docker tag o2imsdms:latest registry.local:9001/admin/o2imsdms:0.1.4
-sudo docker image push registry.local:9001/admin/o2imsdms:0.1.4
+sudo docker tag o2imsdms:latest registry.local:9001/o-ran-sc/pti-o2imsdms:2.0.0
+sudo docker image push registry.local:9001/o-ran-sc/pti-o2imsdms:2.0.0
 
 ```
 
@@ -63,11 +63,15 @@ kubectl create ns ${NAMESPACE}
 cd /home/sysadmin/
 source /etc/platform/openrc
 cat <<EOF>ocloud-override.yaml
+imagePullSecrets:
+  - default-registry-key
+
 o2ims:
   serviceaccountname: admin-oran-o2
   image:
-    repository: registry.local:9001/admin/o2imsdms
-    tag: 0.1.4
+    img_o2: registry.local:9001/o-ran-sc/pti-o2imsdms:2.0.0
+    img_postgres: postgres:9.6
+    img_redis: redis:alpine
     pullPolicy: IfNotPresent
   logginglevel: "DEBUG"
 

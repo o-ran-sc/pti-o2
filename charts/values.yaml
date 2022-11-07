@@ -22,13 +22,14 @@ replicaCount: 1
 nameOverride: ""
 fullnameOverride: ""
 
-applicationconfig: ""
-
-servercrt: ""
-
-serverkey: ""
-
-smocacrt: ""
+# The default value "" doesn't work with binaryData,
+# So generate the value with:
+# echo "" | base64
+# Cg==
+applicationconfig: Cg==
+servercrt: Cg==
+serverkey: Cg==
+smocacrt: Cg==
 
 resources:
   cpu: 1
@@ -40,11 +41,18 @@ global:
 db:
   storageSize: 10Gi
 
+# ImagePullSecrets for operator ServiceAccount, list of secrets in the same
+# namespace used to pull operator image. Must be set for any cluster configured
+# with private docker registry.
+imagePullSecrets:
+  - default-registry-key
+
 o2ims:
   serviceaccountname: admin-oran-o2
   image:
-    repository: registry.local:9001/admin/o2imsdms
-    tag: 0.1.1
+    img_o2: nexus3.o-ran-sc.org:10004/o-ran-sc/pti-o2imsdms:2.0.0
+    img_postgres: postgres:9.6
+    img_redis: redis:alpine
     pullPolicy: IfNotPresent
   logginglevel: "WARNING"
 

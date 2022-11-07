@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "470086ea_10b0a83f",
+        "filename": "charts/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-07T12:55:20Z",
+      "side": 1,
+      "message": "can it be renamed to o2service?",
+      "range": {
+        "startLine": 54,
+        "startChar": 6,
+        "endLine": 54,
+        "endChar": 12
+      },
+      "revId": "a88476817cf0ca3b0d37685677513cc0d3522edc",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "382267f2_f22b6daf",
+        "filename": "charts/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-07T12:55:20Z",
+      "side": 1,
+      "message": "just postgres should be fine",
+      "range": {
+        "startLine": 55,
+        "startChar": 6,
+        "endLine": 55,
+        "endChar": 18
+      },
+      "revId": "a88476817cf0ca3b0d37685677513cc0d3522edc",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec464c58_c99dc1fa",
+        "filename": "charts/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-07T12:55:20Z",
+      "side": 1,
+      "message": "just redis should be fine",
+      "range": {
+        "startLine": 56,
+        "startChar": 6,
+        "endLine": 56,
+        "endChar": 15
+      },
+      "revId": "a88476817cf0ca3b0d37685677513cc0d3522edc",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

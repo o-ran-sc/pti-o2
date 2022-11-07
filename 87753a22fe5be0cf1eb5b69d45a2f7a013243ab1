@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dc097b4_019f575c",
+        "filename": "o2common/authmw/authmiddleware.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-07T10:37:39Z",
+      "side": 1,
+      "message": "replace print with logger.debug if str(ex) does not come along with call stack information",
+      "range": {
+        "startLine": 93,
+        "startChar": 13,
+        "endLine": 93,
+        "endChar": 41
+      },
+      "revId": "87753a22fe5be0cf1eb5b69d45a2f7a013243ab1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51bb838e_b3d0515d",
+        "filename": "o2common/authmw/authmiddleware.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-07T10:37:39Z",
+      "side": 1,
+      "message": "this might be not Authentication exception, the log will be confusing to claim it is an Auth exception!\nand also this should be error log, not debug log",
+      "range": {
+        "startLine": 94,
+        "startChar": 26,
+        "endLine": 94,
+        "endChar": 50
+      },
+      "revId": "87753a22fe5be0cf1eb5b69d45a2f7a013243ab1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

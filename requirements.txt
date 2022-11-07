@@ -18,3 +18,5 @@ ruamel.yaml==0.17.17
 # https://github.com/python-restx/flask-restx/issues/460
 # Workaround for this issue
 werkzeug<=2.1.2
+
+pyOpenSSL

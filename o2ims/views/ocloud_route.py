@@ -49,7 +49,7 @@ class VersionRouter(Resource):
 
 
 # ----------  OClouds ---------- #
-@api_ims_inventory_v1.route("/v1/")
+@api_ims_inventory_v1.route(*["/v1", "/v1/"])
 @api_ims_inventory_v1.response(404, 'oCloud not found')
 @api_ims_inventory_v1.param(
     'all_fields',

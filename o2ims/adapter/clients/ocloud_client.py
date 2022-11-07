@@ -172,7 +172,37 @@ class StxIfPortClient(BaseClient):
         self.driver.setStxClient(self._pool_id)
 
 
-# internal driver which implement client call to Stx Standalone instance
+class StxDevClient(BaseClient):
+    def __init__(self):
+        super().__init__()
+        self.driver = StxClientImp()
+
+    def _get(self, id) -> ocloudModel.StxGenericModel:
+        return self.driver.getDevice(id)
+
+    def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
+        return self.driver.getDeviceList(**filters)
+
+    def _set_stx_client(self):
+        self.driver.setStxClient(self._pool_id)
+
+
+class StxAccClient(BaseClient):
+    def __init__(self):
+        super().__init__()
+        self.driver = StxClientImp()
+
+    def _get(self, id) -> ocloudModel.StxGenericModel:
+        return self.driver.getAccelerator(id)
+
+    def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
+        return self.driver.getAcceleratorList(**filters)
+
+    def _set_stx_client(self):
+        self.driver.setStxClient(self._pool_id)
+
+
+# internal driver which implement client call to Stx Standalone and DC instance
 class StxClientImp(object):
     def __init__(self, stx_client=None, dc_client=None):
         super().__init__()
@@ -446,6 +476,41 @@ class StxClientImp(object):
         return ocloudModel.StxGenericModel(
             ResourceTypeEnum.PSERVER_IF_PORT, portinfo)
 
+    def getDeviceList(self, **filters) -> List[ocloudModel.StxGenericModel]:
+        hostid = filters.get('hostid', None)
+        assert (hostid is not None), 'missing hostid to query pci device list'
+        pci_dev_list = self.stxclient.pci_device.list(hostid)
+        return [ocloudModel.StxGenericModel(
+            ResourceTypeEnum.PSERVER_PCI_DEV,
+            self._devconverter(pci_dev))
+            for pci_dev in pci_dev_list if pci_dev]
+
+    def getDevice(self, id) -> ocloudModel.StxGenericModel:
+        pciinfo = self.stxclient.pci_device.get(id)
+        return ocloudModel.StxGenericModel(
+            ResourceTypeEnum.PSERVER_PCI_DEV, self._devconverter(pciinfo))
+
+    def getAcceleratorList(self, **filters) -> \
+            List[ocloudModel.StxGenericModel]:
+        hostid = filters.get('hostid', None)
+        assert (hostid is not None), 'missing hostid to query accelerator list'
+        pci_dev_list = self.stxclient.pci_device.list(hostid)
+        acc_list = []
+        for pci_dev in pci_dev_list:
+            if pci_dev.pvendor_id in ['8086']:
+                if pci_dev.pdevice_id in ['0d5c', '0d5d']:
+                    logger.info('Accelerator vendor ID: {}, device ID: {}'.
+                                format(pci_dev.pvendor_id, pci_dev.pdevice_id))
+                    acc_list.append(ocloudModel.StxGenericModel(
+                        ResourceTypeEnum.PSERVER_ACC,
+                        self._devconverter(pci_dev)))
+        return acc_list
+
+    def getAccelerator(self, id) -> ocloudModel.StxGenericModel:
+        pciinfo = self.stxclient.pci_device.get(id)
+        return ocloudModel.StxGenericModel(
+            ResourceTypeEnum.PSERVER_ACC, self._devconverter(pciinfo))
+
     def _getIsystems(self):
         return self.stxclient.isystem.list()
 
@@ -489,6 +554,11 @@ class StxClientImp(object):
         setattr(ifs, 'updated_at', None)
         setattr(ifs, 'created_at', None)
         return ifs
+
+    @ staticmethod
+    def _devconverter(dev):
+        setattr(dev, 'name', dev.host_uuid.split('-', 1)[0] + '-'+dev.name)
+        return dev
 
     @ staticmethod
     def _k8sconverter(cluster):

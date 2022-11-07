@@ -105,5 +105,15 @@ class UpdatePserverIfPort(UpdateResource):
 
 
 @dataclass
+class UpdatePserverDev(UpdateResource):
+    pass
+
+
+@dataclass
+class UpdatePserverAcc(UpdateResource):
+    pass
+
+
+@dataclass
 class UpdateAlarm(UpdateFaultObject):
     pass

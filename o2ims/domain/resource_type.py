@@ -12,6 +12,8 @@ class ResourceTypeEnum(Enum):
     PSERVER_IF = 14
     PSERVER_IF_PORT = 15
     PSERVER_ETH = 16
+    PSERVER_PCI_DEV = 17
+    PSERVER_ACC = 18
 
 
 class ResourceKindEnum(Enum):

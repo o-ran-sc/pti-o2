@@ -68,10 +68,11 @@ imagePullSecrets:
 
 o2ims:
   serviceaccountname: admin-oran-o2
-  image:
-    img_o2: registry.local:9001/o-ran-sc/pti-o2imsdms:2.0.0
-    img_postgres: postgres:9.6
-    img_redis: redis:alpine
+  images:
+    tags:
+      img_o2: registry.local:9001/o-ran-sc/pti-o2imsdms:2.0.0
+      img_postgres: docker.io/library/postgres:9.6
+      img_redis: docker.io/library/redis:alpine
     pullPolicy: IfNotPresent
   logginglevel: "DEBUG"
 

@@ -252,11 +252,15 @@ The following instruction should be done outside of INF platform controller host
 
 
   cat <<EOF>o2service-override.yaml
+  imagePullSecrets:
+    - default-registry-key
+
   o2ims:
     serviceaccountname: admin-oran-o2
     image:
-      repository: nexus3.o-ran-sc.org:10004/o-ran-sc/pti-o2imsdms
-      tag: 2.0.0
+      img_o2: nexus3.o-ran-sc.org:10004/o-ran-sc/pti-o2imsdms:2.0.0
+      img_postgres: postgres:9.6
+      img_redis: redis:alpine
       pullPolicy: IfNotPresent
     logginglevel: "DEBUG"
 

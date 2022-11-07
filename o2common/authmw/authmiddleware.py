@@ -43,6 +43,11 @@ def _response_wrapper(environ, start_response, header):
     return res(environ, start_response)
 
 
+def _internal_err_response_wrapper(environ, start_response):
+    res = Response(mimetype='text/plain', status=500)
+    return res(environ, start_response)
+
+
 class authmiddleware():
 
     '''
@@ -67,7 +72,15 @@ class authmiddleware():
                 if ret is True:
                     logger.info(
                         "auth success with oauth token: " + auth_token)
-                    return self.app(environ, start_response)
+                    try:
+                        return self.app(environ, start_response)
+                    except Exception as ex:
+                        logger.error(
+                            'Internal exception happend \
+                            ed {}'.format(str(ex)), exc_info=True)
+                        return \
+                            _internal_err_response_wrapper(environ,
+                                                           start_response)
                 else:
                     raise AuthFailureExp(
                         'Bearer realm="Authentication Failed"')
@@ -77,7 +90,7 @@ class authmiddleware():
             return _response_wrapper(environ, start_response, ex.dictize())
         except AuthFailureExp as ex:
             return _response_wrapper(environ, start_response, ex.dictize())
-        except Exception:
-            hint = 'Bearer realm="Authentication Required"'
-            return _response_wrapper(environ, start_response,
-                                     AuthRequiredExp(hint).dictize())
+        except Exception as ex:
+            logger.error('Internal exception happended {}'.format(
+                str(ex)), exc_info=True)
+            return _internal_err_response_wrapper(environ, start_response)

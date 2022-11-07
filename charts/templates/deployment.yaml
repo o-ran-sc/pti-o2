@@ -43,7 +43,7 @@ spec:
 {{- end }}
       containers:
         - name: postgres
-          image: "{{ .Values.o2ims.image.img_postgres }}"
+          image: "{{ .Values.o2ims.images.tags.postgres }}"
           ports:
             - containerPort: 5432
           env:
@@ -60,11 +60,11 @@ spec:
             - name: db-pv
               mountPath: /var/lib/postgresql/data
         - name: redis
-          image: "{{ .Values.o2ims.image.img_redis }}"
+          image: "{{ .Values.o2ims.images.tags.redis }}"
           ports:
             - containerPort: 6379
         - name: o2pubsub
-          image: "{{ .Values.o2ims.image.img_o2 }}"
+          image: "{{ .Values.o2ims.images.tags.o2service }}"
           command: ["/bin/bash", "/opt/o2pubsub_start.sh"]
           env:
             - name: DB_HOST
@@ -96,7 +96,7 @@ spec:
               mountPath: /configs/smoca.crt
               subPath: config.json
         - name: watcher
-          image: "{{ .Values.o2ims.image.img_o2 }}"
+          image: "{{ .Values.o2ims.images.tags.o2service }}"
           command: ["/bin/bash", "/opt/o2watcher_start.sh"]
           env:
             - name: API_HOST_EXTERNAL_FLOATING
@@ -125,7 +125,7 @@ spec:
               subPath: config.json
               readOnly: true
         - name: o2api
-          image: "{{ .Values.o2ims.image.img_o2 }}"
+          image: "{{ .Values.o2ims.images.tags.o2service }}"
           ports:
             - containerPort: 80
           env:
@@ -172,7 +172,7 @@ spec:
               readOnly: true
         {{- if .Values.o2dms.helm_cli_enable }}
         - name: helmcli
-          image: "{{ .Values.o2ims.image.img_o2 }}"
+          image: "{{ .Values.o2ims.images.tags.o2service }}"
           ports:
             - containerPort: 22
           env:

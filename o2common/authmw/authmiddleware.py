@@ -14,6 +14,7 @@
 
 from werkzeug.wrappers import Request, Response
 from o2common.helper import o2logging
+import traceback
 from o2common.authmw.authprov import auth_definer
 
 logger = o2logging.get_logger(__name__)
@@ -43,6 +44,11 @@ def _response_wrapper(environ, start_response, header):
     return res(environ, start_response)
 
 
+def _internal_err_response_wrapper(environ, start_response):
+    res = Response(mimetype='text/plain', status=500)
+    return res(environ, start_response)
+
+
 class authmiddleware():
 
     '''
@@ -67,7 +73,13 @@ class authmiddleware():
                 if ret is True:
                     logger.info(
                         "auth success with oauth token: " + auth_token)
-                    return self.app(environ, start_response)
+                    try:
+                        return self.app(environ, start_response)
+                    except Exception as ex:
+                        print(traceback.format_exc())
+                        logger.debug(
+                            'API internal exception happended {}'.format(str(ex)))
+                        return _internal_err_response_wrapper(environ, start_response)
                 else:
                     raise AuthFailureExp(
                         'Bearer realm="Authentication Failed"')
@@ -77,7 +89,7 @@ class authmiddleware():
             return _response_wrapper(environ, start_response, ex.dictize())
         except AuthFailureExp as ex:
             return _response_wrapper(environ, start_response, ex.dictize())
-        except Exception:
-            hint = 'Bearer realm="Authentication Required"'
-            return _response_wrapper(environ, start_response,
-                                     AuthRequiredExp(hint).dictize())
+        except Exception as ex:
+            print(traceback.format_exc())
+            logger.debug('Auth exception happended {}'.format(str(ex)))
+            return _internal_err_response_wrapper(environ, start_response)

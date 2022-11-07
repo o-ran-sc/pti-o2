@@ -31,17 +31,19 @@ spec:
         app: o2api
     spec:
       serviceAccountName: {{ .Values.o2ims.serviceaccountname }}
-      # imagePullSecrets:
-      #   - name: {{ .Values.o2ims.imagePullSecrets }}
+      {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
-        - name: {{ .Values.o2ims.serviceaccountname }}-registry-secret
+        {{- range .Values.imagePullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- end }}
 {{- if .Values.o2ims.affinity }}
       affinity:
 {{ toYaml .Values.o2ims.affinity | indent 8 }}
 {{- end }}
       containers:
         - name: postgres
-          image: postgres:9.6
+          image: "{{ .Values.o2ims.image.img_postgres }}"
           ports:
             - containerPort: 5432
           env:
@@ -58,11 +60,11 @@ spec:
             - name: db-pv
               mountPath: /var/lib/postgresql/data
         - name: redis
-          image: redis:alpine
+          image: "{{ .Values.o2ims.image.img_redis }}"
           ports:
             - containerPort: 6379
         - name: o2pubsub
-          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
+          image: "{{ .Values.o2ims.image.img_o2 }}"
           command: ["/bin/bash", "/opt/o2pubsub_start.sh"]
           env:
             - name: DB_HOST
@@ -94,7 +96,7 @@ spec:
               mountPath: /configs/smoca.crt
               subPath: config.json
         - name: watcher
-          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
+          image: "{{ .Values.o2ims.image.img_o2 }}"
           command: ["/bin/bash", "/opt/o2watcher_start.sh"]
           env:
             - name: API_HOST_EXTERNAL_FLOATING
@@ -123,7 +125,7 @@ spec:
               subPath: config.json
               readOnly: true
         - name: o2api
-          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
+          image: "{{ .Values.o2ims.image.img_o2 }}"
           ports:
             - containerPort: 80
           env:
@@ -170,7 +172,7 @@ spec:
               readOnly: true
         {{- if .Values.o2dms.helm_cli_enable }}
         - name: helmcli
-          image: "{{ .Values.o2ims.image.repository }}:{{ .Values.o2ims.image.tag }}"
+          image: "{{ .Values.o2ims.image.img_o2 }}"
           ports:
             - containerPort: 22
           env:

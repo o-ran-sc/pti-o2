@@ -283,7 +283,8 @@ class StxClientImp(object):
         if systems[0].distributed_cloud_role is None or \
                 systems[0].distributed_cloud_role != 'systemcontroller':
             return [ocloudModel.StxGenericModel(
-                ResourceTypeEnum.RESOURCE_POOL, systems[0])]
+                ResourceTypeEnum.RESOURCE_POOL,
+                self._respoolconverter(systems[0]))]
 
         pools = []
         if config.get_system_controller_as_respool():
@@ -305,7 +306,8 @@ class StxClientImp(object):
 
         return [ocloudModel.StxGenericModel(
             ResourceTypeEnum.RESOURCE_POOL,
-            respool) for respool in pools if respool]
+                self._respoolconverter(
+                    respool)) for respool in pools if respool]
 
     def getResourcePoolDetail(self, id):
         self.setStxClient(id)
@@ -523,6 +525,11 @@ class StxClientImp(object):
                 raise Exception('No system uuid was provided and '
                                 'more than one system exists in the account.')
             return isystems[0]
+
+    @ staticmethod
+    def _respoolconverter(res_pool):
+        setattr(res_pool, 'name', res_pool.region_name)
+        return res_pool
 
     @ staticmethod
     def _hostconverter(host):

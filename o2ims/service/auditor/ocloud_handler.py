@@ -81,7 +81,7 @@ def is_outdated(ocloud: Ocloud, stxobj: StxGenericModel):
 
 
 def create_by(stxobj: StxGenericModel) -> Ocloud:
-    imsendpoint = config.get_api_url() + config.get_o2ims_api_base() + '/'
+    imsendpoint = config.get_api_url()
     globalcloudId = conf.DEFAULT.ocloud_global_id
     description = "An ocloud"
     ocloud = Ocloud(stxobj.id, stxobj.name, imsendpoint,

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e275687_95e8b1f3",
+        "filename": "o2common/authmw/authmiddleware.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-08T07:57:42Z",
+      "side": 1,
+      "message": "auth_header \u003d req.headers.get(\u0027Authorization\u0027, None) will fix this issue",
+      "range": {
+        "startLine": 64,
+        "startChar": 12,
+        "endLine": 69,
+        "endChar": 79
+      },
+      "revId": "d40f6482efac11653c28f126ca90a519baff011c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31d72d36_f1a9a2ea",
+        "filename": "o2ims/service/command/notify_alarm_handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-08T07:57:42Z",
+      "side": 1,
+      "message": "I think it is not the terminology issue, it is how you post the failure message. this should be a debug message since it is ok to fail here, make sure add the word \u0027try to ...\u0027 to get people understand it is ok to fail.",
+      "range": {
+        "startLine": 73,
+        "startChar": 41,
+        "endLine": 73,
+        "endChar": 54
+      },
+      "revId": "d40f6482efac11653c28f126ca90a519baff011c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

@@ -102,7 +102,8 @@ def callback_smo(sub: Subscription, msg: Message2SMO):
             return
         logger.error('Notify Response code is: {}'.format(status))
     except ssl.SSLCertVerificationError as e:
-        logger.info('Notify post data with trusted ca failed: {}'.format(e))
+        logger.debug(
+            'Notify try to post data with trusted ca failed: {}'.format(e))
         if 'self signed' in str(e):
             conn = get_https_conn_selfsigned(o.netloc)
             try:

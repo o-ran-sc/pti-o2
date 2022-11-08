@@ -61,8 +61,10 @@ class authmiddleware():
         logger.info(__name__ + 'authentication middleware')
         req = Request(environ, populate_request=True, shallow=True)
         try:
-            auth_header = req.headers['Authorization']
-
+            try:
+                auth_header = req.headers['Authorization']
+            except Exception as ex:
+                raise AuthRequiredExp('Bearer realm="Authentication Required"')
             if auth_header:
                 auth_token = auth_header.split(" ")[1]
 

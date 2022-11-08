@@ -348,9 +348,12 @@ def get_auth_provider():
 
 def get_dms_support_profiles():
     profiles = config.conf.API.DMS_SUPPORT_PROFILES
-    profiles = profiles.replace("'", "").replace(
-        '"', "").replace('[', "").replace(']', "")
-    profiles = profiles.split(',')
+    if profiles is None or profiles == '':
+        profiles = []
+    elif "[" in profiles and "]" in profiles:
+        profiles = profiles.replace("'", "").replace(
+            '"', "").replace('[', "").replace(']', "")
+        profiles = profiles.split(',')
     if 'native_k8sapi' not in profiles:
         profiles.append('native_k8sapi')
     return profiles

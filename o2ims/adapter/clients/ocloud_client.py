@@ -230,7 +230,7 @@ class StxClientImp(object):
             os_client_args = config.get_stx_access_info(
                 region_name=subcloud[0].name,
                 subcloud_hostname=subcloud[0].oam_floating_ip)
-            logger.warning(os_client_args)
+            logger.info(os_client_args)
             config_client = get_stx_client(**os_client_args)
         except EndpointException as e:
             msg = e.format_message()
@@ -238,12 +238,13 @@ class StxClientImp(object):
                 os_client_args = config.get_stx_access_info(
                     region_name=subcloud[0].name, sub_is_https=True,
                     subcloud_hostname=subcloud[0].oam_floating_ip)
-                logger.warning(os_client_args)
+                logger.info(os_client_args)
                 config_client = get_stx_client(**os_client_args)
             else:
                 raise ValueError('Stx endpoint exception: %s' % msg)
-        else:
+        except Exception:
             raise ValueError('cgtsclient get subcloud client failed')
+
         return config_client
 
     def setStxClient(self, resource_pool_id):

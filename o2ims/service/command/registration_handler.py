@@ -108,7 +108,7 @@ def call_smo(reg_data: dict):
     try:
         return post_data(conn, o.path, callback_data)
     except ssl.SSLCertVerificationError as e:
-        logger.info('Register to smo with trusted ca failed: {}'.format(e))
+        logger.debug('Try to register to smo with trusted ca failed: {}'.format(e))
         if 'self signed' in str(e):
             conn = get_https_conn_selfsigned(o.netloc)
             try:

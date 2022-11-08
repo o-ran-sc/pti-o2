@@ -69,8 +69,9 @@ def callback_smo(sub: AlarmSubscription, msg: AlarmEvent2SMO):
             return
         logger.error('Notify alarm Response code is: {}'.format(status))
     except ssl.SSLCertVerificationError as e:
-        logger.info(
-            'Notify alarm post data with trusted ca failed: {}'.format(e))
+        logger.debug(
+            'Notify alarm try to post data with trusted ca \
+                failed: {}'.format(e))
         if 'self signed' in str(e):
             conn = get_https_conn_selfsigned(o.netloc)
             try:

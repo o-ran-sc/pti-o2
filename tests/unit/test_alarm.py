@@ -180,7 +180,7 @@ def test_flask_post(mock_flask_uow):
         resp = client.post(apibase+'/alarmSubscriptions', json={
             'callback': sub_callback,
             'consumerSubscriptionId': 'consumerSubId1',
-            'filter': 'empty'
+            'filter': ''
         })
         assert resp.status_code == 201
         assert 'alarmSubscriptionId' in resp.get_json()

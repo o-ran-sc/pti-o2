@@ -16,7 +16,7 @@ import uuid as uuid
 
 from o2common.service import unit_of_work
 from o2common.views.pagination_view import Pagination
-from o2common.views.view import gen_filter
+from o2common.views.view import gen_filter, check_filter
 from o2ims.views.alarm_dto import SubscriptionDTO
 from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEventRecord
 
@@ -62,6 +62,7 @@ def subscription_one(subscriptionId: str,
 def subscription_create(subscriptionDto: SubscriptionDTO.subscription_create,
                         uow: unit_of_work.AbstractUnitOfWork):
 
+    check_filter(AlarmEventRecord, subscriptionDto['filter'])
     sub_uuid = str(uuid.uuid4())
     subscription = AlarmSubscription(
         sub_uuid, subscriptionDto['callback'],

@@ -12,22 +12,52 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import re
 from sqlalchemy.sql.elements import ColumnElement
-from sqlalchemy import or_
 
 from o2common.views.route_exception import BadRequestException
+from o2common.domain.filter import gen_orm_filter
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
 
 def gen_filter(obj: ColumnElement, filter_str: str):
-    if filter_str == '':
-        return []
+    check_filter(obj, filter_str)
+    try:
+        filter_list = gen_orm_filter(obj, filter_str)
+    except KeyError as e:
+        raise BadRequestException(e.args[0])
+    return filter_list
+
+
+# The regular expressions testing example put on here
+# (neq,testkey,value-1)
+# (neq,testkey,value-1,value-2)
+# (gt,hello,1)
+# (gte,world,2)
+# (lt,testlt,notint)
+# (ncont,key1,v1,v_2)
+# (gt,hello,1);(ncont,world,val1,val-2)
+# (eq,wrong,60cba7be-e2cd-3b8c-a7ff-16e0f10573f9)
+# (eq,description,value key)
+def check_filter(obj: ColumnElement, filter_str: str):
+    if not filter_str:
+        return
+    pattern = r'^(\((eq|neq|gt|lt|gte|lte){1},\w+,[\w -]+\)\;?|' +\
+        r'\((in|nin|cont|ncont){1},\w*(,[\w -]*)*\)\;?)+'
+    result = re.match(pattern, filter_str)
+    logger.warning('filter: {} match result is {}'.format(filter_str, result))
+    if not result:
+        raise BadRequestException(
+            'filter value formater not correct.')
+    check_filter_attribute(obj, filter_str)
+
+
+def check_filter_attribute(obj: ColumnElement, filter_str: str):
     filter_without_space = filter_str.replace(" ", "")
     items = filter_without_space.split(';')
 
-    filter_list = list()
     for i in items:
         if '(' in i:
             i = i.replace("(", "")
@@ -35,67 +65,12 @@ def gen_filter(obj: ColumnElement, filter_str: str):
             i = i.replace(")", "")
         filter_expr = i.split(',')
         if len(filter_expr) < 3:
+            raise BadRequestException(
+                'Filter {} formater not correct.'.format(i))
             continue
-        filter_op = filter_expr[0]
+        # filter_op = filter_expr[0]
         filter_key = filter_expr[1]
-        filter_vals = filter_expr[2:]
-        filter_list.extend(toFilterArgs(
-            filter_op, obj, filter_key, filter_vals))
-    logger.info('Filter list length: %d' % len(filter_list))
-    return filter_list
-
-
-def toFilterArgs(operation: str, obj: ColumnElement, key: str, values: list):
-    if not hasattr(obj, key):
-        logger.warning('Filter attrName %s not in Object %s.' %
-                       (key, str(obj)))
-        raise BadRequestException(
-            'Filter attrName {} not in the Object'.format(key))
-
-    if operation in ['eq', 'neq', 'gt', 'lt', 'gte', 'lte']:
-        if len(values) != 1:
-            raise KeyError('Filter operation one is only support one value.')
-    elif operation in ['in', 'nin', 'cont', 'ncont']:
-        if len(values) == 0:
-            raise KeyError('Filter operation value is needed.')
-    else:
-        raise KeyError('Filter operation value not support.')
-
-    ll = list()
-    if operation == 'eq':
-        val = values[0]
-        if val.lower() == 'null':
-            val = None
-        ll.append(getattr(obj, key) == val)
-    elif operation == 'neq':
-        val = values[0]
-        if val.lower() == 'null':
-            val = None
-        ll.append(getattr(obj, key) != val)
-    elif operation == 'gt':
-        val = values[0]
-        ll.append(getattr(obj, key) > val)
-    elif operation == 'lt':
-        val = values[0]
-        ll.append(getattr(obj, key) < val)
-    elif operation == 'gte':
-        val = values[0]
-        ll.append(getattr(obj, key) >= val)
-    elif operation == 'lte':
-        val = values[0]
-        ll.append(getattr(obj, key) <= val)
-    elif operation == 'in':
-        ll.append(getattr(obj, key).in_(values))
-    elif operation == 'nin':
-        ll.append(~getattr(obj, key).in_(values))
-    elif operation == 'cont':
-        val_list = list()
-        for val in values:
-            val_list.append(getattr(obj, key).contains(val))
-        ll.append(or_(*val_list))
-    elif operation == 'ncont':
-        val_list = list()
-        for val in values:
-            val_list.append(getattr(obj, key).contains(val))
-        ll.append(~or_(*val_list))
-    return ll
+        # filter_vals = filter_expr[2:]
+        if not hasattr(obj, filter_key):
+            raise BadRequestException(
+                'Filter attrName {} not in the Object'.format(filter_key))

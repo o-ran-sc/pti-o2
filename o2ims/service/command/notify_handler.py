@@ -12,20 +12,23 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import json
 # import redis
 # import requests
+import json
+import ssl
 from urllib.parse import urlparse
 
 # from o2common.config import config
+from o2common.domain.filter import gen_orm_filter
 from o2common.service.unit_of_work import AbstractUnitOfWork
-from o2ims.domain import commands
-from o2ims.domain.subscription_obj import Subscription, Message2SMO
 from o2common.service.command.handler import get_https_conn_default
 from o2common.service.command.handler import get_http_conn
 from o2common.service.command.handler import get_https_conn_selfsigned
 from o2common.service.command.handler import post_data
-import ssl
+
+from o2ims.domain import commands, ocloud
+from o2ims.domain.subscription_obj import Subscription, Message2SMO
+
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -38,28 +41,37 @@ def notify_change_to_smo(
     cmd: commands.PubMessage2SMO,
     uow: AbstractUnitOfWork,
 ):
-    logger.info('In notify_change_to_smo')
+    logger.debug('In notify_change_to_smo')
     data = cmd.data
     with uow:
         subs = uow.subscriptions.list()
         for sub in subs:
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
-
-            try:
-                resource_filter = json.loads(sub_data['filter'])
-                if len(resource_filter) > 0:
-                    resource = uow.resources.get(data.id)
-                    logger.debug(type(resource))
-                    if resource:  # TODO deal with resource is empty
-                        res_type_id = resource.serialize()['resourceTypeId']
-                        resourcetype = uow.resource_types.get(res_type_id)
-                        logger.debug(resourcetype.name)
-                        if resourcetype.name not in resource_filter:
-                            continue
-            except json.decoder.JSONDecodeError as err:
-                logger.warning(
-                    'subscription filter decode json failed: {}'.format(err))
+            resource = uow.resources.get(data.id)
+            if resource is None:
+                logger.debug('Resource {} does not exists.'.format(data.id))
+                continue
+            res_pool_id = resource.serialize()['resourcePoolId']
+            logger.debug('res pool id is {}'.format(res_pool_id))
+            if sub_data.get('filter', None):
+                try:
+                    args = gen_orm_filter(ocloud.Resource, sub_data['filter'])
+                except KeyError:
+                    logger.error(
+                        'Subscription {} filter {} has wrong attribute name '
+                        'or value. Ignore the filter.'.format(
+                            sub_data['subscriptionId'], sub_data['filter']))
+                    callback_smo(sub, data)
+                    continue
+                args.append(ocloud.Resource.resourceId == data.id)
+                ret = uow.resources.list_with_count(res_pool_id, *args)
+                if ret[0] != 0:
+                    logger.debug(
+                        'Resource {} skip for subscription {} because of the '
+                        'filter.'
+                        .format(data.id, sub_data['subscriptionId']))
+                    continue
 
             callback_smo(sub, data)
 

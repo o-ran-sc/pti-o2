@@ -12,20 +12,24 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import json
 # import redis
 # import requests
+import ssl
+import json
 from urllib.parse import urlparse
 
 # from o2common.config import config
+from o2common.domain.filter import gen_orm_filter
 from o2common.service.unit_of_work import AbstractUnitOfWork
-from o2ims.domain import commands
-from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEvent2SMO
-import ssl
 from o2common.service.command.handler import get_https_conn_default
 from o2common.service.command.handler import get_http_conn
 from o2common.service.command.handler import get_https_conn_selfsigned
 from o2common.service.command.handler import post_data
+
+from o2ims.domain import commands
+from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEvent2SMO, \
+    AlarmEventRecord
+
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -34,7 +38,7 @@ def notify_alarm_to_smo(
     cmd: commands.PubAlarm2SMO,
     uow: AbstractUnitOfWork,
 ):
-    logger.info('In notify_alarm_to_smo')
+    logger.debug('In notify_alarm_to_smo')
     data = cmd.data
     with uow:
         subs = uow.alarm_subscriptions.list()
@@ -42,6 +46,30 @@ def notify_alarm_to_smo(
             sub_data = sub.serialize()
             logger.debug('Alarm Subscription: {}'.format(
                 sub_data['alarmSubscriptionId']))
+
+            alarm = uow.alarm_event_records.get(data.id)
+            if alarm is None:
+                logger.debug('Alarm Event {} does not exists.'.format(data.id))
+                continue
+            if sub_data.get('filter', None):
+                try:
+                    args = gen_orm_filter(AlarmEventRecord, sub_data['filter'])
+                except KeyError:
+                    logger.warning(
+                        'Alarm Subscription {} filter {} has wrong attribute '
+                        'name or value. Ignore the filter'.format(
+                            sub_data['alarmSubscriptionId'],
+                            sub_data['filter']))
+                    callback_smo(sub, data)
+                    continue
+                args.append(AlarmEventRecord.alarmEventRecordId == data.id)
+                ret = uow.alarm_event_records.list_with_count(*args)
+                if ret[0] != 0:
+                    logger.debug(
+                        'Alarm Event {} skip for subscription {} because of '
+                        'the filter.'
+                        .format(data.id, sub_data['alarmSubscriptionId']))
+                    continue
 
             callback_smo(sub, data)
 

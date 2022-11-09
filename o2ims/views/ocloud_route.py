@@ -17,7 +17,8 @@ from flask_restx import Resource, reqparse
 
 from o2common.service.messagebus import MessageBus
 from o2common.views.pagination_route import link_header, PAGE_PARAM
-from o2common.views.route_exception import NotFoundException
+from o2common.views.route_exception import NotFoundException, \
+    BadRequestException
 from o2ims.domain import ocloud
 from o2ims.views import ocloud_view
 from o2ims.views.api_ns import api_ims_inventory as api_ims_inventory_v1
@@ -517,6 +518,9 @@ class SubscriptionsListRouter(Resource):
         mask='{subscriptionId,callback,consumerSubscriptionId,filter}')
     def post(self):
         data = api_ims_inventory_v1.payload
+        callback = data.get('callback', None)
+        if not callback:
+            raise BadRequestException('The callback parameter is required')
         result = ocloud_view.subscription_create(data, bus.uow)
         return result, 201
 

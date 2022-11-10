@@ -324,7 +324,7 @@ def test_view_deployment_manager_one(mock_uow):
         deployment_manager_id1, uow, profile=profileName)
     assert str(deployment_manager_res.get(
         'serviceUri')) == cluster_endpoint
-    assert str(deployment_manager_res.get(
+    assert str(deployment_manager_res.get("extensions").get(
         "profileName")) == profileName
 
     # profile wrong name

@@ -177,6 +177,11 @@ class DeploymentManagerDTO:
         'helmcli_kubeconfig': fields.String(attribute='helmcli_kubeconfig'),
     })
 
+    extensions = api_ims_inventory_v1.model("DeploymentManagerExtensions", {
+        'profileName': fields.String,
+        'profileData': fields.Nested(profile, False, True),
+    })
+
     deployment_manager_get = api_ims_inventory_v1.model(
         "DeploymentManagerGetDto",
         {
@@ -192,12 +197,10 @@ class DeploymentManagerDTO:
             # 'supportedLocations': fields.String,
             # 'capabilities': fields.String,
             # 'capacity': fields.String,
-            'profileName': fields.String,
-            'profileData': fields.Nested(profile, False, True),
-            'extensions': fields.String
+            'extensions': fields.Nested(extensions, True, True)
         },
         mask='{deploymentManagerId,name,description,oCloudId,serviceUri,' +\
-        'profileName,profileData}'
+        'extensions/profileName,extensions/profileData}'
     )
 
 

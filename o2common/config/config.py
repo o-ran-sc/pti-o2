@@ -56,7 +56,7 @@ def get_api_url():
     port_external = 30205
     port = port_internal if host_external is None or host_external == '' \
         else port_external
-    return f"http://{host}:{port}"
+    return f"https://{host}:{port}"
 
 
 def get_root_api_base():

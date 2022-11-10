@@ -446,9 +446,15 @@ def test_flask_get_one(mock_flask_uow):
         assert resp.status_code == 404
 
 
-def test_flask_post(mock_flask_uow):
+def test_flask_post(mock_flask_uow, mappers):
     session, app = mock_flask_uow
     apibase = config.get_o2ims_api_base() + '/v1'
+
+    order_by = MagicMock()
+    order_by.count.return_value = 0
+    order_by.limit.return_value.offset.return_value = []
+    session.return_value.query.return_value.filter.return_value.\
+        order_by.return_value = order_by
 
     with app.test_client() as client:
         session.return_value.execute.return_value = []
@@ -457,7 +463,7 @@ def test_flask_post(mock_flask_uow):
         resp = client.post(apibase+'/subscriptions', json={
             'callback': sub_callback,
             'consumerSubscriptionId': 'consumerSubId1',
-            'filter': ''
+            'filter': '(eq,resourceTypeId,xxx)'
         })
         assert resp.status_code == 201
         assert 'subscriptionId' in resp.get_json()

@@ -21,8 +21,10 @@ import shutil
 
 from o2common.service import unit_of_work
 from o2common.config import config
-from o2common.views.pagination_view import Pagination
 from o2common.views.view import gen_filter, check_filter
+from o2common.views.pagination_view import Pagination
+from o2common.views.route_exception import BadRequestException
+
 from o2ims.domain import ocloud
 from o2ims.views.ocloud_dto import SubscriptionDTO
 from o2ims.domain.subscription_obj import Subscription
@@ -233,6 +235,15 @@ def subscription_create(subscriptionDto: SubscriptionDTO.subscription_create,
         sub_uuid, subscriptionDto['callback'],
         consumer_subs_id, filter)
     with uow:
+        args = list()
+        args.append(getattr(Subscription, 'callback')
+                    == subscriptionDto['callback'])
+        args.append(getattr(Subscription, 'filter') == filter)
+        args.append(getattr(Subscription,
+                    'consumerSubscriptionId') == consumer_subs_id)
+        count, _ = uow.alarm_subscriptions.list_with_count(*args)
+        if count > 0:
+            raise BadRequestException("The value of parameters is duplicated")
         uow.subscriptions.add(subscription)
         uow.commit()
         first = uow.subscriptions.get(sub_uuid)

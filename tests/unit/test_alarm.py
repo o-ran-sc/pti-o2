@@ -169,7 +169,7 @@ def test_flask_get_one(mock_flask_uow):
         assert resp.status_code == 404
 
 
-def test_flask_post(mock_flask_uow):
+def test_flask_post(mock_flask_uow, mappers):
     session, app = mock_flask_uow
     apibase = config.get_o2ims_monitoring_api_base() + '/v1'
 
@@ -180,7 +180,7 @@ def test_flask_post(mock_flask_uow):
         resp = client.post(apibase+'/alarmSubscriptions', json={
             'callback': sub_callback,
             'consumerSubscriptionId': 'consumerSubId1',
-            'filter': ''
+            'filter': '(eq,resourceTypeId,xxx)'
         })
         assert resp.status_code == 201
         assert 'alarmSubscriptionId' in resp.get_json()

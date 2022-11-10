@@ -140,16 +140,18 @@ def deployment_manager_one(deploymentManagerId: str,
             return None
 
     profile_data = result.pop("profile", None)
-    result['profileName'] = profile
     profiles = config.get_dms_support_profiles()
     if profile not in profiles:
         return ""
 
+    extensions = {
+        'profileName': profile
+    }
     if ocloud.DeploymentManagerProfileDefault == profile \
             or ocloud.DeploymentManagerProfileSOL018 == profile:
         result['serviceUri'] = \
             profile_data['cluster_api_endpoint']
-        result['profileData'] = profile_data
+        extensions['profileData'] = profile_data
     elif ocloud.DeploymentManagerProfileSOL018HelmCLI == profile:
         result['serviceUri'] = \
             profile_data['cluster_api_endpoint']
@@ -160,10 +162,11 @@ def deployment_manager_one(deploymentManagerId: str,
             config.get_helmcli_access()
         helmcli_profile["helmcli_kubeconfig"] = _gen_kube_config(
             deploymentManagerId, profile_data)
-        result['profileData'] = helmcli_profile
+        extensions['profileData'] = helmcli_profile
     else:
         return ""
 
+    result['extensions'] = extensions
     return result
 
 

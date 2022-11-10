@@ -15,8 +15,10 @@
 import uuid as uuid
 
 from o2common.service import unit_of_work
-from o2common.views.pagination_view import Pagination
 from o2common.views.view import gen_filter, check_filter
+from o2common.views.pagination_view import Pagination
+from o2common.views.route_exception import BadRequestException
+
 from o2ims.views.alarm_dto import SubscriptionDTO
 from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEventRecord
 
@@ -71,6 +73,15 @@ def subscription_create(subscriptionDto: SubscriptionDTO.subscription_create,
         sub_uuid, subscriptionDto['callback'],
         consumer_subs_id, filter)
     with uow:
+        args = list()
+        args.append(getattr(AlarmSubscription, 'callback')
+                    == subscriptionDto['callback'])
+        args.append(getattr(AlarmSubscription, 'filter') == filter)
+        args.append(getattr(AlarmSubscription,
+                    'consumerSubscriptionId') == consumer_subs_id)
+        count, _ = uow.alarm_subscriptions.list_with_count(*args)
+        if count > 0:
+            raise BadRequestException("The value of parameters is duplicated")
         uow.alarm_subscriptions.add(subscription)
         uow.commit()
         first = uow.alarm_subscriptions.get(sub_uuid)

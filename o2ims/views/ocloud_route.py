@@ -521,6 +521,7 @@ class SubscriptionsListRouter(Resource):
         callback = data.get('callback', None)
         if not callback:
             raise BadRequestException('The callback parameter is required')
+
         result = ocloud_view.subscription_create(data, bus.uow)
         return result, 201
 

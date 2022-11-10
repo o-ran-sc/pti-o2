@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "abc7fe54_712a1a97",
+        "filename": "o2ims/views/alarm_route.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-10T07:02:51Z",
+      "side": 1,
+      "message": "why comparing callback to filter or consumer id ?\nthe duplication should be checked against the data in database",
+      "revId": "1d5cbff0e45ff8b914eb813950992815e7db03e1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75fc8404_e1746b00",
+        "filename": "o2ims/views/ocloud_route.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-10T07:02:51Z",
+      "side": 1,
+      "message": "the same comment",
+      "revId": "1d5cbff0e45ff8b914eb813950992815e7db03e1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

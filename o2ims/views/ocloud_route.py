@@ -521,6 +521,12 @@ class SubscriptionsListRouter(Resource):
         callback = data.get('callback', None)
         if not callback:
             raise BadRequestException('The callback parameter is required')
+
+        filter = data.get('filter', None)
+        consumer_subs_id = data.get('consumerSubscriptionId', None)
+        if callback == filter or callback == consumer_subs_id:
+            raise BadRequestException("The value of parameters is duplicated")
+
         result = ocloud_view.subscription_create(data, bus.uow)
         return result, 201
 

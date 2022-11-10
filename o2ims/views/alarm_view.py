@@ -15,8 +15,9 @@
 import uuid as uuid
 
 from o2common.service import unit_of_work
-from o2common.views.pagination_view import Pagination
 from o2common.views.view import gen_filter, check_filter
+from o2common.views.pagination_view import Pagination
+
 from o2ims.views.alarm_dto import SubscriptionDTO
 from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEventRecord
 

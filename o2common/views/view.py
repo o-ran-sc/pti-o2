@@ -44,8 +44,8 @@ def gen_filter(obj: ColumnElement, filter_str: str):
 def check_filter(obj: ColumnElement, filter_str: str):
     if not filter_str:
         return
-    pattern = r'^(\((eq|neq|gt|lt|gte|lte){1},\w+,[\w -]+\)\;?|' +\
-        r'\((in|nin|cont|ncont){1},\w*(,[\w -]*)*\)\;?)+'
+    pattern = r'^(\((eq|neq|gt|lt|gte|lte){1},\w+,[\w -\.]+\)\;?|' +\
+        r'\((in|nin|cont|ncont){1},\w*(,[\w -\.]*)*\)\;?)+'
     result = re.match(pattern, filter_str)
     logger.warning('filter: {} match result is {}'.format(filter_str, result))
     if not result:

@@ -241,7 +241,7 @@ def subscription_create(subscriptionDto: SubscriptionDTO.subscription_create,
         args.append(getattr(Subscription, 'filter') == filter)
         args.append(getattr(Subscription,
                     'consumerSubscriptionId') == consumer_subs_id)
-        count, _ = uow.alarm_subscriptions.list_with_count(*args)
+        count, _ = uow.subscriptions.list_with_count(*args)
         if count > 0:
             raise BadRequestException("The value of parameters is duplicated")
         uow.subscriptions.add(subscription)

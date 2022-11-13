@@ -89,7 +89,6 @@ class StxPserverClient(BaseClient):
         return self.driver.getPserver(id)
 
     def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
-        filters['resourcepoolid']
         return self.driver.getPserverList(**filters)
 
     def _set_stx_client(self):
@@ -315,7 +314,8 @@ class StxClientImp(object):
         systems = self.stxclient.isystem.list()
         logger.debug('systems:' + str(systems[0].to_dict()))
         return ocloudModel.StxGenericModel(
-            ResourceTypeEnum.RESOURCE_POOL, systems[0]) if systems else None
+            ResourceTypeEnum.RESOURCE_POOL,
+            self._respoolconverter(systems[0])) if systems else None
 
     def getPserverList(self, **filters) -> List[ocloudModel.StxGenericModel]:
         hosts = self.stxclient.ihost.list()
@@ -323,6 +323,7 @@ class StxClientImp(object):
         return [ocloudModel.StxGenericModel(
             ResourceTypeEnum.PSERVER, self._hostconverter(host))
             for host in hosts if host and (host.availability == 'available'
+                                           or host.availability == 'online'
                                            or host.availability == 'degraded')]
 
     def getPserver(self, id) -> ocloudModel.StxGenericModel:

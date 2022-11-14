@@ -15,6 +15,8 @@
 from werkzeug.wrappers import Request, Response
 from o2common.helper import o2logging
 from o2common.authmw.authprov import auth_definer
+from flask_restx._http import HTTPStatus
+import json
 
 logger = o2logging.get_logger(__name__)
 
@@ -28,6 +30,30 @@ class AuthRequiredExp(Exception):
             'WWW-Authenticate': '{}'.format(self.value)}
 
 
+class AuthProblemDetails():
+    def __init__(self, code: int, detail: str, path: str,
+                 title=None, instance=None
+                 ) -> None:
+        self.status = code
+        self.detail = detail
+        self.type = path
+        self.title = title if title is not None else self.getTitle(code)
+        self.instance = instance if instance is not None else []
+
+    def getTitle(self, code):
+        return HTTPStatus(code).phrase
+
+    def serialize(self):
+        details = {}
+        for key in dir(self):
+            if key == 'ns' or key.startswith('__') or \
+                    callable(getattr(self, key)):
+                continue
+            else:
+                details[key] = getattr(self, key)
+        return json.dumps(details, indent=True)
+
+
 class AuthFailureExp(Exception):
     def __init__(self, value):
         self.value = value
@@ -37,14 +63,14 @@ class AuthFailureExp(Exception):
             'WWW-Authenticate': '{}'.format(self.value)}
 
 
-def _response_wrapper(environ, start_response, header):
+def _response_wrapper(environ, start_response, header, detail):
     res = Response(headers=header,
-                   mimetype='text/plain', status=401)
+                   mimetype='application/json', status=401, response=detail)
     return res(environ, start_response)
 
 
-def _internal_err_response_wrapper(environ, start_response):
-    res = Response(mimetype='text/plain', status=500)
+def _internal_err_response_wrapper(environ, start_response, detail):
+    res = Response(mimetype='application/json', status=500, response=detail)
     return res(environ, start_response)
 
 
@@ -77,19 +103,29 @@ class authmiddleware():
                         logger.error(
                             'Internal exception happend \
                             ed {}'.format(str(ex)), exc_info=True)
+                        prb = AuthProblemDetails(
+                            500, 'Internal error.', req.path)
                         return \
-                            _internal_err_response_wrapper(environ,
-                                                           start_response)
+                            _internal_err_response_wrapper(
+                                environ,
+                                start_response, prb.serialize())
                 else:
                     raise AuthFailureExp(
                         'Bearer realm="Authentication Failed"')
             else:
                 raise AuthRequiredExp('Bearer realm="Authentication Required"')
         except AuthRequiredExp as ex:
-            return _response_wrapper(environ, start_response, ex.dictize())
+            prb = AuthProblemDetails(401, ex.value, req.path)
+            return _response_wrapper(environ, start_response,
+                                     ex.dictize(), prb.serialize())
         except AuthFailureExp as ex:
-            return _response_wrapper(environ, start_response, ex.dictize())
+            prb = AuthProblemDetails(401, ex.value, req.path)
+            return _response_wrapper(environ, start_response,
+                                     ex.dictize(), prb.serialize())
         except Exception as ex:
             logger.error('Internal exception happended {}'.format(
                 str(ex)), exc_info=True)
-            return _internal_err_response_wrapper(environ, start_response)
+            prb = AuthProblemDetails(500, 'Internal error.', req.path)
+            return \
+                _internal_err_response_wrapper(environ,
+                                               start_response, prb.serialize())

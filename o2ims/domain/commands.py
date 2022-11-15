@@ -75,6 +75,26 @@ class UpdateResource(UpdateStxObject):
 
 
 @dataclass
+class UpdateComputeAgg(UpdateResource):
+    pass
+
+
+@dataclass
+class UpdateNetworkAgg(UpdateResource):
+    pass
+
+
+@dataclass
+class UpdateStorageAgg(UpdateResource):
+    pass
+
+
+@dataclass
+class UpdateUndefinedAgg(UpdateResource):
+    pass
+
+
+@dataclass
 class UpdatePserver(UpdateResource):
     pass
 

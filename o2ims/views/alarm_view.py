@@ -17,7 +17,8 @@ import uuid as uuid
 from o2common.service import unit_of_work
 from o2common.views.view import gen_filter, check_filter
 from o2common.views.pagination_view import Pagination
-from o2common.views.route_exception import BadRequestException
+from o2common.views.route_exception import BadRequestException, \
+    NotFoundException
 
 from o2ims.views.alarm_dto import SubscriptionDTO
 from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEventRecord
@@ -91,6 +92,10 @@ def subscription_create(subscriptionDto: SubscriptionDTO.subscription_create,
 def subscription_delete(subscriptionId: str,
                         uow: unit_of_work.AbstractUnitOfWork):
     with uow:
+        first = uow.alarm_subscriptions.get(subscriptionId)
+        if not first:
+            raise NotFoundException(
+                "Alarm Subscription {} not found.".format(subscriptionId))
         uow.alarm_subscriptions.delete(subscriptionId)
         uow.commit()
     return True

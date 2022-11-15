@@ -22,7 +22,7 @@
 # pip install retry
 
 # pip install -e /root/o2
-pip install -e /src
+# pip install -e /src
 
 cat <<EOF>>/etc/hosts
 127.0.0.1  api

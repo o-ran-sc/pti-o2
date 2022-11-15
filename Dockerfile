@@ -4,20 +4,21 @@ FROM nexus3.onap.org:10001/onap/integration-python:10.1.0
 
 USER root
 
-RUN set -ex \
-    && mkdir -p /src \
-    && mkdir -p /configs/ \
-    && mkdir -p /src/o2app/ \
-    && mkdir -p /src/helm_sdk/
-
 ARG user=orano2
 ARG group=orano2
 # Create a group and user
 RUN addgroup -S $group && adduser -S -D -h /home/$user $user $group && \
     chown -R $user:$group /home/$user &&  \
     mkdir /var/log/$user && \
+    mkdir -p /src && \
+    mkdir -p /configs/ && \
+    mkdir -p /src/o2app/ && \
+    mkdir -p /src/helm_sdk/ && \
+    mkdir -p /etc/o2/ && \
     chown -R $user:$group /var/log/$user && \
-    chown -R $user:$group /src
+    chown -R $user:$group /src && \
+    chown -R $user:$group /configs && \
+    chown -R $user:$group /etc/o2/
 
 COPY requirements.txt /tmp/
 COPY requirements-stx.txt /tmp/
@@ -82,4 +83,4 @@ RUN set -ex \
 
 WORKDIR /src
 
-USER $user
+# USER $user

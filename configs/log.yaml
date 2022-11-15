@@ -40,7 +40,7 @@ handlers:
     file_handler:
       level: "DEBUG"
       class: "logging.handlers.RotatingFileHandler"
-      filename: "/var/log/o2.log"
+      filename: "/var/log/orano2/o2.log"
       formatter: "standard"
       maxBytes: 52428800
       backupCount: 10

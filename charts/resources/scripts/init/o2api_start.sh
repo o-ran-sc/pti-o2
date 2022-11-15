@@ -24,11 +24,11 @@
 # pip install -e /root/o2
 pip install -e /src
 
-cat <<EOF>>/etc/hosts
-127.0.0.1  api
-127.0.0.1  postgres
-127.0.0.1  redis
-EOF
+# cat <<EOF>>/etc/hosts
+# 127.0.0.1  api
+# 127.0.0.1  postgres
+# 127.0.0.1  redis
+# EOF
 
 
 flask run --host=0.0.0.0 --port=80 --cert /configs/server.crt  --key /configs/server.key

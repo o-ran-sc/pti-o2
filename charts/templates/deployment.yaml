@@ -68,7 +68,7 @@ spec:
           command: ["/bin/bash", "/opt/o2pubsub_start.sh"]
           env:
             - name: DB_HOST
-              value: postgres
+              value: localhost
             - name: DB_PASSWORD
               value: o2ims123
             - name: LOGGING_CONFIG_LEVEL
@@ -82,7 +82,7 @@ spec:
             - name: PYTHONDONTWRITEBYTECODE
               value: "1"
             - name: REDIS_HOST
-              value: redis
+              value: localhost
             - name: K8S_KUBECONFIG
               value: {{ .Values.ocloud.K8S_KUBECONFIG }}
           volumeMounts:
@@ -102,7 +102,7 @@ spec:
             - name: API_HOST_EXTERNAL_FLOATING
               value: {{ .Values.ocloud.API_HOST_EXTERNAL_FLOATING }}
             - name: DB_HOST
-              value: postgres
+              value: localhost
             - name: DB_PASSWORD
               value: o2ims123
             - name: LOGGING_CONFIG_LEVEL
@@ -116,7 +116,7 @@ spec:
             - name: PYTHONDONTWRITEBYTECODE
               value: "1"
             - name: REDIS_HOST
-              value: redis
+              value: localhost
           volumeMounts:
             - name: scripts
               mountPath: /opt
@@ -132,7 +132,7 @@ spec:
             - name: API_HOST_EXTERNAL_FLOATING
               value: {{ .Values.ocloud.API_HOST_EXTERNAL_FLOATING }}
             - name: DB_HOST
-              value: postgres
+              value: localhost
             - name: DB_PASSWORD
               value: o2ims123
             - name: FLASK_APP
@@ -149,7 +149,7 @@ spec:
             - name: PYTHONUNBUFFERED
               value: "1"
             - name: REDIS_HOST
-              value: redis
+              value: localhost
             - name: HELM_USER_PASSWD
               value: {{ .Values.ocloud.HELM_USER_PASSWD }}
           command: ["/bin/bash", "/opt/o2api_start.sh"]

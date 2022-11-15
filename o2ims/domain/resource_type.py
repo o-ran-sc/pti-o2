@@ -14,6 +14,10 @@ class ResourceTypeEnum(Enum):
     PSERVER_ETH = 16
     PSERVER_PCI_DEV = 17
     PSERVER_ACC = 18
+    COMPUTE_AGGREGATE = 70
+    NETWORK_AGGREGATE = 80
+    STORAGE_AGGREGATE = 90
+    UNDEFINED_AGGREGATE = 100
 
 
 class ResourceKindEnum(Enum):

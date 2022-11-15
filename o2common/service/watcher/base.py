@@ -12,8 +12,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import traceback
 # from logging import exception
 # from cgtsclient import exc
+
 from o2common.service.client.base_client import BaseClient
 from o2common.domain import commands
 from o2common.service.messagebus import MessageBus
@@ -45,6 +47,7 @@ class BaseWatcher(object):
         except Exception as ex:
             logger.warning("Failed to probe %s watcher due to: %s - %s" %
                            (self._targetname(), type(ex), str(ex)))
+            logger.debug(traceback.format_exc())
             return []
 
     def _probe(self, parent: object = None, tags: object = None) \

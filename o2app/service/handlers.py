@@ -27,7 +27,8 @@ from o2ims.service.auditor import ocloud_handler, dms_handler, \
     resourcepool_handler, pserver_handler, pserver_cpu_handler, \
     pserver_mem_handler, pserver_port_handler, pserver_if_handler,\
     pserver_eth_handler, pserver_acc_handler, alarm_handler, \
-    pserver_dev_handler
+    pserver_dev_handler, agg_compute_handler, agg_network_handler,\
+    agg_storage_handler, agg_undefined_handler
 from o2ims.service.command import notify_handler, registration_handler,\
     notify_alarm_handler
 from o2ims.service.event import ocloud_event, resource_event, \
@@ -67,6 +68,11 @@ COMMAND_HANDLERS = {
     commands.UpdateDms: dms_handler.update_dms,
     commands.UpdateAlarm: alarm_handler.update_alarm,
     commands.UpdateResourcePool: resourcepool_handler.update_resourcepool,
+    commands.UpdateComputeAgg: agg_compute_handler.update_compute_aggregate,
+    commands.UpdateNetworkAgg: agg_network_handler.update_network_aggregate,
+    commands.UpdateStorageAgg: agg_storage_handler.update_storage_aggregate,
+    commands.UpdateUndefinedAgg:
+    agg_undefined_handler.update_undefined_aggregate,
     commands.UpdatePserver: pserver_handler.update_pserver,
     commands.UpdatePserverCpu: pserver_cpu_handler.update_pserver_cpu,
     commands.UpdatePserverMem: pserver_mem_handler.update_pserver_mem,

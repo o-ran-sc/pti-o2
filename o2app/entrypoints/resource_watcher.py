@@ -51,6 +51,13 @@ from o2ims.adapter.clients.ocloud_client import StxEthClient
 from o2ims.service.watcher.pserver_acc_watcher import PServerAccWatcher
 from o2ims.adapter.clients.ocloud_client import StxAccClient
 
+from o2ims.service.watcher.agg_compute_watcher import ComputeAggWatcher
+from o2ims.service.watcher.agg_network_watcher import NetworkAggWatcher
+from o2ims.service.watcher.agg_storage_watcher import StorageAggWatcher
+from o2ims.service.watcher.agg_undefined_watcher import UndefinedAggWatcher
+from o2ims.adapter.clients.aggregate_client import ComputeAggClient, \
+    NetworkAggClient, StorageAggClient, UndefinedAggClient
+
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -76,6 +83,15 @@ class WatcherService(cotyledon.Service):
             child_respool = root.addchild(
                 ResourcePoolWatcher(StxResourcePoolClient(),
                                     self.bus))
+            child_respool.addchild(
+                ComputeAggWatcher(ComputeAggClient(), self.bus))
+            child_respool.addchild(
+                NetworkAggWatcher(NetworkAggClient(), self.bus))
+            child_respool.addchild(
+                StorageAggWatcher(StorageAggClient(), self.bus))
+            child_respool.addchild(
+                UndefinedAggWatcher(UndefinedAggClient(), self.bus))
+
             child_pserver = child_respool.addchild(
                 PServerWatcher(StxPserverClient(), self.bus))
             child_pserver.addchild(

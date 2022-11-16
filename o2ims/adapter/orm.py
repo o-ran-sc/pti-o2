@@ -117,9 +117,9 @@ resource = Table(
     Column("name", String(255)),
     Column("globalAssetId", String(255)),
     Column("parentId", String(255)),
-    Column("description", String(255)),
-    Column("elements", Text())
-    # Column("extensions", String(1024))
+    Column("description", String()),
+    Column("elements", Text()),
+    Column("extensions", String())
 )
 
 deploymentmanager = Table(

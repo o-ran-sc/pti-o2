@@ -15,7 +15,7 @@
 from flask_restx import fields
 
 from o2ims.views.api_ns import api_ims_inventory as api_ims_inventory_v1
-
+from o2common.views.flask_restx_fields import Json2Dict
 
 class OcloudDTO:
 
@@ -107,7 +107,9 @@ class ResourceDTO:
             'parentId': fields.String,
             'description': fields.String,
             # 'elements': fields.String,
-            'extensions': fields.String
+            # 'extensions': fields.String
+            'extensions': Json2Dict(attribute='extensions')
+            # 'extensions': fields.Raw(attribute='extensions')
         },
         mask='{resourceId,resourcePoolId,resourceTypeId,description,parentId}'
     )
@@ -123,7 +125,9 @@ class ResourceDTO:
             'parentId': fields.String,
             'description': fields.String,
             # 'elements': fields.String,
-            'extensions': fields.String
+            # 'extensions': fields.String
+            'extensions': Json2Dict(attribute='extensions')
+            # 'extensions': fields.Raw(attribute='extensions')
         }
         if iteration_number:
             resource_json_mapping['elements'] = fields.List(

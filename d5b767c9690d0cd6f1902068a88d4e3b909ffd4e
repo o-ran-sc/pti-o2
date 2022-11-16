@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3b6065f_a8d2a293",
+        "filename": "o2ims/views/ocloud_view.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-11-16T08:51:05Z",
+      "side": 1,
+      "message": "resourcePoolId is a new parameter of the method, so it needs to move to the latest position, and the type should be String with a none or empty value as default.",
+      "revId": "d5b767c9690d0cd6f1902068a88d4e3b909ffd4e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e88e9362_754d1b55",
+        "filename": "o2ims/views/ocloud_view.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-11-16T08:51:05Z",
+      "side": 1,
+      "message": "The uow needs the \"with uow\" to use this method",
+      "revId": "d5b767c9690d0cd6f1902068a88d4e3b909ffd4e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7491f6b_897a865c",
+        "filename": "o2ims/views/ocloud_view.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-11-16T08:51:05Z",
+      "side": 1,
+      "message": "If the resource pool ID is not the same as the input, an exception should be raised.",
+      "revId": "d5b767c9690d0cd6f1902068a88d4e3b909ffd4e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

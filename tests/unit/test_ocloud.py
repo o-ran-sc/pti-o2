@@ -243,7 +243,8 @@ def test_view_resource_one(mock_uow):
         return_value.serialize.return_value = None
 
     # Query return None
-    resource_res = ocloud_view.resource_one(resource_id1, uow)
+    resource_res = ocloud_view.resource_one(
+        resource_id1, uow, resource_pool_id1)
     assert resource_res is None
 
     session.return_value.query.return_value.filter_by.return_value.first.\
@@ -251,9 +252,10 @@ def test_view_resource_one(mock_uow):
             "resourceId": resource_id1,
             "resourcePoolId": resource_pool_id1
         }
-
-    resource_res = ocloud_view.resource_one(resource_id1, uow)
-    assert str(resource_res.get("resourceId")) == resource_id1
+    resource_res = ocloud_view.resource_one(
+        resource_id1, uow, resource_pool_id1)
+    assert str(resource_res.get("resourceId") == resource_id1)
+    assert str(resource_res.get("resourcePoolId") == resource_pool_id1)
 
 
 def test_view_deployment_managers(mock_uow):

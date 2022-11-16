@@ -82,6 +82,11 @@ def resource_pool_one(resourcePoolId: str,
 
 def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,
               **kwargs):
+    with uow:
+        first = uow.resource_pools.get(resourcePoolId)
+    if first is None:
+        raise NotFoundException("ResourcePool {} doesn't exist".format(
+            resourcePoolId))
     pagination = Pagination(**kwargs)
     # filter key should be the same with database name
     query_kwargs = pagination.get_pagination()
@@ -113,10 +118,18 @@ def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,
     return pagination.get_result(ret)
 
 
-def resource_one(resourceId: str, uow: unit_of_work.AbstractUnitOfWork):
+def resource_one(resourcePoolId: None, resourceId: str,
+                 uow: unit_of_work.AbstractUnitOfWork):
     with uow:
-        first = uow.resources.get(resourceId)
-        return first.serialize() if first is not None else None
+        resoucePool = uow.resource_pools.get(resourcePoolId)
+    if resoucePool is None:
+        raise NotFoundException("ResourcePool {} doesn't exist".format(
+            resourcePoolId))
+
+    first = uow.resources.get(resourceId)
+    if first is not None and first.ResourcePoolID == resourcePoolId:
+        return first
+    return None
 
 
 def deployment_managers(uow: unit_of_work.AbstractUnitOfWork, **kwargs):

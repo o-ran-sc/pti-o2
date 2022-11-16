@@ -83,6 +83,8 @@ class WatcherService(cotyledon.Service):
             child_respool = root.addchild(
                 ResourcePoolWatcher(StxResourcePoolClient(),
                                     self.bus))
+
+            # Add Aggregate watch
             child_respool.addchild(
                 ComputeAggWatcher(ComputeAggClient(), self.bus))
             child_respool.addchild(
@@ -92,6 +94,7 @@ class WatcherService(cotyledon.Service):
             child_respool.addchild(
                 UndefinedAggWatcher(UndefinedAggClient(), self.bus))
 
+            # Add Resource watch
             child_pserver = child_respool.addchild(
                 PServerWatcher(StxPserverClient(), self.bus))
             child_pserver.addchild(
@@ -109,11 +112,10 @@ class WatcherService(cotyledon.Service):
             child_pserver.addchild(
                 PServerAccWatcher(StxAccClient(), self.bus))
 
-            self.worker.add_watcher(root)
-
             # Add Alarm watch
-            root = WatcherTree(
+            child_respool.addchild(
                 AlarmWatcher(StxAlarmClient(self.bus.uow), self.bus))
+
             self.worker.add_watcher(root)
 
             self.worker.start()

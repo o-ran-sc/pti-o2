@@ -37,6 +37,8 @@ def update_alarm(
                 + " id: " + str(fmobj.id)
                 + " hash: " + str(fmobj.hash))
     with uow:
+        resourcepool = uow.resource_pools.get(cmd.parentid)
+
         alarm_event_record = uow.alarm_event_records.get(fmobj.id)
         if not alarm_event_record:
             logger.info("add alarm event record:" + fmobj.name
@@ -52,13 +54,10 @@ def update_alarm(
                 # TODO: handle different resource type
                 hostname = entity_instance_id.split('.')[0].split('=')[1]
                 logger.debug('hostname: ' + hostname)
-                respools = uow.resource_pools.list()
-                respoolids = [respool.resourcePoolId for respool in
-                              respools if respool.oCloudId ==
-                              respool.resourcePoolId]
+
                 restype = uow.resource_types.get_by_name('pserver')
                 localmodel.resourceTypeId = restype.resourceTypeId
-                hosts = uow.resources.list(respoolids[0], **{
+                hosts = uow.resources.list(resourcepool.resourcePoolId, **{
                     'resourceTypeId': restype.resourceTypeId
                 })
                 for host in hosts:
@@ -72,6 +71,18 @@ def update_alarm(
             # localmodel.resourceId = check_res_id(uow, fmobj)
             # logger.debug("resource ID: " + localmodel.resourceId)
             # uow.alarm_event_records.add(localmodel)
+            else:
+                restype = uow.resource_types.get_by_name('undefined_aggregate')
+                localmodel.resourceTypeId = restype.resourceTypeId
+
+                undefined_res = uow.resources.list(
+                    resourcepool.resourcePoolId, **{
+                        'resourceTypeId': restype.resourceTypeId
+                    })
+                localmodel.resourceId = undefined_res[0].resourceId
+                uow.alarm_event_records.add(localmodel)
+                logger.info("Add the alarm event record: " + fmobj.id
+                            + ", name: " + fmobj.name)
 
         else:
             localmodel = alarm_event_record

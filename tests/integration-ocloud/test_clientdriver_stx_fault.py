@@ -87,3 +87,17 @@ def test_get_eventinfo(real_stx_fm_client):
     event2 = fmClientImp.getEventInfo(event1.id)
     assert event1 != event2
     assert event1.id == event2.id
+
+
+def test_get_subcloud_alarmlist(real_stx_fm_client, real_stx_dc_client):
+    fmClientImp = StxFaultClientImp(
+        real_stx_fm_client, dc_client=real_stx_dc_client)
+    assert fmClientImp is not None
+    subclouds = fmClientImp.getSubcloudList()
+    stxclient, _ = fmClientImp.getSubcloudFaultClient(subclouds[0].subcloud_id)
+    res_pool_id = stxclient.isystem.list()[0].uuid
+
+    fmClientImp.setFaultClient(res_pool_id)
+    alarms = fmClientImp.getAlarmList()
+    assert alarms is not None
+    assert len(alarms) > 0

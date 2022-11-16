@@ -314,7 +314,12 @@ def test_probe_new_alarm():
     bus = create_alarm_fake_bus(fakeuow)
     fakeClient = FakeAlarmClient()
     alarmwatcher = AlarmWatcher(fakeClient, bus)
-    cmds = alarmwatcher.probe()
+    parent = type('obj', (object,), {
+        'data': type('obj', (object,), {
+            'id': 'test_parent_id',
+            'res_pool_id': 'test_res_pool'
+        })})
+    cmds = alarmwatcher.probe(parent)
     assert cmds is not None
     assert len(cmds) == 1
     assert cmds[0].data.name == "alarm"

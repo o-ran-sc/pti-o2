@@ -15,7 +15,7 @@
 # pylint: disable=unused-argument
 from __future__ import annotations
 import uuid
-# import json
+import json
 
 from o2ims.domain import commands, events
 from o2ims.domain.stx_object import StxGenericModel
@@ -99,10 +99,19 @@ def create_by(stxobj: StxGenericModel, parent: Resource, resourcetype_id: str)\
     resourcepool_id = parent.resourcePoolId
     parent_id = parent.resourceId
     gAssetId = ''  # TODO: global ID
-    description = "%s : A CPU resource of the physical server" % stxobj.name
+    # description = "%s : A CPU resource of the physical server" % stxobj.name
+    content = json.loads(stxobj.content)
+    selected_keys = [
+        "cpu", "core", "thread", "allocated_function", "numa_node",
+        "cpu_model", "cpu_family"
+        ]
+    filtered = dict(
+        filter(lambda item: item[0] in selected_keys, content.items()))
+    extensions = json.dumps(filtered)
+    description = ";".join([f"{k}:{v}" for k, v in filtered.items()])
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
                         stxobj.name, parent_id, gAssetId, stxobj.content,
-                        description)
+                        description, extensions)
     resource.createtime = stxobj.createtime
     resource.updatetime = stxobj.updatetime
     resource.hash = stxobj.hash

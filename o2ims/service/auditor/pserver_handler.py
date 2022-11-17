@@ -15,7 +15,7 @@
 # pylint: disable=unused-argument
 from __future__ import annotations
 import uuid
-# import json
+import json
 from typing import Callable
 
 from o2ims.domain import commands, events
@@ -102,10 +102,22 @@ def create_by(stxobj: StxGenericModel, parentid: str, resourcetype_id: str) \
     resourcepool_id = parentid
     parent_id = None  # the root of the resource has no parent id
     gAssetId = ''  # TODO: global ID
-    description = "%s : A physical server resource" % stxobj.name
+    # description = "%s : A physical server resource" % stxobj.name
+    content = json.loads(stxobj.content)
+    selected_keys = [
+        "hostname", "personality", "id", "mgmt_ip", "mgmt_mac",
+        "software_load", "capabilities",
+        "operational", "availability", "administrative",
+        "boot_device", "rootfs_device", "install_state", "subfunctions",
+        "clock_synchronization", "max_cpu_mhz_allowed"
+        ]
+    filtered = dict(
+        filter(lambda item: item[0] in selected_keys, content.items()))
+    extensions = json.dumps(filtered)
+    description = ";".join([f"{k}:{v}" for k, v in filtered.items()])
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
                         stxobj.name, parent_id, gAssetId, stxobj.content,
-                        description)
+                        description, extensions)
     resource.createtime = stxobj.createtime
     resource.updatetime = stxobj.updatetime
     resource.hash = stxobj.hash

@@ -136,4 +136,4 @@ class UpdatePserverAcc(UpdateResource):
 
 @dataclass
 class UpdateAlarm(UpdateFaultObject):
-    pass
+    parentid: str

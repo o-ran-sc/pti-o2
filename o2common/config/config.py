@@ -193,7 +193,8 @@ def get_dc_access_info():
     return os_client_args
 
 
-def get_fm_access_info():
+def get_fm_access_info(subcloud_hostname: str = "",
+                       sub_is_https: bool = False):
     try:
         # client_args = dict(
         #     auth_url=os.environ.get('OS_AUTH_URL', _DEFAULT_STX_URL),
@@ -210,11 +211,24 @@ def get_fm_access_info():
     os_client_args = {}
     for key, val in client_args.items():
         os_client_args['os_{key}'.format(key=key)] = val
+
     auth_url = urlparse(os_client_args.pop('os_auth_url'))
+    os_client_args['auth_url'] = auth_url.geturl()
+
+    if "" != subcloud_hostname:
+        orig_auth_url = urlparse(_DEFAULT_STX_URL)
+        new_auth_url = orig_auth_url._replace(
+            netloc=orig_auth_url.netloc.replace(
+                orig_auth_url.hostname, subcloud_hostname))
+        if sub_is_https:
+            new_auth_url = new_auth_url._replace(
+                scheme=new_auth_url.scheme.
+                replace(new_auth_url.scheme, 'https'))
+        os_client_args['auth_url'] = new_auth_url.geturl()
+        os_client_args['endpoint_type'] = 'publicURL'
 
     os_client_args['insecure'] = True
 
-    os_client_args['auth_url'] = auth_url.geturl()
     os_client_args['username'] = os_client_args.pop('os_username')
     os_client_args['password'] = os_client_args.pop('os_api_key')
     os_client_args['project_name'] = os_client_args.pop('os_project_name')

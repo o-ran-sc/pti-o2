@@ -15,17 +15,17 @@
 # client talking to Stx standalone
 
 import uuid
-from o2common.service.client.base_client import BaseClient
 from typing import List
 # Optional,  Set
-from o2ims.domain import stx_object as ocloudModel
-from o2common.config import config
-from o2ims.domain.resource_type import ResourceTypeEnum
 
-# from dcmanagerclient.api import client
 from cgtsclient.client import get_client as get_stx_client
 from cgtsclient.exc import EndpointException
 from dcmanagerclient.api.client import client as get_dc_client
+
+from o2common.config import config
+from o2common.service.client.base_client import BaseClient
+from o2ims.domain import stx_object as ocloudModel
+from o2ims.domain.resource_type import ResourceTypeEnum
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -229,7 +229,7 @@ class StxClientImp(object):
             os_client_args = config.get_stx_access_info(
                 region_name=subcloud[0].name,
                 subcloud_hostname=subcloud[0].oam_floating_ip)
-            logger.info(os_client_args)
+            # logger.info(os_client_args)
             config_client = get_stx_client(**os_client_args)
         except EndpointException as e:
             msg = e.format_message()
@@ -237,7 +237,7 @@ class StxClientImp(object):
                 os_client_args = config.get_stx_access_info(
                     region_name=subcloud[0].name, sub_is_https=True,
                     subcloud_hostname=subcloud[0].oam_floating_ip)
-                logger.info(os_client_args)
+                # logger.info(os_client_args)
                 config_client = get_stx_client(**os_client_args)
             else:
                 raise ValueError('Stx endpoint exception: %s' % msg)

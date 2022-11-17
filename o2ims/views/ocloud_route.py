@@ -262,6 +262,7 @@ class ResourcePoolGetRouter(Resource):
 # ----------  Resources ---------- #
 @api_ims_inventory_v1.route("/v1/resourcePools/<resourcePoolID>/resources")
 @api_ims_inventory_v1.param('resourcePoolID', 'ID of the resource pool')
+@api_ims_inventory_v1.response(404, 'Resource pool not found')
 # @api_ims_inventory_v1.param('sort', 'sort by column name',
 #                             _in='query')
 # @api_ims_inventory_v1.param('per_page', 'The number of results per page ' +
@@ -312,8 +313,10 @@ class ResourcesListRouter(Resource):
         if args.nextpage_opaque_marker is not None:
             kwargs['page'] = args.nextpage_opaque_marker
         kwargs['filter'] = args.filter if args.filter is not None else ''
-
         ret = ocloud_view.resources(resourcePoolID, bus.uow, **kwargs)
+        if ret is None:
+            raise NotFoundException("Resources under {} doesn't exist".format(
+                resourcePoolID))
         return link_header(request.full_path, ret)
 
 
@@ -351,11 +354,11 @@ class ResourceGetRouter(Resource):
     @api_ims_inventory_v1.doc('Get resource')
     @api_ims_inventory_v1.marshal_with(model)
     def get(self, resourcePoolID, resourceID):
-        result = ocloud_view.resource_one(resourceID, bus.uow)
-        if result is not None:
-            return result
-        raise NotFoundException("Resource {} doesn't exist".format(
-            resourceID))
+        result = ocloud_view.resource_one(resourceID, bus.uow, resourcePoolID)
+        if result is None:
+            raise NotFoundException("Resource {} doesn't exist".format(
+                resourceID))
+        return result
 
 
 # ----------  DeploymentManagers ---------- #

@@ -22,45 +22,46 @@ logger = o2logging.get_logger(__name__)
 def gen_orm_filter(obj: ColumnElement, filter_str: str):
     if not filter_str:
         return []
-    filter_without_space = filter_str.replace(" ", "")
+    # filter_without_space = filter_str.replace(" ", "")
+    filter_without_space = filter_str.strip(' ()')
     items = filter_without_space.split(';')
 
     filter_list = list()
     for i in items:
-        if '(' in i:
-            i = i.replace("(", "")
-        if ')' in i:
-            i = i.replace(")", "")
+        # if '(' in i:
+        #     i = i.replace("(", "")
+        # if ')' in i:
+        #     i = i.replace(")", "")
         filter_expr = i.split(',')
         if len(filter_expr) < 3:
             continue
-        filter_op = filter_expr[0]
-        filter_key = filter_expr[1]
+        filter_op = filter_expr[0].strip()
+        filter_key = filter_expr[1].strip()
         filter_vals = filter_expr[2:]
         filter_list.extend(toFilterArgs(
             filter_op, obj, filter_key, filter_vals))
-    logger.info('Filter list length: %d' % len(filter_list))
+    logger.debug('Filter list length: %d' % len(filter_list))
     return filter_list
 
 
 def toFilterArgs(operation: str, obj: ColumnElement, key: str, values: list):
-    if not hasattr(obj, key):
-        logger.warning('Filter attrName %s not in Object %s.' %
-                       (key, str(obj)))
-        raise KeyError(
-            'Filter attrName {} not in the Object'.format(key))
+    # if not hasattr(obj, key):
+    #     logger.warning('Filter attrName %s not in Object %s' %
+    #                    (key, str(obj)))
+    #     raise KeyError(
+    #         'Filter attrName {} not in the Object'.format(key))
 
-    if operation in ['eq', 'neq', 'gt', 'lt', 'gte', 'lte']:
-        if len(values) != 1:
-            raise KeyError(
-                'Filter operation one {} is only support one value.'.
-                format(operation))
-    elif operation in ['in', 'nin', 'cont', 'ncont']:
-        if len(values) == 0:
-            raise KeyError('Filter operation {} value is needed.'.
-                           format(operation))
-    else:
-        raise KeyError('Filter operation {} not support.'.format(operation))
+    # if operation in ['eq', 'neq', 'gt', 'lt', 'gte', 'lte']:
+    #     if len(values) != 1:
+    #         raise KeyError(
+    #             'Filter operation one {} is only support one value'.
+    #             format(operation))
+    # elif operation in ['in', 'nin', 'cont', 'ncont']:
+    #     if len(values) == 0:
+    #         raise KeyError('Filter operation {} value is needed'.
+    #                        format(operation))
+    # else:
+    #     raise KeyError('Filter operation {} not support'.format(operation))
 
     ll = list()
     if operation == 'eq':

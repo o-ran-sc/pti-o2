@@ -38,7 +38,7 @@ class Pagination:
 
     def get_result(self, ret: Tuple[int, List[Serializer]]):
         count = ret[0]
-        logger.info('List count: {}'.format(count))
+        logger.debug('List count: {}'.format(count))
         ret_list = ret[1]
         page_total = int(math.ceil(count/self.limit)
                          ) if count > self.limit else 1

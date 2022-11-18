@@ -130,7 +130,7 @@ class o2_marshal_with(marshal_with):
         mask_val = ''
         if 'all_fields' in kwargs:
             all_fields_without_space = kwargs['all_fields'].replace(" ", "")
-            logger.info('all_fields selector value is {}'.format(
+            logger.debug('all_fields selector value is {}'.format(
                 all_fields_without_space))
             # all_fields = all_fields_without_space.lower()
             # if 'true' == all_fields:

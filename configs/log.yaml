@@ -19,26 +19,26 @@ loggers:
     root:
       handlers: [console_handler, file_handler]
       level: "WARNING"
-      propagate: False
-    o2common:
-      handlers: [console_handler, file_handler]
-      level: "WARNING"
-      propagate: False
-    o2ims:
-      handlers: [console_handler, file_handler]
-      level: "DEBUG"
-      propagate: False
-    o2dms:
-      handlers: [console_handler, file_handler]
-      level: "DEBUG"
-      propagate: False
+      # propagate: False
+    # o2common:
+    #   handlers: [console_handler, file_handler]
+    #   level: "WARNING"
+    #   propagate: True
+    # o2ims:
+    #   handlers: [console_handler, file_handler]
+    #   level: "WARNING"
+    #   propagate: True
+    # o2dms:
+    #   handlers: [console_handler, file_handler]
+    #   level: "WARNING"
+    #   propagate: True
 handlers:
     console_handler:
-      level: "DEBUG"
+      level: "NOTSET"
       class: "logging.StreamHandler"
       formatter: "standard"
     file_handler:
-      level: "DEBUG"
+      level: "NOTSET"
       class: "logging.handlers.RotatingFileHandler"
       filename: "/var/log/orano2/o2.log"
       formatter: "standard"

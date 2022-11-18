@@ -11,3 +11,10 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
+
+from o2common.helper.o2logging import configure_logger
+
+
+# make sure init logger at the first chance
+configure_logger()

@@ -109,7 +109,7 @@ class ProbableCause(AgRoot, Serializer):
         self.description = desc
 
 
-class AlarmLastChangeEnum(str, Enum):
+class AlarmChangeTypeEnum(str, Enum):
     ADDED = 'ADDED'
     DELETED = 'DELETED'
     MODIFYED = 'MODIFYED'
@@ -121,13 +121,14 @@ class ClearingTypeEnum(str, Enum):
 
 
 class AlarmDefinition(AgRoot, Serializer):
-    def __init__(self, id: str, name: str, last_change: AlarmLastChangeEnum,
+    def __init__(self, id: str, name: str, change_type: AlarmChangeTypeEnum,
                  desc: str, prop_action: str, clearing_type: ClearingTypeEnum,
                  pk_noti_field: str) -> None:
         super().__init__()
         self.alarmDefinitionId = id
         self.alarmName = name
-        self.alarmLastChange = last_change
+        self.alarmLastChange = '0.1'
+        self.alarmChangeType = change_type
         self.alarmDescription = desc
         self.proposedRepairActions = prop_action
         self.clearingType = clearing_type
@@ -146,7 +147,13 @@ class AlarmDictionary(AgRoot, Serializer):
         self.vendor = ""
         self.managementInterfaceId = "O2IMS"
         self.pkNotificationField = ""
-        self.alarmDefinition = ""
+        self.alarmDefinition = []
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        if 'alarmDefinition' in d and len(d['alarmDefinition']) > 0:
+            d['alarmDefinition'] = self.serialize_list(d['alarmDefinition'])
+        return d
 
 
 class AlarmNotificationEventEnum(str, Enum):

@@ -39,11 +39,11 @@ def update_pserver_mem(
     stxobj = cmd.data
     with uow:
         p_resource = uow.resources.get(cmd.parentid)
-        resourcepool = uow.resource_pools.get(p_resource.resourcePoolId)
+        # resourcepool = uow.resource_pools.get(p_resource.resourcePoolId)
 
         res = uow.session.execute(
             '''
-            SELECT "resourceTypeId", "oCloudId", "name"
+            SELECT "resourceTypeId", "name"
             FROM "resourceType"
             WHERE "resourceTypeEnum" = :resource_type_enum
             ''',
@@ -54,11 +54,17 @@ def update_pserver_mem(
             res_type_name = 'pserver_mem'
             resourcetype_id = str(uuid.uuid3(
                 uuid.NAMESPACE_URL, res_type_name))
-            uow.resource_types.add(ResourceType(
+            res_type = ResourceType(
                 resourcetype_id,
                 res_type_name, stxobj.type,
-                resourcepool.oCloudId,
-                description='A Memory resource type of Physical Server'))
+                description='A Memory resource type of Physical Server')
+            dict_id = str(uuid.uuid3(
+                uuid.NAMESPACE_URL,
+                str(f"{res_type_name}_alarmdictionary")))
+            alarm_dictionary = uow.alarm_dictionaries.get(dict_id)
+            if alarm_dictionary:
+                res_type.alarmDictionary = alarm_dictionary
+            uow.resource_types.add(res_type)
         else:
             resourcetype_id = first['resourceTypeId']
 

@@ -12,29 +12,38 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-dictionary:
-    pserver:
-        version: 0.1
-        alarmDefinition: [
-          "100.104", "100.105"
-        ]
-    pserver_cpu:
-        version: 0.1
-        alarmDefinition: [
-          "100.101"
-        ]
-    pserver_mem:
-        version: 0.1
-        alarmDefinition: [
-          "100.103"
-        ]
-    pserver_ethernet:
-        version: 0.1
-        alarmDefinition: [
-          "100.102"
-        ]
-    pserver_if:
-        version: 0.1
-        alarmDefinition: [
-          
-        ]
+alarmDictionary:
+    schemaVersion: 0.1
+    schema:
+        pserver:
+            version: 0.1
+            alarmDefinition:
+              - "100.104"
+              - "100.105"
+        pserver_cpu:
+            version: 0.1
+            alarmDefinition:
+              - "100.101"
+        pserver_mem:
+            version: 0.1
+            alarmDefinition:
+              - "100.103"
+        pserver_ethernet:
+            version: 0.1
+            alarmDefinition:
+              - "100.102"
+        pserver_if:
+            version: 0.1
+            alarmDefinition:
+        compute_aggregate:
+            version: 0.1
+            alarmDefinition:
+        network_aggregate:
+            version: 0.1
+            alarmDefinition:
+        storage_aggregate:
+            version: 0.1
+            alarmDefinition:
+        undefined_aggregate:
+            version: 0.1
+            alarmDefinition:

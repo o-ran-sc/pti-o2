@@ -17,7 +17,7 @@ from typing import List, Tuple
 from o2ims.domain import alarm_obj
 from o2ims.domain.alarm_repo import AlarmDefinitionRepository, \
     AlarmEventRecordRepository, AlarmSubscriptionRepository, \
-    AlarmProbableCauseRepository
+    AlarmProbableCauseRepository, AlarmDictionaryRepository
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -75,6 +75,26 @@ class AlarmDefinitionSqlAlchemyRepository(AlarmDefinitionRepository):
     def _delete(self, alarm_definition_id):
         self.session.query(alarm_obj.AlarmDefinition).filter_by(
             alarmDefinitionId=alarm_definition_id).delete()
+
+
+class AlarmDictionarySqlAlchemyRepository(AlarmDictionaryRepository):
+    def __init__(self, session):
+        super().__init__()
+        self.session = session
+
+    def _add(self, alarm_dict: alarm_obj.AlarmDictionary):
+        self.session.add(alarm_dict)
+
+    def _get(self, dictionary_id) -> alarm_obj.AlarmDictionary:
+        return self.session.query(alarm_obj.AlarmDictionary).filter_by(
+            id=dictionary_id).first()
+
+    def _list(self) -> List[alarm_obj.AlarmDictionary]:
+        return self.session.query(alarm_obj.AlarmDictionary)
+
+    def _delete(self, dictionary_id):
+        self.session.query(alarm_obj.AlarmDictionary).filter_by(
+            id=dictionary_id).delete()
 
 
 class AlarmSubscriptionSqlAlchemyRepository(AlarmSubscriptionRepository):

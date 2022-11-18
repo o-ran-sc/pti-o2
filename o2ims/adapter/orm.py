@@ -31,7 +31,7 @@ from sqlalchemy import (
     exc,
 )
 
-from sqlalchemy.orm import mapper, relationship
+from sqlalchemy.orm import mapper, relationship, backref
 # from sqlalchemy.sql.sqltypes import Integer
 
 from o2ims.domain import ocloud as ocloudModel
@@ -82,7 +82,7 @@ resourcetype = Table(
     Column("resourceClass", Enum(ResourceTypeEnum)),
     # Column("extensions", String(1024))
 
-    Column("oCloudId", ForeignKey("ocloud.oCloudId")),
+    Column("alarmDictionaryId", ForeignKey("alarmDictionary.id"))
 )
 
 resourcepool = Table(
@@ -165,11 +165,38 @@ alarm_definition = Table(
     Column("alarmDefinitionId", String(255), primary_key=True),
     Column("alarmName", String(255), unique=True),
     Column("alarmLastChange", String(255)),
+    Column("alarmChangeType", String(255)),
     Column("alarmDescription", String(255)),
-    Column("proposeRepairActions", String(255)),
+    Column("proposedRepairActions", String(1024)),
     Column("clearingType", String(255)),
     Column("managementInterfaceId", String(255)),
     Column("pkNotificationField", String(255))
+)
+
+alarm_dictionary = Table(
+    "alarmDictionary",
+    metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+
+    Column("id", String(255), primary_key=True),
+    Column("entityType", String(255), unique=True),
+    Column("alarmDictionaryVersion", String(255)),
+    Column("alarmDictionarySchemaVersion", String(255)),
+    Column("vendor", String(255)),
+    Column("managementInterfaceId", String(255)),
+    Column("pkNotificationField", String(255))
+
+    # Column("resourceTypeId", ForeignKey("resourceType.resourceTypeId"))
+)
+
+association_table1 = Table(
+    'associationAlarmDictAndAlarmDef',
+    metadata,
+    Column("alarmDictionaryId", ForeignKey(
+        'alarmDictionary.id', ondelete='cascade')),
+    Column("alarmDefinitionId", ForeignKey(
+        'alarmDefinition.alarmDefinitionId'))
 )
 
 alarm_event_record = Table(
@@ -227,16 +254,43 @@ def wait_for_metadata_ready(engine):
 def start_o2ims_mappers(engine=None):
     logger.info("Starting O2 IMS mappers")
 
+    # IMS Infrastruture Monitoring Mappering
+    mapper(alarmModel.AlarmEventRecord, alarm_event_record)
+    alarmdefinition_mapper = mapper(
+        alarmModel.AlarmDefinition, alarm_definition)
+    mapper(alarmModel.ProbableCause, alarm_probable_cause)
+    mapper(alarmModel.AlarmSubscription, alarm_subscription)
+    alarm_dictionary_mapper = mapper(
+        alarmModel.AlarmDictionary, alarm_dictionary,
+        properties={
+            "alarmDefinition": relationship(alarmdefinition_mapper,
+                                            cascade='all,delete-orphan',
+                                            secondary=association_table1,
+                                            single_parent=True,
+                                            backref='alarmDictionaries')
+        }
+    )
+
     # IMS Infrastructure Inventory Mappering
     dm_mapper = mapper(ocloudModel.DeploymentManager, deploymentmanager)
     resourcepool_mapper = mapper(ocloudModel.ResourcePool, resourcepool)
-    resourcetype_mapper = mapper(ocloudModel.ResourceType, resourcetype)
+    resourcetype_mapper = mapper(
+        ocloudModel.ResourceType, resourcetype,
+        properties={
+            #     "alarmDictionary": relationship(alarmModel.AlarmDictionary,
+            #                                     uselist=False)
+            "alarmDictionary": relationship(alarm_dictionary_mapper,
+                                            backref=backref(
+                                                'resourceType', uselist=False))
+
+        }
+    )
     mapper(
         ocloudModel.Ocloud,
         ocloud,
         properties={
             "deploymentManagers": relationship(dm_mapper),
-            "resourceTypes": relationship(resourcetype_mapper),
+            # "resourceTypes": relationship(resourcetype_mapper),
             "resourcePools": relationship(resourcepool_mapper)
         })
     mapper(
@@ -248,12 +302,6 @@ def start_o2ims_mappers(engine=None):
         }
     )
     mapper(subModel.Subscription, subscription)
-
-    # IMS Infrastruture Monitoring Mappering
-    mapper(alarmModel.AlarmEventRecord, alarm_event_record)
-    mapper(alarmModel.AlarmDefinition, alarm_definition)
-    mapper(alarmModel.ProbableCause, alarm_probable_cause)
-    mapper(alarmModel.AlarmSubscription, alarm_subscription)
 
     if engine is not None:
         wait_for_metadata_ready(engine)

@@ -69,6 +69,8 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
             .AlarmEventRecordSqlAlchemyRepository(self.session)
         self.alarm_definitions = alarm_repository\
             .AlarmDefinitionSqlAlchemyRepository(self.session)
+        self.alarm_dictionaries = alarm_repository\
+            .AlarmDictionarySqlAlchemyRepository(self.session)
         self.alarm_subscriptions = alarm_repository\
             .AlarmSubscriptionSqlAlchemyRepository(self.session)
         self.alarm_probable_causes = alarm_repository\

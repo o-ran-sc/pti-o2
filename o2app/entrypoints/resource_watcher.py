@@ -51,6 +51,8 @@ from o2ims.adapter.clients.ocloud_client import StxEthClient
 from o2ims.service.watcher.pserver_acc_watcher import PServerAccWatcher
 from o2ims.adapter.clients.ocloud_client import StxAccClient
 
+from o2ims.adapter.clients.alarm_dict_client import load_alarm_definition,\
+    load_alarm_dictionary_from_conf_file
 from o2ims.service.watcher.agg_compute_watcher import ComputeAggWatcher
 from o2ims.service.watcher.agg_network_watcher import NetworkAggWatcher
 from o2ims.service.watcher.agg_storage_watcher import StorageAggWatcher
@@ -70,6 +72,8 @@ class WatcherService(cotyledon.Service):
         self.args = args
         self.bus = bootstrap.bootstrap()
         self.worker = PollWorker(bus=self.bus)
+        load_alarm_definition(self.bus.uow)
+        load_alarm_dictionary_from_conf_file(self.bus.uow)
 
     def run(self):
         try:

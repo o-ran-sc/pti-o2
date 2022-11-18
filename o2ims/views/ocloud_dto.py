@@ -42,17 +42,35 @@ class OcloudDTO:
 
 
 class ResourceTypeDTO:
+    alarm_definition = api_ims_inventory_v1.model(
+        "AlarmDefinitionDto",
+        {
+            'alarmDefinitionId': fields.String,
+            'alarmName': fields.String,
+            'alarmLastChange': fields.String,
+            'alarmChangeType': fields.String,
+            'alarmDescription': fields.String,
+            'proposedRepairActions': fields.String,
+            'clearingType': fields.String,
+            'managementInterfaceId': fields.String,
+            'pkNotificationField': fields.String,
+            'alarmAdditionalFields': fields.String,
+        }
+
+    )
     alarm_dictionary = api_ims_inventory_v1.model(
         "AlarmDictionaryDto",
         {
             'id': fields.String,
             'alarmDictionaryVersion': fields.String,
-            'alarmDictionarySchemVersion': fields.String,
+            'alarmDictionarySchemaVersion': fields.String,
             'entityType': fields.String,
             'vendor': fields.String,
             'managementInterfaceId': fields.String,
             'pkNotificationField': fields.String,
-            'alarmDefinition': fields.String,
+            # 'alarmDefinition': fields.String,
+            'alarmDefinition': fields.List(fields.Nested(alarm_definition),
+                                           attribute='alarmDefinition'),
         }
     )
 

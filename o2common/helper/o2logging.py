@@ -20,17 +20,25 @@ import yaml
 
 
 def get_logger(name=None):
+    # CONFIG_FILE = os.environ.get(
+    #     "LOGGING_CONFIG_FILE", "/etc/o2/log.yaml")
+    # if os.path.exists(CONFIG_FILE):
+    #     with open(file=CONFIG_FILE, mode='r', encoding="utf-8") as file:
+    #         config_yaml = yaml.load(stream=file, Loader=yaml.FullLoader)
+    #     logging.config.dictConfig(config=config_yaml)
+
+    logger = logging.getLogger(name)
+    # override root logger's logging level
+    LOGGING_CONFIG_LEVEL = os.environ.get("LOGGING_CONFIG_LEVEL", None)
+    if LOGGING_CONFIG_LEVEL:
+        logger.setLevel(LOGGING_CONFIG_LEVEL)
+    return logger
+
+
+def configure_logger():
     CONFIG_FILE = os.environ.get(
         "LOGGING_CONFIG_FILE", "/etc/o2/log.yaml")
     if os.path.exists(CONFIG_FILE):
         with open(file=CONFIG_FILE, mode='r', encoding="utf-8") as file:
             config_yaml = yaml.load(stream=file, Loader=yaml.FullLoader)
-        logging.config.dictConfig(config=config_yaml)
-
-    logger = logging.getLogger(name)
-
-    # override logging level
-    LOGGING_CONFIG_LEVEL = os.environ.get("LOGGING_CONFIG_LEVEL", None)
-    if LOGGING_CONFIG_LEVEL:
-        logger.setLevel(LOGGING_CONFIG_LEVEL)
-    return logger
+            logging.config.dictConfig(config=config_yaml)

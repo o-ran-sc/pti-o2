@@ -17,6 +17,7 @@ from sqlalchemy.sql.elements import ColumnElement
 
 from o2common.views.route_exception import BadRequestException
 from o2common.domain.filter import gen_orm_filter
+from o2common.domain.convert import convert
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -73,6 +74,7 @@ def check_filter_attribute(obj: ColumnElement, filter_str: str):
             continue
         filter_op = filter_expr[0].strip()
         filter_key = filter_expr[1].strip()
+        filter_key = convert(obj, filter_key)
         filter_vals = filter_expr[2:]
         if filter_op in ["eq", "neq", "gt", "lt", "gte", "lte"]:
             if len(filter_vals) != 1:

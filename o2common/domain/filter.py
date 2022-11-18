@@ -14,7 +14,7 @@
 
 from sqlalchemy.sql.elements import ColumnElement
 from sqlalchemy import or_
-
+from o2common.domain.convert import convert
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -38,6 +38,7 @@ def gen_orm_filter(obj: ColumnElement, filter_str: str):
         filter_op = filter_expr[0].strip()
         filter_key = filter_expr[1].strip()
         filter_vals = filter_expr[2:]
+        filter_key = convert(obj, filter_key)
         filter_list.extend(toFilterArgs(
             filter_op, obj, filter_key, filter_vals))
     logger.debug('Filter list length: %d' % len(filter_list))

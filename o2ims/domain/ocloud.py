@@ -15,12 +15,13 @@
 from __future__ import annotations
 import json
 
+from o2common.config import config
 from o2common.domain.base import AgRoot, Serializer
-from o2common.config import config, conf as CONF
 # from dataclasses import dataclass
 # from datetime import date
 # from typing import Optional, List, Set
 from .resource_type import ResourceKindEnum, ResourceTypeEnum
+from .alarm_obj import AlarmDictionary
 
 
 DeploymentManagerProfileDefault = 'native_k8sapi'
@@ -84,7 +85,7 @@ class ResourcePool(AgRoot, Serializer):
 
 class ResourceType(AgRoot, Serializer):
     def __init__(self, typeid: str, name: str, typeEnum: ResourceTypeEnum,
-                 ocloudid: str, vendor: str = '', model: str = '',
+                 vendor: str = '', model: str = '',
                  version: str = '',
                  description: str = '') -> None:
         super().__init__()
@@ -95,7 +96,7 @@ class ResourceType(AgRoot, Serializer):
         self.vendor = vendor
         self.model = model
         self.version = version
-        self.alarmDictionary = {}
+        self.alarmDictionary = None
         self.resourceKind = ResourceKindEnum.UNDEFINED
         self.resourceClass = ResourceTypeEnum.UNDEFINED
         self.extensions = []
@@ -104,11 +105,9 @@ class ResourceType(AgRoot, Serializer):
 
     def serialize(self):
         d = Serializer.serialize(self)
-
-        if CONF.alarm_dictionaries.get(d['name']) is not None:
-            d["alarmDictionary"] = CONF.alarm_dictionaries.get(
-                d['name']).serialize()
-
+        if 'alarmDictionary' in d and \
+                type(d['alarmDictionary']) is AlarmDictionary:
+            d['alarmDictionary'] = d['alarmDictionary'].serialize()
         return d
 
 

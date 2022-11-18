@@ -77,7 +77,7 @@ def resource_pool_one(resourcePoolId: str,
                       uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         first = uow.resource_pools.get(resourcePoolId)
-        return first.serialize() if first is not None else None
+        return first.serialize() if first else None
 
 
 def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,

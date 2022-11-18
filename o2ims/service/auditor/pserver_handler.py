@@ -40,13 +40,13 @@ def update_pserver(
 ):
     stxobj = cmd.data
     with uow:
-        resourcepool = uow.resource_pools.get(cmd.parentid)
+        # resourcepool = uow.resource_pools.get(cmd.parentid)
 
         # res = uow.session.execute(select(resourcetype).where(
         #     resourcetype.c.resourceTypeEnum == stxobj.type))
         res = uow.session.execute(
             '''
-            SELECT "resourceTypeId", "oCloudId", "name"
+            SELECT "resourceTypeId", "name"
             FROM "resourceType"
             WHERE "resourceTypeEnum" = :resource_type_enum
             ''',
@@ -57,11 +57,17 @@ def update_pserver(
             res_type_name = 'pserver'
             resourcetype_id = str(uuid.uuid3(
                 uuid.NAMESPACE_URL, res_type_name))
-            uow.resource_types.add(ResourceType(
+            res_type = ResourceType(
                 resourcetype_id,
                 res_type_name, stxobj.type,
-                resourcepool.oCloudId,
-                description='The Physical Server resource type'))
+                description='The Physical Server resource type')
+            dict_id = str(uuid.uuid3(
+                uuid.NAMESPACE_URL,
+                str(f"{res_type_name}_alarmdictionary")))
+            alarm_dictionary = uow.alarm_dictionaries.get(dict_id)
+            if alarm_dictionary:
+                res_type.alarmDictionary = alarm_dictionary
+            uow.resource_types.add(res_type)
         else:
             resourcetype_id = first['resourceTypeId']
 

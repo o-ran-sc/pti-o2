@@ -167,10 +167,10 @@ class ResourceTypeGetRouter(Resource):
     @api_ims_inventory_v1.marshal_with(model)
     def get(self, resourceTypeID):
         result = ocloud_view.resource_type_one(resourceTypeID, bus.uow)
-        if result is not None:
-            return result
-        raise NotFoundException("Resource type {} doesn't exist".format(
-            resourceTypeID))
+        if not result:
+            raise NotFoundException("Resource type {} doesn't exist".format(
+                resourceTypeID))
+        return result
 
 
 # ----------  ResourcePools ---------- #

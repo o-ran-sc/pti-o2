@@ -97,6 +97,10 @@ class AlarmDefinitionRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def _list(self, **kwargs) -> List[obj.AlarmDefinition]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def _update(self, definition: obj.AlarmDefinition):
         raise NotImplementedError
 
@@ -137,7 +141,7 @@ class AlarmDictionaryRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _update(self, dictionary: obj.AlarmDictionary):
+    def _list(self, **kwargs) -> List[obj.AlarmDictionary]:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -222,6 +226,10 @@ class AlarmProbableCauseRepository(abc.ABC):
 
     @abc.abstractmethod
     def _get(self, probable_cause_id) -> obj.ProbableCause:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _list(self, **kwargs) -> List[obj.ProbableCause]:
         raise NotImplementedError
 
     @abc.abstractmethod

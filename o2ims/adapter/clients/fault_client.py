@@ -132,6 +132,7 @@ class StxFaultClientImp(object):
         return config_client
 
     def getSubcloudList(self):
+        self.dcclient = self.getDcmanagerClient()
         subs = self.dcclient.subcloud_manager.list_subclouds()
         known_subs = [sub for sub in subs if sub.sync_status != 'unknown']
         return known_subs

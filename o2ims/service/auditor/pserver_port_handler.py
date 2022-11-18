@@ -39,11 +39,11 @@ def update_pserver_port(
     stxobj = cmd.data
     with uow:
         p_resource = uow.resources.get(cmd.parentid)
-        resourcepool = uow.resource_pools.get(p_resource.resourcePoolId)
+        # resourcepool = uow.resource_pools.get(p_resource.resourcePoolId)
 
         res = uow.session.execute(
             '''
-            SELECT "resourceTypeId", "oCloudId", "name"
+            SELECT "resourceTypeId", "name"
             FROM "resourceType"
             WHERE "resourceTypeEnum" = :resource_type_enum
             ''',
@@ -51,19 +51,20 @@ def update_pserver_port(
         )
         first = res.first()
         if first is None:
-            resourcetype_id = str(uuid.uuid4())
-            uow.resource_types.add(ResourceType(
-                resourcetype_id,
-                'pserver_if_port', stxobj.type,
-                resourcepool.oCloudId))
             res_type_name = 'pserver_if_port'
             resourcetype_id = str(uuid.uuid3(
                 uuid.NAMESPACE_URL, res_type_name))
-            uow.resource_types.add(ResourceType(
+            res_type = ResourceType(
                 resourcetype_id,
                 res_type_name, stxobj.type,
-                resourcepool.oCloudId,
-                description='A Port resource type of Physical Server'))
+                description='A Port resource type of Physical Server')
+            dict_id = str(uuid.uuid3(
+                uuid.NAMESPACE_URL,
+                str(f"{res_type_name}_alarmdictionary")))
+            alarm_dictionary = uow.alarm_dictionaries.get(dict_id)
+            if alarm_dictionary:
+                res_type.alarmDictionary = alarm_dictionary
+            uow.resource_types.add(res_type)
         else:
             resourcetype_id = first['resourceTypeId']
 

@@ -20,7 +20,6 @@ from o2app import bootstrap
 from o2ims.views import configure_namespace as ims_route_configure_namespace
 from o2common.views.route_exception import configure_exception
 
-from o2ims.adapter.clients.alarm_dict_client import load_alarm_definition
 from o2common.authmw import authmiddleware
 from o2common.authmw import authprov
 from o2common.config.config import get_review_url
@@ -61,5 +60,3 @@ bus = bootstrap.bootstrap()
 
 configure_exception(api)
 ims_route_configure_namespace(api)
-
-load_alarm_definition(bus.uow)

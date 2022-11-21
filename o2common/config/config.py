@@ -70,6 +70,14 @@ def get_o2ims_api_base():
     return get_root_api_base() + 'o2ims-infrastructureInventory'
 
 
+def get_o2ims_monitoring_api_v1():
+    return '/v1'
+
+
+def get_o2ims_inventory_api_v1():
+    return '/v1'
+
+
 def get_o2ims_monitoring_api_base():
     return get_root_api_base() + 'o2ims-infrastructureMonitoring'
 

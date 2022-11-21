@@ -16,7 +16,8 @@
 from sqlalchemy.sql.elements import ColumnElement
 
 from o2common.views.route_exception import BadRequestException
-from o2common.domain.filter import gen_orm_filter
+from o2common.domain.filter import gen_orm_filter, \
+    transfer_filter_attr_name_in_special
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -87,6 +88,7 @@ def check_filter_attribute(obj: ColumnElement, filter_str: str):
             )
         else:
             pass
+        filter_key = transfer_filter_attr_name_in_special(obj, filter_key)
         if not hasattr(obj, filter_key):
             raise BadRequestException(
                 'Filter attrName {} is invalid'.format(filter_key))

@@ -129,50 +129,31 @@ class o2_marshal_with(marshal_with):
     def _gen_mask_from_selector(self, **kwargs) -> str:
         mask_val = ''
         if 'all_fields' in kwargs:
-            all_fields_without_space = kwargs['all_fields'].replace(" ", "")
+            all_fields_without_space = kwargs['all_fields'].strip()
             logger.debug('all_fields selector value is {}'.format(
                 all_fields_without_space))
-            # all_fields = all_fields_without_space.lower()
-            # if 'true' == all_fields:
             selector = self.__gen_selector_from_model_with_value(
                 self.fields)
             mask_val = self.__gen_mask_from_selector(selector)
 
         elif 'fields' in kwargs and kwargs['fields'] != '':
-            fields_without_space = kwargs['fields'].replace(" ", "")
-
-            # filters = fields_without_space.split(',')
-
-            # mask_val_list = []
-            # for f in filters:
-            #     if '/' in f:
-            #         a = self.__gen_mask_tree(f)
-            #         mask_val_list.append(a)
-            #         continue
-            #     mask_val_list.append(f)
-            # mask_val = '{%s}' % ','.join(mask_val_list)
+            fields_without_space = kwargs['fields'].strip()
             selector = {}
-
             self.__update_selector_value(selector, fields_without_space, True)
             self.__set_default_mask(selector)
-
             mask_val = self.__gen_mask_from_selector(selector)
 
         elif 'exclude_fields' in kwargs and kwargs['exclude_fields'] != '':
-            exclude_fields_without_space = kwargs['exclude_fields'].replace(
-                " ", "")
-
+            exclude_fields_without_space = kwargs['exclude_fields'].strip()
             selector = self.__gen_selector_from_model_with_value(
                 self.fields)
-
             self.__update_selector_value(
                 selector, exclude_fields_without_space, False)
             self.__set_default_mask(selector)
-
             mask_val = self.__gen_mask_from_selector(selector)
+
         elif 'exclude_default' in kwargs and kwargs['exclude_default'] != '':
-            exclude_default_without_space = kwargs['exclude_default'].replace(
-                " ", "")
+            exclude_default_without_space = kwargs['exclude_default'].strip()
             exclude_default = exclude_default_without_space.lower()
             if 'true' == exclude_default:
                 mask_val = '{}'
@@ -212,6 +193,7 @@ class o2_marshal_with(marshal_with):
                                 val: bool):
         fields = filter.split(',')
         for f in fields:
+            f = f.strip()
             if '/' in f:
                 self.__update_selector_tree_value(selector, f, val)
                 continue
@@ -243,5 +225,12 @@ class o2_marshal_with(marshal_with):
         return '{%s}' % ','.join(mask_li)
 
     def __set_default_mask(self, selector: dict, val: bool = True):
-        default_selector = str(getattr(self.fields, "__mask__"))[1:-1]
+        mask = getattr(self.fields, "__mask__")
+        if not mask:
+            selector_all = self.__gen_selector_from_model_with_value(
+                self.fields)
+            for s in selector_all:
+                selector[s] = val
+            return
+        default_selector = str(mask).split('()')
         self.__update_selector_value(selector, default_selector, val)

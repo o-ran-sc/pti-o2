@@ -30,6 +30,7 @@ r = redis.Redis(**config.get_redis_host_and_port())
 
 apibase = config.get_o2ims_api_base()
 api_monitoring_base = config.get_o2ims_monitoring_api_base()
+api_version = config.get_o2ims_monitoring_api_v1()
 
 
 def main():
@@ -66,8 +67,8 @@ def handle_changed(m, bus):
         datastr = m['data']
         data = json.loads(datastr)
         logger.info('ResourceChanged with cmd:{}'.format(data))
-        ref = apibase + '/resourcePools/' + data['resourcePoolId'] +\
-            '/resources/' + data['id']
+        ref = apibase + api_version + '/resourcePools/' + \
+            data['resourcePoolId'] + '/resources/' + data['id']
         cmd = imscmd.PubMessage2SMO(data=Message2SMO(
             id=data['id'], ref=ref,
             eventtype=data['notificationEventType'],
@@ -85,7 +86,7 @@ def handle_changed(m, bus):
         datastr = m['data']
         data = json.loads(datastr)
         logger.info('AlarmEventChanged with cmd:{}'.format(data))
-        ref = api_monitoring_base + '/alarms/' + data['id']
+        ref = api_monitoring_base + api_version + '/alarms/' + data['id']
         cmd = imscmd.PubAlarm2SMO(data=AlarmEvent2SMO(
             id=data['id'], ref=ref,
             eventtype=data['notificationEventType'],

@@ -29,19 +29,21 @@ class AlarmDTO:
             'resourceTypeID': fields.String(attribute='resourceTypeId'),
             'resourceId': fields.String,
             'resourceID': fields.String(attribute='resourceId'),
-            'alarmEventRecordID':
-            fields.String(attribute='alarmEventRecordId'),
             'alarmDefinitionId': fields.String,
             'alarmDefinitionID': fields.String(attribute='alarmDefinitionId'),
             'probableCauseId': fields.String,
             'probableCauseID': fields.String(attribute='probableCauseId'),
             'alarmRaisedTime': fields.String,
-            'perceivedSeverity': fields.String,
             'alarmChangedTime': fields.String,
             'alarmAcknowledgeTime': fields.String,
             'alarmAcknowledged': fields.Boolean,
+            'perceivedSeverity': fields.String,
             'extensions': fields.Raw(attribute='extensions'),
-        }
+        },
+        mask='{alarmEventRecordId,resourceTypeID,resourceID,' +
+        'alarmDefinitionID,probableCauseID,' +
+        'alarmRaisedTime,perceivedSeverity,alarmChangedTime,' +
+        'alarmAcknowledgeTime,alarmAcknowledged,extensions}'
     )
 
 

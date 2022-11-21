@@ -15,6 +15,9 @@
 from sqlalchemy.sql.elements import ColumnElement
 from sqlalchemy import or_
 
+from o2ims.domain.alarm_obj import AlarmEventRecord
+from o2ims.domain.ocloud import Ocloud
+
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -62,6 +65,7 @@ def toFilterArgs(operation: str, obj: ColumnElement, key: str, values: list):
     #                        format(operation))
     # else:
     #     raise KeyError('Filter operation {} not support'.format(operation))
+    key = transfer_filter_attr_name_in_special(obj, key)
 
     ll = list()
     if operation == 'eq':
@@ -101,3 +105,19 @@ def toFilterArgs(operation: str, obj: ColumnElement, key: str, values: list):
             val_list.append(getattr(obj, key).contains(val))
         ll.append(~or_(*val_list))
     return ll
+
+
+def transfer_filter_attr_name_in_special(obj: ColumnElement, filter_key: str):
+    if obj == AlarmEventRecord:
+        if filter_key == 'resourceTypeID':
+            filter_key = 'resourceTypeId'
+        elif filter_key == 'resourceID':
+            filter_key = 'resourceId'
+        elif filter_key == 'alarmDefinitionID':
+            filter_key = 'alarmDefinitionId'
+        elif filter_key == 'probableCauseID':
+            filter_key = 'probableCauseId'
+    elif obj == Ocloud:
+        if filter_key == 'globalcloudId':
+            filter_key = 'globalCloudId'
+    return filter_key

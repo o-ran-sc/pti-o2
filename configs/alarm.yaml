@@ -35,6 +35,9 @@ alarmDictionary:
         pserver_if:
             version: 0.1
             alarmDefinition:
+        pserver_acc:
+            version: 0.1
+            alarmDefinition:
         compute_aggregate:
             version: 0.1
             alarmDefinition:

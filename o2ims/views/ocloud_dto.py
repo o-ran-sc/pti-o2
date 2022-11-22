@@ -24,6 +24,7 @@ class OcloudDTO:
         "OcloudDto",
         {
             'oCloudId': fields.String(required=True),
+            'globalCloudId': fields.String,
             'globalcloudId': fields.String(attribute='globalCloudId'),
             'name': fields.String,
             'description': fields.String,
@@ -38,7 +39,8 @@ class OcloudDTO:
             # 'smoRegistrationService': fields.String
             'extensions': fields.String
         },
-        mask='{oCloudId,globalcloudId,name,description,serviceUri}'
+        mask='{oCloudId,globalCloudId,globalcloudId,name,description,' +\
+        'serviceUri}'
     )
 
 

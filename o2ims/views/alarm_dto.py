@@ -39,11 +39,11 @@ class AlarmDTO:
             'alarmAcknowledged': fields.Boolean,
             'perceivedSeverity': fields.String,
             'extensions': fields.Raw(attribute='extensions'),
-        },
-        mask='{alarmEventRecordId,resourceTypeID,resourceID,' +
-        'alarmDefinitionID,probableCauseID,' +
-        'alarmRaisedTime,perceivedSeverity,alarmChangedTime,' +
-        'alarmAcknowledgeTime,alarmAcknowledged,extensions}'
+        }
+        # mask='{alarmEventRecordId,resourceTypeID,resourceID,' +
+        # 'alarmDefinitionID,probableCauseID,' +
+        # 'alarmRaisedTime,perceivedSeverity,alarmChangedTime,' +
+        # 'alarmAcknowledgeTime,alarmAcknowledged,extensions}'
     )
 
 

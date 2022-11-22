@@ -96,10 +96,10 @@ def update_by(target: ResourcePool, stxobj: StxGenericModel,
     target.name = stxobj.name
     target.location = content['location'] if content['location'] is not None \
         else ''
-    target.createtime = stxobj.createtime
     target.updatetime = stxobj.updatetime
-    target.hash = stxobj.hash
     target.oCloudId = parentid
+
+    target.hash = stxobj.hash
     target.version_number = target.version_number + 1
     target.events.append(events.ResourcePoolChanged(
         id=stxobj.id,

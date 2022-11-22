@@ -137,9 +137,10 @@ def create_by(fmobj: FaultGenericModel) -> AlarmEventRecord:
 def update_by(target: AlarmEventRecord, fmobj: FaultGenericModel
               ) -> None:
     # content = json.loads(fmobj.content)
-    target.hash = fmobj.hash
     if fmobj.status == 'clear':
         target.perceivedSeverity = alarm_obj.PerceivedSeverityEnum.CLEARED
+
+    target.hash = fmobj.hash
     target.events.append(events.AlarmEventChanged(
         id=fmobj.id,
         notificationEventType=AlarmNotificationEventEnum.CLEAR,

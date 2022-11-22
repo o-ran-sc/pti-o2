@@ -93,6 +93,30 @@
       },
       "revId": "7953c93409f9dc865f92a0a2c99af785fa07a5a8",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03e9240c_375ab89e",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-22T04:24:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4032b773_79463087",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 31
+      },
+      "revId": "7953c93409f9dc865f92a0a2c99af785fa07a5a8",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

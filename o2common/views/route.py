@@ -232,5 +232,5 @@ class o2_marshal_with(marshal_with):
             for s in selector_all:
                 selector[s] = val
             return
-        default_selector = str(mask).split('()')
+        default_selector = str(mask).strip(' ()')
         self.__update_selector_value(selector, default_selector, val)

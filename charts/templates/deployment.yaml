@@ -135,10 +135,10 @@ spec:
               value: localhost
             - name: DB_PASSWORD
               value: o2ims123
-            - name: FLASK_APP
-              value: /src/o2app/entrypoints/flask_application.py
-            - name: FLASK_DEBUG
-              value: {{ .Values.o2ims.logginglevel }}
+            # - name: FLASK_APP
+            #   value: /src/o2app/entrypoints/flask_application.py
+            # - name: FLASK_DEBUG
+            #   value: {{ .Values.o2ims.logginglevel }}
             - name: LOGGING_CONFIG_LEVEL
               value: {{ .Values.o2ims.logginglevel }}
             - name: OS_AUTH_URL

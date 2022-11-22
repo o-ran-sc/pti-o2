@@ -103,24 +103,12 @@ def is_outdated(resource: Resource, stxobj: StxGenericModel):
 
 def create_by(stxobj: StxGenericModel, parentid: str, resourcetype_id: str) \
         -> Resource:
-    # content = json.loads(stxobj.content)
     resourcetype_id = resourcetype_id
     resourcepool_id = parentid
     parent_id = None  # the root of the resource has no parent id
     gAssetId = ''  # TODO: global ID
-    # description = "%s : A physical server resource" % stxobj.name
-    content = json.loads(stxobj.content)
-    selected_keys = [
-        "hostname", "personality", "id", "mgmt_ip", "mgmt_mac",
-        "software_load", "capabilities",
-        "operational", "availability", "administrative",
-        "boot_device", "rootfs_device", "install_state", "subfunctions",
-        "clock_synchronization", "max_cpu_mhz_allowed"
-        ]
-    filtered = dict(
-        filter(lambda item: item[0] in selected_keys, content.items()))
-    extensions = json.dumps(filtered)
-    description = ";".join([f"{k}:{v}" for k, v in filtered.items()])
+    extensions = json.dumps(stxobj.filtered)
+    description = ";".join([f"{k}:{v}" for k, v in stxobj.filtered.items()])
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
                         stxobj.name, parent_id, gAssetId, stxobj.content,
                         description, extensions)
@@ -135,9 +123,12 @@ def update_by(target: Resource, stxobj: StxGenericModel,
               parentid: str) -> None:
     if target.resourceId != stxobj.id:
         raise MismatchedModel("Mismatched Id")
-    target.createtime = stxobj.createtime
     target.updatetime = stxobj.updatetime
     target.hash = stxobj.hash
+    target.elements = stxobj.content
+    target.extensions = json.dumps(stxobj.filtered)
+    target.description = ";".join(
+        [f"{k}:{v}" for k, v in stxobj.filtered.items()])
     target.version_number = target.version_number + 1
     target.events.append(events.ResourceChanged(
         id=stxobj.id,

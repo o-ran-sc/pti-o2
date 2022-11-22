@@ -15,21 +15,15 @@
 # pylint: disable=unused-argument
 from __future__ import annotations
 import uuid
-import json
 
-from o2ims.domain import commands, events
-from o2ims.domain.stx_object import StxGenericModel
 from o2common.service.unit_of_work import AbstractUnitOfWork
-from o2ims.domain.resource_type import MismatchedModel
-from o2ims.domain.ocloud import Resource, ResourceType
-from o2ims.domain.subscription_obj import NotificationEventEnum
+from o2ims.domain import commands
+from o2ims.domain.ocloud import ResourceType
+from o2ims.service.auditor.pserver_res_handler import is_outdated, \
+    create_by, update_by
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
-
-
-class InvalidResourceType(Exception):
-    pass
 
 
 def update_pserver_eth(
@@ -92,54 +86,3 @@ def update_pserver_eth(
             logger.info("Update the ethernet of pserver: " + stxobj.id
                         + ", name: " + stxobj.name)
         uow.commit()
-
-
-def is_outdated(resource: Resource, stxobj: StxGenericModel):
-    return True if resource.hash != stxobj.hash else False
-
-
-def create_by(stxobj: StxGenericModel, parent: Resource, resourcetype_id: str)\
-        -> Resource:
-    # content = json.loads(stxobj.content)
-    resourcetype_id = resourcetype_id
-    resourcepool_id = parent.resourcePoolId
-    parent_id = parent.resourceId
-    gAssetId = ''  # TODO: global ID
-    # description = "%s : An ethernet resource of the physical server"\
-    #     % stxobj.name
-    content = json.loads(stxobj.content)
-    selected_keys = [
-        "name", "namedisplay", "dev_id", "pdevice", "capabilities",
-        "type", "driver", "mac", "numa_node",
-        "pciaddr", "pclass", "psvendor", "psdevice",
-        "sriov_totalvfs", "sriov_numvfs", "dpdksupport",
-        "sriov_vf_driver", "sriov_vf_pdevice_id", "interface_uuid"
-    ]
-    filtered = dict(
-        filter(lambda item: item[0] in selected_keys, content.items()))
-    extensions = json.dumps(filtered)
-    description = ";".join([f"{k}:{v}" for k, v in filtered.items()])
-    resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
-                        parent_id, gAssetId, stxobj.content, description,
-                        extensions)
-    resource.createtime = stxobj.createtime
-    resource.updatetime = stxobj.updatetime
-    resource.hash = stxobj.hash
-
-    return resource
-
-
-def update_by(target: Resource, stxobj: StxGenericModel,
-              parentid: str) -> None:
-    if target.resourceId != stxobj.id:
-        raise MismatchedModel("Mismatched Id")
-    target.createtime = stxobj.createtime
-    target.updatetime = stxobj.updatetime
-    target.hash = stxobj.hash
-    target.version_number = target.version_number + 1
-    target.events.append(events.ResourceChanged(
-        id=stxobj.id,
-        resourcePoolId=target.resourcePoolId,
-        notificationEventType=NotificationEventEnum.MODIFY,
-        updatetime=stxobj.updatetime
-    ))

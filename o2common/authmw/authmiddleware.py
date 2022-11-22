@@ -84,8 +84,9 @@ class authmiddleware():
         self.app = app
 
     def __call__(self, environ, start_response):
-        logger.info(__name__ + 'authentication middleware')
+        logger.debug(__name__ + 'authentication middleware')
         req = Request(environ, populate_request=True, shallow=True)
+        auth_token = None
         try:
             auth_header = req.headers.get('Authorization', None)
             if auth_header:
@@ -95,7 +96,7 @@ class authmiddleware():
                 # invoke underlying auth mdw to make k8s/keystone api
                 ret = ad.authenticate(auth_token)
                 if ret is True:
-                    logger.info(
+                    logger.debug(
                         "auth success with oauth token: " + auth_token)
                     try:
                         return self.app(environ, start_response)
@@ -123,9 +124,16 @@ class authmiddleware():
             return _response_wrapper(environ, start_response,
                                      ex.dictize(), prb.serialize())
         except Exception as ex:
-            logger.error('Internal exception happended {}'.format(
-                str(ex)), exc_info=True)
-            prb = AuthProblemDetails(500, 'Internal error.', req.path)
-            return \
-                _internal_err_response_wrapper(environ,
-                                               start_response, prb.serialize())
+            if auth_token:
+                logger.error('Internal exception happended {}'.format(
+                    str(ex)), exc_info=True)
+                prb = AuthProblemDetails(500, 'Internal error.', req.path)
+                return \
+                    _internal_err_response_wrapper(
+                        environ, start_response, prb.serialize())
+            else:
+                logger.debug('Auth token missing or not obtained.')
+                ex = AuthRequiredExp('Bearer realm="Authentication Required"')
+                prb = AuthProblemDetails(401, ex.value, req.path)
+                return _response_wrapper(environ, start_response,
+                                         ex.dictize(), prb.serialize())

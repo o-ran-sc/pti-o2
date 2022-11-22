@@ -109,7 +109,7 @@ class k8s_auth_provider(auth_definer):
             response = urllib.request.urlopen(req)
             data = json.load(response)
             if data['status']['authenticated'] is True:
-                logger.info("Authenticated.")
+                logger.debug("Authenticated.")
                 return True
         except Exception as ex:
             strex = str(ex)

@@ -29,15 +29,20 @@ class StxGenericModel(AgRoot):
         if api_response:
             self.id = str(api_response.uuid)
             self.type = type
+            self.name = api_response.name
             self.updatetime = datetime.datetime.strptime(
                 api_response.updated_at.split('.')[0], "%Y-%m-%dT%H:%M:%S") \
                 if api_response.updated_at else None
             self.createtime = datetime.datetime.strptime(
                 api_response.created_at.split('.')[0], "%Y-%m-%dT%H:%M:%S") \
                 if api_response.created_at else None
-            self.name = api_response.name
-            self.hash = content_hash if content_hash \
-                else str(hash((self.id, self.updatetime)))
+            self.hash = content_hash
+            if not self.hash:
+                if hasattr(api_response, 'filtered'):
+                    self.filtered = api_response.filtered
+                    self.hash = str(hash((self.id, str(self.filtered))))
+                else:
+                    self.hash = str(hash((self.id, self.updatetime)))
             self.content = json.dumps(api_response.to_dict())
             if ResourceTypeEnum.RESOURCE_POOL == type:
                 self.res_pool_id = self.id

@@ -105,6 +105,7 @@ def update_by(ocloud: Ocloud, stxobj: StxGenericModel) -> None:
     ocloud.createtime = stxobj.createtime
     ocloud.updatetime = stxobj.updatetime
     # ocloud.content = stxobj.content
+
     ocloud.hash = stxobj.hash
     ocloud.version_number = ocloud.version_number + 1
     ocloud.events.append(events.OcloudChanged(

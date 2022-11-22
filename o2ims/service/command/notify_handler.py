@@ -89,6 +89,8 @@ def _notify_resourcetype(uow, data):
                             sub_data['subscriptionId'],
                             sub_data['filter']))
                     continue
+                if len(args) == 0:
+                    continue
                 args.append(ocloud.ResourceType.resourceTypeId == data.id)
                 ret = uow.resource_types.list_with_count(*args)
                 if ret[0] > 0:
@@ -135,6 +137,8 @@ def _notify_resourcepool(uow, data):
                         'name or value. Ignore the filter.'.format(
                             sub_data['subscriptionId'],
                             sub_data['filter']))
+                    continue
+                if len(args) == 0:
                     continue
                 args.append(ocloud.ResourcePool.resourcePoolId == data.id)
                 ret = uow.resource_pools.list_with_count(*args)
@@ -185,6 +189,8 @@ def _notify_dms(uow, data):
                             sub_data['subscriptionId'],
                             sub_data['filter']))
                     continue
+                if len(args) == 0:
+                    continue
                 args.append(
                     ocloud.DeploymentManager.deploymentManagerId == data.id)
                 ret = uow.deployment_managers.list_with_count(*args)
@@ -198,14 +204,6 @@ def _notify_dms(uow, data):
             if filter_effect > 0:
                 continue
             callback_smo(sub, data, dms_dict)
-
-
-class FilterNotEffect(Exception):
-    pass
-
-
-class FilterEffect(Exception):
-    pass
 
 
 def _notify_resource(uow, data):
@@ -242,6 +240,8 @@ def _notify_resource(uow, data):
                         'name or value. Ignore the filter.'.format(
                             sub_data['subscriptionId'],
                             sub_data['filter']))
+                    continue
+                if len(args) == 0:
                     continue
                 args.append(ocloud.Resource.resourceId == data.id)
                 ret = uow.resources.list_with_count(res_pool_id, *args)

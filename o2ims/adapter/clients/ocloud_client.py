@@ -43,7 +43,7 @@ class StxOcloudClient(BaseClient):
     def _get(self, id) -> ocloudModel.StxGenericModel:
         return self.driver.getInstanceInfo()
 
-    def _list(self, **filters):
+    def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
         return [self.driver.getInstanceInfo()]
 
     def _set_stx_client(self):
@@ -58,7 +58,7 @@ class StxResourcePoolClient(BaseClient):
     def _get(self, id) -> ocloudModel.StxGenericModel:
         return self.driver.getResourcePoolDetail(id)
 
-    def _list(self, **filters):
+    def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
         return self.driver.getResourcePoolList(**filters)
 
     def _set_stx_client(self):
@@ -73,7 +73,7 @@ class StxDmsClient(BaseClient):
     def _get(self, name) -> ocloudModel.StxGenericModel:
         return self.driver.getK8sDetail(name)
 
-    def _list(self, **filters):
+    def _list(self, **filters) -> List[ocloudModel.StxGenericModel]:
         return self.driver.getK8sList(**filters)
 
     def _set_stx_client(self):
@@ -536,23 +536,65 @@ class StxClientImp(object):
 
     @ staticmethod
     def _hostconverter(host):
+        selected_keys = [
+            "hostname", "personality", "id", "mgmt_ip", "mgmt_mac",
+            "software_load", "capabilities",
+            "operational", "availability", "administrative",
+            "boot_device", "rootfs_device", "install_state", "subfunctions",
+            "clock_synchronization", "max_cpu_mhz_allowed"
+        ]
+        content = host.to_dict()
+        filtered = dict(
+            filter(lambda item: item[0] in selected_keys, content.items()))
+        setattr(host, 'filtered', filtered)
         setattr(host, 'name', host.hostname)
         return host
 
     @ staticmethod
     def _cpuconverter(cpu):
+        selected_keys = [
+            "cpu", "core", "thread", "allocated_function", "numa_node",
+            "cpu_model", "cpu_family"
+        ]
+        content = cpu.to_dict()
+        filtered = dict(
+            filter(lambda item: item[0] in selected_keys, content.items()))
+        setattr(cpu, 'filtered', filtered)
         setattr(cpu, 'name', cpu.ihost_uuid.split(
             '-', 1)[0] + '-cpu-'+str(cpu.cpu))
         return cpu
 
     @ staticmethod
     def _memconverter(mem):
+        selected_keys = [
+            "memtotal_mib", "memavail_mib", "vm_hugepages_use_1G",
+            "vm_hugepages_possible_1G", "hugepages_configured",
+            "vm_hugepages_avail_1G", "vm_hugepages_nr_1G",
+            "vm_hugepages_nr_4K", "vm_hugepages_nr_2M",
+            "vm_hugepages_possible_2M", "vm_hugepages_avail_2M",
+            "platform_reserved_mib", "numa_node"
+        ]
+        content = mem.to_dict()
+        filtered = dict(
+            filter(lambda item: item[0] in selected_keys, content.items()))
+        setattr(mem, 'filtered', filtered)
         setattr(mem, 'name', mem.ihost_uuid.split('-', 1)[0] +
                 '-mem-node-'+str(mem.numa_node))
         return mem
 
     @ staticmethod
     def _ethconverter(eth):
+        selected_keys = [
+            "name", "namedisplay", "dev_id", "pdevice", "capabilities",
+            "type", "driver", "mac", "numa_node",
+            "pciaddr", "pclass", "psvendor", "psdevice",
+            "sriov_totalvfs", "sriov_numvfs", "dpdksupport",
+            "sriov_vf_driver", "sriov_vf_pdevice_id", "interface_uuid"
+        ]
+        content = eth.to_dict()
+        filtered = dict(
+            filter(lambda item: item[0] in selected_keys, content.items()))
+        setattr(eth, 'filtered', filtered)
         setattr(eth, 'name', eth.host_uuid.split('-', 1)[0] + '-'+eth.name)
         setattr(eth, 'updated_at', None)
         setattr(eth, 'created_at', None)
@@ -560,6 +602,15 @@ class StxClientImp(object):
 
     @ staticmethod
     def _ifconverter(ifs):
+        selected_keys = [
+            "ifname", "iftype", "imac", "vlan_id", "imtu",
+            "ifclass", "uses", "max_tx_rate",
+            "sriov_vf_driver", "sriov_numvfs", "ptp_role"
+        ]
+        content = ifs.to_dict()
+        filtered = dict(
+            filter(lambda item: item[0] in selected_keys, content.items()))
+        setattr(ifs, 'filtered', filtered)
         setattr(ifs, 'name', ifs.ihost_uuid.split('-', 1)[0] + '-'+ifs.ifname)
         setattr(ifs, 'updated_at', None)
         setattr(ifs, 'created_at', None)
@@ -567,6 +618,15 @@ class StxClientImp(object):
 
     @ staticmethod
     def _devconverter(dev):
+        selected_keys = [
+            "name", "pdevice", "pciaddr", "pvendor_id", "pvendor",
+            "pclass_id", "pclass", "psvendor", "psdevice",
+            "sriov_totalvfs", "sriov_numvfs", "numa_node"
+        ]
+        content = dev.to_dict()
+        filtered = dict(
+            filter(lambda item: item[0] in selected_keys, content.items()))
+        setattr(dev, 'filtered', filtered)
         setattr(dev, 'name', dev.host_uuid.split('-', 1)[0] + '-'+dev.name)
         return dev
 

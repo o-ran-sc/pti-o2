@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2022 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -13,11 +13,6 @@
 #  limitations under the License.
 
 #!/bin/bash
-
-# pull latest code to debug
-# cd /root/
-# git clone "https://gerrit.o-ran-sc.org/r/pti/o2"
-# pip install -e /root/o2
 
 # python /root/o2/o2app/entrypoints/redis_eventconsumer.py
 python /src/o2app/entrypoints/redis_eventconsumer.py

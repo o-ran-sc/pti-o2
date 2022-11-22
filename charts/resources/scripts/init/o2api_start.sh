@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2022 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -14,23 +14,6 @@
 
 #!/bin/bash
 
-# pull latest code to debug
-# cd /root/
-# git clone "https://gerrit.o-ran-sc.org/r/pti/o2"
-# cd o2
-# git pull https://gerrit.o-ran-sc.org/r/pti/o2 refs/changes/85/7085/5
-# pip install retry
-
-# pip install -e /root/o2
-# pip install -e /src
-
-cat <<EOF>>/etc/hosts
-127.0.0.1  api
-127.0.0.1  postgres
-127.0.0.1  redis
-EOF
-
-
-flask run --host=0.0.0.0 --port=80 --cert /configs/server.crt  --key /configs/server.key
+gunicorn -b 0.0.0.0:80 o2app.entrypoints.flask_application:app --certfile /configs/server.crt  --keyfile /configs/server.key
 
 sleep infinity

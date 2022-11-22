@@ -10,3 +10,7 @@ __pycache__
 temp
 docs/_build/
 configs/kubeconfig_*.config
+*.pem
+*.crt
+*.csr
+*.key

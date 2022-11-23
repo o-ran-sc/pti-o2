@@ -85,3 +85,9 @@ def configure_exception(app):
         '''Return a custom message and 500 status code'''
         problem = ProblemDetails(500, "Internal Server Error")
         return problem.serialize(), 500
+
+    @app.errorhandler(Exception)
+    def handle_general_exception(error):
+        '''Return a custom message and 500 status code'''
+        problem = ProblemDetails(500, "Internal Server Error")
+        return problem.serialize(), 500

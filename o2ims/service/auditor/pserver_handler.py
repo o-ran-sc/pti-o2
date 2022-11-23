@@ -122,8 +122,8 @@ def create_by(stxobj: StxGenericModel, parentid: str, resourcetype_id: str) \
     extensions = json.dumps(filtered)
     description = ";".join([f"{k}:{v}" for k, v in filtered.items()])
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
-                        stxobj.name, parent_id, gAssetId, stxobj.content,
-                        description, extensions)
+                        parent_id, gAssetId, stxobj.content, description,
+                        extensions)
     resource.createtime = stxobj.createtime
     resource.updatetime = stxobj.updatetime
     resource.hash = stxobj.hash

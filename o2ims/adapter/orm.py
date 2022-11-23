@@ -114,7 +114,6 @@ resource = Table(
     Column("resourceId", String(255), primary_key=True),
     Column("resourceTypeId", ForeignKey("resourceType.resourceTypeId")),
     Column("resourcePoolId", ForeignKey("resourcePool.resourcePoolId")),
-    Column("name", String(255)),
     Column("globalAssetId", String(255)),
     Column("parentId", String(255)),
     Column("description", String()),

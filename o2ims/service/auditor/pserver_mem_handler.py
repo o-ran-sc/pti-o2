@@ -115,14 +115,14 @@ def create_by(stxobj: StxGenericModel, parent: Resource, resourcetype_id: str)\
         "vm_hugepages_nr_4K", "vm_hugepages_nr_2M",
         "vm_hugepages_possible_2M", "vm_hugepages_avail_2M",
         "platform_reserved_mib", "numa_node"
-        ]
+    ]
     filtered = dict(
         filter(lambda item: item[0] in selected_keys, content.items()))
     extensions = json.dumps(filtered)
     description = ";".join([f"{k}:{v}" for k, v in filtered.items()])
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
-                        stxobj.name, parent_id, gAssetId, stxobj.content,
-                        description, extensions)
+                        parent_id, gAssetId, stxobj.content, description,
+                        extensions)
     resource.createtime = stxobj.createtime
     resource.updatetime = stxobj.updatetime
     resource.hash = stxobj.hash

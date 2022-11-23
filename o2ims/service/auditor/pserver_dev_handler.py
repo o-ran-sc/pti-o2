@@ -108,8 +108,7 @@ def create_by(stxobj: StxGenericModel, parent: Resource, resourcetype_id: str)\
     description = "%s : A device resource of the physical server"\
         % stxobj.name
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
-                        stxobj.name, parent_id, gAssetId, stxobj.content,
-                        description)
+                        parent_id, gAssetId, stxobj.content, description)
     resource.createtime = stxobj.createtime
     resource.updatetime = stxobj.updatetime
     resource.hash = stxobj.hash

@@ -113,7 +113,7 @@ class ResourceType(AgRoot, Serializer):
 
 class Resource(AgRoot, Serializer):
     def __init__(self, resourceId: str, resourceTypeId: str,
-                 resourcePoolId: str, name: str, parentId: str = '',
+                 resourcePoolId: str, parentId: str = '',
                  gAssetId: str = '', elements: str = '',
                  description: str = '', extensions: str = '') -> None:
         super().__init__()
@@ -125,7 +125,6 @@ class Resource(AgRoot, Serializer):
         self.elements = elements
         self.extensions = extensions
 
-        self.name = name
         self.parentId = parentId
         self.children = []
 

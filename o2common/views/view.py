@@ -89,6 +89,7 @@ def check_filter_attribute(obj: ColumnElement, filter_str: str):
         else:
             pass
         filter_key = transfer_filter_attr_name_in_special(obj, filter_key)
-        if not hasattr(obj, filter_key):
+        if not hasattr(obj, filter_key) or \
+                filter_key in ['hash', 'updatetime', 'createtime', 'events']:
             raise BadRequestException(
                 'Filter attrName {} is invalid'.format(filter_key))

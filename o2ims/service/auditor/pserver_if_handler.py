@@ -112,14 +112,14 @@ def create_by(stxobj: StxGenericModel, parent: Resource, resourcetype_id: str)\
         "ifname", "iftype", "imac", "vlan_id", "imtu",
         "ifclass", "uses", "max_tx_rate",
         "sriov_vf_driver", "sriov_numvfs", "ptp_role"
-        ]
+    ]
     filtered = dict(
         filter(lambda item: item[0] in selected_keys, content.items()))
     extensions = json.dumps(filtered)
     description = ";".join([f"{k}:{v}" for k, v in filtered.items()])
     resource = Resource(stxobj.id, resourcetype_id, resourcepool_id,
-                        stxobj.name, parent_id, gAssetId, stxobj.content,
-                        description, extensions)
+                        parent_id, gAssetId, stxobj.content, description,
+                        extensions)
     resource.createtime = stxobj.createtime
     resource.updatetime = stxobj.updatetime
     resource.hash = stxobj.hash

@@ -138,8 +138,9 @@ class ResourceSqlAlchemyRepository(ResourceRepository):
         size = kwargs.pop('limit') if 'limit' in kwargs else None
         offset = kwargs.pop('start') if 'start' in kwargs else 0
 
+        args1 = args + (ocloud.Resource.resourcePoolId == resourcepool_id,)
         result = self.session.query(ocloud.Resource).filter(
-            *args).order_by('resourceId')
+            *args1).order_by('resourceId')
         count = result.count()
         if size is not None and size != -1:
             return (count, result.limit(size).offset(offset))

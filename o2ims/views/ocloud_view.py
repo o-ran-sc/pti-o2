@@ -103,8 +103,6 @@ def resources(resourcePoolId: str, uow: unit_of_work.AbstractUnitOfWork,
         query_kwargs['resourceTypeId'] = restype_id
     args = gen_filter(
         ocloud.Resource, kwargs['filter']) if 'filter' in kwargs else []
-    args.append(ocloud.Resource.resourcePoolId == resourcePoolId)
-    # args.append(ocloud.Resource.parentId == None)
 
     if 'parentId' in kwargs:
         query_kwargs['parentId'] = kwargs['parentId']

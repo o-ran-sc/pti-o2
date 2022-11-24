@@ -19,7 +19,7 @@ import json
 # from o2common.config import config
 # from o2common.service.messagebus import MessageBus
 from o2common.service.unit_of_work import AbstractUnitOfWork
-from o2ims.domain import events, commands, alarm_obj
+from o2ims.domain import events, commands, alarm_obj, ocloud
 from o2ims.domain.alarm_obj import AlarmEventRecord, FaultGenericModel,\
     AlarmNotificationEventEnum
 
@@ -57,29 +57,25 @@ def update_alarm(
 
                 restype = uow.resource_types.get_by_name('pserver')
                 localmodel.resourceTypeId = restype.resourceTypeId
-                hosts = uow.resources.list(resourcepool.resourcePoolId, **{
-                    'resourceTypeId': restype.resourceTypeId
-                })
+                args = [ocloud.Resource.resourceTypeId ==
+                        restype.resourceTypeId]
+                hosts = uow.resources.list(resourcepool.resourcePoolId, *args)
                 for host in hosts:
+                    logger.debug('host extensions: ' + host.extensions)
                     extensions = json.loads(host.extensions)
                     if extensions['hostname'] == hostname:
                         localmodel.resourceId = host.resourceId
                 uow.alarm_event_records.add(localmodel)
                 logger.info("Add the alarm event record: " + fmobj.id
                             + ", name: " + fmobj.name)
-            # localmodel.resourceTypeId = check_restype_id(uow, fmobj)
-            # logger.debug("resource type ID: " + localmodel.resourceTypeId)
-            # localmodel.resourceId = check_res_id(uow, fmobj)
-            # logger.debug("resource ID: " + localmodel.resourceId)
-            # uow.alarm_event_records.add(localmodel)
             else:
                 restype = uow.resource_types.get_by_name('undefined_aggregate')
                 localmodel.resourceTypeId = restype.resourceTypeId
 
+                args = [ocloud.Resource.resourceTypeId ==
+                        restype.resourceTypeId]
                 undefined_res = uow.resources.list(
-                    resourcepool.resourcePoolId, **{
-                        'resourceTypeId': restype.resourceTypeId
-                    })
+                    resourcepool.resourcePoolId, *args)
                 localmodel.resourceId = undefined_res[0].resourceId
                 uow.alarm_event_records.add(localmodel)
                 logger.info("Add the alarm event record: " + fmobj.id

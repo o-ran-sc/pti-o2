@@ -44,63 +44,60 @@ def notify_change_to_smo(
     logger.debug('In notify_change_to_smo')
     data = cmd.data
     with uow:
+        resource = uow.resources.get(data.id)
+        if resource is None:
+            logger.debug('Resource {} does not exists.'.format(data.id))
+            return
+        res_pool_id = resource.serialize()['resourcePoolId']
+        logger.debug('res pool id is {}'.format(res_pool_id))
+
         subs = uow.subscriptions.list()
         for sub in subs:
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
-            resource = uow.resources.get(data.id)
-            if resource is None:
-                logger.debug('Resource {} does not exists.'.format(data.id))
+            if not sub_data.get('filter', None):
+                callback_smo(sub, data)
                 continue
-            res_pool_id = resource.serialize()['resourcePoolId']
-            logger.debug('res pool id is {}'.format(res_pool_id))
-            if sub_data.get('filter', None):
-                try:
-                    args = gen_orm_filter(ocloud.Resource, sub_data['filter'])
-                except KeyError:
-                    logger.error(
-                        'Subscription {} filter {} has wrong attribute name '
-                        'or value. Ignore the filter.'.format(
-                            sub_data['subscriptionId'], sub_data['filter']))
-                    callback_smo(sub, data)
-                    continue
-                args.append(ocloud.Resource.resourceId == data.id)
-                ret = uow.resources.list_with_count(res_pool_id, *args)
-                if ret[0] != 0:
-                    logger.debug(
-                        'Resource {} skip for subscription {} because of the '
-                        'filter.'
-                        .format(data.id, sub_data['subscriptionId']))
-                    continue
-
+            try:
+                args = gen_orm_filter(ocloud.Resource, sub_data['filter'])
+            except KeyError:
+                logger.error(
+                    'Subscription {} filter {} has wrong attribute name '
+                    'or value. Ignore the filter.'.format(
+                        sub_data['subscriptionId'], sub_data['filter']))
+                callback_smo(sub, data)
+                continue
+            args.append(ocloud.Resource.resourceId == data.id)
+            ret = uow.resources.list_with_count(res_pool_id, *args)
+            if ret[0] != 0:
+                logger.debug(
+                    'Resource {} skip for subscription {} because of the '
+                    'filter.'
+                    .format(data.id, sub_data['subscriptionId']))
+                continue
             callback_smo(sub, data)
 
 
 def callback_smo(sub: Subscription, msg: Message2SMO):
     sub_data = sub.serialize()
-    callback_data = json.dumps({
+    callback = {
         'consumerSubscriptionId': sub_data['consumerSubscriptionId'],
         'notificationEventType': msg.notificationEventType,
         'objectRef': msg.objectRef,
         'updateTime': msg.updatetime
-    })
+    }
+    # if msg.notificationEventType in [NotificationEventEnum.DELETE,
+    #                                  NotificationEventEnum.MODIFY]:
+    #     callback['priorObjectState'] = {}
+    # if msg.notificationEventType in [NotificationEventEnum.CREATE,
+    #                                  NotificationEventEnum.MODIFY]:
+    #     callback['postObjectState'] = {}
+    # logger.warning(callback)
+    callback_data = json.dumps(callback)
     logger.info('URL: {}, data: {}'.format(
         sub_data['callback'], callback_data))
-    # r.publish(sub_data['subscriptionId'], json.dumps({
-    #     'consumerSubscriptionId': sub_data['consumerSubscriptionId'],
-    #     'notificationEventType': msg.notificationEventType,
-    #     'objectRef': msg.objectRef
-    # }))
-    # try:
-    #     headers = {'User-Agent': 'Mozilla/5.0'}
-    #     resp = requests.post(sub_data['callback'], data=callback_data,
-    #                          headers=headers)
-    #     if resp.status_code == 202 or resp.status_code == 200:
-    #         logger.info('Notify to SMO successed')
-    #         return
-    #     logger.error('Response code is: {}'.format(resp.status_code))
-    # except requests.exceptions.HTTPError as err:
-    #     logger.error('request smo error: {}'.format(err))
+
+    # Call SMO through the SMO callback url
     o = urlparse(sub_data['callback'])
     if o.scheme == 'https':
         conn = get_https_conn_default(o.netloc)

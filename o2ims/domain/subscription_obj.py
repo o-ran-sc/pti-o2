@@ -32,9 +32,9 @@ class Subscription(AgRoot, Serializer):
 
 
 class NotificationEventEnum(str, Enum):
-    CREATE = 'CREATE'
-    MODIFY = 'MODIFY'
-    DELETE = 'DELETE'
+    CREATE = 0
+    MODIFY = 1
+    DELETE = 2
 
 
 class Message2SMO(Serializer):

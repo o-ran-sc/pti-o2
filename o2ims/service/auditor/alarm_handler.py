@@ -61,7 +61,8 @@ def update_alarm(
                     'resourceTypeId': restype.resourceTypeId
                 })
                 for host in hosts:
-                    if host.name == hostname:
+                    extensions = json.loads(host.extensions)
+                    if extensions['hostname'] == hostname:
                         localmodel.resourceId = host.resourceId
                 uow.alarm_event_records.add(localmodel)
                 logger.info("Add the alarm event record: " + fmobj.id

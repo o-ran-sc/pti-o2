@@ -74,8 +74,8 @@ class ResourceTypeRepository(abc.ABC):
             self.seen.add(resource_type)
         return resource_type
 
-    def list(self, **kwargs) -> List[ocloud.ResourceType]:
-        return self._list(*[], **kwargs)[1]
+    def list(self, *args) -> List[ocloud.ResourceType]:
+        return self._list(*args)[1]
 
     def list_with_count(self, *args, **kwargs) -> \
             Tuple[int, List[ocloud.ResourceType]]:
@@ -120,8 +120,8 @@ class ResourcePoolRepository(abc.ABC):
             self.seen.add(resource_pool)
         return resource_pool
 
-    def list(self, **kwargs) -> List[ocloud.ResourcePool]:
-        return self._list(*[], **kwargs)[1]
+    def list(self, *args) -> List[ocloud.ResourcePool]:
+        return self._list(*args)[1]
 
     def list_with_count(self, *args, **kwargs) -> \
             Tuple[int, List[ocloud.ResourcePool]]:
@@ -162,8 +162,8 @@ class ResourceRepository(abc.ABC):
             self.seen.add(resource)
         return resource
 
-    def list(self, resourcepool_id, **kwargs) -> List[ocloud.Resource]:
-        return self._list(resourcepool_id, *[], **kwargs)[1]
+    def list(self, resourcepool_id, *args) -> List[ocloud.Resource]:
+        return self._list(resourcepool_id, *args)[1]
 
     def list_with_count(self, resourcepool_id, *args, **kwargs) -> \
             Tuple[int, List[ocloud.Resource]]:
@@ -205,8 +205,8 @@ class DeploymentManagerRepository(abc.ABC):
             self.seen.add(deployment_manager)
         return deployment_manager
 
-    def list(self, **kwargs) -> List[ocloud.DeploymentManager]:
-        return self._list(*[], **kwargs)[1]
+    def list(self, *args) -> List[ocloud.DeploymentManager]:
+        return self._list(*args)[1]
 
     def list_with_count(self, *args, **kwargs) -> \
             Tuple[int, List[ocloud.DeploymentManager]]:

@@ -45,8 +45,13 @@ class FaultGenericModel(AgRoot):
             # elif hasattr(api_response, 'event_log_id'):
             #     self.alarm_id = api_response.event_log_id
 
-            self.hash = content_hash if content_hash \
-                else str(hash((self.id, self.timestamp, self.status)))
+            self.hash = content_hash
+            if not self.hash:
+                if hasattr(api_response, 'filtered'):
+                    self.filtered = api_response.filtered
+                    self.hash = str(hash((self.id, str(self.filtered))))
+                else:
+                    self.hash = str(hash((self.id, self.updatetime)))
             self.content = json.dumps(api_response.to_dict())
             if EventTypeEnum.ALARM == type:
                 pass
@@ -98,7 +103,7 @@ class AlarmEventRecord(AgRoot, Serializer):
         self.alarmChangedTime = ''
         self.alarmAcknowledgeTime = ''
         self.alarmAcknowledged = False
-        self.extensions = []
+        self.extensions = ''
 
 
 class ProbableCause(AgRoot, Serializer):
@@ -205,4 +210,4 @@ class AlarmEventNotification(AgRoot, Serializer):
         self.alarmChangedTime = alarm.alarmChangedTime
         self.alarmAcknowledgeTime = alarm.alarmAcknowledgeTime
         self.alarmAcknowledged = alarm.alarmAcknowledged
-        self.extensions = []
+        self.extensions = alarm.extensions

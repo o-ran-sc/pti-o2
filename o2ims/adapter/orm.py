@@ -216,6 +216,7 @@ alarm_event_record = Table(
     Column("alarmChangedTime", String(255)),
     Column("alarmAcknowledgeTime", String(255)),
     Column("alarmAcknowledged", String(255)),
+    Column("extensions", String())
 )
 
 alarm_probable_cause = Table(

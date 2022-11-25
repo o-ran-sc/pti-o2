@@ -221,6 +221,16 @@ class StxFaultClientImp(object):
 
     @ staticmethod
     def _alarmconverter(alarm):
+        selected_keys = [
+            'alarm_id', 'alarm_state', 'entity_type_id', 'entity_instance_id',
+            'reason_text', 'alarm_type', 'probable_cause',
+            'proposed_repair_action', 'service_affecting', 'suppression',
+            'suppression_status', 'mgmt_affecting', 'degrade_affecting'
+        ]
+        content = alarm.to_dict()
+        filtered = dict(
+            filter(lambda item: item[0] in selected_keys, content.items()))
+        setattr(alarm, 'filtered', filtered)
         # setattr(alarm, 'alarm_def_id', uuid.uuid3(
         #         uuid.NAMESPACE_URL, alarm.alarm_id))
         setattr(alarm, 'state', alarm.alarm_state)
@@ -233,6 +243,16 @@ class StxFaultClientImp(object):
 
     @ staticmethod
     def _eventconverter(event, clear=False):
+        selected_keys = [
+            'event_log_id', 'state', 'entity_type_id',
+            'entity_instance_id', 'reason_text', 'event_log_type',
+            'probable_cause', 'proposed_repair_action',
+            'service_affecting', 'suppression', 'suppression_status'
+        ]
+        content = event.to_dict()
+        filtered = dict(
+            filter(lambda item: item[0] in selected_keys, content.items()))
+        setattr(event, 'filtered', filtered)
         setattr(event, 'alarm_id', event.event_log_id)
         setattr(event, 'alarm_type', event.event_log_type)
         if clear:

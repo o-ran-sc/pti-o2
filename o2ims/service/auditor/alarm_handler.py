@@ -121,10 +121,10 @@ def create_by(fmobj: FaultGenericModel) -> AlarmEventRecord:
             return alarm_obj.PerceivedSeverityEnum.WARNING
     alarm_event_record.perceivedSeverity = severity_switch(content['severity'])
     alarm_event_record.probableCauseId = fmobj.probable_cause_id
+
+    extensions = json.dumps(fmobj.filtered)
+    alarm_event_record.extensions = extensions
     alarm_event_record.hash = fmobj.hash
-    # logger.info('severity: ' + content['severity'])
-    # logger.info('perceived severity: '
-    # + alarm_event_record.perceivedSeverity)
     alarm_event_record.events.append(events.AlarmEventChanged(
         id=fmobj.id,
         notificationEventType=AlarmNotificationEventEnum.NEW,
@@ -219,18 +219,21 @@ def check_res_id(uow: AbstractUnitOfWork, fmobj: FaultGenericModel) -> str:
     entity_type_id = content['entity_type_id']
     entity_instance_id = content['entity_instance_id']
     if 'host' == entity_type_id:
-        logger.info('host: ' + entity_instance_id)
+        logger.debug('host: ' + entity_instance_id)
         hostname = entity_instance_id.split('.')[0].split('=')[1]
         with uow:
             respools = uow.resource_pools.list()
             respoolids = [respool.resourcePoolId for respool in respools
                           if respool.oCloudId == respool.resourcePoolId]
+
             restype = uow.resource_types.get_by_name('pserver')
-            hosts = uow.resources.list(respoolids[0], **{
-                'resourceTypeId': restype.resourceTypeId
-            })
+            args = [ocloud.Resource.resourceTypeId ==
+                    restype.resourceTypeId]
+            hosts = uow.resources.list(respoolids[0], *args)
             for host in hosts:
-                if host.name == hostname:
+                logger.debug('host extensions: ' + host.extensions)
+                extensions = json.loads(host.extensions)
+                if extensions['hostname'] == hostname:
                     return host.resourceId
     else:
         return ""

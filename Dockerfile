@@ -84,3 +84,4 @@ RUN set -ex \
 WORKDIR /src
 
 # USER $user
+ENV PYTHONHASHSEED=0

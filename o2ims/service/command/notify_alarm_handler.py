@@ -95,7 +95,7 @@ def callback_smo(sub: AlarmSubscription, msg: AlarmEvent2SMO,
         'alarmAcknowledgeTime': alarm_data['alarmAcknowledgeTime'],
         'alarmAcknowledged': alarm_data['alarmAcknowledged'],
         'perceivedSeverity': alarm_data['perceivedSeverity'],
-        'extensions': ''
+        'extensions': json.loads(alarm_data['extensions'])
     }
     # logger.warning(callback)
     callback_data = json.dumps(callback)

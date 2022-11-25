@@ -14,6 +14,7 @@
 
 from flask_restx import fields
 
+from o2common.views.flask_restx_fields import Json2Dict
 from o2ims.views.api_ns import api_ims_monitoring as api_monitoring_v1
 
 
@@ -38,7 +39,7 @@ class AlarmDTO:
             'alarmAcknowledgeTime': fields.String,
             'alarmAcknowledged': fields.Boolean,
             'perceivedSeverity': fields.String,
-            'extensions': fields.Raw(attribute='extensions'),
+            'extensions': Json2Dict(attribute='extensions')
         }
         # mask='{alarmEventRecordId,resourceTypeID,resourceID,' +
         # 'alarmDefinitionID,probableCauseID,' +

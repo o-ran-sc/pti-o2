@@ -14,15 +14,12 @@
 
 # pylint: disable=unused-argument
 from __future__ import annotations
-
 import base64
 import json
 
+from o2ims.domain import commands, events
 from o2ims.domain.stx_object import StxGenericModel
-# from dataclasses import asdict
-# from typing import List, Dict, Callable, Type
-# TYPE_CHECKING
-from o2ims.domain import commands
+from o2ims.domain.subscription_obj import NotificationEventEnum
 from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.domain.resource_type import MismatchedModel
 from o2ims.domain.ocloud import DeploymentManager
@@ -94,6 +91,12 @@ def create_by(stxobj: StxGenericModel, parentid: str) -> DeploymentManager:
     localmodel.updatetime = stxobj.updatetime
     localmodel.hash = stxobj.hash
 
+    localmodel.events.append(events.DmsChanged(
+        id=stxobj.id,
+        notificationEventType=NotificationEventEnum.CREATE,
+        updatetime=stxobj.updatetime
+    ))
+
     return localmodel
 
 
@@ -108,7 +111,12 @@ def update_by(target: DeploymentManager, stxobj: StxGenericModel,
     target.oCloudId = parentid
     target.version_number = target.version_number + 1
     target.profile = _convert_content(stxobj.content)
-    target.events = []
+
+    target.events.append(events.DmsChanged(
+        id=stxobj.id,
+        notificationEventType=NotificationEventEnum.MODIFY,
+        updatetime=stxobj.updatetime
+    ))
 
 
 def _convert_content(stxobj_content: str):

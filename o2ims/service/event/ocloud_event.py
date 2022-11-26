@@ -24,7 +24,7 @@ def notify_ocloud_update(
     event: events.OcloudChanged,
     publish: Callable,
 ):
-    logger.info('In notify_ocloud_update')
+    logger.debug('In notify_ocloud_update')
     publish("OcloudChanged", event)
     logger.debug("published Ocloud Changed: {}".format(
         event.id))

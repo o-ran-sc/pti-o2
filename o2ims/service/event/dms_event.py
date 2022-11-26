@@ -20,11 +20,11 @@ from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
 
-def notify_alarm_event_change(
-    event: events.AlarmEventChanged,
+def notify_dms_change(
+    event: events.DmsChanged,
     publish: Callable,
 ):
-    logger.debug('In notify_alarm_event_change')
-    publish("AlarmEventChanged", event)
-    logger.debug("published Alarm Event Changed: {}".format(
+    logger.debug('In notify_dms_change')
+    publish("DmsChanged", event)
+    logger.debug("published DMS Changed: {}".format(
         event.id))

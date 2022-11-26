@@ -84,7 +84,11 @@ def create_by(stxobj: StxGenericModel, parentid: str) -> ResourcePool:
     resourcepool.createtime = stxobj.createtime
     resourcepool.updatetime = stxobj.updatetime
     resourcepool.hash = stxobj.hash
-
+    resourcepool.events.append(events.ResourcePoolChanged(
+        id=stxobj.id,
+        notificationEventType=NotificationEventEnum.CREATE,
+        updatetime=stxobj.updatetime
+    ))
     return resourcepool
 
 

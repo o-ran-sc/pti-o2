@@ -31,6 +31,14 @@ class OcloudChanged(Event):
 @dataclass
 class ResourceTypeChanged(Event):
     id: str
+    notificationEventType: NotificationEventEnum
+    updatetime: datetime.now()
+
+
+@dataclass
+class DmsChanged(Event):
+    id: str
+    notificationEventType: NotificationEventEnum
     updatetime: datetime.now()
 
 

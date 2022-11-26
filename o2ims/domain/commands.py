@@ -37,6 +37,7 @@ class UpdateFaultObject(Command):
 @dataclass
 class PubMessage2SMO(Command):
     data: Message2SMO
+    type: str
 
 
 @dataclass

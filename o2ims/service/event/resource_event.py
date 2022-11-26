@@ -24,7 +24,7 @@ def notify_resource_change(
     event: events.ResourceChanged,
     publish: Callable,
 ):
-    logger.info('In notify_resource_change')
+    logger.debug('In notify_resource_change')
     publish("ResourceChanged", event)
     logger.debug("published Resource Changed: {}".format(
         event.id))

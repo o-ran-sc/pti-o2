@@ -20,11 +20,11 @@ from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
 
-def notify_alarm_event_change(
-    event: events.AlarmEventChanged,
+def notify_resourcetype_change(
+    event: events.ResourceTypeChanged,
     publish: Callable,
 ):
-    logger.debug('In notify_alarm_event_change')
-    publish("AlarmEventChanged", event)
-    logger.debug("published Alarm Event Changed: {}".format(
+    logger.debug('In notify_resourcetype_change')
+    publish("ResourceTypeChanged", event)
+    logger.debug("published Resource Type Changed: {}".format(
         event.id))

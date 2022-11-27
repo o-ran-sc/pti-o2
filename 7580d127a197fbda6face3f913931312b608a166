@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4704e8da_0dc27247",
+        "filename": "o2ims/service/command/notify_handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-27T11:54:52Z",
+      "side": 1,
+      "message": "this should be a warning message along with data dumped",
+      "range": {
+        "startLine": 151,
+        "startChar": 19,
+        "endLine": 151,
+        "endChar": 24
+      },
+      "revId": "7580d127a197fbda6face3f913931312b608a166",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b5d8b94_84a8287e",
+        "filename": "o2ims/service/command/notify_handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-27T11:54:52Z",
+      "side": 1,
+      "message": "will this be a client error? if yes, it should be a info or warning message",
+      "range": {
+        "startLine": 172,
+        "startChar": 23,
+        "endLine": 172,
+        "endChar": 28
+      },
+      "revId": "7580d127a197fbda6face3f913931312b608a166",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

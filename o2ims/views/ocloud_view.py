@@ -241,7 +241,7 @@ def subscription_create(subscriptionDto: SubscriptionDTO.subscription_create,
     filter = subscriptionDto.get('filter', '')
     consumer_subs_id = subscriptionDto.get('consumerSubscriptionId', '')
 
-    check_filter(ocloud.Resource, filter)
+    _check_subscription_filter(filter)
 
     sub_uuid = str(uuid.uuid4())
     subscription = Subscription(
@@ -261,6 +261,50 @@ def subscription_create(subscriptionDto: SubscriptionDTO.subscription_create,
         uow.commit()
         first = uow.subscriptions.get(sub_uuid)
         return first.serialize()
+
+
+def _check_subscription_filter(filter: str):
+    def _sub_filter_checking(sub_filter: str):
+        logger.debug(sub_filter)
+        exprs = sub_filter.split(';')
+        objectType = False
+        objectTypeValue = ''
+        for expr in exprs:
+            expr_strip = expr.strip(' ()')
+            items = expr_strip.split(',')
+            item_key = items[1].strip()
+            if item_key != 'objectType':
+                continue
+            item_op = items[0].strip()
+            if item_op != 'eq':
+                raise BadRequestException(
+                    "Filter objectType only support 'eq' operation")
+            objectType = True
+            objectTypeValue = items[2].strip()
+        if not objectType:
+            # if there has no objectType specific, by default is ResourceInfo
+            check_filter(ocloud.Resource, sub_filter)
+            return
+        if objectTypeValue == 'ResourceTypeInfo':
+            check_filter(ocloud.ResourceType, sub_filter)
+        elif objectTypeValue == 'ResourcePoolInfo':
+            check_filter(ocloud.ResourcePool, sub_filter)
+        elif objectTypeValue == 'DeploymentManagerInfo':
+            check_filter(ocloud.DeploymentManager, sub_filter)
+        elif objectTypeValue == 'CloudInfo':
+            check_filter(ocloud.Ocloud, sub_filter)
+        elif objectTypeValue == 'ResourceInfo':
+            check_filter(ocloud.Resource, sub_filter)
+        else:
+            raise BadRequestException(
+                "Filter ObjectType {} not support.".format(items[2]))
+    if "[" in filter and "]" in filter:
+        filter_strip = filter.strip(' []')
+        filter_list = filter_strip.split('|')
+        for sub_filter in filter_list:
+            _sub_filter_checking(sub_filter)
+    else:
+        _sub_filter_checking(filter)
 
 
 def subscription_delete(subscriptionId: str,

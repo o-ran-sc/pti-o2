@@ -45,18 +45,16 @@ def notify_change_to_smo(
     logger.debug('In notify_change_to_smo')
     msg_type = cmd.type
     if msg_type == 'ResourceType':
-        _notify_resourcetype(uow, cmd)
+        _notify_resourcetype(uow, cmd.data)
     elif msg_type == 'ResourcePool':
-        _notify_resourcepool(uow, cmd)
+        _notify_resourcepool(uow, cmd.data)
     elif msg_type == 'Dms':
-        _notify_dms(uow, cmd)
+        _notify_dms(uow, cmd.data)
     elif msg_type == 'Resource':
-        _notify_resource(uow, cmd)
+        _notify_resource(uow, cmd.data)
 
 
-def _notify_resourcetype(uow, cmd):
-    data = cmd.data
-    msg_type = cmd.type
+def _notify_resourcetype(uow, data):
     with uow:
         resource_type = uow.resource_types.get(data.id)
         if resource_type is None:
@@ -76,17 +74,18 @@ def _notify_resourcetype(uow, cmd):
         for sub in subs:
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
-            if not sub_data.get('filter', None):
-                callback_smo(sub, data, msg_type, resource_type_dict)
+            filter = handle_filter(sub_data['filter'], 'ResourceTypeInfo')
+            if not filter:
+                callback_smo(sub, data, resource_type_dict)
                 continue
             try:
-                args = gen_orm_filter(ocloud.ResourceType, sub_data['filter'])
+                args = gen_orm_filter(ocloud.ResourceType, filter)
             except KeyError:
                 logger.warning(
                     'Subscription {} filter {} has wrong attribute name '
                     'or value. Ignore the filter.'.format(
                         sub_data['subscriptionId'], sub_data['filter']))
-                callback_smo(sub, data, msg_type, resource_type_dict)
+                callback_smo(sub, data, resource_type_dict)
                 continue
             args.append(ocloud.ResourceType.resourceTypeId == data.id)
             ret = uow.resource_types.list_with_count(*args)
@@ -96,12 +95,10 @@ def _notify_resourcetype(uow, cmd):
                     'filter.'
                     .format(data.id, sub_data['subscriptionId']))
                 continue
-            callback_smo(sub, data, msg_type, resource_type_dict)
+            callback_smo(sub, data, resource_type_dict)
 
 
-def _notify_resourcepool(uow, cmd):
-    data = cmd.data
-    msg_type = cmd.type
+def _notify_resourcepool(uow, data):
     with uow:
         resource_pool = uow.resource_pools.get(data.id)
         if resource_pool is None:
@@ -119,17 +116,18 @@ def _notify_resourcepool(uow, cmd):
         for sub in subs:
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
-            if not sub_data.get('filter', None):
-                callback_smo(sub, data, msg_type, resource_pool_dict)
+            filter = handle_filter(sub_data['filter'], 'ResourcePoolInfo')
+            if not filter:
+                callback_smo(sub, data, resource_pool_dict)
                 continue
             try:
-                args = gen_orm_filter(ocloud.Resource, sub_data['filter'])
+                args = gen_orm_filter(ocloud.ResourcePool, filter)
             except KeyError:
                 logger.warning(
                     'Subscription {} filter {} has wrong attribute name '
                     'or value. Ignore the filter.'.format(
                         sub_data['subscriptionId'], sub_data['filter']))
-                callback_smo(sub, data, msg_type, resource_pool_dict)
+                callback_smo(sub, data, resource_pool_dict)
                 continue
             args.append(ocloud.ResourcePool.resourcePoolId == data.id)
             ret = uow.resource_pools.list_with_count(*args)
@@ -139,12 +137,10 @@ def _notify_resourcepool(uow, cmd):
                     'filter.'
                     .format(data.id, sub_data['subscriptionId']))
                 continue
-            callback_smo(sub, data, msg_type, resource_pool_dict)
+            callback_smo(sub, data, resource_pool_dict)
 
 
-def _notify_dms(uow, cmd):
-    data = cmd.data
-    msg_type = cmd.type
+def _notify_dms(uow, data):
     with uow:
         dms = uow.deployment_managers.get(data.id)
         if dms is None:
@@ -163,17 +159,18 @@ def _notify_dms(uow, cmd):
         for sub in subs:
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
-            if not sub_data.get('filter', None):
-                callback_smo(sub, data, msg_type, dms_dict)
+            filter = handle_filter(sub_data['filter'], 'DeploymentManagerInfo')
+            if not filter:
+                callback_smo(sub, data, dms_dict)
                 continue
             try:
-                args = gen_orm_filter(ocloud.Resource, sub_data['filter'])
+                args = gen_orm_filter(ocloud.DeploymentManager, filter)
             except KeyError:
                 logger.warning(
                     'Subscription {} filter {} has wrong attribute name '
                     'or value. Ignore the filter.'.format(
                         sub_data['subscriptionId'], sub_data['filter']))
-                callback_smo(sub, data, msg_type, dms_dict)
+                callback_smo(sub, data, dms_dict)
                 continue
             args.append(
                 ocloud.DeploymentManager.deploymentManagerId == data.id)
@@ -185,12 +182,10 @@ def _notify_dms(uow, cmd):
                     .format(data.id, sub_data['subscriptionId']))
                 continue
             callback_smo(sub, data)
-            callback_smo(sub, data, msg_type, dms_dict)
+            callback_smo(sub, data, dms_dict)
 
 
-def _notify_resource(uow, cmd):
-    data = cmd.data
-    msg_type = cmd.type
+def _notify_resource(uow, data):
     with uow:
         resource = uow.resources.get(data.id)
         if resource is None:
@@ -198,22 +193,30 @@ def _notify_resource(uow, cmd):
             return
         res_pool_id = resource.serialize()['resourcePoolId']
         logger.debug('res pool id is {}'.format(res_pool_id))
+        res_dict = {
+            'resourceId': resource.resourceId,
+            'description': resource.description,
+            'resourceTypeId': resource.resourceTypeId,
+            'resourcePoolId': resource.resourcePoolId,
+            'globalAssetId': resource.globalAssetId
+        }
 
         subs = uow.subscriptions.list()
         for sub in subs:
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
-            if not sub_data.get('filter', None):
-                callback_smo(sub, data, msg_type)
+            filter = handle_filter(sub_data['filter'], 'ResourceInfo')
+            if not filter:
+                callback_smo(sub, data, res_dict)
                 continue
             try:
-                args = gen_orm_filter(ocloud.Resource, sub_data['filter'])
+                args = gen_orm_filter(ocloud.Resource, filter)
             except KeyError:
                 logger.warning(
                     'Subscription {} filter {} has wrong attribute name '
                     'or value. Ignore the filter.'.format(
                         sub_data['subscriptionId'], sub_data['filter']))
-                callback_smo(sub, data, msg_type)
+                callback_smo(sub, data, res_dict)
                 continue
             args.append(ocloud.Resource.resourceId == data.id)
             ret = uow.resources.list_with_count(res_pool_id, *args)
@@ -223,11 +226,38 @@ def _notify_resource(uow, cmd):
                     'filter.'
                     .format(data.id, sub_data['subscriptionId']))
                 continue
-            callback_smo(sub, data, msg_type)
+            callback_smo(sub, data, res_dict)
 
 
-def callback_smo(sub: Subscription, msg: Message2SMO, msg_type: str,
-                 obj_dict: dict = None):
+def handle_filter(filter: str, f_type: str):
+    if "[" in filter and "]" in filter:
+        filter_strip = filter.strip(' []')
+        filter_list = filter_strip.split('|')
+        for sub_filter in filter_list:
+            exprs = sub_filter.split(';')
+            objectType = False
+            objectTypeValue = ''
+            for expr in exprs:
+                expr_strip = expr.strip(' ()')
+                items = expr_strip.split(',')
+                item_key = items[1].strip()
+                if item_key != 'objectType':
+                    continue
+                objectType = True
+                objectTypeValue = items[2].strip()
+            if not objectType:
+                if f_type == 'ResourceInfo':
+                    return sub_filter
+                continue
+            if objectTypeValue == f_type:
+                return sub_filter
+    else:
+        if f_type == 'ResourceInfo':
+            return filter
+        return ''
+
+
+def callback_smo(sub: Subscription, msg: Message2SMO, obj_dict: dict = None):
     sub_data = sub.serialize()
     callback = {
         'consumerSubscriptionId': sub_data['consumerSubscriptionId'],
@@ -235,13 +265,14 @@ def callback_smo(sub: Subscription, msg: Message2SMO, msg_type: str,
         'objectRef': msg.objectRef,
         'updateTime': msg.updatetime
     }
-    if msg_type != 'Resource':
-        if msg.notificationEventType in [NotificationEventEnum.DELETE,
-                                         NotificationEventEnum.MODIFY]:
-            callback['priorObjectState'] = obj_dict
-        if msg.notificationEventType in [NotificationEventEnum.CREATE,
-                                         NotificationEventEnum.MODIFY]:
-            callback['postObjectState'] = obj_dict
+    if msg.notificationEventType in [NotificationEventEnum.DELETE,
+                                     NotificationEventEnum.MODIFY]:
+        callback['priorObjectState'] = obj_dict
+    if msg.notificationEventType in [NotificationEventEnum.CREATE,
+                                     NotificationEventEnum.MODIFY]:
+        callback['postObjectState'] = obj_dict
+    if msg.notificationEventType == NotificationEventEnum.DELETE:
+        callback.pop('objectRef')
     callback_data = json.dumps(callback)
     logger.info('URL: {}, data: {}'.format(
         sub_data['callback'], callback_data))

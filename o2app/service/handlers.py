@@ -32,7 +32,7 @@ from o2ims.service.auditor import ocloud_handler, dms_handler, \
 from o2ims.service.command import notify_handler, registration_handler,\
     notify_alarm_handler
 from o2ims.service.event import ocloud_event, resource_event, \
-    resource_pool_event, alarm_event
+    resource_pool_event, alarm_event, dms_event, resource_type_event
 
 # if TYPE_CHECKING:
 #     from . import unit_of_work
@@ -55,6 +55,9 @@ EVENT_HANDLERS = {
     # o2dms_events.NfDeploymentUninstalled: [
     #     nfdeployment_handler.publish_nfdeployment_uninstalled]
     events.OcloudChanged: [ocloud_event.notify_ocloud_update],
+    events.ResourceTypeChanged: [resource_type_event.\
+                                 notify_resourcetype_change],
+    events.DmsChanged: [dms_event.notify_dms_change],
     events.ResourceChanged: [resource_event.notify_resource_change],
     events.ResourcePoolChanged: [resource_pool_event.\
                                  notify_resourcepool_change],

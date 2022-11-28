@@ -39,8 +39,11 @@ def main():
     bus = bootstrap.bootstrap()
     pubsub = r.pubsub(ignore_subscribe_messages=True)
     pubsub.subscribe("NfDeploymentStateChanged")
-    pubsub.subscribe('ResourceChanged')
     pubsub.subscribe('OcloudChanged')
+    pubsub.subscribe('ResourceTypeChanged')
+    pubsub.subscribe('ResourcePoolChanged')
+    pubsub.subscribe('DmsChanged')
+    pubsub.subscribe('ResourceChanged')
     pubsub.subscribe('AlarmEventChanged')
 
     for m in pubsub.listen():
@@ -64,6 +67,42 @@ def handle_changed(m, bus):
             ToState=data['ToState']
         )
         bus.handle(cmd)
+    elif channel == 'ResourceTypeChanged':
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('ResourceTypeChanged with cmd:{}'.format(data))
+        ref = apibase + inventory_api_version + '/resourceTypes/' + \
+            data['id']
+        cmd = imscmd.PubMessage2SMO(data=Message2SMO(
+            id=data['id'], ref=ref,
+            eventtype=data['notificationEventType'],
+            updatetime=data['updatetime']),
+            type='ResourceType')
+        bus.handle(cmd)
+    elif channel == 'ResourcePoolChanged':
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('ResourcePoolChanged with cmd:{}'.format(data))
+        ref = apibase + inventory_api_version + '/resourcePools/' + \
+            data['id']
+        cmd = imscmd.PubMessage2SMO(data=Message2SMO(
+            id=data['id'], ref=ref,
+            eventtype=data['notificationEventType'],
+            updatetime=data['updatetime']),
+            type='ResourcePool')
+        bus.handle(cmd)
+    elif channel == 'DmsChanged':
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('ResourceChanged with cmd:{}'.format(data))
+        ref = apibase + inventory_api_version + '/deploymentManagers/' + \
+            data['id']
+        cmd = imscmd.PubMessage2SMO(data=Message2SMO(
+            id=data['id'], ref=ref,
+            eventtype=data['notificationEventType'],
+            updatetime=data['updatetime']),
+            type='Dms')
+        bus.handle(cmd)
     elif channel == 'ResourceChanged':
         datastr = m['data']
         data = json.loads(datastr)
@@ -73,7 +112,8 @@ def handle_changed(m, bus):
         cmd = imscmd.PubMessage2SMO(data=Message2SMO(
             id=data['id'], ref=ref,
             eventtype=data['notificationEventType'],
-            updatetime=data['updatetime']))
+            updatetime=data['updatetime']),
+            type='Resource')
         bus.handle(cmd)
     elif channel == 'OcloudChanged':
         datastr = m['data']

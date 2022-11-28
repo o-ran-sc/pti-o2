@@ -67,6 +67,10 @@ def update_pserver(
             alarm_dictionary = uow.alarm_dictionaries.get(dict_id)
             if alarm_dictionary:
                 res_type.alarmDictionary = alarm_dictionary
+            res_type.events.append(events.ResourceTypeChanged(
+                id=res_type.resourceTypeId,
+                notificationEventType=NotificationEventEnum.CREATE,
+                updatetime=stxobj.updatetime))
             uow.resource_types.add(res_type)
         else:
             resourcetype_id = first['resourceTypeId']
@@ -116,7 +120,7 @@ def create_by(stxobj: StxGenericModel, parentid: str, resourcetype_id: str) \
         "operational", "availability", "administrative",
         "boot_device", "rootfs_device", "install_state", "subfunctions",
         "clock_synchronization", "max_cpu_mhz_allowed"
-        ]
+    ]
     filtered = dict(
         filter(lambda item: item[0] in selected_keys, content.items()))
     extensions = json.dumps(filtered)
@@ -127,6 +131,13 @@ def create_by(stxobj: StxGenericModel, parentid: str, resourcetype_id: str) \
     resource.createtime = stxobj.createtime
     resource.updatetime = stxobj.updatetime
     resource.hash = stxobj.hash
+
+    resource.events.append(events.ResourceChanged(
+        id=stxobj.id,
+        resourcePoolId=resource.resourcePoolId,
+        notificationEventType=NotificationEventEnum.CREATE,
+        updatetime=stxobj.updatetime
+    ))
 
     return resource
 

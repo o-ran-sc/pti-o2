@@ -24,7 +24,7 @@ def notify_resourcepool_change(
     event: events.ResourcePoolChanged,
     publish: Callable,
 ):
-    logger.info('In notify_resourcepool_change')
+    logger.debug('In notify_resourcepool_change')
     publish("ResourcePoolChanged", event)
     logger.debug("published Resource Pool Changed: {}".format(
         event.id))

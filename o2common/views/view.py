@@ -56,24 +56,22 @@ def check_filter(obj: ColumnElement, filter_str: str):
 
 
 def check_filter_attribute(obj: ColumnElement, filter_str: str):
-    # filter_without_space = filter_str.replace(" ", "")
-    filter_without_space = filter_str.strip(' ()')
+    filter_without_space = filter_str.strip()
     logger.debug(
         f"filter_str: {filter_str}, stripped: {filter_without_space}")
     items = filter_without_space.split(';')
 
     for i in items:
-        # if '(' in i:
-        #     i = i.replace("(", "")
-        # if ')' in i:
-        #     i = i.replace(")", "")
-        filter_expr = i.split(',')
+        item = i.strip(' ()')
+        filter_expr = item.split(',')
         if len(filter_expr) < 3:
             raise BadRequestException(
-                'ignore invalid filter {}'.format(i))
-            continue
+                'invalid filter {}'.format(i))
         filter_op = filter_expr[0].strip()
         filter_key = filter_expr[1].strip()
+        if filter_key == 'objectType':
+            logger.debug('ignore objectType while checking formatter')
+            continue
         filter_vals = filter_expr[2:]
         if filter_op in ["eq", "neq", "gt", "lt", "gte", "lte"]:
             if len(filter_vals) != 1:

@@ -64,6 +64,10 @@ def update_pserver_if(
             alarm_dictionary = uow.alarm_dictionaries.get(dict_id)
             if alarm_dictionary:
                 res_type.alarmDictionary = alarm_dictionary
+            res_type.events.append(events.ResourceTypeChanged(
+                id=res_type.resourceTypeId,
+                notificationEventType=NotificationEventEnum.CREATE,
+                updatetime=stxobj.updatetime))
             uow.resource_types.add(res_type)
         else:
             resourcetype_id = first['resourceTypeId']

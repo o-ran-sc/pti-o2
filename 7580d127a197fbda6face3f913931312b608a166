@@ -26,6 +26,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "889a6a32_46c5c078",
+        "filename": "o2ims/service/command/notify_handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-28T00:33:52Z",
+      "side": 1,
+      "message": "consider a case: a subscription with filter specifying (eq,objectType,deploymentManagerInfo;eq,deploymentManagerId,id1234) created, what will happened here? resulting a keyError and output an error log?",
+      "range": {
+        "startLine": 170,
+        "startChar": 23,
+        "endLine": 170,
+        "endChar": 37
+      },
+      "revId": "7580d127a197fbda6face3f913931312b608a166",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5b5d8b94_84a8287e",
         "filename": "o2ims/service/command/notify_handler.py",
         "patchSetId": 1

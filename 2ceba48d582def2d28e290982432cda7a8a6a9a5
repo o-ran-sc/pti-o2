@@ -81,6 +81,24 @@
       "parentUuid": "ff6a0250_019fe703",
       "revId": "2ceba48d582def2d28e290982432cda7a8a6a9a5",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6ef6083_bb371ce5",
+        "filename": "o2ims/views/ocloud_view.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-29T06:25:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b609cb5_998d74ed",
+      "revId": "2ceba48d582def2d28e290982432cda7a8a6a9a5",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

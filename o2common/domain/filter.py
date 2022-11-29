@@ -23,23 +23,22 @@ logger = o2logging.get_logger(__name__)
 
 
 def gen_orm_filter(obj: ColumnElement, filter_str: str):
+    logger.debug(filter_str)
     if not filter_str:
         return []
-    # filter_without_space = filter_str.replace(" ", "")
-    filter_without_space = filter_str.strip(' ()')
+    filter_without_space = filter_str.strip()
     items = filter_without_space.split(';')
 
     filter_list = list()
     for i in items:
-        # if '(' in i:
-        #     i = i.replace("(", "")
-        # if ')' in i:
-        #     i = i.replace(")", "")
-        filter_expr = i.split(',')
+        item = i.strip(' ()')
+        filter_expr = item.split(',')
         if len(filter_expr) < 3:
             continue
         filter_op = filter_expr[0].strip()
         filter_key = filter_expr[1].strip()
+        if filter_key == 'objectType':
+            continue
         filter_vals = filter_expr[2:]
         filter_list.extend(toFilterArgs(
             filter_op, obj, filter_key, filter_vals))

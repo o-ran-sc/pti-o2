@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c92143c_3c9fb730",
+        "filename": "o2ims/service/command/notify_handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-29T00:27:54Z",
+      "side": 1,
+      "message": "the usecase of this method includes: \n1, (eq,resourceId,resourceid1234)\n2, (eq,objectType,ResourceInfo);(eq,resourceId,resourceid1234)\n3, (eq,resourceId,resourceid1234)|(eq,objectType,ResourceTypeInfo);(eq,resourceTypeId, typeid1234)\n4, (eq,objectType,ResourceInfo);(eq,resourceId,resourceid1234)|(eq,objectType,ResourceTypeInfo);(eq,resourceTypeId, typeid1234)\n5, [(eq,resourceId,resourceid1234)|(eq,objectType,ResourceTypeInfo);(eq,resourceTypeId, typeid1234)]\n6, (eq,resourceId,resourceid1234) | (eq,resourceId,resourceid5678)\n7, (eq,objectType,ResourceInfo);(eq,resourceId,resourceid1234) | (eq,objectType,ResourceInfo);(eq,resourceId,resourceid5678)\n8, [(eq,objectType,ResourceInfo);(eq,resourceId,resourceid1234) | (eq,objectType,ResourceInfo);(eq,resourceId,resourceid5678)]\n9, [(eq,resourceId,resourceid1234)]\n10,[(eq,objectType,ResourceInfo);(eq,resourceId,resourceid1234)]\n11, [()|()]\n12, []\n13, ()\n14, ();\n15, ;()",
+      "range": {
+        "startLine": 232,
+        "startChar": 4,
+        "endLine": 232,
+        "endChar": 17
+      },
+      "revId": "2ceba48d582def2d28e290982432cda7a8a6a9a5",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff6a0250_019fe703",
+        "filename": "o2ims/views/ocloud_view.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-29T00:27:54Z",
+      "side": 1,
+      "message": "why not extact the interpreting of filter to be a domain class? the logic here and the logic of handle_filter() should share the same set of rules",
+      "revId": "2ceba48d582def2d28e290982432cda7a8a6a9a5",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

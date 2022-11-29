@@ -89,8 +89,9 @@ def _notify_resourcetype(uow, data):
                             sub_data['subscriptionId'],
                             sub_data['filter']))
                     continue
-                if len(args) == 0:
-                    continue
+                if len(args) == 0 and 'objectType' in filter:
+                    filter_effect += 1
+                    break
                 args.append(ocloud.ResourceType.resourceTypeId == data.id)
                 ret = uow.resource_types.list_with_count(*args)
                 if ret[0] > 0:
@@ -138,8 +139,9 @@ def _notify_resourcepool(uow, data):
                             sub_data['subscriptionId'],
                             sub_data['filter']))
                     continue
-                if len(args) == 0:
-                    continue
+                if len(args) == 0 and 'objectType' in filter:
+                    filter_effect += 1
+                    break
                 args.append(ocloud.ResourcePool.resourcePoolId == data.id)
                 ret = uow.resource_pools.list_with_count(*args)
                 if ret[0] > 0:
@@ -189,8 +191,9 @@ def _notify_dms(uow, data):
                             sub_data['subscriptionId'],
                             sub_data['filter']))
                     continue
-                if len(args) == 0:
-                    continue
+                if len(args) == 0 and 'objectType' in filter:
+                    filter_effect += 1
+                    break
                 args.append(
                     ocloud.DeploymentManager.deploymentManagerId == data.id)
                 ret = uow.deployment_managers.list_with_count(*args)
@@ -241,8 +244,9 @@ def _notify_resource(uow, data):
                             sub_data['subscriptionId'],
                             sub_data['filter']))
                     continue
-                if len(args) == 0:
-                    continue
+                if len(args) == 0 and 'objectType' in filter:
+                    filter_effect += 1
+                    break
                 args.append(ocloud.Resource.resourceId == data.id)
                 ret = uow.resources.list_with_count(res_pool_id, *args)
                 if ret[0] > 0:
@@ -294,15 +298,15 @@ def callback_smo(sub: Subscription, msg: Message2SMO, obj_dict: dict = None):
     }
     if msg.notificationEventType in [NotificationEventEnum.DELETE,
                                      NotificationEventEnum.MODIFY]:
-        callback['priorObjectState'] = obj_dict
+        callback['priorObjectState'] = json.dumps(obj_dict)
     if msg.notificationEventType in [NotificationEventEnum.CREATE,
                                      NotificationEventEnum.MODIFY]:
-        callback['postObjectState'] = obj_dict
+        callback['postObjectState'] = json.dumps(obj_dict)
     if msg.notificationEventType == NotificationEventEnum.DELETE:
         callback.pop('objectRef')
     callback_data = json.dumps(callback)
-    logger.info('URL: {}, data: {}'.format(
-        sub_data['callback'], callback_data))
+    logger.info('URL: {}'.format(sub_data['callback']))
+    logger.debug('callback data: {}'.format(callback_data))
 
     # Call SMO through the SMO callback url
     o = urlparse(sub_data['callback'])

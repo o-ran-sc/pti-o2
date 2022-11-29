@@ -43,7 +43,7 @@ def notify_alarm_to_smo(
     with uow:
         alarm = uow.alarm_event_records.get(data.id)
         if alarm is None:
-            logger.debug('Alarm Event {} does not exists.'.format(data.id))
+            logger.warning('Alarm Event {} does not exists.'.format(data.id))
             return
 
         subs = uow.alarm_subscriptions.list()
@@ -99,8 +99,8 @@ def callback_smo(sub: AlarmSubscription, msg: AlarmEvent2SMO,
     }
     # logger.warning(callback)
     callback_data = json.dumps(callback)
-    logger.info('URL: {}, data: {}'.format(
-        sub_data['callback'], callback_data))
+    logger.info('URL: {}'.format(sub_data['callback']))
+    logger.debug('callback data: {}'.format(callback_data))
 
     o = urlparse(sub_data['callback'])
     if o.scheme == 'https':

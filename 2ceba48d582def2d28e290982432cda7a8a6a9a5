@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf7f30c3_5d7fba56",
+        "filename": "o2ims/service/command/notify_handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-11-29T04:15:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1c92143c_3c9fb730",
+      "range": {
+        "startLine": 232,
+        "startChar": 4,
+        "endLine": 232,
+        "endChar": 17
+      },
+      "revId": "2ceba48d582def2d28e290982432cda7a8a6a9a5",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ff6a0250_019fe703",
@@ -37,6 +61,24 @@
       "writtenOn": "2022-11-29T00:27:54Z",
       "side": 1,
       "message": "why not extact the interpreting of filter to be a domain class? the logic here and the logic of handle_filter() should share the same set of rules",
+      "revId": "2ceba48d582def2d28e290982432cda7a8a6a9a5",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b609cb5_998d74ed",
+        "filename": "o2ims/views/ocloud_view.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2022-11-29T04:15:25Z",
+      "side": 1,
+      "message": "This method is only for filter checking, the \"handle_filter()\" for generating a filter list to query. Some of the logic will be the same, but the purpose not be the same.",
+      "parentUuid": "ff6a0250_019fe703",
       "revId": "2ceba48d582def2d28e290982432cda7a8a6a9a5",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }

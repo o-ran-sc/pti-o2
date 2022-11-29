@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6b36c04_0708562d",
+        "filename": "o2ims/service/command/notify_handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000114
+      },
+      "writtenOn": "2022-11-29T06:07:52Z",
+      "side": 1,
+      "message": "break the loop here after update filter_effect, no need further iterations",
+      "range": {
+        "startLine": 99,
+        "startChar": 20,
+        "endLine": 99,
+        "endChar": 34
+      },
+      "revId": "7787b5ec32e9b7be84f14095951078e1f65f7af8",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

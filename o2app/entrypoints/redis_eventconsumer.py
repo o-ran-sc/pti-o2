@@ -120,8 +120,8 @@ def handle_changed(m, bus):
         data = json.loads(datastr)
         logger.info('OcloudChanged with cmd:{}'.format(data))
         cmd = imscmd.Register2SMO(data=RegistrationMessage(
-            data['notificationEventType'],
-            id=data['id']))
+            id=data['id'], eventtype=data['notificationEventType'],
+            updatetime=data['updatetime']))
         bus.handle(cmd)
     elif channel == 'AlarmEventChanged':
         datastr = m['data']

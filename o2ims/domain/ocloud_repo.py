@@ -31,8 +31,8 @@ class OcloudRepository(abc.ABC):
             self.seen.add(ocloud)
         return ocloud
 
-    def list(self) -> List[ocloud.Ocloud]:
-        return self._list()
+    def list(self, *args) -> List[ocloud.Ocloud]:
+        return self._list(*args)
 
     def update(self, ocloud: ocloud.Ocloud):
         self._update(ocloud)
@@ -47,6 +47,10 @@ class OcloudRepository(abc.ABC):
 
     @abc.abstractmethod
     def _get(self, ocloud_id) -> ocloud.Ocloud:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _list(self, *args) -> List[ocloud.Ocloud]:
         raise NotImplementedError
 
     @abc.abstractmethod

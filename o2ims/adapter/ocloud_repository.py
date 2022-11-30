@@ -35,8 +35,9 @@ class OcloudSqlAlchemyRepository(OcloudRepository):
         return self.session.query(ocloud.Ocloud).filter_by(
             oCloudId=ocloud_id).first()
 
-    def _list(self) -> List[ocloud.Ocloud]:
-        return self.session.query(ocloud.Ocloud)
+    def _list(self, *args) -> List[ocloud.Ocloud]:
+        return self.session.query(ocloud.Ocloud).filter(*args).order_by(
+            'oCloudId')
 
     def _update(self, ocloud: ocloud.Ocloud):
         self.session.add(ocloud)

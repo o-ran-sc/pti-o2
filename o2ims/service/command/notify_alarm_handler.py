@@ -99,7 +99,7 @@ def callback_smo(sub: AlarmSubscription, msg: AlarmEvent2SMO,
     }
     # logger.warning(callback)
     callback_data = json.dumps(callback)
-    logger.info('URL: {}'.format(sub_data['callback']))
+    logger.info('callback URL: {}'.format(sub_data['callback']))
     logger.debug('callback data: {}'.format(callback_data))
 
     o = urlparse(sub_data['callback'])

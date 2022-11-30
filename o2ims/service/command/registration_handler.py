@@ -12,44 +12,58 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# import time
-import json
-# import asyncio
-# import requests
-
-from urllib.parse import urlparse
-from retry import retry
-
-from o2common.service.unit_of_work import AbstractUnitOfWork
-from o2common.config import config, conf
-from o2common.service.command.handler import get_https_conn_default
-from o2common.service.command.handler import get_http_conn
-from o2common.service.command.handler import get_https_conn_selfsigned
-from o2common.service.command.handler import post_data
 import ssl
-from o2ims.domain import commands
-from o2ims.domain.subscription_obj import NotificationEventEnum
+import json
+from retry import retry
+from urllib.parse import urlparse
+
+from o2common.config import config, conf
+from o2common.domain.filter import gen_orm_filter
+from o2common.service.unit_of_work import AbstractUnitOfWork
+from o2common.service.command.handler import get_https_conn_default, \
+    get_http_conn, get_https_conn_selfsigned, post_data
+
+from o2ims.domain import commands, ocloud as cloud
+from o2ims.domain.subscription_obj import Message2SMO, NotificationEventEnum
+
+from .notify_handler import handle_filter, callback_smo
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
+
+apibase = config.get_o2ims_api_base()
+api_monitoring_base = config.get_o2ims_monitoring_api_base()
+inventory_api_version = config.get_o2ims_inventory_api_v1()
 
 
 def registry_to_smo(
     cmd: commands.Register2SMO,
     uow: AbstractUnitOfWork,
 ):
-    logger.info('In registry_to_smo')
+    logger.debug('In registry_to_smo')
     data = cmd.data
     logger.info('The Register2SMO notificationEventType is {}'.format(
         data.notificationEventType))
     with uow:
         ocloud = uow.oclouds.get(data.id)
         if ocloud is None:
+            logger.warning('Ocloud {} does not exists.'.format(data.id))
             return
         logger.debug('O-Cloud Global UUID: {}'.format(ocloud.globalCloudId))
-        ocloud_dict = ocloud.serialize()
+        # ocloud_dict = ocloud.serialize()
+        ocloud_dict = {
+            'oCloudId': ocloud.oCloudId,
+            'globalcloudId': ocloud.globalCloudId,
+            'globalCloudId': ocloud.globalCloudId,
+            'name': ocloud.name,
+            'description': ocloud.description,
+            'serviceUri': ocloud.serviceUri
+        }
         if data.notificationEventType == NotificationEventEnum.CREATE:
             register_smo(uow, ocloud_dict)
+        elif data.notificationEventType in [NotificationEventEnum.MODIFY,
+                                            NotificationEventEnum.DELETE]:
+            _notify_ocloud(uow, data, ocloud_dict)
 
 
 class RegIMSToSMOExp(Exception):
@@ -67,16 +81,44 @@ def register_smo(uow, ocloud_data):
     # TODO: record the result for the smo register
 
 
-# def retry(fun, max_tries=2):
-#     for i in range(max_tries):
-#         try:
-#             time.sleep(5*i)
-#             # await asyncio.sleep(5*i)
-#             res = fun()
-#             logger.debug('retry function result: {}'.format(res))
-#             return res
-#         except Exception:
-#             continue
+def _notify_ocloud(uow, data, ocloud_dict):
+    ref = api_monitoring_base + inventory_api_version
+    msg = Message2SMO(
+        eventtype=data.notificationEventType, id=data.id,
+        ref=ref, updatetime=data.updatetime)
+    ocloud_dict.pop('globalCloudId')
+    subs = uow.subscriptions.list()
+    for sub in subs:
+        sub_data = sub.serialize()
+        logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
+        filters = handle_filter(sub_data['filter'], 'CloudInfo')
+        if not filters:
+            callback_smo(sub, msg, ocloud_dict)
+            continue
+        filter_hit = False
+        for filter in filters:
+            try:
+                args = gen_orm_filter(cloud.Ocloud, filter)
+            except KeyError:
+                logger.warning(
+                    'Subscription {} filter {} has wrong attribute '
+                    'name or value. Ignore the filter.'.format(
+                        sub_data['subscriptionId'],
+                        sub_data['filter']))
+                continue
+            if len(args) == 0 and 'objectType' in filter:
+                filter_hit = True
+                break
+            args.append(cloud.Ocloud.oCloudId == data.id)
+            ret = uow.oclouds.list(*args)
+            if ret.count() > 0:
+                filter_hit = True
+                break
+        if filter_hit:
+            logger.info('Subscription {} filter hit, skip oCloud {}.'
+                        .format(sub_data['subscriptionId'], data.id))
+        else:
+            callback_smo(sub, msg, ocloud_dict)
 
 
 @retry((ConnectionRefusedError), tries=2, delay=2)
@@ -97,8 +139,8 @@ def call_smo(reg_data: dict):
         'IMS_EP': config.get_api_url(),
         'smo_token_data': smo_token_info
     })
-    logger.info('URL: {}, data: {}'.format(
-        conf.DEFAULT.smo_register_url, callback_data))
+    logger.info('callback URL: {}'.format(conf.DEFAULT.smo_register_url))
+    logger.debug('callback data: {}'.format(callback_data))
     o = urlparse(conf.DEFAULT.smo_register_url)
     if o.scheme == 'https':
         conn = get_https_conn_default(o.netloc)

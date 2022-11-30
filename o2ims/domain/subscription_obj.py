@@ -47,9 +47,11 @@ class Message2SMO(Serializer):
 
 
 class RegistrationMessage(Serializer):
-    def __init__(self, eventtype: NotificationEventEnum, id: str = '') -> None:
+    def __init__(self, eventtype: NotificationEventEnum, id: str = '',
+                 updatetime: str = '') -> None:
         self.notificationEventType = eventtype
         self.id = id
+        self.updatetime = updatetime
 
 
 @dataclass

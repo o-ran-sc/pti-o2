@@ -78,7 +78,7 @@ def _notify_resourcetype(uow, data):
             if not filters:
                 callback_smo(sub, data, resource_type_dict)
                 continue
-            filter_effect = 0
+            filter_hit = False
             for filter in filters:
                 try:
                     args = gen_orm_filter(ocloud.ResourceType, filter)
@@ -90,20 +90,18 @@ def _notify_resourcetype(uow, data):
                             sub_data['filter']))
                     continue
                 if len(args) == 0 and 'objectType' in filter:
-                    filter_effect += 1
+                    filter_hit = True
                     break
                 args.append(ocloud.ResourceType.resourceTypeId == data.id)
-                ret = uow.resource_types.list_with_count(*args)
-                if ret[0] > 0:
-                    logger.debug(
-                        'ResourcePool {} skip for subscription {} because of'
-                        ' the filter.'
-                        .format(data.id, sub_data['subscriptionId']))
-                    filter_effect += 1
+                obj_count, _ = uow.resource_types.list_with_count(*args)
+                if obj_count > 0:
+                    filter_hit = True
                     break
-            if filter_effect > 0:
-                continue
-            callback_smo(sub, data, resource_type_dict)
+            if filter_hit:
+                logger.info('Subscription {} filter hit, skip ResourceType {}.'
+                            .format(sub_data['subscriptionId'], data.id))
+            else:
+                callback_smo(sub, data, resource_type_dict)
 
 
 def _notify_resourcepool(uow, data):
@@ -128,7 +126,7 @@ def _notify_resourcepool(uow, data):
             if not filters:
                 callback_smo(sub, data, resource_pool_dict)
                 continue
-            filter_effect = 0
+            filter_hit = False
             for filter in filters:
                 try:
                     args = gen_orm_filter(ocloud.ResourcePool, filter)
@@ -140,20 +138,18 @@ def _notify_resourcepool(uow, data):
                             sub_data['filter']))
                     continue
                 if len(args) == 0 and 'objectType' in filter:
-                    filter_effect += 1
+                    filter_hit = True
                     break
                 args.append(ocloud.ResourcePool.resourcePoolId == data.id)
-                ret = uow.resource_pools.list_with_count(*args)
-                if ret[0] > 0:
-                    logger.debug(
-                        'ResourcePool {} skip for subscription {} because of'
-                        ' the filter.'
-                        .format(data.id, sub_data['subscriptionId']))
-                    filter_effect += 1
+                obj_count, _ = uow.resource_pools.list_with_count(*args)
+                if obj_count > 0:
+                    filter_hit = True
                     break
-            if filter_effect > 0:
-                continue
-            callback_smo(sub, data, resource_pool_dict)
+            if filter_hit:
+                logger.info('Subscription {} filter hit, skip ResourcePool {}.'
+                            .format(sub_data['subscriptionId'], data.id))
+            else:
+                callback_smo(sub, data, resource_pool_dict)
 
 
 def _notify_dms(uow, data):
@@ -180,7 +176,7 @@ def _notify_dms(uow, data):
             if not filters:
                 callback_smo(sub, data, dms_dict)
                 continue
-            filter_effect = 0
+            filter_hit = False
             for filter in filters:
                 try:
                     args = gen_orm_filter(ocloud.DeploymentManager, filter)
@@ -192,21 +188,20 @@ def _notify_dms(uow, data):
                             sub_data['filter']))
                     continue
                 if len(args) == 0 and 'objectType' in filter:
-                    filter_effect += 1
+                    filter_hit = True
                     break
                 args.append(
                     ocloud.DeploymentManager.deploymentManagerId == data.id)
-                ret = uow.deployment_managers.list_with_count(*args)
-                if ret[0] > 0:
-                    logger.debug(
-                        'DeploymentManager {} skip for subscription {} because'
-                        ' of the filter.'
-                        .format(data.id, sub_data['subscriptionId']))
-                    filter_effect += 1
+                obj_count, _ = uow.deployment_managers.list_with_count(*args)
+                if obj_count > 0:
+                    filter_hit = True
                     break
-            if filter_effect > 0:
-                continue
-            callback_smo(sub, data, dms_dict)
+            if filter_hit:
+                logger.info('Subscription {} filter hit, skip '
+                            'DeploymentManager {}.'
+                            .format(sub_data['subscriptionId'], data.id))
+            else:
+                callback_smo(sub, data, dms_dict)
 
 
 def _notify_resource(uow, data):
@@ -233,7 +228,7 @@ def _notify_resource(uow, data):
             if not filters:
                 callback_smo(sub, data, res_dict)
                 continue
-            filter_effect = 0
+            filter_hit = False
             for filter in filters:
                 try:
                     args = gen_orm_filter(ocloud.Resource, filter)
@@ -245,20 +240,19 @@ def _notify_resource(uow, data):
                             sub_data['filter']))
                     continue
                 if len(args) == 0 and 'objectType' in filter:
-                    filter_effect += 1
+                    filter_hit = True
                     break
                 args.append(ocloud.Resource.resourceId == data.id)
-                ret = uow.resources.list_with_count(res_pool_id, *args)
-                if ret[0] > 0:
-                    logger.debug(
-                        'Resource {} skip for subscription {} because of '
-                        'the filter.'
-                        .format(data.id, sub_data['subscriptionId']))
-                    filter_effect += 1
+                obj_count, _ = uow.resources.list_with_count(
+                    res_pool_id, *args)
+                if obj_count > 0:
+                    filter_hit = True
                     break
-            if filter_effect > 0:
-                continue
-            callback_smo(sub, data, res_dict)
+            if filter_hit:
+                logger.info('Subscription {} filter hit, skip Resource {}.'
+                            .format(sub_data['subscriptionId'], data.id))
+            else:
+                callback_smo(sub, data, res_dict)
 
 
 def handle_filter(filter: str, f_type: str):
@@ -305,7 +299,7 @@ def callback_smo(sub: Subscription, msg: Message2SMO, obj_dict: dict = None):
     if msg.notificationEventType == NotificationEventEnum.DELETE:
         callback.pop('objectRef')
     callback_data = json.dumps(callback)
-    logger.info('URL: {}'.format(sub_data['callback']))
+    logger.info('callback URL: {}'.format(sub_data['callback']))
     logger.debug('callback data: {}'.format(callback_data))
 
     # Call SMO through the SMO callback url

@@ -101,7 +101,8 @@ def test_view_olcouds(mock_uow):
     ocloud1 = MagicMock()
     ocloud1.serialize.return_value = {
         'oCloudId': ocloud1_UUID, 'name': 'ocloud1'}
-    session.return_value.query.return_value = [ocloud1]
+    session.return_value.query.return_value.filter.return_value.\
+        order_by.return_value = [ocloud1]
 
     ocloud_list = ocloud_view.oclouds(uow)
     # assert str(ocloud_list[0].get("oCloudId")) == ocloud1_UUID

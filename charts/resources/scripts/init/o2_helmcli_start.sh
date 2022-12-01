@@ -14,18 +14,17 @@
 
 #!/bin/bash
 
-apt-get update && apt-get install ssh -y
+apk add --no-cache openssh
 
 if [ -z "${HELM_USER_PASSWD}" ];
 then
     HELM_USER_PASSWD=St8rlingX*
 fi
-useradd helm
-passwd helm << EOF
+
+adduser helm << EOF
 ${HELM_USER_PASSWD}
 ${HELM_USER_PASSWD}
 EOF
 
-service ssh restart
-
-tail -f /dev/null
+ssh-keygen -A
+exec /usr/sbin/sshd -D -e "$@"

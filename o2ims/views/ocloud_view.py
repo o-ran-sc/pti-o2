@@ -186,6 +186,7 @@ def deployment_manager_one(deploymentManagerId: str,
 
 
 def _gen_kube_config(dmId: str, kubeconfig: dict) -> dict:
+    shared_folder = config.get_containers_shared_folder()
 
     data = config.gen_k8s_config_dict(
         kubeconfig.pop('cluster_api_endpoint', None),
@@ -204,6 +205,7 @@ def _gen_kube_config(dmId: str, kubeconfig: dict) -> dict:
     current_time = datetime.now().strftime("%Y%m%d%H%M%S")
     tmp_file_name = 'kubeconfig_' + name_key + "_" + current_time
     kube_config_name = 'kubeconfig_' + name_key + '.config'
+    kube_config_path = f'{shared_folder}/{kube_config_name}'
 
     # write down the yaml file of kubectl into tmp folder
     with open('/tmp/' + tmp_file_name, 'w') as file:
@@ -211,12 +213,12 @@ def _gen_kube_config(dmId: str, kubeconfig: dict) -> dict:
 
     # generate the kube config file if not exist or update the file if it
     # changes
-    if not os.path.exists('/configs/' + kube_config_name) or not \
-            filecmp.cmp('/tmp/'+tmp_file_name, '/configs/'+kube_config_name):
+    if not os.path.exists(kube_config_path) or not \
+            filecmp.cmp('/tmp/'+tmp_file_name, kube_config_path):
         shutil.move(os.path.join('/tmp', tmp_file_name),
-                    os.path.join('/configs', kube_config_name))
+                    os.path.join(shared_folder, kube_config_name))
 
-    return '/configs/'+kube_config_name
+    return kube_config_path
 
 
 def subscriptions(uow: unit_of_work.AbstractUnitOfWork, **kwargs):

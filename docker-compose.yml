@@ -32,22 +32,22 @@ services:
       - /bin/sh
       - /tests/o2app-redis-entry.sh
 
-  helm_cli:
-    image: o2imsdms
-    depends_on:
-      - watcher
-    environment:
-      - LOGGING_CONFIG_LEVEL=DEBUG
-      - HELM_USER_PASSWD=St8rlingX*
-    volumes:
-      - ./configs:/configs
-      - ./helm_sdk:/helm_sdk
-      - ./tests:/tests
-    entrypoint:
-      - /bin/sh
-      - /tests/o2app-helmcli-entry.sh
-    ports:
-      - "10022:22"
+  # helm_cli:
+  #   image: o2imsdms
+  #   depends_on:
+  #     - watcher
+  #   environment:
+  #     - LOGGING_CONFIG_LEVEL=DEBUG
+  #     - HELM_USER_PASSWD=St8rlingX*
+  #   volumes:
+  #     - ./share:/share
+  #     - ./helm_sdk:/helm_sdk
+  #     - ./tests:/tests
+  #   entrypoint:
+  #     - /bin/sh
+  #     - /tests/o2app-helmcli-entry.sh
+  #   ports:
+  #     - "10022:22"
 
   api:
     image: o2imsdms
@@ -69,6 +69,7 @@ services:
       - HELM_USER_PASSWD=St8rlingX*
     volumes:
       - ./configs:/configs
+      - ./share:/share
       - ./o2ims:/o2ims
       - ./o2dms:/o2dms
       - ./o2common:/o2common

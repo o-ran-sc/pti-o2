@@ -257,6 +257,10 @@ def get_helm_cli():
     return '/usr/local/bin/helm'
 
 
+def get_containers_shared_folder():
+    return '/share'
+
+
 def get_system_controller_as_respool():
     return True
 
@@ -374,13 +378,13 @@ def get_auth_provider():
 
 
 def get_dms_support_profiles():
-    profiles = config.conf.API.DMS_SUPPORT_PROFILES
-    if profiles is None or profiles == '':
-        profiles = []
-    elif "[" in profiles and "]" in profiles:
-        profiles = profiles.replace("'", "").replace(
-            '"', "").replace('[', "").replace(']', "")
-        profiles = profiles.split(',')
-    if 'native_k8sapi' not in profiles:
-        profiles.append('native_k8sapi')
-    return profiles
+    profiles_list = []
+    profiles_str = config.conf.API.DMS_SUPPORT_PROFILES
+    if profiles_str:
+        profiles_strip = profiles_str.strip(' []')
+        profiles_str = profiles_strip.replace("'", "").replace(
+            '"', "")
+        profiles_list = profiles_str.split(',')
+    if 'native_k8sapi' not in profiles_list:
+        profiles_list.append('native_k8sapi')
+    return profiles_list

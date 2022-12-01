@@ -156,8 +156,10 @@ spec:
           volumeMounts:
             - name: scripts
               mountPath: /opt
-            # - name: configs
-            #   mountPath: /configs
+            {{- if .Values.o2dms.helm_cli_enable }}
+            - name: share
+              mountPath: /share
+            {{- end }}
             - name: applicationconfig
               mountPath: /configs/o2app.conf
               subPath: config.json
@@ -184,13 +186,17 @@ spec:
           volumeMounts:
             - name: scripts
               mountPath: /opt
+            - name: share
+              mountPath: /share
         {{- end }}
       volumes:
         - name: scripts
           configMap:
             name: {{ .Chart.Name }}-scripts-configmap
-        # - name: configs
-        #   emptyDir: {}
+        {{- if .Values.o2dms.helm_cli_enable }}
+        - name: share
+          emptyDir: {}
+        {{- end }}
         - configMap:
             name: {{ .Chart.Name }}-application-config
           name: applicationconfig

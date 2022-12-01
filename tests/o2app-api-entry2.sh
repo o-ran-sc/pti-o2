@@ -23,7 +23,7 @@ then
 cp /tests/my-root-ca-cert.pem /configs/my-root-ca-cert.pem
 cp /tests/my-server-cert.pem /configs/server.crt
 cp /tests/my-server-key.pem /configs/server.key
-gunicorn -b 0.0.0.0:80 o2app.entrypoints.flask_application:app --certfile /configs/server.crt  --keyfile /configs/server.key
+gunicorn -b 0.0.0.0:80 o2app.entrypoints.flask_application:app --certfile /configs/server.crt  --keyfile /configs/server.key --log-level debug
 else
-gunicorn -b 0.0.0.0:80 o2app.entrypoints.flask_application:app
+gunicorn -b 0.0.0.0:80 o2app.entrypoints.flask_application:app --log-level debug
 fi

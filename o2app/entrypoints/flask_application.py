@@ -52,9 +52,11 @@ app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
 # app.config['RESTX_MASK_HEADER'] = 'fields'
 app.config['RESTX_MASK_SWAGGER'] = False
 app.config['ERROR_INCLUDE_MESSAGE'] = False
-api = Api(app, version=FLASK_API_VERSION,
-          title='INF O2 Services API',
-          description='Swagger OpenAPI document for the INF O2 Services',
+api = Api(
+    app, version=FLASK_API_VERSION,
+    catch_all_404s=True,
+    title='INF O2 Services API',
+    description='Swagger OpenAPI document for the INF O2 Services',
           )
 bus = bootstrap.bootstrap()
 

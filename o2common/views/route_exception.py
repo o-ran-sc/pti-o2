@@ -18,6 +18,7 @@ from werkzeug.exceptions import (
     MethodNotAllowed,
     NotFound,
     InternalServerError,
+    HTTPException,
 )
 
 
@@ -60,6 +61,19 @@ class ProblemDetails():
 
 
 def configure_exception(app):
+
+    @app.errorhandler(HTTPException)
+    def default_error_handler(error):
+        '''Default error handler'''
+        status_code = getattr(error, 'code', 500)
+        problem = ProblemDetails(status_code, str(error))
+        return problem.serialize(), status_code
+
+    @app.errorhandler(NotFound)
+    def handle_notfound(error):
+        '''notfound handler'''
+        problem = ProblemDetails(404, str(error))
+        return problem.serialize(), 404
 
     @app.errorhandler(BadRequestException)
     def handle_badrequest_exception(error):

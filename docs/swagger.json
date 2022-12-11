@@ -1,0 +1,1611 @@
+{
+    "swagger": "2.0",
+    "basePath": "/",
+    "paths": {
+        "/o2ims-infrastructureInventory/api_versions": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "get_inventory_version",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "oCloud not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/OcloudDto"
+                        }
+                    }
+                },
+                "operationId": "get_oclouds_list_router",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "oCloud not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/OcloudDto"
+                        }
+                    }
+                },
+                "operationId": "get_oclouds_list_router",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/api_versions": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "get_version_router",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/deploymentManagers": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Filter of the query.",
+                    "name": "filter",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                },
+                {
+                    "default": 1,
+                    "in": "query",
+                    "description": "Page number of the results to fetch. Default: 1",
+                    "name": "nextpage_opaque_marker",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DeploymentManagerListDto"
+                            }
+                        }
+                    }
+                },
+                "operationId": "get_deployment_managers_list_router",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/deploymentManagers/{deploymentManagerID}": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "DMS profile: value supports \"native_k8sapi\"",
+                    "name": "profile",
+                    "type": "string"
+                },
+                {
+                    "in": "path",
+                    "description": "ID of the deployment manager",
+                    "name": "deploymentManagerID",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "Deployment manager not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/DeploymentManagerGetDto"
+                        }
+                    }
+                },
+                "operationId": "Get deployment manager",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/resourcePools": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Filter of the query.",
+                    "name": "filter",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                },
+                {
+                    "default": 1,
+                    "in": "query",
+                    "description": "Page number of the results to fetch. Default: 1",
+                    "name": "nextpage_opaque_marker",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ResourcePoolGetDto"
+                            }
+                        }
+                    }
+                },
+                "operationId": "get_resource_pools_list_router",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "path",
+                    "description": "ID of the resource pool",
+                    "name": "resourcePoolID",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "Resource pool not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/ResourcePoolGetDto"
+                        }
+                    }
+                },
+                "operationId": "Get resource pool",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}/resources": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Filter of the query.",
+                    "name": "filter",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                },
+                {
+                    "default": 1,
+                    "in": "query",
+                    "description": "Page number of the results to fetch. Default: 1",
+                    "name": "nextpage_opaque_marker",
+                    "type": "string"
+                },
+                {
+                    "in": "path",
+                    "description": "ID of the resource pool",
+                    "name": "resourcePoolID",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "Resource pool not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ResourceListDto"
+                            }
+                        }
+                    }
+                },
+                "operationId": "get_resources_list_router",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}/resources/{resourceID}": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "path",
+                    "description": "ID of the resource",
+                    "name": "resourceID",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "in": "path",
+                    "description": "ID of the resource pool",
+                    "name": "resourcePoolID",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "Resource not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/ResourceGetDto2"
+                        }
+                    }
+                },
+                "operationId": "Get resource",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/resourceTypes": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Filter of the query.",
+                    "name": "filter",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                },
+                {
+                    "default": 1,
+                    "in": "query",
+                    "description": "Page number of the results to fetch. Default: 1",
+                    "name": "nextpage_opaque_marker",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ResourceTypeGetDto"
+                            }
+                        }
+                    }
+                },
+                "operationId": "get_resource_types_list_router",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/resourceTypes/{resourceTypeID}": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "path",
+                    "description": "ID of the resource type",
+                    "name": "resourceTypeID",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "Resource type not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/ResourceTypeGetDto"
+                        }
+                    }
+                },
+                "operationId": "Get resource type",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/subscriptions": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SubscriptionGetDto"
+                            }
+                        }
+                    }
+                },
+                "operationId": "List subscriptions",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "description": "Filter of the query.",
+                        "name": "filter",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                        "name": "exclude_default",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                        "name": "exclude_fields",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                        "name": "fields",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                        "name": "all_fields",
+                        "type": "string"
+                    },
+                    {
+                        "default": 1,
+                        "in": "query",
+                        "description": "Page number of the results to fetch. Default: 1",
+                        "name": "nextpage_opaque_marker",
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/SubscriptionGetDto"
+                        }
+                    }
+                },
+                "operationId": "Create a subscription",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/SubscriptionCreateDto"
+                        }
+                    }
+                ],
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureInventory/v1/subscriptions/{subscriptionID}": {
+            "parameters": [
+                {
+                    "in": "path",
+                    "description": "ID of the subscription",
+                    "name": "subscriptionID",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "Subscription not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/SubscriptionGetDto"
+                        }
+                    }
+                },
+                "operationId": "Get subscription by ID",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                        "name": "exclude_default",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                        "name": "exclude_fields",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                        "name": "fields",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                        "name": "all_fields",
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            },
+            "delete": {
+                "responses": {
+                    "404": {
+                        "description": "Subscription not found"
+                    },
+                    "200": {
+                        "description": "Subscription deleted"
+                    }
+                },
+                "operationId": "Delete subscription by ID",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            }
+        },
+        "/o2ims-infrastructureMonitoring/api_versions": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "get_monitoring_version",
+                "tags": [
+                    "O2IMS_InfrastructureMonitoring"
+                ]
+            }
+        },
+        "/o2ims-infrastructureMonitoring/v1/alarmSubscriptions": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AlarmSubscriptionGetDto"
+                            }
+                        }
+                    }
+                },
+                "operationId": "List alarm subscriptions",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "description": "Filter of the query.",
+                        "name": "filter",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                        "name": "exclude_default",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                        "name": "exclude_fields",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                        "name": "fields",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                        "name": "all_fields",
+                        "type": "string"
+                    },
+                    {
+                        "default": 1,
+                        "in": "query",
+                        "description": "Page number of the results to fetch. Default: 1",
+                        "name": "nextpage_opaque_marker",
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "O2IMS_InfrastructureMonitoring"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/AlarmSubscriptionGetDto"
+                        }
+                    }
+                },
+                "operationId": "Create a alarm subscription",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/AlarmSubscriptionCreateDto"
+                        }
+                    }
+                ],
+                "tags": [
+                    "O2IMS_InfrastructureMonitoring"
+                ]
+            }
+        },
+        "/o2ims-infrastructureMonitoring/v1/alarmSubscriptions/{alarmSubscriptionID}": {
+            "parameters": [
+                {
+                    "in": "path",
+                    "description": "ID of the Alarm Subscription",
+                    "name": "alarmSubscriptionID",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "Alarm Subscription not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/AlarmSubscriptionGetDto"
+                        }
+                    }
+                },
+                "operationId": "Get Alarm Subscription by ID",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                        "name": "exclude_default",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                        "name": "exclude_fields",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                        "name": "fields",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                        "name": "all_fields",
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "O2IMS_InfrastructureMonitoring"
+                ]
+            },
+            "delete": {
+                "responses": {
+                    "404": {
+                        "description": "Alarm Subscription not found"
+                    },
+                    "200": {
+                        "description": "Subscription deleted"
+                    }
+                },
+                "operationId": "Delete subscription by ID",
+                "tags": [
+                    "O2IMS_InfrastructureMonitoring"
+                ]
+            }
+        },
+        "/o2ims-infrastructureMonitoring/v1/alarms": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Filter of the query.",
+                    "name": "filter",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                },
+                {
+                    "default": 1,
+                    "in": "query",
+                    "description": "Page number of the results to fetch. Default: 1",
+                    "name": "nextpage_opaque_marker",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AlarmGetDto"
+                            }
+                        }
+                    }
+                },
+                "operationId": "get_alarm_list_router",
+                "tags": [
+                    "O2IMS_InfrastructureMonitoring"
+                ]
+            }
+        },
+        "/o2ims-infrastructureMonitoring/v1/alarms/{alarmEventRecordId}": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "description": "Exclude showing all default fields, Set \"true\" to enable.",
+                    "name": "exclude_default",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\".",
+                    "name": "exclude_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\".",
+                    "name": "fields",
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "description": "Set any value for show all fields. This value will cover \"fields\" and \"all_fields\".",
+                    "name": "all_fields",
+                    "type": "string"
+                },
+                {
+                    "in": "path",
+                    "description": "ID of the alarm event record",
+                    "name": "alarmEventRecordId",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "Alarm Event Record not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/AlarmGetDto"
+                        }
+                    }
+                },
+                "operationId": "Get AlarmEventRecord",
+                "tags": [
+                    "O2IMS_InfrastructureMonitoring"
+                ]
+            }
+        },
+        "/o2ims-infrastructureMonitoring/v1/api_versions": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "get_version_router",
+                "tags": [
+                    "O2IMS_InfrastructureMonitoring"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "INF O2 Services API",
+        "version": "1.0.0",
+        "description": "Swagger OpenAPI document for the INF O2 Services"
+    },
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "O2IMS_Inventory",
+            "description": "IMS Inventory related operations."
+        },
+        {
+            "name": "O2IMS_InfrastructureMonitoring",
+            "description": "O2 IMS Monitoring related operations."
+        }
+    ],
+    "definitions": {
+        "OcloudDto": {
+            "required": [
+                "oCloudId"
+            ],
+            "properties": {
+                "oCloudId": {
+                    "type": "string"
+                },
+                "globalCloudId": {
+                    "type": "string"
+                },
+                "globalcloudId": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "serviceUri": {
+                    "type": "string"
+                },
+                "extensions": {
+                    "type": "string"
+                }
+            },
+            "x-mask": "{oCloudId,globalCloudId,globalcloudId,name,description,serviceUri}",
+            "type": "object"
+        },
+        "ResourceTypeGetDto": {
+            "required": [
+                "resourceTypeId"
+            ],
+            "properties": {
+                "resourceTypeId": {
+                    "type": "string",
+                    "description": "Resource type ID"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "vendor": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "alarmDictionary": {
+                    "$ref": "#/definitions/AlarmDictionaryDto"
+                },
+                "extensions": {
+                    "type": "string"
+                }
+            },
+            "x-mask": "{resourceTypeId,name,description,model,vendor,version}",
+            "type": "object"
+        },
+        "AlarmDictionaryDto": {
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "alarmDictionaryVersion": {
+                    "type": "string"
+                },
+                "alarmDictionarySchemaVersion": {
+                    "type": "string"
+                },
+                "entityType": {
+                    "type": "string"
+                },
+                "vendor": {
+                    "type": "string"
+                },
+                "managementInterfaceId": {
+                    "type": "string"
+                },
+                "pkNotificationField": {
+                    "type": "string"
+                },
+                "alarmDefinition": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AlarmDefinitionDto"
+                    }
+                }
+            },
+            "type": "object"
+        },
+        "AlarmDefinitionDto": {
+            "properties": {
+                "alarmDefinitionId": {
+                    "type": "string"
+                },
+                "alarmName": {
+                    "type": "string"
+                },
+                "alarmLastChange": {
+                    "type": "string"
+                },
+                "alarmChangeType": {
+                    "type": "string"
+                },
+                "alarmDescription": {
+                    "type": "string"
+                },
+                "proposedRepairActions": {
+                    "type": "string"
+                },
+                "clearingType": {
+                    "type": "string"
+                },
+                "managementInterfaceId": {
+                    "type": "string"
+                },
+                "pkNotificationField": {
+                    "type": "string"
+                },
+                "alarmAdditionalFields": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ResourcePoolGetDto": {
+            "required": [
+                "resourcePoolId"
+            ],
+            "properties": {
+                "resourcePoolId": {
+                    "type": "string",
+                    "description": "Resource pool ID"
+                },
+                "globalLocationId": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "oCloudId": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "extensions": {
+                    "type": "string"
+                }
+            },
+            "x-mask": "{resourcePoolId,oCloudId,globalLocationId,name,description}",
+            "type": "object"
+        },
+        "ResourceListDto": {
+            "required": [
+                "resourceId"
+            ],
+            "properties": {
+                "resourceId": {
+                    "type": "string",
+                    "description": "Resource ID"
+                },
+                "resourceTypeId": {
+                    "type": "string"
+                },
+                "resourcePoolId": {
+                    "type": "string"
+                },
+                "globalAssetId": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "extensions": {
+                    "type": "object"
+                }
+            },
+            "x-mask": "{resourceId,resourcePoolId,resourceTypeId,description,parentId}",
+            "type": "object"
+        },
+        "ResourceGetDto2": {
+            "required": [
+                "resourceId"
+            ],
+            "properties": {
+                "resourceId": {
+                    "type": "string",
+                    "description": "Resource ID"
+                },
+                "resourceTypeId": {
+                    "type": "string"
+                },
+                "resourcePoolId": {
+                    "type": "string"
+                },
+                "globalAssetId": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "extensions": {
+                    "type": "object"
+                },
+                "elements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ResourceGetDto1"
+                    }
+                }
+            },
+            "x-mask": "{resourceId,resourcePoolId,resourceTypeId,description,parentId}",
+            "type": "object"
+        },
+        "ResourceGetDto1": {
+            "required": [
+                "resourceId"
+            ],
+            "properties": {
+                "resourceId": {
+                    "type": "string",
+                    "description": "Resource ID"
+                },
+                "resourceTypeId": {
+                    "type": "string"
+                },
+                "resourcePoolId": {
+                    "type": "string"
+                },
+                "globalAssetId": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "extensions": {
+                    "type": "object"
+                },
+                "elements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ResourceGetDto0"
+                    }
+                }
+            },
+            "x-mask": "{resourceId,resourcePoolId,resourceTypeId,description,parentId}",
+            "type": "object"
+        },
+        "ResourceGetDto0": {
+            "required": [
+                "resourceId"
+            ],
+            "properties": {
+                "resourceId": {
+                    "type": "string",
+                    "description": "Resource ID"
+                },
+                "resourceTypeId": {
+                    "type": "string"
+                },
+                "resourcePoolId": {
+                    "type": "string"
+                },
+                "globalAssetId": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "extensions": {
+                    "type": "object"
+                }
+            },
+            "x-mask": "{resourceId,resourcePoolId,resourceTypeId,description,parentId}",
+            "type": "object"
+        },
+        "DeploymentManagerListDto": {
+            "required": [
+                "deploymentManagerId"
+            ],
+            "properties": {
+                "deploymentManagerId": {
+                    "type": "string",
+                    "description": "Deployment manager ID"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "oCloudId": {
+                    "type": "string"
+                },
+                "serviceUri": {
+                    "type": "string"
+                },
+                "profileSupportList": {
+                    "type": "array",
+                    "description": "Profile support list, use default for the return                      endpoint",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "extensions": {
+                    "type": "string"
+                }
+            },
+            "x-mask": "{deploymentManagerId,name,description,oCloudId,serviceUri,profileSupportList}",
+            "type": "object"
+        },
+        "DeploymentManagerGetDto": {
+            "required": [
+                "deploymentManagerId"
+            ],
+            "properties": {
+                "deploymentManagerId": {
+                    "type": "string",
+                    "description": "Deployment manager ID"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "oCloudId": {
+                    "type": "string"
+                },
+                "serviceUri": {
+                    "type": "string"
+                },
+                "extensions": {
+                    "$ref": "#/definitions/DeploymentManagerExtensions"
+                }
+            },
+            "x-mask": "{deploymentManagerId,name,description,oCloudId,serviceUri,extensions,profileName,profileData}",
+            "type": "object"
+        },
+        "DeploymentManagerExtensions": {
+            "properties": {
+                "profileName": {
+                    "type": "string"
+                },
+                "profileData": {
+                    "$ref": "#/definitions/DeploymentManagerGetDtoProfile"
+                }
+            },
+            "type": "object"
+        },
+        "DeploymentManagerGetDtoProfile": {
+            "properties": {
+                "cluster_api_endpoint": {
+                    "type": "string"
+                },
+                "cluster_ca_cert": {
+                    "type": "string"
+                },
+                "admin_user": {
+                    "type": "string"
+                },
+                "admin_client_cert": {
+                    "type": "string"
+                },
+                "admin_client_key": {
+                    "type": "string"
+                },
+                "helmcli_host_with_port": {
+                    "type": "string"
+                },
+                "helmcli_username": {
+                    "type": "string"
+                },
+                "helmcli_password": {
+                    "type": "string"
+                },
+                "helmcli_kubeconfig": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SubscriptionCreateDto": {
+            "required": [
+                "callback"
+            ],
+            "properties": {
+                "callback": {
+                    "type": "string",
+                    "description": "Subscription callback address"
+                },
+                "consumerSubscriptionId": {
+                    "type": "string"
+                },
+                "filter": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SubscriptionGetDto": {
+            "required": [
+                "subscriptionId"
+            ],
+            "properties": {
+                "subscriptionId": {
+                    "type": "string",
+                    "description": "Subscription ID"
+                },
+                "callback": {
+                    "type": "string"
+                },
+                "consumerSubscriptionId": {
+                    "type": "string"
+                },
+                "filter": {
+                    "type": "string"
+                }
+            },
+            "x-mask": "{subscriptionId,callback}",
+            "type": "object"
+        },
+        "AlarmGetDto": {
+            "required": [
+                "alarmEventRecordId"
+            ],
+            "properties": {
+                "alarmEventRecordId": {
+                    "type": "string",
+                    "description": "Alarm Event Record ID"
+                },
+                "resourceTypeId": {
+                    "type": "string"
+                },
+                "resourceTypeID": {
+                    "type": "string"
+                },
+                "resourceId": {
+                    "type": "string"
+                },
+                "resourceID": {
+                    "type": "string"
+                },
+                "alarmDefinitionId": {
+                    "type": "string"
+                },
+                "alarmDefinitionID": {
+                    "type": "string"
+                },
+                "probableCauseId": {
+                    "type": "string"
+                },
+                "probableCauseID": {
+                    "type": "string"
+                },
+                "alarmRaisedTime": {
+                    "type": "string"
+                },
+                "alarmChangedTime": {
+                    "type": "string"
+                },
+                "alarmAcknowledgeTime": {
+                    "type": "string"
+                },
+                "alarmAcknowledged": {
+                    "type": "boolean"
+                },
+                "perceivedSeverity": {
+                    "type": "string"
+                },
+                "extensions": {
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "AlarmSubscriptionCreateDto": {
+            "required": [
+                "callback"
+            ],
+            "properties": {
+                "callback": {
+                    "type": "string",
+                    "description": "Alarm Subscription callback address"
+                },
+                "consumerSubscriptionId": {
+                    "type": "string"
+                },
+                "filter": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "AlarmSubscriptionGetDto": {
+            "required": [
+                "alarmSubscriptionId"
+            ],
+            "properties": {
+                "alarmSubscriptionId": {
+                    "type": "string",
+                    "description": "Alarm Subscription ID"
+                },
+                "callback": {
+                    "type": "string"
+                },
+                "consumerSubscriptionId": {
+                    "type": "string"
+                },
+                "filter": {
+                    "type": "string"
+                }
+            },
+            "x-mask": "{alarmSubscriptionId,callback}",
+            "type": "object"
+        }
+    },
+    "responses": {
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        },
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        },
+        "HTTPException": {
+            "description": "Default error handler"
+        },
+        "NotFound": {
+            "description": "notfound handler"
+        },
+        "BadRequestException": {
+            "description": "Return a custom message and 400 status code"
+        },
+        "NotFoundException": {
+            "description": "Return a custom message and 404 status code"
+        },
+        "MethodNotAllowed": {
+            "description": "Return a custom message and 405 status code"
+        },
+        "InternalServerError": {
+            "description": "Return a custom message and 500 status code"
+        },
+        "Exception": {
+            "description": "Return a custom message and 500 status code"
+        }
+    }
+}

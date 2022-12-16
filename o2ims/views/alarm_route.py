@@ -36,6 +36,7 @@ def configure_api_route():
 # ----------  API versions ---------- #
 @api_monitoring_v1.route("/v1/api_versions")
 class VersionRouter(Resource):
+    @api_monitoring_v1.doc('Get Monitoring API version')
     def get(self):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
@@ -82,6 +83,7 @@ class AlarmListRouter(Resource):
 
     model = AlarmDTO.alarm_event_record_get
 
+    @api_monitoring_v1.doc('Get Alarm Event Record List')
     @api_monitoring_v1.marshal_list_with(model)
     def get(self):
         parser = reqparse.RequestParser()
@@ -125,7 +127,7 @@ class AlarmGetRouter(Resource):
 
     model = AlarmDTO.alarm_event_record_get
 
-    @api_monitoring_v1.doc('Get AlarmEventRecord')
+    @api_monitoring_v1.doc('Get Alarm Event Record Information')
     @api_monitoring_v1.marshal_with(model)
     def get(self, alarmEventRecordId):
         result = alarm_view.alarm_event_record_one(alarmEventRecordId, bus.uow)
@@ -142,7 +144,7 @@ class SubscriptionsListRouter(Resource):
     model = SubscriptionDTO.subscription_get
     expect = SubscriptionDTO.subscription_create
 
-    @api_monitoring_v1.doc('List alarm subscriptions')
+    @api_monitoring_v1.doc('Get Alarm Subscription List')
     @api_monitoring_v1.marshal_list_with(model)
     @api_monitoring_v1.param(
         PAGE_PARAM,
@@ -186,7 +188,7 @@ class SubscriptionsListRouter(Resource):
         ret = alarm_view.subscriptions(bus.uow, **kwargs)
         return link_header(request.full_path, ret)
 
-    @api_monitoring_v1.doc('Create a alarm subscription')
+    @api_monitoring_v1.doc('Create a Alarm Subscription')
     @api_monitoring_v1.expect(expect)
     @api_monitoring_v1.marshal_with(
         model, code=201,
@@ -208,7 +210,7 @@ class SubscriptionGetDelRouter(Resource):
 
     model = SubscriptionDTO.subscription_get
 
-    @api_monitoring_v1.doc('Get Alarm Subscription by ID')
+    @api_monitoring_v1.doc('Get Alarm Subscription Information')
     @api_monitoring_v1.marshal_with(model)
     @api_monitoring_v1.param(
         'all_fields',
@@ -239,7 +241,7 @@ class SubscriptionGetDelRouter(Resource):
         raise NotFoundException(
             "Subscription {} doesn't exist".format(alarmSubscriptionID))
 
-    @api_monitoring_v1.doc('Delete subscription by ID')
+    @api_monitoring_v1.doc('Delete an Alarm Subscription')
     @api_monitoring_v1.response(200, 'Subscription deleted')
     def delete(self, alarmSubscriptionID):
         result = alarm_view.subscription_delete(alarmSubscriptionID, bus.uow)

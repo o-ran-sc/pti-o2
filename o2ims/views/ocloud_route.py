@@ -38,6 +38,7 @@ def configure_api_route():
 # ----------  API versions ---------- #
 @api_ims_inventory_v1.route("/v1/api_versions")
 class VersionRouter(Resource):
+    @api_ims_inventory_v1.doc('Get Inventory API version')
     def get(self):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
@@ -79,6 +80,7 @@ class OcloudsListRouter(Resource):
 
     ocloud_get = OcloudDTO.ocloud
 
+    @api_ims_inventory_v1.doc('Get Ocloud Information')
     @api_ims_inventory_v1.marshal_with(ocloud_get)
     def get(self):
         res = ocloud_view.oclouds(bus.uow)
@@ -121,6 +123,7 @@ class ResourceTypesListRouter(Resource):
 
     model = ResourceTypeDTO.resource_type_get
 
+    @api_ims_inventory_v1.doc('Get Resource Type List')
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self):
         parser = reqparse.RequestParser()
@@ -163,7 +166,7 @@ class ResourceTypeGetRouter(Resource):
 
     model = ResourceTypeDTO.resource_type_get
 
-    @api_ims_inventory_v1.doc('Get resource type')
+    @api_ims_inventory_v1.doc('Get Resource Type Information')
     @api_ims_inventory_v1.marshal_with(model)
     def get(self, resourceTypeID):
         result = ocloud_view.resource_type_one(resourceTypeID, bus.uow)
@@ -207,6 +210,7 @@ class ResourcePoolsListRouter(Resource):
 
     model = ResourcePoolDTO.resource_pool_get
 
+    @api_ims_inventory_v1.doc('Get Resource Pool List')
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self):
         parser = reqparse.RequestParser()
@@ -249,7 +253,7 @@ class ResourcePoolGetRouter(Resource):
 
     model = ResourcePoolDTO.resource_pool_get
 
-    @api_ims_inventory_v1.doc('Get resource pool')
+    @api_ims_inventory_v1.doc('Get Resource Pool Information')
     @api_ims_inventory_v1.marshal_with(model)
     def get(self, resourcePoolID):
         result = ocloud_view.resource_pool_one(resourcePoolID, bus.uow)
@@ -300,6 +304,7 @@ class ResourcesListRouter(Resource):
 
     model = ResourceDTO.resource_list
 
+    @api_ims_inventory_v1.doc('Get Resource List')
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self, resourcePoolID):
         parser = reqparse.RequestParser()
@@ -351,7 +356,7 @@ class ResourceGetRouter(Resource):
     # model = dto.get_resource_get()
     model = ResourceDTO.recursive_resource_mapping()
 
-    @api_ims_inventory_v1.doc('Get resource')
+    @api_ims_inventory_v1.doc('Get Resource Information')
     @api_ims_inventory_v1.marshal_with(model)
     def get(self, resourcePoolID, resourceID):
         result = ocloud_view.resource_one(resourceID, bus.uow, resourcePoolID)
@@ -395,6 +400,7 @@ class DeploymentManagersListRouter(Resource):
 
     model = DeploymentManagerDTO.deployment_manager_list
 
+    @api_ims_inventory_v1.doc('Get Deployment Manager List')
     @api_ims_inventory_v1.marshal_list_with(model)
     def get(self):
         parser = reqparse.RequestParser()
@@ -441,7 +447,7 @@ class DeploymentManagerGetRouter(Resource):
 
     model = DeploymentManagerDTO.deployment_manager_get
 
-    @api_ims_inventory_v1.doc('Get deployment manager')
+    @api_ims_inventory_v1.doc('Get Deployment Manager Information')
     @api_ims_inventory_v1.marshal_with(model)
     def get(self, deploymentManagerID):
         parser = reqparse.RequestParser()
@@ -470,7 +476,7 @@ class SubscriptionsListRouter(Resource):
     model = SubscriptionDTO.subscription_get
     expect = SubscriptionDTO.subscription_create
 
-    @api_ims_inventory_v1.doc('List subscriptions')
+    @api_ims_inventory_v1.doc('Get Subscription List')
     @api_ims_inventory_v1.marshal_list_with(model)
     @api_ims_inventory_v1.param(
         PAGE_PARAM,
@@ -514,7 +520,7 @@ class SubscriptionsListRouter(Resource):
         ret = ocloud_view.subscriptions(bus.uow, **kwargs)
         return link_header(request.full_path, ret)
 
-    @api_ims_inventory_v1.doc('Create a subscription')
+    @api_ims_inventory_v1.doc('Create a Subscription')
     @api_ims_inventory_v1.expect(expect)
     @api_ims_inventory_v1.marshal_with(
         model, code=201,
@@ -536,7 +542,7 @@ class SubscriptionGetDelRouter(Resource):
 
     model = SubscriptionDTO.subscription_get
 
-    @api_ims_inventory_v1.doc('Get subscription by ID')
+    @api_ims_inventory_v1.doc('Get Subscription Information')
     @api_ims_inventory_v1.marshal_with(model)
     @api_ims_inventory_v1.param(
         'all_fields',
@@ -567,7 +573,7 @@ class SubscriptionGetDelRouter(Resource):
         raise NotFoundException("Subscription {} doesn't exist".format(
             subscriptionID))
 
-    @api_ims_inventory_v1.doc('Delete subscription by ID')
+    @api_ims_inventory_v1.doc('Delete a Subscription')
     @api_ims_inventory_v1.response(200, 'Subscription deleted')
     def delete(self, subscriptionID):
         result = ocloud_view.subscription_delete(subscriptionID, bus.uow)

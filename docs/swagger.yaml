@@ -19,7 +19,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: get_inventory_version
+      operationId: Get Inventory Version
       parameters: []
       responses:
         "200":
@@ -28,7 +28,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: get_oclouds_list_router
+      operationId: Get Ocloud Information
       parameters:
       - name: exclude_default
         in: query
@@ -61,7 +61,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: get_oclouds_list_router
+      operationId: Get Ocloud Information
       parameters:
       - name: exclude_default
         in: query
@@ -94,7 +94,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: get_version_router
+      operationId: Get Inventory API version
       parameters: []
       responses:
         "200":
@@ -103,7 +103,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: get_deployment_managers_list_router
+      operationId: Get Deployment Manager List
       parameters:
       - name: filter
         in: query
@@ -147,7 +147,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: Get deployment manager
+      operationId: Get Deployment Manager Information
       parameters:
       - name: exclude_default
         in: query
@@ -190,7 +190,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: get_resource_pools_list_router
+      operationId: Get Resource Pool List
       parameters:
       - name: filter
         in: query
@@ -234,7 +234,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: Get resource pool
+      operationId: Get Resource Pool Information
       parameters:
       - name: exclude_default
         in: query
@@ -272,7 +272,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: get_resources_list_router
+      operationId: Get Resource List
       parameters:
       - name: filter
         in: query
@@ -323,7 +323,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: Get resource
+      operationId: Get Resource Information
       parameters:
       - name: exclude_default
         in: query
@@ -366,7 +366,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: get_resource_types_list_router
+      operationId: Get Resource Type List
       parameters:
       - name: filter
         in: query
@@ -410,7 +410,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: Get resource type
+      operationId: Get Resource Type Information
       parameters:
       - name: exclude_default
         in: query
@@ -448,7 +448,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: List subscriptions
+      operationId: Get Subscription List
       parameters:
       - name: filter
         in: query
@@ -491,7 +491,7 @@ paths:
     post:
       tags:
       - O2IMS_Inventory
-      operationId: Create a subscription
+      operationId: Create a Subscription
       parameters:
       - in: body
         name: payload
@@ -507,7 +507,7 @@ paths:
     get:
       tags:
       - O2IMS_Inventory
-      operationId: Get subscription by ID
+      operationId: Get Subscription Information
       parameters:
       - name: subscriptionID
         in: path
@@ -544,7 +544,7 @@ paths:
     delete:
       tags:
       - O2IMS_Inventory
-      operationId: Delete subscription by ID
+      operationId: Delete a Subscription
       parameters:
       - name: subscriptionID
         in: path
@@ -560,7 +560,7 @@ paths:
     get:
       tags:
       - O2IMS_InfrastructureMonitoring
-      operationId: get_monitoring_version
+      operationId: Get Monitoring Version
       parameters: []
       responses:
         "200":
@@ -569,7 +569,7 @@ paths:
     get:
       tags:
       - O2IMS_InfrastructureMonitoring
-      operationId: List alarm subscriptions
+      operationId: Get Alarm Subscription List
       parameters:
       - name: filter
         in: query
@@ -612,7 +612,7 @@ paths:
     post:
       tags:
       - O2IMS_InfrastructureMonitoring
-      operationId: Create a alarm subscription
+      operationId: Create a Alarm Subscription
       parameters:
       - in: body
         name: payload
@@ -628,7 +628,7 @@ paths:
     get:
       tags:
       - O2IMS_InfrastructureMonitoring
-      operationId: Get Alarm Subscription by ID
+      operationId: Get Alarm Subscription Information
       parameters:
       - name: alarmSubscriptionID
         in: path
@@ -665,7 +665,7 @@ paths:
     delete:
       tags:
       - O2IMS_InfrastructureMonitoring
-      operationId: Delete subscription by ID
+      operationId: Delete an Alarm Subscription
       parameters:
       - name: alarmSubscriptionID
         in: path
@@ -681,7 +681,7 @@ paths:
     get:
       tags:
       - O2IMS_InfrastructureMonitoring
-      operationId: get_alarm_list_router
+      operationId: Get Alarm Event Record List
       parameters:
       - name: filter
         in: query
@@ -725,7 +725,7 @@ paths:
     get:
       tags:
       - O2IMS_InfrastructureMonitoring
-      operationId: Get AlarmEventRecord
+      operationId: Get Alarm Event Record Information
       parameters:
       - name: exclude_default
         in: query
@@ -763,7 +763,7 @@ paths:
     get:
       tags:
       - O2IMS_InfrastructureMonitoring
-      operationId: get_version_router
+      operationId: Get Monitoring API version
       parameters: []
       responses:
         "200":

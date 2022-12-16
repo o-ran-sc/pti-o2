@@ -8,44 +8,48 @@ INF O2 Service User Guide
 This guide will introduce the process that make INF O2 interface work
 with SMO.
 
--  Assume you have an O2 service with INF platform environment
+-  Assume you have an O2 service with INF platform environment, and you
+   have the token of the O2 service.
 
    .. code:: bash
 
       export OAM_IP=<INF_OAM_IP>
+      export SMO_TOKEN_DATA=<TOKEN of O2 Service>
 
 -  Discover INF platform inventory
 
-   -  INF platform auto discovery
+   -  INF platform auto-discovery
 
       After you installed the INF O2 service, it will automatically
       discover the INF through the parameters that you give from the
       “*o2service-override.yaml*”
 
-      Below command can get the INF platform information as O-Cloud
+      The below command can get the INF platform information as O-Cloud
 
       .. code:: shell
 
-         curl -X 'GET' \
-           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/" \
-           -H 'accept: application/json'
+         curl -k -X 'GET' \
+           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/" \
+           -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
 
    -  Resource pool
 
-      One INF platform have one resource pool, all the resources that
-      belong to this INF platform will be organized into this resource
-      pool
+      The INF platform is a standalone environment, it has one resource
+      pool. If the INF platform is a distributed cloud environment, the
+      central cloud will be one resource pool, and each of the sub-cloud
+      will be a resource pool. All the resources that belong to the
+      cloud will be organized into the resource pool.
 
       Get the resource pool information through this interface
 
       .. code:: shell
 
-         curl -X 'GET' \
-           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/resourcePools" \
-           -H 'accept: application/json'
+         curl -k -X 'GET' \
+           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools" \
+           -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
 
-         # export resource pool id
-         export resourcePoolId=`curl -X 'GET'   "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/resourcePools"   -H 'accept: application/json' -H 'X-Fields: resourcePoolId' 2>/dev/null | jq .[].resourcePoolId | xargs echo`
+         # export the first resource pool id
+         export resourcePoolId=`curl -k -X 'GET' "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools"   -H 'accept: application/json' -H "Authorization: Bearer $SMO_TOKEN_DATA" 2>/dev/null | jq .[0].resourcePoolId | xargs echo`
 
          echo ${resourcePoolId} # check the exported resource pool id
 
@@ -58,218 +62,136 @@ with SMO.
 
       .. code:: shell
 
-         curl -X 'GET' \
-           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/resourceTypes" \
-           -H 'accept: application/json'
+         curl -k -X 'GET' \
+           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourceTypes" \
+           -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
 
    -  Resource
 
       Get the list of all resources, the value of *resourcePoolId* from
-      the result of resource pool interface
+      the result of the resource pool interface
 
       .. code:: shell
 
-         curl -X 'GET' \
-           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources" \
-           -H 'accept: application/json'
+         curl -k -X 'GET' \
+         "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources" \
+         -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
 
-      Get detail of one resource, need to export one specific resource
-      id that wants to check
+      To get the detail of one resource, need to export one specific
+      resource id that wants to check
 
       .. code:: shell
 
-         curl -X 'GET' \
-           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources/${resourceId}" \
-           -H 'accept: application/json'
+         # export the first resource id in the resource pool
+         export resourceId=`curl -k -X 'GET' "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources"   -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" 2>/dev/null | jq .[0].resourceId | xargs echo`
+
+         echo ${resourceId} # check the exported resource id
+
+         # Get the detail of one specific resource
+         curl -k -X 'GET' \
+         "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources/${resourceId}" \
+         -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
 
    -  Deployment manager services endpoint
 
-      The Deployment Manager Service (DMS) that related to this IMS
-      information you can use below API to check
+      The Deployment Manager Service (DMS) related to this IMS
+      information you can use the below API to check
 
       .. code:: shell
 
-         curl -X 'GET' \
-           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" \
-           -H 'accept: application/json'
+         curl -k -X 'GET' \
+           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers" \
+           -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
 
 -  Provisioning INF platform with SMO endpoint configuration
 
-   Assume you have an SMO, then configure INF platform with SMO endpoint
-   address. This provisioning of INF O2 service will make a request from
-   INF O2 service to SMO, that make SMO know the O2 service is working.
+   Assume you have an SMO, and prepare the configuration of the INF
+   platform with the SMO endpoint address before the O2 service
+   installation. This provisioning of the INF O2 service will make a
+   request from the INF O2 service to SMO while the O2 service
+   installing, which make SMO know the O2 service is working.
 
-   It needs SMO to have an API like
-   “*http(s)://SMO_HOST:SMO_PORT/registration*”, which can accept JSON
-   format data.
+   After you installed the INF O2 service, it will automatically
+   register the SMO through the parameters that you give from the
+   “*o2app.conf*”
 
    .. code:: bash
 
-      curl -X 'POST' \
-        'http://'${OAM_IP}':30205/provision/v1/smo-endpoint' \
-        -H 'accept: application/json' \
-        -H 'Content-Type: application/json' \
-        -d '{
-        "endpoint": "http://<SMO_HOST>:<SMO_PORT>/registration"
-      }'
+      export OCLOUD_GLOBAL_ID=<Ocloud global UUID defined by SMO>
+      export SMO_REGISTER_URL=<SMO Register URL for O2 service>
+
+      cat <<EOF > o2app.conf
+      [DEFAULT]
+
+      ocloud_global_id = ${OCLOUD_GLOBAL_ID}
+      smo_register_url = ${SMO_REGISTER_URL}
+      ...
 
 -  Subscribe to the INF platform resource change notification
 
-   Assume you have an SMO, and the SMO have an API can be receive
+   Assume you have an SMO, and the SMO has an API that can receive
    callback request
 
-   -  Create subscription in the INF O2 IMS
+   -  Create a subscription to the INF O2 IMS
 
       .. code:: bash
 
-         curl -X 'POST' \
-           "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/subscriptions" \
+         export SMO_SUBSCRIBE_CALLBACK=<The Callback URL for SMO Subscribe resource>
+         export SMO_CONSUMER_SUBSCRIPTION_ID=<The Subscription ID of the SMO Consumer>
+
+         curl -k -X 'POST' \
+           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/subscriptions" \
            -H 'accept: application/json' \
            -H 'Content-Type: application/json' \
+           -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
            -d '{
-           "callback": "http://SMO/address/to/callback",
-           "consumerSubscriptionId": "<ConsumerIdHelpSmoToIdentify>",
-           "filter": "<ResourceTypeNameSplitByComma,EmptyToGetAll>"
+           "callback": "'${SMO_SUBSCRIBE_CALLBACK}'",
+           "consumerSubscriptionId": "'${SMO_CONSUMER_SUBSCRIPTION_ID}'",
+           "filter": ""
          }'
 
    -  Handle resource change notification
 
-      When the SMO callback API get the notification that the resource
+      When the SMO callback API gets the notification that the resource
       of INF platform changing, use the URL to get the latest resource
       information to update its database
 
--  Orchestrate CNF in helm chart
+-  Subscribe to the INF platform alarm change notification
 
-   On this sample, we prepare a firewall chart to test the
-   orchestration.
+   Assume you have an SMO, and the SMO has an API that can receive
+   callback request
 
-   We need to do some preparation to make the helm repo work and include
-   our firewall chart inside of the repository.
-
-      Get the DMS Id in the INF O2 service, and set it into bash
-      environment
+   -  Create an alarm subscription to the INF O2 IMS
 
       .. code:: bash
 
-         curl --location --request GET "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers"
+         export SMO_SUBSCRIBE_CALLBACK=<The Callback URL for SMO Subscribe alarm>
+         export SMO_CONSUMER_SUBSCRIPTION_ID=<The Subscription ID of the SMO Consumer>
 
-         export dmsId=`curl --location --request GET "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" 2>/dev/null | jq .[].deploymentManagerId | xargs echo`
-
-         echo ${dmsId} # check the exported DMS id
-
-      Using helm to deploy a chartmuseum to the INF platform
-
-      .. code:: bash
-
-         helm repo add chartmuseum https://chartmuseum.github.io/charts
-         helm repo update
-         helm pull chartmuseum/chartmuseum # download chartmuseum-3.4.0.tgz to local
-         tar zxvf chartmuseum-3.4.0.tgz
-         cat <<EOF>chartmuseum-override.yaml
-         env:
-           open:
-             DISABLE_API: false
-         service:
-           type: NodePort
-           nodePort: 30330
-         EOF
-
-         helm install chartmuseumrepo chartmuseum/chartmuseum -f chartmuseum-override.yaml
-         kubectl get pods
-         Kubectl get services
-
-      Update the helm repo and add the chartmusem into the repository
-
-      .. code:: bash
-
-         helm repo add o2imsrepo http://${NODE_IP}:30330
-         helm repo update
-
-      Download the firewall chart and push it into the repository
-
-      .. code:: bash
-
-         git clone https://github.com/biny993/firewall-host-netdevice.git
-         tar -zcvf firewall-host-netdevice-1.0.0.tgz firewall-host-netdevice/
-         helm plugin install https://github.com/chartmuseum/helm-push.git
-         helm cm-push firewall-host-netdevice-1.0.0.tgz o2imsrepo
-         helm repo update
-         helm search repo firewall
-
-      Setup host net device over INF node
-
-      .. code:: bash
-
-         ssh sysadmin@<INF OAM IP>
-         sudo ip link add name veth11 type veth peer name veth12
-         sudo ip link add name veth21 type veth peer name veth22
-         sudo ip link |grep veth
-         exit
-
-   -  Create NfDeploymentDescriptor on the INF O2 DMS
-
-      .. code:: bash
-
-         curl --location --request POST "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor" \
-         --header 'Content-Type: application/json' \
-         --data-raw '{
-           "name": "cfwdesc1",
-           "description": "demo nf deployment descriptor",
-           "artifactRepoUrl": "http://'${NODE_IP}':30330",
-           "artifactName": "firewall-host-netdevice",
-           "inputParams": 
-           "{\n  \"image\": {\n    \"repository\": \"ubuntu\",\n    \"tag\": 18.04,\n    \"pullPolicy\": \"IfNotPresent\"\n  },\n  \"resources\": {\n    \"cpu\": 2,\n    \"memory\": \"2Gi\",\n    \"hugepage\": \"0Mi\",\n    \"unprotectedNetPortVpg\": \"veth11\",\n    \"unprotectedNetPortVfw\": \"veth12\",\n    \"unprotectedNetCidr\": \"10.10.1.0/24\",\n    \"unprotectedNetGwIp\": \"10.10.1.1\",\n    \"protectedNetPortVfw\": \"veth21\",\n    \"protectedNetPortVsn\": \"veth22\",\n    \"protectedNetCidr\": \"10.10.2.0/24\",\n    \"protectedNetGwIp\": \"10.10.2.1\",\n    \"vfwPrivateIp0\": \"10.10.1.1\",\n    \"vfwPrivateIp1\": \"10.10.2.1\",\n    \"vpgPrivateIp0\": \"10.10.1.2\",\n    \"vsnPrivateIp0\": \"10.10.2.2\"\n  }\n}",
-           "outputParams": "{\"output1\": 100}"
+         curl -k -X 'POST' \
+           "https://${OAM_IP}:30205/o2ims-infrastructureMonitoring/v1/alarmSubscriptions" \
+           -H 'accept: application/json' \
+           -H 'Content-Type: application/json' \
+           -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+           -d '{
+           "callback": "'${SMO_SUBSCRIBE_CALLBACK}'",
+           "consumerSubscriptionId": "'${SMO_CONSUMER_SUBSCRIPTION_ID}'",
+           "filter": ""
          }'
 
-         curl --location --request GET "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor"
+   -  Handle alarm change notification
 
-         export descId=` curl -X 'GET'   "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeploymentDescriptor"   -H 'accept: application/json'   -H 'X-Fields: id' 2>/dev/null | jq .[].id | xargs echo`
-
-         echo ${descId} # check the exported descriptor id
-
-   -  Create NfDeployment on the INF O2 DMS
-
-      When you have an descriptor of deployment, you can create a
-      NfDeployment, it will trigger an event inside of the IMS/DMS, and
-      use the K8S API to create a real pod of the firewall sample
-
-      .. code:: bash
-
-         curl --location --request POST "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment" \
-         --header 'Content-Type: application/json' \
-         --data-raw '{
-           "name": "cfw100",
-           "description": "demo nf deployment",
-           "descriptorId": "'${descId}'",
-           "parentDeploymentId": ""
-         }'
-
-         curl --location --request GET "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment"
-
-   -  Check pods of the firewall sample
-
-      .. code:: bash
-
-         kubectl get pods
-
-   -  Delete the deployment we just created
-
-      .. code:: shell
-
-         export NfDeploymentId=`curl --location --request GET "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment" 2>/dev/null | jq .[].id | xargs echo`
-
-         echo ${NfDeploymentId} # Check the exported deployment id
-
-         curl --location --request DELETE "http://${OAM_IP}:30205/o2dms/v1/${dmsId}/O2dms_DeploymentLifecycle/NfDeployment/${NfDeploymentId}"
+      When the SMO callback API gets the alarm of the INF platform, use
+      the URL to get the latest alarm event record information to get
+      more details
 
 -  Use Kubernetes Control Client through O2 DMS profile
 
-   Assume you have kubectl command tool installed on your Linux
+   Assume you have the kubectl command tool on your local Linux
    environment.
 
    And install the ‘jq’ command for your Linux bash terminal. If you are
-   use ubuntu, you can following below command to install it.
+   using Ubuntu, you can follow the below command to install it.
 
    .. code:: bash
 
@@ -285,7 +207,8 @@ with SMO.
       sudo apt-get update
       sudo apt-get install -y kubectl
 
-   We need to get Kubernetes profile to set up the kubectl command tool.
+   We need to get the Kubernetes profile to set up the kubectl command
+   tool.
 
    Get the DMS Id in the INF O2 service, and set it into bash
    environment.
@@ -293,46 +216,52 @@ with SMO.
    .. code:: bash
 
       # Get all DMS ID, and print them with command
-      dmsIDs=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" \
-        -H 'accept: application/json' | jq --raw-output '.[]["deploymentManagerId"]')
+      dmsIDs=$(curl -k -s -X 'GET' \
+      "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers" \
+      -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+      | jq --raw-output '.[]["deploymentManagerId"]')
       for i in $dmsIDs;do echo ${i};done;
 
       # Choose one DMS and set it to bash environment, here I set the first one
-      export dmsID=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers" \
-        -H 'accept: application/json' | jq --raw-output '.[0]["deploymentManagerId"]')
+      export dmsID=$(curl -k -s -X 'GET' \
+        "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        | jq --raw-output '.[0]["deploymentManagerId"]')
 
       echo ${dmsID} # check the exported DMS Id
 
-   The profile of the ‘kubectl’ need the cluster name, I assume it set
-   to “o2dmsk8s1”.
+   The profile of the ‘kubectl’ need the cluster name, I assume it is
+   set to “o2dmsk8s1”.
 
-   It also need the server endpoint address, username and authority, and
-   for the environment that has Certificate Authority validation, it
+   It also needs the server endpoint address, username, and authority,
+   and for the environment that has Certificate Authority validation, it
    needs the CA data to be set up.
 
    .. code:: bash
 
       CLUSTER_NAME="o2dmsk8s1" # set the cluster name
 
-      K8S_SERVER=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol018" \
-        -H 'accept: application/json' | jq --raw-output '.["profileData"]["cluster_api_endpoint"]')
-      K8S_CA_DATA=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol018" \
-        -H 'accept: application/json' | jq --raw-output '.["profileData"]["cluster_ca_cert"]')
+      K8S_SERVER=$(curl -k -s -X 'GET' \
+        "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=native_k8sapi" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        | jq --raw-output '.["extensions"]["profileData"]["cluster_api_endpoint"]')
+      K8S_CA_DATA=$(curl -k -s -X 'GET' \
+        "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=native_k8sapi" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        | jq --raw-output '.["extensions"]["profileData"]["cluster_ca_cert"]')
 
-      K8S_USER_NAME=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol018" \
-        -H 'accept: application/json' | jq --raw-output '.["profileData"]["admin_user"]')
-      K8S_USER_CLIENT_CERT_DATA=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol018" \
-        -H 'accept: application/json' | jq --raw-output '.["profileData"]["admin_client_cert"]')
-      K8S_USER_CLIENT_KEY_DATA=$(curl -s -X 'GET' \
-        "http://${OAM_IP}:30205/o2ims_infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=sol018" \
-        -H 'accept: application/json' | jq --raw-output '.["profileData"]["admin_client_key"]')
-
+      K8S_USER_NAME=$(curl -k -s -X 'GET' \
+        "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=native_k8sapi" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        | jq --raw-output '.["extensions"]["profileData"]["admin_user"]')
+      K8S_USER_CLIENT_CERT_DATA=$(curl -k -s -X 'GET' \
+        "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=native_k8sapi" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        | jq --raw-output '.["extensions"]["profileData"]["admin_client_cert"]')
+      K8S_USER_CLIENT_KEY_DATA=$(curl -k -s -X 'GET' \
+        "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=native_k8sapi" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        | jq --raw-output '.["extensions"]["profileData"]["admin_client_key"]')
 
       # If you do not want to set up the CA data, you can execute following command without the secure checking
       # kubectl config set-cluster ${CLUSTER_NAME} --server=${K8S_SERVER} --insecure-skip-tls-verify
@@ -350,13 +279,12 @@ with SMO.
 
       kubectl get ns # check the command working with this context
 
+   Now you can use “kubectl”, which means you set up a successfully
+   Kubernetes client. But, it uses the default admin user, so I
+   recommend you create an account for yourself.
 
-   Now you can use “kubectl”, it means you set up successful of the
-   Kubernetes client. But, it use the default admin user, so I recommend
-   you create an account for yourself.
-
-   Create a new user and account for K8S with “cluster-admin” role. And,
-   set the token of this user to the base environment.
+   Create a new user and account for K8S with a “cluster-admin” role.
+   And, set the token of this user to the base environment.
 
    .. code:: bash
 

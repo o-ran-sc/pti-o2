@@ -17,5 +17,6 @@ Welcome to INF O2 documentation
    installation-guide.rst
    user-guide.rst
    api-docs.rst
+   api.rst
 
 * :ref:`search`

@@ -17,7 +17,8 @@ linkcheck_ignore = [
     'http://localhost.*',
     'http://127.0.0.1.*',
     'https://gerrit.o-ran-sc.org.*',
-    './oran-o2-api.html'  # Generated file that doesn't exist at link check.
+    './oran-o2-api.html',  # Generated file that doesn't exist at link check.
+    './api-docs.html'
 ]
 
 extensions = ['sphinxcontrib.redoc', 'sphinx.ext.intersphinx']

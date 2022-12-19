@@ -11,7 +11,6 @@
                   :width: 40px
 
 
-==========================
 O-RAN O2 API Definition v1
 ==========================
 
@@ -24,8 +23,8 @@ The typical port used for the O-RAN O2 REST API is 30205.
 Here we describe the API to access the O2 API.
 
 
-O-RAN O2 API v1
-===============
+O2 API v1
+---------
 
 The O2 API v1 provides API includes O2ims_InfrastructureInventory, O2ims_InfrastructureMonitoring and
 Kubernetes native API based O2dms interfaces.

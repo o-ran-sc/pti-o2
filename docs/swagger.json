@@ -9,7 +9,7 @@
                         "description": "Success"
                     }
                 },
-                "operationId": "get_inventory_version",
+                "operationId": "Get Inventory Version",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -54,7 +54,7 @@
                         }
                     }
                 },
-                "operationId": "get_oclouds_list_router",
+                "operationId": "Get Ocloud Information",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -99,7 +99,7 @@
                         }
                     }
                 },
-                "operationId": "get_oclouds_list_router",
+                "operationId": "Get Ocloud Information",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -112,7 +112,7 @@
                         "description": "Success"
                     }
                 },
-                "operationId": "get_version_router",
+                "operationId": "Get Inventory API version",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -170,7 +170,7 @@
                         }
                     }
                 },
-                "operationId": "get_deployment_managers_list_router",
+                "operationId": "Get Deployment Manager List",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -228,7 +228,7 @@
                         }
                     }
                 },
-                "operationId": "Get deployment manager",
+                "operationId": "Get Deployment Manager Information",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -286,7 +286,7 @@
                         }
                     }
                 },
-                "operationId": "get_resource_pools_list_router",
+                "operationId": "Get Resource Pool List",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -338,7 +338,7 @@
                         }
                     }
                 },
-                "operationId": "Get resource pool",
+                "operationId": "Get Resource Pool Information",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -406,7 +406,7 @@
                         }
                     }
                 },
-                "operationId": "get_resources_list_router",
+                "operationId": "Get Resource List",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -465,7 +465,7 @@
                         }
                     }
                 },
-                "operationId": "Get resource",
+                "operationId": "Get Resource Information",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -523,7 +523,7 @@
                         }
                     }
                 },
-                "operationId": "get_resource_types_list_router",
+                "operationId": "Get Resource Type List",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -575,7 +575,7 @@
                         }
                     }
                 },
-                "operationId": "Get resource type",
+                "operationId": "Get Resource Type Information",
                 "tags": [
                     "O2IMS_Inventory"
                 ]
@@ -594,7 +594,7 @@
                         }
                     }
                 },
-                "operationId": "List subscriptions",
+                "operationId": "Get Subscription List",
                 "parameters": [
                     {
                         "in": "query",
@@ -647,7 +647,7 @@
                         }
                     }
                 },
-                "operationId": "Create a subscription",
+                "operationId": "Create a Subscription",
                 "parameters": [
                     {
                         "name": "payload",
@@ -673,6 +673,20 @@
                     "type": "string"
                 }
             ],
+            "delete": {
+                "responses": {
+                    "404": {
+                        "description": "Subscription not found"
+                    },
+                    "200": {
+                        "description": "Subscription deleted"
+                    }
+                },
+                "operationId": "Delete a Subscription",
+                "tags": [
+                    "O2IMS_Inventory"
+                ]
+            },
             "get": {
                 "responses": {
                     "404": {
@@ -685,7 +699,7 @@
                         }
                     }
                 },
-                "operationId": "Get subscription by ID",
+                "operationId": "Get Subscription Information",
                 "parameters": [
                     {
                         "in": "query",
@@ -715,20 +729,6 @@
                 "tags": [
                     "O2IMS_Inventory"
                 ]
-            },
-            "delete": {
-                "responses": {
-                    "404": {
-                        "description": "Subscription not found"
-                    },
-                    "200": {
-                        "description": "Subscription deleted"
-                    }
-                },
-                "operationId": "Delete subscription by ID",
-                "tags": [
-                    "O2IMS_Inventory"
-                ]
             }
         },
         "/o2ims-infrastructureMonitoring/api_versions": {
@@ -738,7 +738,7 @@
                         "description": "Success"
                     }
                 },
-                "operationId": "get_monitoring_version",
+                "operationId": "Get Monitoring Version",
                 "tags": [
                     "O2IMS_InfrastructureMonitoring"
                 ]
@@ -757,7 +757,7 @@
                         }
                     }
                 },
-                "operationId": "List alarm subscriptions",
+                "operationId": "Get Alarm Subscription List",
                 "parameters": [
                     {
                         "in": "query",
@@ -810,7 +810,7 @@
                         }
                     }
                 },
-                "operationId": "Create a alarm subscription",
+                "operationId": "Create a Alarm Subscription",
                 "parameters": [
                     {
                         "name": "payload",
@@ -836,6 +836,20 @@
                     "type": "string"
                 }
             ],
+            "delete": {
+                "responses": {
+                    "404": {
+                        "description": "Alarm Subscription not found"
+                    },
+                    "200": {
+                        "description": "Subscription deleted"
+                    }
+                },
+                "operationId": "Delete an Alarm Subscription",
+                "tags": [
+                    "O2IMS_InfrastructureMonitoring"
+                ]
+            },
             "get": {
                 "responses": {
                     "404": {
@@ -848,7 +862,7 @@
                         }
                     }
                 },
-                "operationId": "Get Alarm Subscription by ID",
+                "operationId": "Get Alarm Subscription Information",
                 "parameters": [
                     {
                         "in": "query",
@@ -875,20 +889,6 @@
                         "type": "string"
                     }
                 ],
-                "tags": [
-                    "O2IMS_InfrastructureMonitoring"
-                ]
-            },
-            "delete": {
-                "responses": {
-                    "404": {
-                        "description": "Alarm Subscription not found"
-                    },
-                    "200": {
-                        "description": "Subscription deleted"
-                    }
-                },
-                "operationId": "Delete subscription by ID",
                 "tags": [
                     "O2IMS_InfrastructureMonitoring"
                 ]
@@ -946,7 +946,7 @@
                         }
                     }
                 },
-                "operationId": "get_alarm_list_router",
+                "operationId": "Get Alarm Event Record List",
                 "tags": [
                     "O2IMS_InfrastructureMonitoring"
                 ]
@@ -998,7 +998,7 @@
                         }
                     }
                 },
-                "operationId": "Get AlarmEventRecord",
+                "operationId": "Get Alarm Event Record Information",
                 "tags": [
                     "O2IMS_InfrastructureMonitoring"
                 ]
@@ -1011,7 +1011,7 @@
                         "description": "Success"
                     }
                 },
-                "operationId": "get_version_router",
+                "operationId": "Get Monitoring API version",
                 "tags": [
                     "O2IMS_InfrastructureMonitoring"
                 ]

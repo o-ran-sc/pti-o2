@@ -19,15 +19,15 @@ from o2common.views.route import O2Namespace
 
 
 api_ims_inventory = O2Namespace(
-    "O2IMS_Inventory",
-    description='IMS Inventory related operations.')
+    "O2IMS-InfrastructureInventory",
+    description='O2 IMS Inventory related operations.')
 
 api_provision_v1 = O2Namespace(
     "PROVISION",
     description='Provision related operations.')
 
 api_ims_monitoring = O2Namespace(
-    "O2IMS_InfrastructureMonitoring",
+    "O2IMS-InfrastructureMonitoring",
     description='O2 IMS Monitoring related operations.')
 
 

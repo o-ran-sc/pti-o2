@@ -17,6 +17,7 @@ linkcheck_ignore = [
     'http://localhost.*',
     'http://127.0.0.1.*',
     'https://gerrit.o-ran-sc.org.*',
+    'http://put_your_*',
     './oran-o2-api.html',  # Generated file that doesn't exist at link check.
     './api-docs.html'
 ]

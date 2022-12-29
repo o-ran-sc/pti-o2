@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2021 Wind River Systems, Inc.
+.. Copyright (C) 2021-2022 Wind River Systems, Inc.
 
 
 Installation Guide
@@ -13,321 +13,362 @@ Installation Guide
 Abstract
 --------
 
-This document describes how to install INF O2 service over O-RAN INF platform.
+This document describes how to install INF O2 service over the O-RAN INF
+platform.
 
-The audience of this document is assumed to have basic knowledge in kubernetes cli, helm chart cli.
-
+The audience of this document is assumed to have basic knowledge of
+kubernetes CLI, and helm chart cli.
 
 Preface
 -------
 
-Before starting the installation and deployment of O-RAN O2 service, you should have already deployed O-RAN INF platform, and you need to download the helm charts or build from source as described in developer-guide.
+In the context of hosting a RAN Application on INF, the O-RAN O2
+Application provides and exposes the IMS and DMS service APIs of the O2
+interface between the O-Cloud (INF) and the Service Management &
+Orchestration (SMO), in the O-RAN Architecture.
 
+The O2 interfaces enable the management of the O-Cloud (INF)
+infrastructure and the deployment life-cycle management of O-RAN
+cloudified NFs that run on O-Cloud (INF). See `O-RAN O2 General Aspects
+and Principles
+2.0 <https://orandownloadsweb.azurewebsites.net/specifications>`__, and
+`INF O2
+documentation <https://docs.o-ran-sc.org/projects/o-ran-sc-pti-o2/en/latest/>`__.
 
-INF O2 Service in E Release
-===========================
+The O-RAN O2 application is integrated into INF as a system application.
+The O-RAN O2 application package is saved in INF during system
+installation, but it is not applied by default.
 
-1. Provision remote cli for kubernetes over INF platform
---------------------------------------------------------
+System administrators can follow the procedures below to install and
+uninstall the O-RAN O2 application.
 
+INF O2 Service Install
+======================
 
-1.1 Setup Service Account over O-RAN INF platform
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1. Prerequisites
+----------------
 
-The following instruction must be done over INF platform controller host (controller-0)
+Configure the internal Ceph storage for the O2 application persistent
+storage, see INF Storage Configuration and Management: `Configure the
+Internal Ceph Storage
+Backend <https://docs.starlingx.io/storage/kubernetes/configure-the-internal-ceph-storage-backend.html#configure-the-internal-ceph-storage-backend>`__.
 
--  Please see the O-RAN INF documentation to find out how to ssh to controller host of INF platform.
+Enable PVC support in ``oran-o2`` namespace, see INF Storage
+Configuration and Management: `Enable ReadWriteOnce PVC Support in
+Additional
+Namespaces <https://docs.starlingx.io/storage/kubernetes/enable-readwriteonce-pvc-support-in-additional-namespaces.html#enable-readwriteonce-pvc-support-in-additional-namespaces>`__.
 
-.. code:: shell
+2. Procedure
+------------
 
-  USER="admin-user"
-  NAMESPACE="kube-system"
+You can install O-RAN O2 application on INF from the command line.
 
-  cat <<EOF > admin-login.yaml
-  apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: ${USER}
-    namespace: kube-system
-  ---
-  apiVersion: rbac.authorization.k8s.io/v1
-  kind: ClusterRoleBinding
-  metadata:
-    name: ${USER}
-  roleRef:
-    apiGroup: rbac.authorization.k8s.io
-    kind: ClusterRole
-    name: cluster-admin
-  subjects:
-  - kind: ServiceAccount
-    name: ${USER}
-    namespace: kube-system
-  EOF
+1. Locate the O2 application tarball in
+   ``/usr/local/share/applications/helm``.
 
-  kubectl apply -f admin-login.yaml
-  TOKEN_DATA=$(kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${USER} | awk '{print $1}') | grep "token:" | awk '{print $2}')
-  echo $TOKEN_DATA
+   For example:
 
+   ::
 
-1.2 Setup remote cli over another linux host (ubuntu as example)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /usr/local/share/applications/helm/oran-o2-<version>.tgz
 
-The following instruction should be done outside of INF platform controller host
+2. Download ``admin_openrc.sh`` from the INF admin dashboard.
 
-.. code:: shell
+   -  Visit http://put_your_OAM_IP_here:8080/project/api_access/
+   -  Click the **Download OpenStack RC File”/”OpenStack RC File**
+      button
 
-  sudo apt-get install -y apt-transport-https
-  echo "deb http://mirrors.ustc.edu.cn/kubernetes/apt kubernetes-xenial main" | \
-  sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-  gpg --keyserver keyserver.ubuntu.com --recv-keys 836F4BEB
-  gpg --export --armor 836F4BEB | sudo apt-key add -
-  sudo apt-get update
-  sudo apt-get install -y kubectl
+3. Copy the file to the controller host.
 
-  source <(kubectl completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
-  echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permanently to your bash shell.
+4. Source the platform environment.
 
-  curl -O https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz
-  tar xvf helm-v3.5.3-linux-amd64.tar.gz
-  sudo cp linux-amd64/helm /usr/local/bin/
+   ::
 
-  source <(helm completion bash)
-  echo "source <(helm completion bash)" >> ~/.bashrc
+      $ source ./admin_openrc.sh
+      ~(keystone_admin)]$
 
-  OAM_IP=<INF OAM IP>
-  NAMESPACE=oran-o2
-  TOKEN_DATA=<TOKEN_DATA from INF>
+5. Upload the application.
 
-  USER="admin-user"
+   ::
 
-  kubectl config set-cluster inf-cluster --server=https://${OAM_IP}:6443 --insecure-skip-tls-verify
-  kubectl config set-credentials ${USER} --token=$TOKEN_DATA
-  kubectl config set-context ${USER}@inf-cluster --cluster=inf-cluster --user ${USER} --namespace=${NAMESPACE}
-  kubectl config use-context ${USER}@inf-cluster
+      ~(keystone_admin)]$ system application-upload /usr/local/share/applications/helm/oran-o2-<version>.tgz
 
-  kubectl get pods -A
+6. Prepare the override ``yaml`` file.
 
+   1. Create a service account for SMO application.
 
-2. Deploy INF O2 service
-------------------------
+      Create a ServiceAccount which can be used to provide SMO
+      application with minimal access permission credentials.
 
-2.1 Retrieve Helm chart for deploying of INF O2 service
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      ::
 
-.. code:: shell
+         export SMO_SERVICEACCOUNT=smo1
 
-  git clone -b e-release "https://gerrit.o-ran-sc.org/r/pti/o2"
+         cat <<EOF > smo-serviceaccount.yaml
+         apiVersion: rbac.authorization.k8s.io/v1
+         kind: Role
+         metadata:
+           namespace: default
+           name: pod-reader
+         rules:
+         - apiGroups: [""] # "" indicates the core API group
+           resources: ["pods"]
+           verbs: ["get", "watch", "list"]
+         ---
+         apiVersion: v1
+         kind: ServiceAccount
+         metadata:
+           name: ${SMO_SERVICEACCOUNT}
+           namespace: default
+         ---
+         apiVersion: rbac.authorization.k8s.io/v1
+         kind: RoleBinding
+         metadata:
+           name: read-pods
+           namespace: default
+         roleRef:
+           apiGroup: rbac.authorization.k8s.io
+           kind: Role
+           name: pod-reader
+         subjects:
+         - kind: ServiceAccount
+           name: ${SMO_SERVICEACCOUNT}
+           namespace: default
+         EOF
 
+         kubectl apply -f smo-serviceaccount.yaml
 
+   2. Create a secret for service account and obtain an access token.
 
-2.2 Prepare override yaml
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: shell
-
-  export NAMESPACE=oran-o2
-  kubectl create ns ${NAMESPACE}
-
-  # default kube config location is ~/.kube/config
-  cp ~/.kube/config o2/charts/resources/scripts/init/k8s_kube.conf
-
-  export OS_AUTH_URL=<INF OAM Auth URL e.g.: http://OAM_IP:5000/v3>
-  export OS_USERNAME=<INF username e.g.: admin>
-  export OS_PASSWORD=<INF password for user e.g.: adminpassword>
-
-  # If the external OAM IP same as OS_AUTH_URL's IP address, you can use the below command to set the environment
-  # export API_HOST_EXTERNAL_FLOATING=$(echo ${OS_AUTH_URL} | sed -e s,`echo ${OS_AUTH_URL} | grep :// | sed -e's,^\(.*//\).*,\1,g'`,,g | cut -d/ -f1 | sed -e 's,:.*,,g')
-  export API_HOST_EXTERNAL_FLOATING=<INF external_oam_floating_address e.g.: 128.10.10.10>
-
-  # please specify the smo service account yaml file
-  export SMO_SERVICEACCOUNT=<your input here eg.: smo>
-  # service account and binding for smo yaml file
-
-  cat <<EOF >smo-serviceaccount.yaml
-  apiVersion: rbac.authorization.k8s.io/v1
-  kind: Role
-  metadata:
-    namespace: default
-    name: pod-reader
-  rules:
-  - apiGroups: [""] # "" indicates the core API group
-    resources: ["pods"]
-    verbs: ["get", "watch", "list"]
-  ---
-  apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: ${SMO_SERVICEACCOUNT}
-    namespace: default
-  ---
-  apiVersion: rbac.authorization.k8s.io/v1
-  kind: RoleBinding
-  metadata:
-    name: read-pods
-    namespace: default
-  roleRef:
-    apiGroup: rbac.authorization.k8s.io
-    kind: Role
-    name: pod-reader
-  subjects:
-  - kind: ServiceAccount
-    name: ${SMO_SERVICEACCOUNT}
-    namespace: default
-
-  EOF
-
-  kubectl apply -f smo-serviceaccount.yaml
-
-  #export the smo account token data
-  export SMO_SECRET=$(kubectl -n default get serviceaccounts $SMO_SERVICEACCOUNT -o jsonpath='{.secrets[0].name}')
-  export SMO_TOKEN_DATA=$(kubectl -n default get secrets $SMO_SECRET -o jsonpath='{.data.token}')
-
-  #prepare the application config file
-  cat <<EOF >app.conf
-  [DEFAULT]
-
-  ocloud_global_id = 4e24b97c-8c49-4c4f-b53e-3de5235a4e37
-
-  smo_register_url = http://127.0.0.1:8090/register
-  smo_token_data = ${SMO_TOKEN_DATA}
-
-  [OCLOUD]
-  OS_AUTH_URL: ${OS_AUTH_URL}
-  OS_USERNAME: ${OS_USERNAME}
-  OS_PASSWORD: ${OS_PASSWORD}
-  API_HOST_EXTERNAL_FLOATING: ${API_HOST_EXTERNAL_FLOATING}
-
-  [API]
-
-  [WATCHER]
-
-  [PUBSUB]
-
-  EOF
-
-  #prepare the ssl cert files or generate with below command.
-
-  PARENT="imsserver"
-  openssl req \
-  -x509 \
-  -newkey rsa:4096 \
-  -sha256 \
-  -days 365 \
-  -nodes \
-  -keyout $PARENT.key \
-  -out $PARENT.crt \
-  -subj "/CN=${PARENT}" \
-  -extensions v3_ca \
-  -extensions v3_req \
-  -config <( \
-    echo '[req]'; \
-    echo 'default_bits= 4096'; \
-    echo 'distinguished_name=req'; \
-    echo 'x509_extension = v3_ca'; \
-    echo 'req_extensions = v3_req'; \
-    echo '[v3_req]'; \
-    echo 'basicConstraints = CA:FALSE'; \
-    echo 'keyUsage = nonRepudiation, digitalSignature, keyEncipherment'; \
-    echo 'subjectAltName = @alt_names'; \
-    echo '[ alt_names ]'; \
-    echo "DNS.1 = www.${PARENT}"; \
-    echo "DNS.2 = ${PARENT}"; \
-    echo '[ v3_ca ]'; \
-    echo 'subjectKeyIdentifier=hash'; \
-    echo 'authorityKeyIdentifier=keyid:always,issuer'; \
-    echo 'basicConstraints = critical, CA:TRUE, pathlen:0'; \
-    echo 'keyUsage = critical, cRLSign, keyCertSign'; \
-    echo 'extendedKeyUsage = serverAuth, clientAuth')
-
-
-  applicationconfig=`base64 app.conf -w 0`
-  servercrt=`base64 imsserver.crt -w 0`
-  serverkey=`base64 imsserver.key -w 0`
-  smocacrt=`base64 smoca.crt -w 0`
-
-  echo $applicationconfig
-  echo $servercrt
-  echo $serverkey
-  echo $smocacrt
-
-
-  cat <<EOF>o2service-override.yaml
-  imagePullSecrets:
-    - default-registry-key
-
-  o2ims:
-    serviceaccountname: admin-oran-o2
-    images:
-      tags:
-        o2service: nexus3.o-ran-sc.org:10004/o-ran-sc/pti-o2imsdms:2.0.0
-        postgres: docker.io/library/postgres:9.6
-        redis: docker.io/library/redis:alpine
-      pullPolicy: IfNotPresent
-    logginglevel: "DEBUG"
-
-  applicationconfig: ${applicationconfig}
-  servercrt: ${servercrt}
-  serverkey: ${serverkey}
-  smocacrt: ${smocacrt}
-
-  EOF
-
-  cat o2service-override.yaml
-
-
-2.3 Deploy by helm cli
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: shell
-
-  helm install o2service o2/charts -f o2service-override.yaml
-  helm list |grep o2service
-  kubectl -n ${NAMESPACE} get pods |grep o2api
-  kubectl -n ${NAMESPACE} get services |grep o2api
-
-
-2.4 Verify INF O2 service
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: shell
-
-  curl -k http(s)://<OAM IP>:30205/o2ims_infrastructureInventory/v1/
-
-
-2.5 INF O2 Service API Swagger
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- Swagger UI can be found with URL: http(s)://<OAM IP>:30205
-
-
-3. Register INF O2 Service to SMO
----------------------------------
-
-- assumed you have setup SMO O2 endpoint for registration
-- INF O2 service will post the INF platform registration data to that SMO O2 endpoint
-
-
-.. code:: shell
-
-  curl -X 'GET' \
-  'http(s)://<OAM IP>:30205/provision/v1/smo-endpoint' \
-  -H 'accept: application/json'
-
-  curl -k -X 'POST' \
-    'http(s)://<OAM IP>:30205/provision/v1/smo-endpoint' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/json' \
-    -d '{"endpoint": "<SMO O2 endpoint for registration>"}'
-
-  # Confirm SMO endpoint provision status
-  curl -X 'GET' \
-  'http(s)://<OAM IP>:30205/provision/v1/smo-endpoint' \
-  -H 'accept: application/json'
-
-
-References
+      Create a secret with the type service-account-token and pass the
+      ServiceAccount in the annotation section as shown below:
+
+      ::
+
+         export SMO_SECRET=smo1-secret
+
+         cat <<EOF > smo-secret.yaml
+         apiVersion: v1
+         kind: Secret
+         metadata:
+           name: ${SMO_SECRET}
+           annotations:
+             kubernetes.io/service-account.name: ${SMO_SERVICEACCOUNT}
+         type: kubernetes.io/service-account-token
+         EOF
+
+         kubectl apply -f smo-secret.yaml
+
+         export SMO_TOKEN_DATA=$(kubectl get secrets $SMO_SECRET -o jsonpath='{.data.token}' | base64 -d -w 0)
+
+   3. Create certificates for the O2 service.
+
+      Obtain an intermediate or Root CA-signed certificate and key from
+      a trusted intermediate or Root Certificate Authority (CA). Refer
+      to the documentation for the external Root CA that you are using
+      on how to create a public certificate and private key pairs signed
+      by an intermediate or Root CA for HTTPS.
+
+      For lab purposes, see INF Security: `Create Certificates Locally
+      using
+      openssl <https://docs.starlingx.io/security/kubernetes/create-certificates-locally-using-openssl.html#create-certificates-locally-using-openssl>`__
+      to create an Intermediate or test Root CA certificate and key, and
+      use it to locally sign test certificates.
+
+      The resulting files, from either an external CA or locally
+      generated for the lab with openssl, should be:
+
+      -  Local CA certificate - ``my-root-ca-cert.pem``
+      -  Server certificate - ``my-server-cert.pem``
+      -  Server key - ``my-server-key.pem``
+
+      ..
+
+         **Note** If using a server certificate signed by a local CA
+         (i.e. lab scenario above), this local CA certificate
+         (e.g. my-root-ca-cert.pem from lab scenario above) must be
+         shared with the SMO application for the O2 server certificate
+         verification.
+
+   4. Prepare the O2 service application configuration file.
+
+      As per the Cloudification and Orchestration use case defined in
+      O-RAN Working Group 6, the following information should be
+      generated by SMO:
+
+      -  O-Cloud Gload ID - ``OCLOUD_GLOBAL_ID``
+      -  SMO Register URL - ``SMO_REGISTER_URL``
+
+      See `O-RAN Cloudification and Orchestration Use Cases and
+      Requirements for O-RAN Virtualized
+      RAN <https://orandownloadsweb.azurewebsites.net/specifications>`__.
+
+      ::
+
+         API_HOST_EXTERNAL_FLOATING=$(echo ${OS_AUTH_URL} | awk -F / '{print $3}' | cut -d: -f1)
+
+         cat <<EOF > app.conf
+         [DEFAULT]
+
+         ocloud_global_id = ${OCLOUD_GLOBAL_ID}
+         smo_register_url = ${SMO_REGISTER_URL}
+         smo_token_data = ${SMO_TOKEN_DATA}
+
+         [OCLOUD]
+         OS_AUTH_URL = ${OS_AUTH_URL}
+         OS_USERNAME = ${OS_USERNAME}
+         OS_PASSWORD = ${OS_PASSWORD}
+         API_HOST_EXTERNAL_FLOATING = ${API_HOST_EXTERNAL_FLOATING}
+
+         [API]
+
+         [WATCHER]
+
+         [PUBSUB]
+         EOF
+
+   5. Retrieve the CA certificate from your SMO vendor.
+
+      If the SMO application provides service via HTTPS, and the server
+      certificate is self-signed, the CA certficate should be retrieved
+      from the SMO.
+
+      This procedure assumes that the name of the certificate is
+      ``smo-ca.pem``
+
+   6. Populate the override yaml file.
+
+      Refer to the previous step for the required override values.
+
+      ::
+
+         APPLICATION_CONFIG=$(base64 app.conf -w 0)
+         SERVER_CERT=$(base64 my-server-cert.pem -w 0)
+         SERVER_KEY=$(base64 my-server-key.pem -w 0)
+         SMO_CA_CERT=$(base64 smo-ca.pem -w 0)
+
+         cat <<EOF > o2service-override.yaml
+
+         applicationconfig: ${APPLICATION_CONFIG}
+         servercrt: ${SERVER_CERT}
+         serverkey: ${SERVER_KEY}
+         smocacrt: ${SMO_CA_CERT}
+
+         EOF
+
+      To deploy other versions of an image required for a quick
+      solution, to have early access to the features (eg.
+      oranscinf/pti-o2imsdms:2.0.0), and to authenticate images that are
+      hosted by a private registry, follow the steps below:
+
+      1. Create a docker-registry secret in ``oran-o2`` namespace.
+
+         ::
+
+            export O2SERVICE_IMAGE_REG=<docker-server-endpoint>
+
+            kubectl create secret docker-registry private-registry-key \
+            --docker-server=${O2SERVICE_IMAGE_REG} --docker-username=${USERNAME} \
+            --docker-password=${PASSWORD} -n oran-o2
+
+      2. Refer to the ``imagePullSecrets`` in override file.
+
+         ::
+
+            cat <<EOF > o2service-override.yaml
+            imagePullSecrets:
+              - private-registry-key
+
+            o2ims:
+              serviceaccountname: admin-oran-o2
+              images:
+                tags:
+                  o2service: ${O2SERVICE_IMAGE_REG}/docker.io/oranscinf/pti-o2imsdms:2.0.0
+                  postgres: ${O2SERVICE_IMAGE_REG}/docker.io/library/postgres:9.6
+                  redis: ${O2SERVICE_IMAGE_REG}/docker.io/library/redis:alpine
+                pullPolicy: IfNotPresent
+              logginglevel: "DEBUG"
+
+            applicationconfig: ${APPLICATION_CONFIG}
+            servercrt: ${SERVER_CERT}
+            serverkey: ${SERVER_KEY}
+            smocacrt: ${SMO_CA_CERT}
+
+            EOF
+
+7. Update the overrides for the oran-o2 application.
+
+   ::
+
+      ~(keystone_admin)]$ system helm-override-update oran-o2 oran-o2 oran-o2 --values o2service-override.yaml
+
+      # Check the overrides
+      ~(keystone_admin)]$ system helm-override-show oran-o2 oran-o2 oran-o2
+
+8. Run the **system application-apply** command to apply the updates.
+
+   ::
+
+      ~(keystone_admin)]$ system application-apply oran-o2
+
+9. Monitor the status using the command below.
+
+   ::
+
+      ~(keystone_admin)]$ watch -n 5 system application-list
+
+   OR
+
+   ::
+
+      ~(keystone_admin)]$ watch kubectl get all -n oran-o2
+
+3. Results
 ----------
 
-- `O-RAN-SC INF`_
+You have launched services in the above namespace.
 
-.. _`O-RAN-SC INF`: https://docs.o-ran-sc.org/en/latest/projects.html#infrastructure-inf
+4. Postrequisites
+-----------------
+
+You will need to integrate INF with an SMO application that performs
+management of O-Cloud infrastructure and the deployment life cycle
+management of O-RAN cloudified NFs. See the following API reference for
+details:
+
+-  `API O-RAN O2
+   interface <https://docs.o-ran-sc.org/projects/o-ran-sc-pti-o2/en/g-release/api.html>`__
+
+INF O2 Service Uninstall
+========================
+
+.. _procedure-1:
+
+1. Procedure
+------------
+
+You can uninstall the O-RAN O2 application on INF from the command line.
+
+1. Uninstall the application.
+
+   Remove O2 application related resources.
+
+   ::
+
+      ~(keystone_admin)]$ system application-remove oran-o2
+
+2. Delete the application.
+
+   Remove the uninstalled O2 application’s definition, including the
+   manifest and helm charts and helm chart overrides, from the system.
+
+   ::
+
+      ~(keystone_admin)]$ system application-delete oran-o2
+
+.. _results-1:
+
+2. Results
+----------
+
+You have uninstalled the O2 application from the system.

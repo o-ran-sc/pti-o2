@@ -25,6 +25,7 @@ class AlarmDTO:
         {
             'alarmEventRecordId': fields.String(
                 required=True,
+                example='f078a1d3-56df-46c2-88a2-dd659aa3f6bd',
                 description='Alarm Event Record ID'),
             'resourceTypeId': fields.String,
             'resourceTypeID': fields.String(attribute='resourceTypeId'),

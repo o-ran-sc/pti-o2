@@ -6,9 +6,9 @@ info:
   title: INF O2 Services API
 basePath: /
 tags:
-- name: O2IMS_Inventory
-  description: IMS Inventory related operations.
-- name: O2IMS_InfrastructureMonitoring
+- name: O2IMS-InfrastructureInventory
+  description: O2 IMS Inventory related operations.
+- name: O2IMS-InfrastructureMonitoring
   description: O2 IMS Monitoring related operations.
 consumes:
 - application/json
@@ -18,7 +18,7 @@ paths:
   /o2ims-infrastructureInventory/api_versions:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Inventory Version
       parameters: []
       responses:
@@ -27,7 +27,7 @@ paths:
   /o2ims-infrastructureInventory/v1:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Ocloud Information
       parameters:
       - name: exclude_default
@@ -60,7 +60,7 @@ paths:
   /o2ims-infrastructureInventory/v1/:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Ocloud Information
       parameters:
       - name: exclude_default
@@ -93,7 +93,7 @@ paths:
   /o2ims-infrastructureInventory/v1/api_versions:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Inventory API version
       parameters: []
       responses:
@@ -102,7 +102,7 @@ paths:
   /o2ims-infrastructureInventory/v1/deploymentManagers:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Deployment Manager List
       parameters:
       - name: filter
@@ -146,7 +146,7 @@ paths:
   /o2ims-infrastructureInventory/v1/deploymentManagers/{deploymentManagerID}:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Deployment Manager Information
       parameters:
       - name: exclude_default
@@ -189,7 +189,7 @@ paths:
   /o2ims-infrastructureInventory/v1/resourcePools:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Resource Pool List
       parameters:
       - name: filter
@@ -233,7 +233,7 @@ paths:
   /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Resource Pool Information
       parameters:
       - name: exclude_default
@@ -271,7 +271,7 @@ paths:
   /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}/resources:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Resource List
       parameters:
       - name: filter
@@ -322,7 +322,7 @@ paths:
   /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}/resources/{resourceID}:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Resource Information
       parameters:
       - name: exclude_default
@@ -365,7 +365,7 @@ paths:
   /o2ims-infrastructureInventory/v1/resourceTypes:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Resource Type List
       parameters:
       - name: filter
@@ -409,7 +409,7 @@ paths:
   /o2ims-infrastructureInventory/v1/resourceTypes/{resourceTypeID}:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Resource Type Information
       parameters:
       - name: exclude_default
@@ -447,7 +447,7 @@ paths:
   /o2ims-infrastructureInventory/v1/subscriptions:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Subscription List
       parameters:
       - name: filter
@@ -490,7 +490,7 @@ paths:
               $ref: '#/definitions/SubscriptionGetDto'
     post:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Create a Subscription
       parameters:
       - in: body
@@ -506,7 +506,7 @@ paths:
   /o2ims-infrastructureInventory/v1/subscriptions/{subscriptionID}:
     get:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Get Subscription Information
       parameters:
       - name: subscriptionID
@@ -543,7 +543,7 @@ paths:
           description: Subscription not found
     delete:
       tags:
-      - O2IMS_Inventory
+      - O2IMS-InfrastructureInventory
       operationId: Delete a Subscription
       parameters:
       - name: subscriptionID
@@ -559,7 +559,7 @@ paths:
   /o2ims-infrastructureMonitoring/api_versions:
     get:
       tags:
-      - O2IMS_InfrastructureMonitoring
+      - O2IMS-InfrastructureMonitoring
       operationId: Get Monitoring Version
       parameters: []
       responses:
@@ -568,7 +568,7 @@ paths:
   /o2ims-infrastructureMonitoring/v1/alarmSubscriptions:
     get:
       tags:
-      - O2IMS_InfrastructureMonitoring
+      - O2IMS-InfrastructureMonitoring
       operationId: Get Alarm Subscription List
       parameters:
       - name: filter
@@ -611,7 +611,7 @@ paths:
               $ref: '#/definitions/AlarmSubscriptionGetDto'
     post:
       tags:
-      - O2IMS_InfrastructureMonitoring
+      - O2IMS-InfrastructureMonitoring
       operationId: Create a Alarm Subscription
       parameters:
       - in: body
@@ -627,7 +627,7 @@ paths:
   /o2ims-infrastructureMonitoring/v1/alarmSubscriptions/{alarmSubscriptionID}:
     get:
       tags:
-      - O2IMS_InfrastructureMonitoring
+      - O2IMS-InfrastructureMonitoring
       operationId: Get Alarm Subscription Information
       parameters:
       - name: alarmSubscriptionID
@@ -664,7 +664,7 @@ paths:
           description: Alarm Subscription not found
     delete:
       tags:
-      - O2IMS_InfrastructureMonitoring
+      - O2IMS-InfrastructureMonitoring
       operationId: Delete an Alarm Subscription
       parameters:
       - name: alarmSubscriptionID
@@ -680,7 +680,7 @@ paths:
   /o2ims-infrastructureMonitoring/v1/alarms:
     get:
       tags:
-      - O2IMS_InfrastructureMonitoring
+      - O2IMS-InfrastructureMonitoring
       operationId: Get Alarm Event Record List
       parameters:
       - name: filter
@@ -724,7 +724,7 @@ paths:
   /o2ims-infrastructureMonitoring/v1/alarms/{alarmEventRecordId}:
     get:
       tags:
-      - O2IMS_InfrastructureMonitoring
+      - O2IMS-InfrastructureMonitoring
       operationId: Get Alarm Event Record Information
       parameters:
       - name: exclude_default
@@ -762,7 +762,7 @@ paths:
   /o2ims-infrastructureMonitoring/v1/api_versions:
     get:
       tags:
-      - O2IMS_InfrastructureMonitoring
+      - O2IMS-InfrastructureMonitoring
       operationId: Get Monitoring API version
       parameters: []
       responses:
@@ -776,18 +776,32 @@ definitions:
     properties:
       oCloudId:
         type: string
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
+        description: Identifier for the containing O-Cloud.
       globalCloudId:
         type: string
+        example: 10a07219-4201-4b3e-a52d-81ab6a755d8a
+        description: Identifier of the O-Cloud instance. Globally unique across O-Cloud instances.
       globalcloudId:
         type: string
+        example: 10a07219-4201-4b3e-a52d-81ab6a755d8a
+        description: Identifier of the O-Cloud instance. Globally unique across O-Cloud instances.(Specification)
       name:
         type: string
+        example: 95b818b8-b315-4d9f-af37-b82c492101f1
+        description: Human readable name of the O-Cloud.
       description:
         type: string
+        example: An ocloud
+        description: Human readable description of the O-Cloud.
       serviceUri:
         type: string
+        example: https://128.224.115.51:30205
+        description: The fully qualified URI root to all services provided by the O2ims interface
       extensions:
         type: string
+        example: ""
+        description: These are unspecified (not standardized) properties (keys) which are tailored by the vendor to extend the information provided about the O-Cloud.
     x-mask: "{oCloudId,globalCloudId,globalcloudId,name,description,serviceUri}"
   ResourceTypeGetDto:
     type: object
@@ -863,19 +877,32 @@ definitions:
     properties:
       resourcePoolId:
         type: string
-        description: Resource pool ID
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
+        description: Identifier for the Resource Pool in the O-Cloud instance.
       globalLocationId:
         type: string
+        example: ""
+        description: This identifier is copied from the O-Cloud Id assigned by the SMO during the O-Cloud deployment.
       name:
         type: string
+        example: RegionOne
+        description: Human readable name of the resource pool.
       description:
         type: string
+        example: A Resource Pool
+        description: Human readable description of the resource pool.
       oCloudId:
         type: string
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
+        description: Identifier for the containing O-Cloud.
       location:
         type: string
+        example: ""
+        description: Information about the geographical location of the resource pool as detected by the O-Cloud.
       extensions:
         type: string
+        example: ""
+        description: List of metadata key-value pairs used to associate meaningful metadata to the related resource pool.
     x-mask: "{resourcePoolId,oCloudId,globalLocationId,name,description}"
   ResourceListDto:
     type: object
@@ -1078,6 +1105,7 @@ definitions:
     properties:
       alarmEventRecordId:
         type: string
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
         description: Alarm Event Record ID
       resourceTypeId:
         type: string

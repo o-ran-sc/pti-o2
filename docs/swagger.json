@@ -11,7 +11,7 @@
                 },
                 "operationId": "Get Inventory Version",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -56,7 +56,7 @@
                 },
                 "operationId": "Get Ocloud Information",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -101,7 +101,7 @@
                 },
                 "operationId": "Get Ocloud Information",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -114,7 +114,7 @@
                 },
                 "operationId": "Get Inventory API version",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -172,7 +172,7 @@
                 },
                 "operationId": "Get Deployment Manager List",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -230,7 +230,7 @@
                 },
                 "operationId": "Get Deployment Manager Information",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -288,7 +288,7 @@
                 },
                 "operationId": "Get Resource Pool List",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -340,7 +340,7 @@
                 },
                 "operationId": "Get Resource Pool Information",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -408,7 +408,7 @@
                 },
                 "operationId": "Get Resource List",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -467,7 +467,7 @@
                 },
                 "operationId": "Get Resource Information",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -525,7 +525,7 @@
                 },
                 "operationId": "Get Resource Type List",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -577,11 +577,35 @@
                 },
                 "operationId": "Get Resource Type Information",
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
         "/o2ims-infrastructureInventory/v1/subscriptions": {
+            "post": {
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/SubscriptionGetDto"
+                        }
+                    }
+                },
+                "operationId": "Create a Subscription",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/SubscriptionCreateDto"
+                        }
+                    }
+                ],
+                "tags": [
+                    "O2IMS-InfrastructureInventory"
+                ]
+            },
             "get": {
                 "responses": {
                     "200": {
@@ -635,31 +659,7 @@
                     }
                 ],
                 "tags": [
-                    "O2IMS_Inventory"
-                ]
-            },
-            "post": {
-                "responses": {
-                    "201": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/SubscriptionGetDto"
-                        }
-                    }
-                },
-                "operationId": "Create a Subscription",
-                "parameters": [
-                    {
-                        "name": "payload",
-                        "required": true,
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/SubscriptionCreateDto"
-                        }
-                    }
-                ],
-                "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -673,20 +673,6 @@
                     "type": "string"
                 }
             ],
-            "delete": {
-                "responses": {
-                    "404": {
-                        "description": "Subscription not found"
-                    },
-                    "200": {
-                        "description": "Subscription deleted"
-                    }
-                },
-                "operationId": "Delete a Subscription",
-                "tags": [
-                    "O2IMS_Inventory"
-                ]
-            },
             "get": {
                 "responses": {
                     "404": {
@@ -727,7 +713,21 @@
                     }
                 ],
                 "tags": [
-                    "O2IMS_Inventory"
+                    "O2IMS-InfrastructureInventory"
+                ]
+            },
+            "delete": {
+                "responses": {
+                    "404": {
+                        "description": "Subscription not found"
+                    },
+                    "200": {
+                        "description": "Subscription deleted"
+                    }
+                },
+                "operationId": "Delete a Subscription",
+                "tags": [
+                    "O2IMS-InfrastructureInventory"
                 ]
             }
         },
@@ -740,11 +740,35 @@
                 },
                 "operationId": "Get Monitoring Version",
                 "tags": [
-                    "O2IMS_InfrastructureMonitoring"
+                    "O2IMS-InfrastructureMonitoring"
                 ]
             }
         },
         "/o2ims-infrastructureMonitoring/v1/alarmSubscriptions": {
+            "post": {
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/AlarmSubscriptionGetDto"
+                        }
+                    }
+                },
+                "operationId": "Create a Alarm Subscription",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/AlarmSubscriptionCreateDto"
+                        }
+                    }
+                ],
+                "tags": [
+                    "O2IMS-InfrastructureMonitoring"
+                ]
+            },
             "get": {
                 "responses": {
                     "200": {
@@ -798,31 +822,7 @@
                     }
                 ],
                 "tags": [
-                    "O2IMS_InfrastructureMonitoring"
-                ]
-            },
-            "post": {
-                "responses": {
-                    "201": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/AlarmSubscriptionGetDto"
-                        }
-                    }
-                },
-                "operationId": "Create a Alarm Subscription",
-                "parameters": [
-                    {
-                        "name": "payload",
-                        "required": true,
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/AlarmSubscriptionCreateDto"
-                        }
-                    }
-                ],
-                "tags": [
-                    "O2IMS_InfrastructureMonitoring"
+                    "O2IMS-InfrastructureMonitoring"
                 ]
             }
         },
@@ -836,20 +836,6 @@
                     "type": "string"
                 }
             ],
-            "delete": {
-                "responses": {
-                    "404": {
-                        "description": "Alarm Subscription not found"
-                    },
-                    "200": {
-                        "description": "Subscription deleted"
-                    }
-                },
-                "operationId": "Delete an Alarm Subscription",
-                "tags": [
-                    "O2IMS_InfrastructureMonitoring"
-                ]
-            },
             "get": {
                 "responses": {
                     "404": {
@@ -890,7 +876,21 @@
                     }
                 ],
                 "tags": [
-                    "O2IMS_InfrastructureMonitoring"
+                    "O2IMS-InfrastructureMonitoring"
+                ]
+            },
+            "delete": {
+                "responses": {
+                    "404": {
+                        "description": "Alarm Subscription not found"
+                    },
+                    "200": {
+                        "description": "Subscription deleted"
+                    }
+                },
+                "operationId": "Delete an Alarm Subscription",
+                "tags": [
+                    "O2IMS-InfrastructureMonitoring"
                 ]
             }
         },
@@ -948,7 +948,7 @@
                 },
                 "operationId": "Get Alarm Event Record List",
                 "tags": [
-                    "O2IMS_InfrastructureMonitoring"
+                    "O2IMS-InfrastructureMonitoring"
                 ]
             }
         },
@@ -1000,7 +1000,7 @@
                 },
                 "operationId": "Get Alarm Event Record Information",
                 "tags": [
-                    "O2IMS_InfrastructureMonitoring"
+                    "O2IMS-InfrastructureMonitoring"
                 ]
             }
         },
@@ -1013,7 +1013,7 @@
                 },
                 "operationId": "Get Monitoring API version",
                 "tags": [
-                    "O2IMS_InfrastructureMonitoring"
+                    "O2IMS-InfrastructureMonitoring"
                 ]
             }
         }
@@ -1031,11 +1031,11 @@
     ],
     "tags": [
         {
-            "name": "O2IMS_Inventory",
-            "description": "IMS Inventory related operations."
+            "name": "O2IMS-InfrastructureInventory",
+            "description": "O2 IMS Inventory related operations."
         },
         {
-            "name": "O2IMS_InfrastructureMonitoring",
+            "name": "O2IMS-InfrastructureMonitoring",
             "description": "O2 IMS Monitoring related operations."
         }
     ],
@@ -1046,25 +1046,39 @@
             ],
             "properties": {
                 "oCloudId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the containing O-Cloud.",
+                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
                 },
                 "globalCloudId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier of the O-Cloud instance. Globally unique across O-Cloud instances.",
+                    "example": "10a07219-4201-4b3e-a52d-81ab6a755d8a"
                 },
                 "globalcloudId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier of the O-Cloud instance. Globally unique across O-Cloud instances.(Specification)",
+                    "example": "10a07219-4201-4b3e-a52d-81ab6a755d8a"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable name of the O-Cloud.",
+                    "example": "95b818b8-b315-4d9f-af37-b82c492101f1"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable description of the O-Cloud.",
+                    "example": "An ocloud"
                 },
                 "serviceUri": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The fully qualified URI root to all services provided by the O2ims interface",
+                    "example": "https://128.224.115.51:30205"
                 },
                 "extensions": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "These are unspecified (not standardized) properties (keys) which are tailored by the vendor to extend the information provided about the O-Cloud.",
+                    "example": ""
                 }
             },
             "x-mask": "{oCloudId,globalCloudId,globalcloudId,name,description,serviceUri}",
@@ -1178,25 +1192,38 @@
             "properties": {
                 "resourcePoolId": {
                     "type": "string",
-                    "description": "Resource pool ID"
+                    "description": "Identifier for the Resource Pool in the O-Cloud instance.",
+                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
                 },
                 "globalLocationId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "This identifier is copied from the O-Cloud Id assigned by the SMO during the O-Cloud deployment.",
+                    "example": ""
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable name of the resource pool.",
+                    "example": "RegionOne"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable description of the resource pool.",
+                    "example": "A Resource Pool"
                 },
                 "oCloudId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the containing O-Cloud.",
+                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
                 },
                 "location": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Information about the geographical location of the resource pool as detected by the O-Cloud.",
+                    "example": ""
                 },
                 "extensions": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "List of metadata key-value pairs used to associate meaningful metadata to the related resource pool.",
+                    "example": ""
                 }
             },
             "x-mask": "{resourcePoolId,oCloudId,globalLocationId,name,description}",
@@ -1491,7 +1518,8 @@
             "properties": {
                 "alarmEventRecordId": {
                     "type": "string",
-                    "description": "Alarm Event Record ID"
+                    "description": "Alarm Event Record ID",
+                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
                 },
                 "resourceTypeId": {
                     "type": "string"

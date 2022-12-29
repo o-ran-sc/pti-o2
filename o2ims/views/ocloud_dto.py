@@ -23,12 +23,30 @@ class OcloudDTO:
     ocloud = api_ims_inventory_v1.model(
         "OcloudDto",
         {
-            'oCloudId': fields.String(required=True),
-            'globalCloudId': fields.String,
-            'globalcloudId': fields.String(attribute='globalCloudId'),
-            'name': fields.String,
-            'description': fields.String,
-            'serviceUri': fields.String(attribute='serviceUri'),
+            'oCloudId': fields.String(
+                required=True,
+                example='f078a1d3-56df-46c2-88a2-dd659aa3f6bd',
+                description='Identifier for the containing O-Cloud.'),
+            'globalCloudId': fields.String(
+                example='10a07219-4201-4b3e-a52d-81ab6a755d8a',
+                description='Identifier of the O-Cloud instance. ' +
+                'Globally unique across O-Cloud instances.'),
+            'globalcloudId': fields.String(
+                attribute='globalCloudId',
+                example='10a07219-4201-4b3e-a52d-81ab6a755d8a',
+                description='Identifier of the O-Cloud instance. ' +
+                'Globally unique across O-Cloud instances.(Specification)'),
+            'name': fields.String(
+                example='95b818b8-b315-4d9f-af37-b82c492101f1',
+                description='Human readable name of the O-Cloud.'),
+            'description': fields.String(
+                example='An ocloud',
+                description='Human readable description of the O-Cloud.'),
+            'serviceUri': fields.String(
+                attribute='serviceUri',
+                example='https://128.224.115.51:30205',
+                description='The fully qualified URI root to all ' +
+                'services provided by the O2ims interface'),
             # 'infrastructureManagementServiceEndpoint': fields.String(
             # attribute='serviceUri'),
             # 'infrastructureMangementServiceEndPoint': fields.String(
@@ -37,7 +55,11 @@ class OcloudDTO:
             # 'resourcePools': fields.String,
             # 'deploymentManagers': fields.String,
             # 'smoRegistrationService': fields.String
-            'extensions': fields.String
+            'extensions': fields.String(
+                example='',
+                description='These are unspecified (not standardized) ' +\
+                'properties (keys) which are tailored by the vendor ' +\
+                'to extend the information provided about the O-Cloud.'),
         },
         mask='{oCloudId,globalCloudId,globalcloudId,name,description,' +\
         'serviceUri}'
@@ -101,15 +123,35 @@ class ResourcePoolDTO:
     resource_pool_get = api_ims_inventory_v1.model(
         "ResourcePoolGetDto",
         {
-            'resourcePoolId': fields.String(required=True,
-                                            description='Resource pool ID'),
-            'globalLocationId': fields.String,
-            'name': fields.String,
-            'description': fields.String,
-            'oCloudId': fields.String,
-            'location': fields.String,
+            'resourcePoolId': fields.String(
+                required=True,
+                example='f078a1d3-56df-46c2-88a2-dd659aa3f6bd',
+                description='Identifier for the Resource Pool in the ' +
+                'O-Cloud instance.'),
+            'globalLocationId': fields.String(
+                example='',
+                description='This identifier is copied from the O-Cloud ' +
+                'Id assigned by the SMO during the O-Cloud deployment.'),
+            'name': fields.String(
+                example='RegionOne',
+                description='Human readable name of the resource pool.'),
+            'description': fields.String(
+                example='A Resource Pool',
+                description='Human readable description of the ' +
+                'resource pool.'),
+            'oCloudId': fields.String(
+                example='f078a1d3-56df-46c2-88a2-dd659aa3f6bd',
+                description='Identifier for the containing O-Cloud.'),
+            'location': fields.String(
+                example='',
+                description='Information about the geographical ' +
+                'location of the resource pool as detected by the O-Cloud.'),
             # 'resources': fields.String,
-            'extensions': fields.String
+            'extensions': fields.String(
+                example='',
+                description='List of metadata key-value pairs ' +\
+                'used to associate meaningful metadata to ' +\
+                'the related resource pool.')
         },
         mask='{resourcePoolId,oCloudId,globalLocationId,name,description}'
     )

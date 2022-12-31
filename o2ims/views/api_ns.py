@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from flask import request
-from flask_restx import Resource
+from flask_restx import Resource, fields
 
 from o2common.views.route import O2Namespace
 
@@ -33,7 +33,36 @@ api_ims_monitoring = O2Namespace(
 
 @api_ims_inventory.route('/api_versions')
 class InventoryVersion(Resource):
+    api_version = api_ims_inventory.model(
+        'InventoryApiVersionStructure',
+        {
+            'version': fields.String(
+                required=True,
+                example='1.0.0',
+                description='Identifies a supported version.'
+            )
+        },
+        mask='{version,}'
+    )
+    model = api_ims_inventory.model(
+        "InventoryAPIVersion",
+        {
+            'uriPrefix': fields.String(
+                required=True,
+                example='https://128.224.115.36:30205/' +
+                'o2ims-infrastructureInventory',
+                description='Specifies the URI prefix for the API'),
+            'apiVersions': fields.List(
+                fields.Nested(api_version),
+                example=[{'version': '1.0.0'}],
+                description='Version(s) supported for the API ' +
+                'signaled by the uriPrefix attribute.'),
+        },
+        mask='{uriPrefix,apiVersions}'
+    )
+
     @api_ims_inventory.doc('Get Inventory Version')
+    @api_ims_inventory.marshal_with(model)
     def get(self):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
@@ -47,7 +76,36 @@ class InventoryVersion(Resource):
 
 @api_ims_monitoring.route('/api_versions')
 class MonitoringVersion(Resource):
+    api_version = api_ims_inventory.model(
+        'MonitoringApiVersionStructure',
+        {
+            'version': fields.String(
+                required=True,
+                example='1.0.0',
+                description='Identifies a supported version.'
+            )
+        },
+        mask='{version,}'
+    )
+    model = api_ims_inventory.model(
+        "MonitoringAPIVersion",
+        {
+            'uriPrefix': fields.String(
+                required=True,
+                example='https://128.224.115.36:30205/' +
+                'o2ims-infrastructureMonitoring',
+                description='Specifies the URI prefix for the API'),
+            'apiVersions': fields.List(
+                fields.Nested(api_version),
+                example=[{'version': '1.0.0'}],
+                description='Version(s) supported for the API ' +
+                'signaled by the uriPrefix attribute.'),
+        },
+        mask='{uriPrefix,apiVersions}'
+    )
+
     @api_ims_monitoring.doc('Get Monitoring Version')
+    @api_ims_monitoring.marshal_with(model)
     def get(self):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],

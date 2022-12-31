@@ -6,7 +6,10 @@
             "get": {
                 "responses": {
                     "200": {
-                        "description": "Success"
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/InventoryAPIVersion"
+                        }
                     }
                 },
                 "operationId": "Get Inventory Version",
@@ -109,7 +112,10 @@
             "get": {
                 "responses": {
                     "200": {
-                        "description": "Success"
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/InventoryV1APIVersion"
+                        }
                     }
                 },
                 "operationId": "Get Inventory API version",
@@ -582,30 +588,6 @@
             }
         },
         "/o2ims-infrastructureInventory/v1/subscriptions": {
-            "post": {
-                "responses": {
-                    "201": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/SubscriptionGetDto"
-                        }
-                    }
-                },
-                "operationId": "Create a Subscription",
-                "parameters": [
-                    {
-                        "name": "payload",
-                        "required": true,
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/SubscriptionCreateDto"
-                        }
-                    }
-                ],
-                "tags": [
-                    "O2IMS-InfrastructureInventory"
-                ]
-            },
             "get": {
                 "responses": {
                     "200": {
@@ -656,6 +638,30 @@
                         "description": "Page number of the results to fetch. Default: 1",
                         "name": "nextpage_opaque_marker",
                         "type": "string"
+                    }
+                ],
+                "tags": [
+                    "O2IMS-InfrastructureInventory"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/SubscriptionGetDto"
+                        }
+                    }
+                },
+                "operationId": "Create a Subscription",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/SubscriptionCreateDto"
+                        }
                     }
                 ],
                 "tags": [
@@ -735,7 +741,10 @@
             "get": {
                 "responses": {
                     "200": {
-                        "description": "Success"
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/MonitoringAPIVersion"
+                        }
                     }
                 },
                 "operationId": "Get Monitoring Version",
@@ -745,30 +754,6 @@
             }
         },
         "/o2ims-infrastructureMonitoring/v1/alarmSubscriptions": {
-            "post": {
-                "responses": {
-                    "201": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/AlarmSubscriptionGetDto"
-                        }
-                    }
-                },
-                "operationId": "Create a Alarm Subscription",
-                "parameters": [
-                    {
-                        "name": "payload",
-                        "required": true,
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/AlarmSubscriptionCreateDto"
-                        }
-                    }
-                ],
-                "tags": [
-                    "O2IMS-InfrastructureMonitoring"
-                ]
-            },
             "get": {
                 "responses": {
                     "200": {
@@ -819,6 +804,30 @@
                         "description": "Page number of the results to fetch. Default: 1",
                         "name": "nextpage_opaque_marker",
                         "type": "string"
+                    }
+                ],
+                "tags": [
+                    "O2IMS-InfrastructureMonitoring"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/AlarmSubscriptionGetDto"
+                        }
+                    }
+                },
+                "operationId": "Create a Alarm Subscription",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/AlarmSubscriptionCreateDto"
+                        }
                     }
                 ],
                 "tags": [
@@ -1008,7 +1017,13 @@
             "get": {
                 "responses": {
                     "200": {
-                        "description": "Success"
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/MonitoringV1APIVersion"
+                            }
+                        }
                     }
                 },
                 "operationId": "Get Monitoring API version",
@@ -1040,6 +1055,86 @@
         }
     ],
     "definitions": {
+        "InventoryAPIVersion": {
+            "required": [
+                "uriPrefix"
+            ],
+            "properties": {
+                "uriPrefix": {
+                    "type": "string",
+                    "description": "Specifies the URI prefix for the API",
+                    "example": "https://128.224.115.36:30205/o2ims-infrastructureInventory"
+                },
+                "apiVersions": {
+                    "type": "array",
+                    "description": "Version(s) supported for the API signaled by the uriPrefix attribute.",
+                    "example": [
+                        {
+                            "version": "1.0.0"
+                        }
+                    ],
+                    "items": {
+                        "$ref": "#/definitions/InventoryApiVersionStructure"
+                    }
+                }
+            },
+            "x-mask": "{uriPrefix,apiVersions}",
+            "type": "object"
+        },
+        "InventoryApiVersionStructure": {
+            "required": [
+                "version"
+            ],
+            "properties": {
+                "version": {
+                    "type": "string",
+                    "description": "Identifies a supported version.",
+                    "example": "1.0.0"
+                }
+            },
+            "x-mask": "{version}",
+            "type": "object"
+        },
+        "InventoryV1APIVersion": {
+            "required": [
+                "uriPrefix"
+            ],
+            "properties": {
+                "uriPrefix": {
+                    "type": "string",
+                    "description": "Specifies the URI prefix for the API",
+                    "example": "https://128.224.115.36:30205/o2ims-infrastructureInventory/v1"
+                },
+                "apiVersions": {
+                    "type": "array",
+                    "description": "Version(s) supported for the API signaled by the uriPrefix attribute.",
+                    "example": [
+                        {
+                            "version": "1.0.0"
+                        }
+                    ],
+                    "items": {
+                        "$ref": "#/definitions/InventoryV1ApiVersionStructure"
+                    }
+                }
+            },
+            "x-mask": "{uriPrefix,apiVersions}",
+            "type": "object"
+        },
+        "InventoryV1ApiVersionStructure": {
+            "required": [
+                "version"
+            ],
+            "properties": {
+                "version": {
+                    "type": "string",
+                    "description": "Identifies a supported version.",
+                    "example": "1.0.0"
+                }
+            },
+            "x-mask": "{version}",
+            "type": "object"
+        },
         "OcloudDto": {
             "required": [
                 "oCloudId"
@@ -1091,28 +1186,41 @@
             "properties": {
                 "resourceTypeId": {
                     "type": "string",
-                    "description": "Resource type ID"
+                    "description": "Identifier for the Resource Type.",
+                    "example": "60cba7be-e2cd-3b8c-a7ff-16e0f10573f9"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable name of the resource type.",
+                    "example": "pserver"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable description of the resource type.",
+                    "example": "The Physical Server resource type"
                 },
                 "vendor": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Provider of the Resource.",
+                    "example": ""
                 },
                 "model": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Information about the model of the resource as defined by its provider.",
+                    "example": ""
                 },
                 "version": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Version or generation of the resource as defined by its provider.",
+                    "example": ""
                 },
                 "alarmDictionary": {
                     "$ref": "#/definitions/AlarmDictionaryDto"
                 },
                 "extensions": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "List of metadata key-value pairs used to associate meaningful metadata to the related resource type.",
+                    "example": ""
                 }
             },
             "x-mask": "{resourceTypeId,name,description,model,vendor,version}",
@@ -1121,28 +1229,44 @@
         "AlarmDictionaryDto": {
             "properties": {
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the Alarm Dictionary.",
+                    "example": "7e1e59c3-c99e-3d1c-9934-21548a3a699a"
                 },
                 "alarmDictionaryVersion": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Version of the Alarm Dictionary.",
+                    "example": "0.1"
                 },
                 "alarmDictionarySchemaVersion": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Version of the Alarm Dictionary Schema to which this alarm dictionary conforms.",
+                    "example": "0.1"
                 },
                 "entityType": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "O-RAN entity type emitting the alarm: This shall be unique per vendor ResourceType.model and ResourceType.version",
+                    "example": "pserver"
                 },
                 "vendor": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Vendor of the Entity Type to whom this Alarm Dictionary applies. This should be the same value as in the ResourceType.vendor attribute.",
+                    "example": ""
                 },
                 "managementInterfaceId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "List of management interface over which alarms are transmitted for this Entity Type.",
+                    "example": "O2IMS"
                 },
                 "pkNotificationField": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifies which field or list of fields in the alarm notification contains the primary key (PK) into the Alarm Dictionary for this interface; i.e. which field contains the Alarm Definition ID.",
+                    "example": ""
                 },
                 "alarmDefinition": {
                     "type": "array",
+                    "description": "Contains the list of alarms that can be detected against this ResourceType.",
+                    "example": "",
                     "items": {
                         "$ref": "#/definitions/AlarmDefinitionDto"
                     }
@@ -1153,34 +1277,54 @@
         "AlarmDefinitionDto": {
             "properties": {
                 "alarmDefinitionId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Provides a unique identifier of the alarm being raised.",
+                    "example": "eaefa070-7cb6-3403-be46-177bd9ccc2d3"
                 },
                 "alarmName": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Provides short name for the alarm.",
+                    "example": "100.104"
                 },
                 "alarmLastChange": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Indicates the Alarm Dictionary Version in which this alarm last changed.",
+                    "example": "0.1"
                 },
                 "alarmChangeType": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Indicates the type of change that occurred during the alarm last change; added, deleted, modified.",
+                    "example": "ADDED"
                 },
                 "alarmDescription": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Provides a longer descriptive meaning of the alarm condition and a description of the consequences of the alarm condition.",
+                    "example": "host=<hostname>.filesystem=<mount-dir>\n    File System threshold exceeded; threshold x%, actual y% .\n        CRITICAL @ 90%\n        MAJOR    @ 80%\nOR\nhost=<hostname>.volumegroup=<volumegroup-name>\n    Monitor and if condition persists, consider addin ..."
                 },
                 "proposedRepairActions": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Provides guidance for proposed repair actions.",
+                    "example": "Reduce usage or resize filesystem."
                 },
                 "clearingType": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifies whether alarm is cleared automatically or manually.",
+                    "example": "MANUAL"
                 },
                 "managementInterfaceId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "List of management interface over which alarms are transmitted for this Entity Type.",
+                    "example": "O2IMS"
                 },
                 "pkNotificationField": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifies which field or list of fields in the alarm notification contains the primary key (PK) into the Alarm Dictionary for this interface; i.e. which field contains the Alarm Definition ID.",
+                    "example": ""
                 },
                 "alarmAdditionalFields": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "List of metadata key-value pairs used to associate meaningful metadata to the related resource type.",
+                    "example": ""
                 }
             },
             "type": "object"
@@ -1236,22 +1380,33 @@
             "properties": {
                 "resourceId": {
                     "type": "string",
-                    "description": "Resource ID"
+                    "description": "Identifier for the Resource.",
+                    "example": "5b3a2da8-17da-466c-b5f7-972590c7baf2"
                 },
                 "resourceTypeId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the Resource Type of this resource.",
+                    "example": "60cba7be-e2cd-3b8c-a7ff-16e0f10573f9"
                 },
                 "resourcePoolId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier of the Resource Pool containing this resource.",
+                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
                 },
                 "globalAssetId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier or serial number of the resource.",
+                    "example": ""
                 },
                 "parentId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the parent resource.",
+                    "example": "None"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable description of the resource.",
+                    "example": "id:1;hostname:controller-0;mgmt_mac:00:00:00:00:00:00;mgmt_ip:192.168.204.2;personality:controller;subfunctions:controller,worker;administrative:unlocked;operational:enabled;availability:available;clock_synchronization:ntp;capabilities:{'is_max_cpu_configurable': 'configurable', 'stor_function': 'monitor', 'Personality': 'Controller-Active'};boot_device:/dev/disk/by-path/pci-0000:02:00.0-scsi-0:1:0:0;rootfs_device:/dev/disk/by-path/pci-0000:02:00.0-scsi-0:1:0:0;software_load:22.12;install_state:None;max_cpu_mhz_allowed:None"
                 },
                 "extensions": {
                     "type": "object"
@@ -1267,22 +1422,33 @@
             "properties": {
                 "resourceId": {
                     "type": "string",
-                    "description": "Resource ID"
+                    "description": "Identifier for the Resource.",
+                    "example": "eee8b101-6b7f-4f0a-b54b-89adc0f3f906"
                 },
                 "resourceTypeId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the Resource Type of this resource.",
+                    "example": "a45983bb-199a-30ec-b7a1-eab2455f333c"
                 },
                 "resourcePoolId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier of the Resource Pool containing this resource.",
+                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
                 },
                 "globalAssetId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier or serial number of the resource.",
+                    "example": ""
                 },
                 "parentId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the parent resource.",
+                    "example": "5b3a2da8-17da-466c-b5f7-972590c7baf2"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable description of the resource.",
+                    "example": "cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0"
                 },
                 "extensions": {
                     "type": "object"
@@ -1304,22 +1470,33 @@
             "properties": {
                 "resourceId": {
                     "type": "string",
-                    "description": "Resource ID"
+                    "description": "Identifier for the Resource.",
+                    "example": "eee8b101-6b7f-4f0a-b54b-89adc0f3f906"
                 },
                 "resourceTypeId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the Resource Type of this resource.",
+                    "example": "a45983bb-199a-30ec-b7a1-eab2455f333c"
                 },
                 "resourcePoolId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier of the Resource Pool containing this resource.",
+                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
                 },
                 "globalAssetId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier or serial number of the resource.",
+                    "example": ""
                 },
                 "parentId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the parent resource.",
+                    "example": "5b3a2da8-17da-466c-b5f7-972590c7baf2"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable description of the resource.",
+                    "example": "cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0"
                 },
                 "extensions": {
                     "type": "object"
@@ -1341,22 +1518,33 @@
             "properties": {
                 "resourceId": {
                     "type": "string",
-                    "description": "Resource ID"
+                    "description": "Identifier for the Resource.",
+                    "example": "eee8b101-6b7f-4f0a-b54b-89adc0f3f906"
                 },
                 "resourceTypeId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the Resource Type of this resource.",
+                    "example": "a45983bb-199a-30ec-b7a1-eab2455f333c"
                 },
                 "resourcePoolId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier of the Resource Pool containing this resource.",
+                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
                 },
                 "globalAssetId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier or serial number of the resource.",
+                    "example": ""
                 },
                 "parentId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the parent resource.",
+                    "example": "5b3a2da8-17da-466c-b5f7-972590c7baf2"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable description of the resource.",
+                    "example": "cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0"
                 },
                 "extensions": {
                     "type": "object"
@@ -1372,29 +1560,43 @@
             "properties": {
                 "deploymentManagerId": {
                     "type": "string",
-                    "description": "Deployment manager ID"
+                    "description": "Identifier for the Deployment Manager.",
+                    "example": "c765516a-a84e-30c9-b954-9c3031bf71c8"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable name of the deployment manager.",
+                    "example": "95b818b8-b315-4d9f-af37-b82c492101f1.kubernetes"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable description of the deployment manager.",
+                    "example": "A DMS"
                 },
                 "oCloudId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the containing O-Cloud.",
+                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
                 },
                 "serviceUri": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The fully qualified URI to a Deployment Management server for O2dms services.",
+                    "example": "https://128.224.115.51:6443"
                 },
                 "profileSupportList": {
                     "type": "array",
-                    "description": "Profile support list, use default for the return                      endpoint",
+                    "description": "Profile support list, use default for the return endpoint",
+                    "example": [
+                        "native_k8sapi"
+                    ],
                     "items": {
                         "type": "string"
                     }
                 },
                 "extensions": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "List of metadata key-value pairs used to associate meaningful metadata to the related Deployment Manager",
+                    "example": ""
                 }
             },
             "x-mask": "{deploymentManagerId,name,description,oCloudId,serviceUri,profileSupportList}",
@@ -1407,19 +1609,28 @@
             "properties": {
                 "deploymentManagerId": {
                     "type": "string",
-                    "description": "Deployment manager ID"
+                    "description": "Identifier for the Deployment Manager.",
+                    "example": "c765516a-a84e-30c9-b954-9c3031bf71c8"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable name of the deployment manager.",
+                    "example": "95b818b8-b315-4d9f-af37-b82c492101f1.kubernetes"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Human readable description of the deployment manager.",
+                    "example": "A DMS"
                 },
                 "oCloudId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the containing O-Cloud.",
+                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
                 },
                 "serviceUri": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The fully qualified URI to a Deployment Management server for O2dms services.",
+                    "example": "https://128.224.115.51:6443"
                 },
                 "extensions": {
                     "$ref": "#/definitions/DeploymentManagerExtensions"
@@ -1431,7 +1642,9 @@
         "DeploymentManagerExtensions": {
             "properties": {
                 "profileName": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "",
+                    "example": ""
                 },
                 "profileData": {
                     "$ref": "#/definitions/DeploymentManagerGetDtoProfile"
@@ -1442,31 +1655,49 @@
         "DeploymentManagerGetDtoProfile": {
             "properties": {
                 "cluster_api_endpoint": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Kubernetes Cluster API Endpoint",
+                    "example": "https://128.224.115.51:6443"
                 },
                 "cluster_ca_cert": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Kubernetes Cluster CA cert",
+                    "example": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZEakNDQX....."
                 },
                 "admin_user": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Kubernetes Admin username",
+                    "example": "kubernetes-admin"
                 },
                 "admin_client_cert": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Kubernetes Admin client cert",
+                    "example": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVJRENDQW....."
                 },
                 "admin_client_key": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Kubernetes Admin client key",
+                    "example": "LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcE....."
                 },
                 "helmcli_host_with_port": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Helm CLI Host address with SSH port",
+                    "example": "128.224.115.34:30022"
                 },
                 "helmcli_username": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Helm CLI SSH login username",
+                    "example": "helm"
                 },
                 "helmcli_password": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Helm CLI SSH login password",
+                    "example": "password"
                 },
                 "helmcli_kubeconfig": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Helm CLI KUBECONFIG path",
+                    "example": "/share/kubeconfig_c765516a.config"
                 }
             },
             "type": "object"
@@ -1478,13 +1709,18 @@
             "properties": {
                 "callback": {
                     "type": "string",
-                    "description": "Subscription callback address"
+                    "description": "Identifier for the Subscription.",
+                    "example": "https://128.224.115.15:1081/smo/v1/o2ims_inventory_observer"
                 },
                 "consumerSubscriptionId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the consumer of events sent due to the Subscription.",
+                    "example": "3F20D850-AF4F-A84F-FB5A-0AD585410361"
                 },
                 "filter": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported.",
+                    "example": ""
                 }
             },
             "type": "object"
@@ -1496,19 +1732,106 @@
             "properties": {
                 "subscriptionId": {
                     "type": "string",
-                    "description": "Subscription ID"
+                    "description": "Identifier for the Subscription.",
+                    "example": "0bea3e71-d2f7-4bf3-9c06-41d8d35806f9"
                 },
                 "callback": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The fully qualified URI to a consumer procedure which can process a Post of the InventoryEventNotification.",
+                    "example": "https://128.224.115.15:1081/smo/v1/o2ims_inventory_observer"
                 },
                 "consumerSubscriptionId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the consumer of events sent due to the Subscription.",
+                    "example": "3F20D850-AF4F-A84F-FB5A-0AD585410361"
                 },
                 "filter": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported.",
+                    "example": ""
                 }
             },
             "x-mask": "{subscriptionId,callback}",
+            "type": "object"
+        },
+        "MonitoringAPIVersion": {
+            "required": [
+                "uriPrefix"
+            ],
+            "properties": {
+                "uriPrefix": {
+                    "type": "string",
+                    "description": "Specifies the URI prefix for the API",
+                    "example": "https://128.224.115.36:30205/o2ims-infrastructureMonitoring"
+                },
+                "apiVersions": {
+                    "type": "array",
+                    "description": "Version(s) supported for the API signaled by the uriPrefix attribute.",
+                    "example": [
+                        {
+                            "version": "1.0.0"
+                        }
+                    ],
+                    "items": {
+                        "$ref": "#/definitions/MonitoringApiVersionStructure"
+                    }
+                }
+            },
+            "x-mask": "{uriPrefix,apiVersions}",
+            "type": "object"
+        },
+        "MonitoringApiVersionStructure": {
+            "required": [
+                "version"
+            ],
+            "properties": {
+                "version": {
+                    "type": "string",
+                    "description": "Identifies a supported version.",
+                    "example": "1.0.0"
+                }
+            },
+            "x-mask": "{version}",
+            "type": "object"
+        },
+        "MonitoringV1APIVersion": {
+            "required": [
+                "uriPrefix"
+            ],
+            "properties": {
+                "uriPrefix": {
+                    "type": "string",
+                    "description": "Specifies the URI prefix for the API",
+                    "example": "https://128.224.115.36:30205/o2ims-infrastructureMonitoring/v1"
+                },
+                "apiVersions": {
+                    "type": "array",
+                    "description": "Version(s) supported for the API signaled by the uriPrefix attribute.",
+                    "example": [
+                        {
+                            "version": "1.0.0"
+                        }
+                    ],
+                    "items": {
+                        "$ref": "#/definitions/MonitoringV1ApiVersionStructure"
+                    }
+                }
+            },
+            "x-mask": "{uriPrefix,apiVersions}",
+            "type": "object"
+        },
+        "MonitoringV1ApiVersionStructure": {
+            "required": [
+                "version"
+            ],
+            "properties": {
+                "version": {
+                    "type": "string",
+                    "description": "Identifies a supported version.",
+                    "example": "1.0.0"
+                }
+            },
+            "x-mask": "{version}",
             "type": "object"
         },
         "AlarmGetDto": {
@@ -1518,47 +1841,73 @@
             "properties": {
                 "alarmEventRecordId": {
                     "type": "string",
-                    "description": "Alarm Event Record ID",
-                    "example": "f078a1d3-56df-46c2-88a2-dd659aa3f6bd"
+                    "description": "The identifier for the AlarmEventRecord Object.",
+                    "example": "97cc2b01-0e71-4a93-a911-2e87f04d996f"
                 },
                 "resourceTypeId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "A reference to the type of resource which caused the alarm.",
+                    "example": "60cba7be-e2cd-3b8c-a7ff-16e0f10573f9"
                 },
                 "resourceTypeID": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "A reference to the type of resource which caused the alarm.(Specification)",
+                    "example": "60cba7be-e2cd-3b8c-a7ff-16e0f10573f9"
                 },
                 "resourceId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "A reference to the resource instance which caused the alarm.",
+                    "example": "5b3a2da8-17da-466c-b5f7-972590c7baf2"
                 },
                 "resourceID": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "A reference to the resource instance which caused the alarm.(Specification)",
+                    "example": "5b3a2da8-17da-466c-b5f7-972590c7baf2"
                 },
                 "alarmDefinitionId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "A reference to the Alarm Definition record in the Alarm Dictionary associated with the referenced Resource Type.",
+                    "example": "1197f463-b3d4-3aa3-9c14-faa493baa069"
                 },
                 "alarmDefinitionID": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "A reference to the Alarm Definition record in the Alarm Dictionary associated with the referenced Resource Type.(Specification)",
+                    "example": "1197f463-b3d4-3aa3-9c14-faa493baa069"
                 },
                 "probableCauseId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "A reference to the ProbableCause of the Alarm.",
+                    "example": "f52054c9-6f3c-39a0-aab8-e00e01d8c4d3"
                 },
                 "probableCauseID": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "A reference to the ProbableCause of the Alarm.(Specification)",
+                    "example": "f52054c9-6f3c-39a0-aab8-e00e01d8c4d3"
                 },
                 "alarmRaisedTime": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Date/Time stamp value when the AlarmEventRecord has been created.",
+                    "example": "2022-12-22 09:42:53"
                 },
                 "alarmChangedTime": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Date/Time stamp value when any value of the AlarmEventRecord has been modified.",
+                    "example": ""
                 },
                 "alarmAcknowledgeTime": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Date/Time stamp value when the alarm condition is acknowledged.",
+                    "example": ""
                 },
                 "alarmAcknowledged": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "Boolean value indicating of a management system has acknowledged the alarm.",
+                    "example": false
                 },
                 "perceivedSeverity": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "One of the following values: \n 0 for \"CRITICAL\" \n1 for \"MAJOR\" \n2 for \"MINOR\" \n3 for \"WARNING\" \n4 for \"INDETERMINATE\" \n5 for \"CLEARED\"",
+                    "example": "1"
                 },
                 "extensions": {
                     "type": "object"
@@ -1573,13 +1922,18 @@
             "properties": {
                 "callback": {
                     "type": "string",
-                    "description": "Alarm Subscription callback address"
+                    "description": "The fully qualified URI to a consumer procedure which can process a Post of the InventoryEventNotification.",
+                    "example": "https://128.224.115.15:1081/smo/v1/o2ims_alarm_observer"
                 },
                 "consumerSubscriptionId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the consumer of events sent due to the Subscription.",
+                    "example": "3F20D850-AF4F-A84F-FB5A-0AD585410361"
                 },
                 "filter": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported.",
+                    "example": ""
                 }
             },
             "type": "object"
@@ -1591,16 +1945,23 @@
             "properties": {
                 "alarmSubscriptionId": {
                     "type": "string",
-                    "description": "Alarm Subscription ID"
+                    "description": "Identifier for the Alarm Subscription.",
+                    "example": "e320da6d-27a8-4948-8b52-3bf3355b45f3"
                 },
                 "callback": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The fully qualified URI to a consumer procedure which can process a Post of the InventoryEventNotification.",
+                    "example": "https://128.224.115.15:1081/smo/v1/o2ims_alarm_observer"
                 },
                 "consumerSubscriptionId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier for the consumer of events sent due to the Subscription.",
+                    "example": "3F20D850-AF4F-A84F-FB5A-0AD585410361"
                 },
                 "filter": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported.",
+                    "example": ""
                 }
             },
             "x-mask": "{alarmSubscriptionId,callback}",

@@ -24,6 +24,8 @@ paths:
       responses:
         "200":
           description: Success
+          schema:
+            $ref: '#/definitions/InventoryAPIVersion'
   /o2ims-infrastructureInventory/v1:
     get:
       tags:
@@ -99,6 +101,8 @@ paths:
       responses:
         "200":
           description: Success
+          schema:
+            $ref: '#/definitions/InventoryV1APIVersion'
   /o2ims-infrastructureInventory/v1/deploymentManagers:
     get:
       tags:
@@ -565,6 +569,8 @@ paths:
       responses:
         "200":
           description: Success
+          schema:
+            $ref: '#/definitions/MonitoringAPIVersion'
   /o2ims-infrastructureMonitoring/v1/alarmSubscriptions:
     get:
       tags:
@@ -768,7 +774,65 @@ paths:
       responses:
         "200":
           description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MonitoringV1APIVersion'
 definitions:
+  InventoryAPIVersion:
+    type: object
+    required:
+    - uriPrefix
+    properties:
+      uriPrefix:
+        type: string
+        example: https://128.224.115.36:30205/o2ims-infrastructureInventory
+        description: Specifies the URI prefix for the API
+      apiVersions:
+        type: array
+        example:
+        - version: 1.0.0
+        description: Version(s) supported for the API signaled by the uriPrefix attribute.
+        items:
+          $ref: '#/definitions/InventoryApiVersionStructure'
+    x-mask: "{uriPrefix,apiVersions}"
+  InventoryApiVersionStructure:
+    type: object
+    required:
+    - version
+    properties:
+      version:
+        type: string
+        example: 1.0.0
+        description: Identifies a supported version.
+    x-mask: "{version}"
+  InventoryV1APIVersion:
+    type: object
+    required:
+    - uriPrefix
+    properties:
+      uriPrefix:
+        type: string
+        example: https://128.224.115.36:30205/o2ims-infrastructureInventory/v1
+        description: Specifies the URI prefix for the API
+      apiVersions:
+        type: array
+        example:
+        - version: 1.0.0
+        description: Version(s) supported for the API signaled by the uriPrefix attribute.
+        items:
+          $ref: '#/definitions/InventoryV1ApiVersionStructure'
+    x-mask: "{uriPrefix,apiVersions}"
+  InventoryV1ApiVersionStructure:
+    type: object
+    required:
+    - version
+    properties:
+      version:
+        type: string
+        example: 1.0.0
+        description: Identifies a supported version.
+    x-mask: "{version}"
   OcloudDto:
     type: object
     required:
@@ -810,41 +874,70 @@ definitions:
     properties:
       resourceTypeId:
         type: string
-        description: Resource type ID
+        example: 60cba7be-e2cd-3b8c-a7ff-16e0f10573f9
+        description: Identifier for the Resource Type.
       name:
         type: string
+        example: pserver
+        description: Human readable name of the resource type.
       description:
         type: string
+        example: The Physical Server resource type
+        description: Human readable description of the resource type.
       vendor:
         type: string
+        example: ""
+        description: Provider of the Resource.
       model:
         type: string
+        example: ""
+        description: Information about the model of the resource as defined by its provider.
       version:
         type: string
+        example: ""
+        description: Version or generation of the resource as defined by its provider.
       alarmDictionary:
         $ref: '#/definitions/AlarmDictionaryDto'
       extensions:
         type: string
+        example: ""
+        description: List of metadata key-value pairs used to associate meaningful metadata to the related resource type.
     x-mask: "{resourceTypeId,name,description,model,vendor,version}"
   AlarmDictionaryDto:
     type: object
     properties:
       id:
         type: string
+        example: 7e1e59c3-c99e-3d1c-9934-21548a3a699a
+        description: Identifier for the Alarm Dictionary.
       alarmDictionaryVersion:
         type: string
+        example: "0.1"
+        description: Version of the Alarm Dictionary.
       alarmDictionarySchemaVersion:
         type: string
+        example: "0.1"
+        description: Version of the Alarm Dictionary Schema to which this alarm dictionary conforms.
       entityType:
         type: string
+        example: pserver
+        description: "O-RAN entity type emitting the alarm: This shall be unique per vendor ResourceType.model and ResourceType.version"
       vendor:
         type: string
+        example: ""
+        description: Vendor of the Entity Type to whom this Alarm Dictionary applies. This should be the same value as in the ResourceType.vendor attribute.
       managementInterfaceId:
         type: string
+        example: O2IMS
+        description: List of management interface over which alarms are transmitted for this Entity Type.
       pkNotificationField:
         type: string
+        example: ""
+        description: Identifies which field or list of fields in the alarm notification contains the primary key (PK) into the Alarm Dictionary for this interface; i.e. which field contains the Alarm Definition ID.
       alarmDefinition:
         type: array
+        example: ""
+        description: Contains the list of alarms that can be detected against this ResourceType.
         items:
           $ref: '#/definitions/AlarmDefinitionDto'
   AlarmDefinitionDto:
@@ -852,24 +945,51 @@ definitions:
     properties:
       alarmDefinitionId:
         type: string
+        example: eaefa070-7cb6-3403-be46-177bd9ccc2d3
+        description: Provides a unique identifier of the alarm being raised.
       alarmName:
         type: string
+        example: "100.104"
+        description: Provides short name for the alarm.
       alarmLastChange:
         type: string
+        example: "0.1"
+        description: Indicates the Alarm Dictionary Version in which this alarm last changed.
       alarmChangeType:
         type: string
+        example: ADDED
+        description: "Indicates the type of change that occurred during the alarm last change; added, deleted, modified."
       alarmDescription:
         type: string
+        example: |-
+          host=<hostname>.filesystem=<mount-dir>
+              File System threshold exceeded; threshold x%, actual y% .
+                  CRITICAL @ 90%
+                  MAJOR    @ 80%
+          OR
+          host=<hostname>.volumegroup=<volumegroup-name>
+              Monitor and if condition persists, consider addin ...
+        description: Provides a longer descriptive meaning of the alarm condition and a description of the consequences of the alarm condition.
       proposedRepairActions:
         type: string
+        example: Reduce usage or resize filesystem.
+        description: Provides guidance for proposed repair actions.
       clearingType:
         type: string
+        example: MANUAL
+        description: Identifies whether alarm is cleared automatically or manually.
       managementInterfaceId:
         type: string
+        example: O2IMS
+        description: List of management interface over which alarms are transmitted for this Entity Type.
       pkNotificationField:
         type: string
+        example: ""
+        description: Identifies which field or list of fields in the alarm notification contains the primary key (PK) into the Alarm Dictionary for this interface; i.e. which field contains the Alarm Definition ID.
       alarmAdditionalFields:
         type: string
+        example: ""
+        description: List of metadata key-value pairs used to associate meaningful metadata to the related resource type.
   ResourcePoolGetDto:
     type: object
     required:
@@ -911,17 +1031,28 @@ definitions:
     properties:
       resourceId:
         type: string
-        description: Resource ID
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
+        description: Identifier for the Resource.
       resourceTypeId:
         type: string
+        example: 60cba7be-e2cd-3b8c-a7ff-16e0f10573f9
+        description: Identifier for the Resource Type of this resource.
       resourcePoolId:
         type: string
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
+        description: Identifier of the Resource Pool containing this resource.
       globalAssetId:
         type: string
+        example: ""
+        description: Identifier or serial number of the resource.
       parentId:
         type: string
+        example: None
+        description: Identifier for the parent resource.
       description:
         type: string
+        example: "id:1;hostname:controller-0;mgmt_mac:00:00:00:00:00:00;mgmt_ip:192.168.204.2;personality:controller;subfunctions:controller,worker;administrative:unlocked;operational:enabled;availability:available;clock_synchronization:ntp;capabilities:{'is_max_cpu_configurable': 'configurable', 'stor_function': 'monitor', 'Personality': 'Controller-Active'};boot_device:/dev/disk/by-path/pci-0000:02:00.0-scsi-0:1:0:0;rootfs_device:/dev/disk/by-path/pci-0000:02:00.0-scsi-0:1:0:0;software_load:22.12;install_state:None;max_cpu_mhz_allowed:None"
+        description: Human readable description of the resource.
       extensions:
         type: object
         properties: {}
@@ -933,17 +1064,28 @@ definitions:
     properties:
       resourceId:
         type: string
-        description: Resource ID
+        example: eee8b101-6b7f-4f0a-b54b-89adc0f3f906
+        description: Identifier for the Resource.
       resourceTypeId:
         type: string
+        example: a45983bb-199a-30ec-b7a1-eab2455f333c
+        description: Identifier for the Resource Type of this resource.
       resourcePoolId:
         type: string
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
+        description: Identifier of the Resource Pool containing this resource.
       globalAssetId:
         type: string
+        example: ""
+        description: Identifier or serial number of the resource.
       parentId:
         type: string
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
+        description: Identifier for the parent resource.
       description:
         type: string
+        example: cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0
+        description: Human readable description of the resource.
       extensions:
         type: object
         properties: {}
@@ -959,17 +1101,28 @@ definitions:
     properties:
       resourceId:
         type: string
-        description: Resource ID
+        example: eee8b101-6b7f-4f0a-b54b-89adc0f3f906
+        description: Identifier for the Resource.
       resourceTypeId:
         type: string
+        example: a45983bb-199a-30ec-b7a1-eab2455f333c
+        description: Identifier for the Resource Type of this resource.
       resourcePoolId:
         type: string
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
+        description: Identifier of the Resource Pool containing this resource.
       globalAssetId:
         type: string
+        example: ""
+        description: Identifier or serial number of the resource.
       parentId:
         type: string
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
+        description: Identifier for the parent resource.
       description:
         type: string
+        example: cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0
+        description: Human readable description of the resource.
       extensions:
         type: object
         properties: {}
@@ -985,17 +1138,28 @@ definitions:
     properties:
       resourceId:
         type: string
-        description: Resource ID
+        example: eee8b101-6b7f-4f0a-b54b-89adc0f3f906
+        description: Identifier for the Resource.
       resourceTypeId:
         type: string
+        example: a45983bb-199a-30ec-b7a1-eab2455f333c
+        description: Identifier for the Resource Type of this resource.
       resourcePoolId:
         type: string
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
+        description: Identifier of the Resource Pool containing this resource.
       globalAssetId:
         type: string
+        example: ""
+        description: Identifier or serial number of the resource.
       parentId:
         type: string
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
+        description: Identifier for the parent resource.
       description:
         type: string
+        example: cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0
+        description: Human readable description of the resource.
       extensions:
         type: object
         properties: {}
@@ -1007,22 +1171,35 @@ definitions:
     properties:
       deploymentManagerId:
         type: string
-        description: Deployment manager ID
+        example: c765516a-a84e-30c9-b954-9c3031bf71c8
+        description: Identifier for the Deployment Manager.
       name:
         type: string
+        example: 95b818b8-b315-4d9f-af37-b82c492101f1.kubernetes
+        description: Human readable name of the deployment manager.
       description:
         type: string
+        example: A DMS
+        description: Human readable description of the deployment manager.
       oCloudId:
         type: string
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
+        description: Identifier for the containing O-Cloud.
       serviceUri:
         type: string
+        example: https://128.224.115.51:6443
+        description: The fully qualified URI to a Deployment Management server for O2dms services.
       profileSupportList:
         type: array
-        description: "Profile support list, use default for the return                      endpoint"
+        example:
+        - native_k8sapi
+        description: "Profile support list, use default for the return endpoint"
         items:
           type: string
       extensions:
         type: string
+        example: ""
+        description: List of metadata key-value pairs used to associate meaningful metadata to the related Deployment Manager
     x-mask: "{deploymentManagerId,name,description,oCloudId,serviceUri,profileSupportList}"
   DeploymentManagerGetDto:
     type: object
@@ -1031,15 +1208,24 @@ definitions:
     properties:
       deploymentManagerId:
         type: string
-        description: Deployment manager ID
+        example: c765516a-a84e-30c9-b954-9c3031bf71c8
+        description: Identifier for the Deployment Manager.
       name:
         type: string
+        example: 95b818b8-b315-4d9f-af37-b82c492101f1.kubernetes
+        description: Human readable name of the deployment manager.
       description:
         type: string
+        example: A DMS
+        description: Human readable description of the deployment manager.
       oCloudId:
         type: string
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
+        description: Identifier for the containing O-Cloud.
       serviceUri:
         type: string
+        example: https://128.224.115.51:6443
+        description: The fully qualified URI to a Deployment Management server for O2dms services.
       extensions:
         $ref: '#/definitions/DeploymentManagerExtensions'
     x-mask: "{deploymentManagerId,name,description,oCloudId,serviceUri,extensions,profileName,profileData}"
@@ -1048,6 +1234,8 @@ definitions:
     properties:
       profileName:
         type: string
+        example: ""
+        description: ""
       profileData:
         $ref: '#/definitions/DeploymentManagerGetDtoProfile'
   DeploymentManagerGetDtoProfile:
@@ -1055,22 +1243,40 @@ definitions:
     properties:
       cluster_api_endpoint:
         type: string
+        example: https://128.224.115.51:6443
+        description: Kubernetes Cluster API Endpoint
       cluster_ca_cert:
         type: string
+        example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZEakNDQX.....
+        description: Kubernetes Cluster CA cert
       admin_user:
         type: string
+        example: kubernetes-admin
+        description: Kubernetes Admin username
       admin_client_cert:
         type: string
+        example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVJRENDQW.....
+        description: Kubernetes Admin client cert
       admin_client_key:
         type: string
+        example: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcE.....
+        description: Kubernetes Admin client key
       helmcli_host_with_port:
         type: string
+        example: 128.224.115.34:30022
+        description: Helm CLI Host address with SSH port
       helmcli_username:
         type: string
+        example: helm
+        description: Helm CLI SSH login username
       helmcli_password:
         type: string
+        example: password
+        description: Helm CLI SSH login password
       helmcli_kubeconfig:
         type: string
+        example: /share/kubeconfig_c765516a.config
+        description: Helm CLI KUBECONFIG path
   SubscriptionCreateDto:
     type: object
     required:
@@ -1078,11 +1284,16 @@ definitions:
     properties:
       callback:
         type: string
-        description: Subscription callback address
+        example: https://128.224.115.15:1081/smo/v1/o2ims_inventory_observer
+        description: Identifier for the Subscription.
       consumerSubscriptionId:
         type: string
+        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
+        description: Identifier for the consumer of events sent due to the Subscription.
       filter:
         type: string
+        example: ""
+        description: "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported."
   SubscriptionGetDto:
     type: object
     required:
@@ -1090,14 +1301,75 @@ definitions:
     properties:
       subscriptionId:
         type: string
-        description: Subscription ID
+        example: 0bea3e71-d2f7-4bf3-9c06-41d8d35806f9
+        description: Identifier for the Subscription.
       callback:
         type: string
+        example: https://128.224.115.15:1081/smo/v1/o2ims_inventory_observer
+        description: The fully qualified URI to a consumer procedure which can process a Post of the InventoryEventNotification.
       consumerSubscriptionId:
         type: string
+        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
+        description: Identifier for the consumer of events sent due to the Subscription.
       filter:
         type: string
+        example: ""
+        description: "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported."
     x-mask: "{subscriptionId,callback}"
+  MonitoringAPIVersion:
+    type: object
+    required:
+    - uriPrefix
+    properties:
+      uriPrefix:
+        type: string
+        example: https://128.224.115.36:30205/o2ims-infrastructureMonitoring
+        description: Specifies the URI prefix for the API
+      apiVersions:
+        type: array
+        example:
+        - version: 1.0.0
+        description: Version(s) supported for the API signaled by the uriPrefix attribute.
+        items:
+          $ref: '#/definitions/MonitoringApiVersionStructure'
+    x-mask: "{uriPrefix,apiVersions}"
+  MonitoringApiVersionStructure:
+    type: object
+    required:
+    - version
+    properties:
+      version:
+        type: string
+        example: 1.0.0
+        description: Identifies a supported version.
+    x-mask: "{version}"
+  MonitoringV1APIVersion:
+    type: object
+    required:
+    - uriPrefix
+    properties:
+      uriPrefix:
+        type: string
+        example: https://128.224.115.36:30205/o2ims-infrastructureMonitoring/v1
+        description: Specifies the URI prefix for the API
+      apiVersions:
+        type: array
+        example:
+        - version: 1.0.0
+        description: Version(s) supported for the API signaled by the uriPrefix attribute.
+        items:
+          $ref: '#/definitions/MonitoringV1ApiVersionStructure'
+    x-mask: "{uriPrefix,apiVersions}"
+  MonitoringV1ApiVersionStructure:
+    type: object
+    required:
+    - version
+    properties:
+      version:
+        type: string
+        example: 1.0.0
+        description: Identifies a supported version.
+    x-mask: "{version}"
   AlarmGetDto:
     type: object
     required:
@@ -1105,34 +1377,60 @@ definitions:
     properties:
       alarmEventRecordId:
         type: string
-        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
-        description: Alarm Event Record ID
+        example: 97cc2b01-0e71-4a93-a911-2e87f04d996f
+        description: The identifier for the AlarmEventRecord Object.
       resourceTypeId:
         type: string
+        example: 60cba7be-e2cd-3b8c-a7ff-16e0f10573f9
+        description: A reference to the type of resource which caused the alarm.
       resourceTypeID:
         type: string
+        example: 60cba7be-e2cd-3b8c-a7ff-16e0f10573f9
+        description: A reference to the type of resource which caused the alarm.(Specification)
       resourceId:
         type: string
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
+        description: A reference to the resource instance which caused the alarm.
       resourceID:
         type: string
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
+        description: A reference to the resource instance which caused the alarm.(Specification)
       alarmDefinitionId:
         type: string
+        example: 1197f463-b3d4-3aa3-9c14-faa493baa069
+        description: A reference to the Alarm Definition record in the Alarm Dictionary associated with the referenced Resource Type.
       alarmDefinitionID:
         type: string
+        example: 1197f463-b3d4-3aa3-9c14-faa493baa069
+        description: A reference to the Alarm Definition record in the Alarm Dictionary associated with the referenced Resource Type.(Specification)
       probableCauseId:
         type: string
+        example: f52054c9-6f3c-39a0-aab8-e00e01d8c4d3
+        description: A reference to the ProbableCause of the Alarm.
       probableCauseID:
         type: string
+        example: f52054c9-6f3c-39a0-aab8-e00e01d8c4d3
+        description: A reference to the ProbableCause of the Alarm.(Specification)
       alarmRaisedTime:
         type: string
+        example: 2022-12-22 09:42:53
+        description: Date/Time stamp value when the AlarmEventRecord has been created.
       alarmChangedTime:
         type: string
+        example: ""
+        description: Date/Time stamp value when any value of the AlarmEventRecord has been modified.
       alarmAcknowledgeTime:
         type: string
+        example: ""
+        description: Date/Time stamp value when the alarm condition is acknowledged.
       alarmAcknowledged:
         type: boolean
+        example: false
+        description: Boolean value indicating of a management system has acknowledged the alarm.
       perceivedSeverity:
         type: string
+        example: "1"
+        description: "One of the following values: \n 0 for \"CRITICAL\" \n1 for \"MAJOR\" \n2 for \"MINOR\" \n3 for \"WARNING\" \n4 for \"INDETERMINATE\" \n5 for \"CLEARED\""
       extensions:
         type: object
         properties: {}
@@ -1143,11 +1441,16 @@ definitions:
     properties:
       callback:
         type: string
-        description: Alarm Subscription callback address
+        example: https://128.224.115.15:1081/smo/v1/o2ims_alarm_observer
+        description: The fully qualified URI to a consumer procedure which can process a Post of the InventoryEventNotification.
       consumerSubscriptionId:
         type: string
+        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
+        description: Identifier for the consumer of events sent due to the Subscription.
       filter:
         type: string
+        example: ""
+        description: "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported."
   AlarmSubscriptionGetDto:
     type: object
     required:
@@ -1155,13 +1458,20 @@ definitions:
     properties:
       alarmSubscriptionId:
         type: string
-        description: Alarm Subscription ID
+        example: e320da6d-27a8-4948-8b52-3bf3355b45f3
+        description: Identifier for the Alarm Subscription.
       callback:
         type: string
+        example: https://128.224.115.15:1081/smo/v1/o2ims_alarm_observer
+        description: The fully qualified URI to a consumer procedure which can process a Post of the InventoryEventNotification.
       consumerSubscriptionId:
         type: string
+        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
+        description: Identifier for the consumer of events sent due to the Subscription.
       filter:
         type: string
+        example: ""
+        description: "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported."
     x-mask: "{alarmSubscriptionId,callback}"
 responses:
   ParseError:

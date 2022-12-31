@@ -23,7 +23,8 @@ from o2ims.domain import ocloud
 from o2ims.views import ocloud_view
 from o2ims.views.api_ns import api_ims_inventory as api_ims_inventory_v1
 from o2ims.views.ocloud_dto import OcloudDTO, ResourceTypeDTO,\
-    ResourcePoolDTO, ResourceDTO, DeploymentManagerDTO, SubscriptionDTO
+    ResourcePoolDTO, ResourceDTO, DeploymentManagerDTO, SubscriptionDTO, \
+    InventoryApiV1DTO
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -38,7 +39,10 @@ def configure_api_route():
 # ----------  API versions ---------- #
 @api_ims_inventory_v1.route("/v1/api_versions")
 class VersionRouter(Resource):
+    model = InventoryApiV1DTO.api_version_info_get
+
     @api_ims_inventory_v1.doc('Get Inventory API version')
+    @api_ims_inventory_v1.marshal_with(model)
     def get(self):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],

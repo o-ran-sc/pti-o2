@@ -21,7 +21,8 @@ from o2common.views.route_exception import NotFoundException, \
     BadRequestException
 from o2ims.views import alarm_view
 from o2ims.views.api_ns import api_ims_monitoring as api_monitoring_v1
-from o2ims.views.alarm_dto import AlarmDTO, SubscriptionDTO
+from o2ims.views.alarm_dto import AlarmDTO, SubscriptionDTO, \
+    MonitoringApiV1DTO
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -36,7 +37,10 @@ def configure_api_route():
 # ----------  API versions ---------- #
 @api_monitoring_v1.route("/v1/api_versions")
 class VersionRouter(Resource):
+    model = MonitoringApiV1DTO.api_version_info_get
+
     @api_monitoring_v1.doc('Get Monitoring API version')
+    @api_monitoring_v1.marshal_list_with(model)
     def get(self):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],

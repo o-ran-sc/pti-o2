@@ -7,7 +7,7 @@ INF O2 Service Overview
 
 This project implements a reference O-RAN O2 IMS and DMS service to expose the INF platform to SMO via the O-RAN O2 interface.
 
-In the E release, the following APIs are supported by the INF O2 service:
+In the F release, the following APIs are supported by the INF O2 service:
 
 1. INF O2 service Infrastructure Management Service (IMS)
 

@@ -24,7 +24,7 @@ Preface
 Before starting the installation and deployment of O-RAN O2 service, you should have already deployed O-RAN INF platform, and you need to download the helm charts or build from source as described in developer-guide.
 
 
-INF O2 Service in E Release
+INF O2 Service in F Release
 ===========================
 
 1. Provision remote cli for kubernetes over INF platform
@@ -116,7 +116,7 @@ The following instruction should be done outside of INF platform controller host
 
 .. code:: shell
 
-  git clone -b e-release "https://gerrit.o-ran-sc.org/r/pti/o2"
+  git clone -b f-release "https://gerrit.o-ran-sc.org/r/pti/o2"
 
 
 

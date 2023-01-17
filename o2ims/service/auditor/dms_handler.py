@@ -23,7 +23,6 @@ from o2ims.domain.subscription_obj import NotificationEventEnum
 from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.domain.resource_type import MismatchedModel
 from o2ims.domain.ocloud import DeploymentManager
-from o2common.config import config
 # if TYPE_CHECKING:
 #     from . import unit_of_work
 
@@ -76,14 +75,14 @@ def is_outdated(ocloud: DeploymentManager, stxobj: StxGenericModel):
 
 
 def create_by(stxobj: StxGenericModel, parentid: str) -> DeploymentManager:
-    dmsendpoint = config.get_api_url() +\
-        config.get_o2dms_api_base() + "/" + stxobj.id
     description = "A DMS"
     ocloudid = parentid
     supportedLocations = ''
     capabilities = ''
     capacity = ''
-    profile = _convert_content(stxobj.content)
+    content = json.loads(stxobj.content)
+    dmsendpoint = content['cluster_api_endpoint']
+    profile = _convert_content(content)
     localmodel = DeploymentManager(
         stxobj.id, stxobj.name, ocloudid, dmsendpoint, description,
         supportedLocations, capabilities, capacity, profile)
@@ -119,9 +118,9 @@ def update_by(target: DeploymentManager, stxobj: StxGenericModel,
     ))
 
 
-def _convert_content(stxobj_content: str):
+def _convert_content(content: str):
     # Convert api retrun content to dict object
-    content = json.loads(stxobj_content)
+    # content = json.loads(stxobj_content)
     admin_user = content["admin_user"]
     cluster_api_endpoint = content["cluster_api_endpoint"]
     cluster_ca_cert = _b64_encode_str(content["cluster_ca_cert"])

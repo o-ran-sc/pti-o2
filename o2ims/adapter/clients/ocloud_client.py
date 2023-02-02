@@ -635,7 +635,7 @@ class StxClientImp(object):
         setattr(cluster, 'name', cluster.cloud_name +
                 '.' + cluster.cluster_name)
         setattr(cluster, 'uuid',
-                uuid.uuid3(uuid.NAMESPACE_URL, cluster.name))
+                uuid.uuid3(uuid.NAMESPACE_URL, cluster.cluster_name))
         setattr(cluster, 'updated_at', None)
         setattr(cluster, 'created_at', None)
         setattr(cluster, 'events', [])

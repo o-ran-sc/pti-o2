@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2023 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -21,6 +21,9 @@ replicaCount: 1
 
 nameOverride: ""
 fullnameOverride: ""
+
+podLabels: {}
+podAnnotations: {}
 
 # The default value "" doesn't work with binaryData,
 # So generate the value with:

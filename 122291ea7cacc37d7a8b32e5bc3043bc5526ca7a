@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b772da2d_ad1b8250",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1002105
+      },
+      "writtenOn": "2023-03-28T13:20:21Z",
+      "side": 1,
+      "message": "Though not part of required template for this repo, would be helpful to list TestPlan",
+      "revId": "122291ea7cacc37d7a8b32e5bc3043bc5526ca7a",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

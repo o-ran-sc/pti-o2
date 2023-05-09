@@ -1,6 +1,6 @@
 flask
 flask-restx
-sqlalchemy
+sqlalchemy<2.0.0
 redis
 psycopg2-binary
 cotyledon

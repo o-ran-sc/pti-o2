@@ -36,14 +36,16 @@ class StxGenericModel(AgRoot):
             self.createtime = datetime.datetime.strptime(
                 api_response.created_at.split('.')[0], "%Y-%m-%dT%H:%M:%S") \
                 if api_response.created_at else None
-            self.hash = content_hash
-            if not self.hash:
-                if hasattr(api_response, 'filtered'):
-                    self.filtered = api_response.filtered
-                    self.hash = str(hash((self.id, str(self.filtered))))
-                else:
-                    self.hash = str(hash((self.id, self.updatetime)))
-            self.content = json.dumps(api_response.to_dict())
+            self.filtered = getattr(api_response, 'filtered', None)
+            self.hash = content_hash or str(
+                hash((self.id, str(self.filtered)
+                      if self.filtered else self.updatetime)))
+
+            def handle_non_serializable(obj):
+                return repr(obj)
+            self.content = json.dumps(
+                vars(api_response), default=handle_non_serializable)
+
             if ResourceTypeEnum.RESOURCE_POOL == type:
                 self.res_pool_id = self.id
 

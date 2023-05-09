@@ -89,6 +89,20 @@ def test_get_k8s_list(real_stx_aio_client):
         assert k8s3.id == k8s4.id
 
 
+def test_get_label_list(real_stx_aio_client):
+    stxClientImp = StxClientImp(real_stx_aio_client)
+    assert stxClientImp is not None
+    hostlist = stxClientImp.getPserverList()
+    assert len(hostlist) > 0
+
+    print(hostlist[0].id)
+
+    labellist = stxClientImp.getLabelList(hostid=hostlist[0].id)
+    assert len(labellist) > 0
+    label1 = labellist[0]
+    assert label1.id == "test"
+
+
 def test_get_cpu_list(real_stx_aio_client):
     stxClientImp = StxClientImp(real_stx_aio_client)
     assert stxClientImp is not None

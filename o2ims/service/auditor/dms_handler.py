@@ -77,10 +77,12 @@ def is_outdated(ocloud: DeploymentManager, stxobj: StxGenericModel):
 def create_by(stxobj: StxGenericModel, parentid: str) -> DeploymentManager:
     description = "A DMS"
     ocloudid = parentid
-    supportedLocations = ''
-    capabilities = ''
-    capacity = ''
     content = json.loads(stxobj.content)
+    # logger.info(stxobj)
+    # logger.info(content)
+    supportedLocations = ''
+    capabilities = content['capabilities']
+    capacity = ''
     dmsendpoint = content['cluster_api_endpoint']
     profile = _convert_content(content)
     localmodel = DeploymentManager(
@@ -103,13 +105,16 @@ def update_by(target: DeploymentManager, stxobj: StxGenericModel,
               parentid: str) -> None:
     if target.deploymentManagerId != stxobj.id:
         raise MismatchedModel("Mismatched Id")
+    content = json.loads(stxobj.content)
+    logger.info(content)
     target.name = stxobj.name
     target.createtime = stxobj.createtime
     target.updatetime = stxobj.updatetime
     target.hash = stxobj.hash
     target.oCloudId = parentid
+    target.capabilities = content['capabilities']
     target.version_number = target.version_number + 1
-    target.profile = _convert_content(stxobj.content)
+    target.profile = _convert_content(content)
 
     target.events.append(events.DmsChanged(
         id=stxobj.id,

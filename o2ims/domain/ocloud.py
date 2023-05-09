@@ -63,6 +63,8 @@ class DeploymentManager(AgRoot, Serializer):
             elif profile == DeploymentManagerProfileSOL018HelmCLI:
                 d['profileSupportList'].append(profile)
 
+        if 'capabilities' in d and d['capabilities'] != '':
+            d['capabilities'] = json.loads(d['capabilities'])
         return d
 
 

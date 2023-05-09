@@ -359,6 +359,14 @@ class ResourceDTO:
 
 class DeploymentManagerDTO:
 
+    capabilities = api_ims_inventory_v1.model(
+        "DeploymentManagerCapabilities", {
+            'OS': fields.String(
+                example='low_latency',
+                description='Show the OS capablities of ' +
+                'the Deployment Manager'),
+        })
+
     deployment_manager_list = api_ims_inventory_v1.model(
         "DeploymentManagerListDto",
         {
@@ -380,11 +388,11 @@ class DeploymentManagerDTO:
                 attribute='serviceUri',
                 example='https://128.224.115.51:6443',
                 description='The fully qualified URI to a Deployment ' +
-                'Management server for O2dms services.'),
+                'Management server for O2dms.'),
             # 'deploymentManagementServiceEndpoint': fields.String(
             # attribute='serviceUri'),
             # 'supportedLocations': fields.String,
-            # 'capabilities': fields.String,
+            'capabilities': fields.Nested(capabilities, True, True),
             # 'capacity': fields.String,
             'profileSupportList': fields.List(
                 fields.String,
@@ -469,11 +477,11 @@ class DeploymentManagerDTO:
                 attribute='serviceUri',
                 example='https://128.224.115.51:6443',
                 description='The fully qualified URI to a Deployment ' +
-                'Management server for O2dms services.'),
+                'Management server for O2dms.'),
             # 'deploymentManagementServiceEndpoint': fields.String(
             # attribute='serviceUri'),
             # 'supportedLocations': fields.String,
-            # 'capabilities': fields.String,
+            'capabilities': fields.Nested(capabilities, True, True),
             # 'capacity': fields.String,
             'extensions': fields.Nested(extensions, True, True)
         },

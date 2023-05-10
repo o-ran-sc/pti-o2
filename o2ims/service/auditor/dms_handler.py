@@ -106,7 +106,7 @@ def update_by(target: DeploymentManager, stxobj: StxGenericModel,
     if target.deploymentManagerId != stxobj.id:
         raise MismatchedModel("Mismatched Id")
     content = json.loads(stxobj.content)
-    logger.info(content)
+    # logger.info(content)
     target.name = stxobj.name
     target.createtime = stxobj.createtime
     target.updatetime = stxobj.updatetime

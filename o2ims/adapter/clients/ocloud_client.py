@@ -383,6 +383,7 @@ class StxClientImp(object):
     def getK8sList(self, **filters) -> List[ocloudModel.StxGenericModel]:
         def process_cluster(client, cluster):
             setattr(cluster, 'cloud_name', systems[0].name)
+            setattr(cluster, 'cloud_uuid', systems[0].uuid)
             cluster = self._setK8sCapabilities(client, cluster)
             logger.debug('k8sresources cluster_api_endpoint: ' +
                          str(cluster.cluster_api_endpoint))
@@ -430,13 +431,15 @@ class StxClientImp(object):
         return k8s_list
 
     def getK8sDetail(self, name) -> ocloudModel.StxGenericModel:
-        def process_k8s_cluster(client, k8s_cluster, cloud_name):
+        def process_k8s_cluster(client, k8s_cluster, cloud_name, cloud_uuid):
             setattr(k8s_cluster, 'cloud_name', cloud_name)
+            setattr(k8s_cluster, 'cloud_uuid', cloud_uuid)
             k8s_cluster = self._setK8sCapabilities(client, k8s_cluster)
             return k8s_cluster
 
         systems = self.stxclient.isystem.list()
         system_name = systems[0].name
+        system_uuid = systems[0].uuid
 
         if not name:
             k8s_clusters = self.stxclient.kube_cluster.list()
@@ -450,16 +453,20 @@ class StxClientImp(object):
             if cloud_name == system_name:
                 k8s_cluster = process_k8s_cluster(
                     self.stxclient,
-                    self.stxclient.kube_cluster.get(k8s_name), cloud_name)
+                    self.stxclient.kube_cluster.get(k8s_name), cloud_name,
+                    system_uuid)
             else:
                 subclouds = self.getSubcloudList()
                 subcloud_id = next(
                     sub.subcloud_id for sub in subclouds
                     if sub.name == cloud_name)
                 subcloud_stxclient = self.getSubcloudClient(subcloud_id)
+                systems = subcloud_stxclient.isystem.list()
+                system_uuid = systems[0].uuid
                 k8s_cluster = process_k8s_cluster(
                     subcloud_stxclient,
-                    subcloud_stxclient.kube_cluster.get(k8s_name), cloud_name)
+                    subcloud_stxclient.kube_cluster.get(k8s_name), cloud_name,
+                    system_uuid)
 
         if not k8s_cluster:
             return None
@@ -704,7 +711,7 @@ class StxClientImp(object):
         setattr(cluster, 'name', cluster.cloud_name +
                 '.' + cluster.cluster_name)
         setattr(cluster, 'uuid',
-                uuid.uuid3(uuid.NAMESPACE_URL, cluster.cluster_name))
+                uuid.uuid3(uuid.NAMESPACE_URL, cluster.cloud_uuid))
         setattr(cluster, 'updated_at', None)
         setattr(cluster, 'created_at', None)
         setattr(cluster, 'events', [])

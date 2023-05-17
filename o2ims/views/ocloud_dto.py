@@ -486,7 +486,7 @@ class DeploymentManagerDTO:
             'extensions': fields.Nested(extensions, True, True)
         },
         mask='{deploymentManagerId,name,description,oCloudId,serviceUri,' +\
-        'extensions/profileName,extensions/profileData}'
+        'extensions{profileName,profileData}}'
     )
 
 

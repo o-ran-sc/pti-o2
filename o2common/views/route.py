@@ -195,6 +195,9 @@ class o2_marshal_with(marshal_with):
         for f in fields:
             f = f.strip()
             if '/' in f:
+                parent = f.split('/')[0]
+                if parent in selector and type(selector[parent]) is bool:
+                    selector[parent] = dict()
                 self.__update_selector_tree_value(selector, f, val)
                 continue
             if f not in self.fields:
@@ -217,6 +220,8 @@ class o2_marshal_with(marshal_with):
         for k, v in fields.items():
             if type(v) is dict:
                 s = self.__gen_mask_from_selector(v)
+                if s == '{}':
+                    continue
                 mask_li.append('%s%s' % (k, s))
                 continue
             if v:
@@ -225,12 +230,39 @@ class o2_marshal_with(marshal_with):
         return '{%s}' % ','.join(mask_li)
 
     def __set_default_mask(self, selector: dict, val: bool = True):
+        def convert_mask(mask):
+            # convert mask from {aa,bb,xxx{yyy}} structure to aa,bbxxx/yyy
+            stack = []
+            result = []
+            word = ''
+            for ch in mask:
+                if ch == '{':
+                    if word:
+                        stack.append(word)
+                        word = ''
+                elif ch == '}':
+                    if word:
+                        result.append('/'.join(stack + [word]))
+                        word = ''
+                    if stack:
+                        stack.pop()
+                elif ch == ',':
+                    if word:
+                        result.append('/'.join(stack + [word]))
+                        word = ''
+                else:
+                    word += ch
+            if word:
+                result.append(word)
+            return ','.join(result)
+
         mask = getattr(self.fields, "__mask__")
+        mask = convert_mask(str(mask))
         if not mask:
             selector_all = self.__gen_selector_from_model_with_value(
                 self.fields)
             for s in selector_all:
                 selector[s] = val
             return
-        default_selector = str(mask).strip(' {}')
+        default_selector = mask
         self.__update_selector_value(selector, default_selector, val)

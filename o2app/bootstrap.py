@@ -17,7 +17,7 @@ import inspect
 from typing import Callable
 
 from o2common.adapter.notifications import AbstractNotifications,\
-    SmoO2Notifications
+    NoneNotifications
 from o2common.adapter import redis_eventpublisher
 from o2common.service import unit_of_work
 from o2common.service import messagebus
@@ -49,7 +49,7 @@ def bootstrap(
 ) -> messagebus.MessageBus:
 
     if notifications is None:
-        notifications = SmoO2Notifications()
+        notifications = NoneNotifications()
 
     if start_orm:
         with uow:

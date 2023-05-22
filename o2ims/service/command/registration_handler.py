@@ -12,16 +12,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import ssl
 import json
-from retry import retry
-from urllib.parse import urlparse
 
 from o2common.config import config, conf
 from o2common.domain.filter import gen_orm_filter
 from o2common.service.unit_of_work import AbstractUnitOfWork
-from o2common.service.command.handler import get_https_conn_default, \
-    get_http_conn, get_https_conn_selfsigned, post_data
+from o2common.adapter.notifications import AbstractNotifications
 
 from o2ims.domain import commands, ocloud as cloud
 from o2ims.domain.subscription_obj import Message2SMO, NotificationEventEnum
@@ -39,6 +35,7 @@ inventory_api_version = config.get_o2ims_inventory_api_v1()
 def registry_to_smo(
     cmd: commands.Register2SMO,
     uow: AbstractUnitOfWork,
+    notifications: AbstractNotifications,
 ):
     logger.debug('In registry_to_smo')
     data = cmd.data
@@ -60,7 +57,7 @@ def registry_to_smo(
             'serviceUri': ocloud.serviceUri
         }
         if data.notificationEventType == NotificationEventEnum.CREATE:
-            register_smo(uow, ocloud_dict)
+            register_smo(notifications, ocloud_dict)
         elif data.notificationEventType in [NotificationEventEnum.MODIFY,
                                             NotificationEventEnum.DELETE]:
             _notify_ocloud(uow, data, ocloud_dict)
@@ -71,11 +68,11 @@ class RegIMSToSMOExp(Exception):
         self.value = value
 
 
-def register_smo(uow, ocloud_data):
-    call_res, status = call_smo(ocloud_data)
+def register_smo(notifications, ocloud_data):
+    call_res = call_smo(notifications, ocloud_data)
     logger.debug('Call SMO response is {}'.format(call_res))
     if call_res is True:
-        logger.info('Register to smo success response is {}'.format(status))
+        logger.info('Register to smo success response')
     else:
         raise RegIMSToSMOExp('Register o2ims to SMO failed')
     # TODO: record the result for the smo register
@@ -121,8 +118,7 @@ def _notify_ocloud(uow, data, ocloud_dict):
             callback_smo(sub, msg, ocloud_dict)
 
 
-@retry((ConnectionRefusedError), tries=2, delay=2)
-def call_smo(reg_data: dict):
+def call_smo(notifications: AbstractNotifications, reg_data: dict):
     smo_token = conf.DEFAULT.smo_token_data
     smo_token_info = {
         'iss': 'o2ims',
@@ -141,27 +137,4 @@ def call_smo(reg_data: dict):
     })
     logger.info('callback URL: {}'.format(conf.DEFAULT.smo_register_url))
     logger.debug('callback data: {}'.format(callback_data))
-    o = urlparse(conf.DEFAULT.smo_register_url)
-    if o.scheme == 'https':
-        conn = get_https_conn_default(o.netloc)
-    else:
-        conn = get_http_conn(o.netloc)
-
-    try:
-        return post_data(conn, o.path, callback_data)
-    except ssl.SSLCertVerificationError as e:
-        logger.debug('Try to register to smo with \
-        trusted ca failed: {}'.format(e))
-        if 'self signed' in str(e):
-            conn = get_https_conn_selfsigned(o.netloc)
-            try:
-                return post_data(conn, o.path, callback_data)
-            except Exception as e:
-                logger.info(
-                    'Register to smo with self-signed ca failed: {}'.format(e))
-                # TODO: write the status to extension db table.
-                return False, None
-        return False, None
-    except Exception as e:
-        logger.critical('Register to smo except: {}'.format(e))
-        return False, None
+    return notifications.send(conf.DEFAULT.smo_register_url, callback_data)

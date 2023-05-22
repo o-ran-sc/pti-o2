@@ -14,17 +14,12 @@
 
 # import redis
 # import requests
-import ssl
 import json
-from urllib.parse import urlparse
 
 from o2common.config import conf
 from o2common.domain.filter import gen_orm_filter
 from o2common.service.unit_of_work import AbstractUnitOfWork
-from o2common.service.command.handler import get_https_conn_default
-from o2common.service.command.handler import get_http_conn
-from o2common.service.command.handler import get_https_conn_selfsigned
-from o2common.service.command.handler import post_data
+from o2common.adapter.notifications import AbstractNotifications
 
 from o2ims.domain import commands
 from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEvent2SMO, \
@@ -37,6 +32,7 @@ logger = o2logging.get_logger(__name__)
 def notify_alarm_to_smo(
     cmd: commands.PubAlarm2SMO,
     uow: AbstractUnitOfWork,
+    notifications: AbstractNotifications,
 ):
     logger.debug('In notify_alarm_to_smo')
     data = cmd.data
@@ -53,7 +49,7 @@ def notify_alarm_to_smo(
                 sub_data['alarmSubscriptionId']))
 
             if not sub_data.get('filter', None):
-                callback_smo(sub, data, alarm)
+                callback_smo(notifications, sub, data, alarm)
                 continue
             try:
                 args = gen_orm_filter(AlarmEventRecord, sub_data['filter'])
@@ -63,7 +59,7 @@ def notify_alarm_to_smo(
                     'name or value. Ignore the filter'.format(
                         sub_data['alarmSubscriptionId'],
                         sub_data['filter']))
-                callback_smo(sub, data, alarm)
+                callback_smo(notifications, sub, data, alarm)
                 continue
             args.append(AlarmEventRecord.alarmEventRecordId == data.id)
             ret = uow.alarm_event_records.list_with_count(*args)
@@ -73,11 +69,11 @@ def notify_alarm_to_smo(
                     'the filter.'
                     .format(data.id, sub_data['alarmSubscriptionId']))
                 continue
-            callback_smo(sub, data, alarm)
+            callback_smo(notifications, sub, data, alarm)
 
 
-def callback_smo(sub: AlarmSubscription, msg: AlarmEvent2SMO,
-                 alarm: AlarmEventRecord):
+def callback_smo(notifications: AbstractNotifications, sub: AlarmSubscription,
+                 msg: AlarmEvent2SMO, alarm: AlarmEventRecord):
     sub_data = sub.serialize()
     alarm_data = alarm.serialize()
     callback = {
@@ -102,32 +98,4 @@ def callback_smo(sub: AlarmSubscription, msg: AlarmEvent2SMO,
     logger.info('callback URL: {}'.format(sub_data['callback']))
     logger.debug('callback data: {}'.format(callback_data))
 
-    o = urlparse(sub_data['callback'])
-    if o.scheme == 'https':
-        conn = get_https_conn_default(o.netloc)
-    else:
-        conn = get_http_conn(o.netloc)
-    try:
-        rst, status = post_data(conn, o.path, callback_data)
-        if rst is True:
-            logger.info(
-                'Notify alarm to SMO successed with status: {}'.format(status))
-            return
-        logger.error('Notify alarm Response code is: {}'.format(status))
-    except ssl.SSLCertVerificationError as e:
-        logger.debug(
-            'Notify alarm try to post data with trusted ca \
-                failed: {}'.format(e))
-        if 'self signed' in str(e):
-            conn = get_https_conn_selfsigned(o.netloc)
-            try:
-                return post_data(conn, o.path, callback_data)
-            except Exception as e:
-                logger.info(
-                    'Notify alarm with self-signed ca failed: {}'.format(e))
-                # TODO: write the status to extension db table.
-                return False
-        return False
-    except Exception as e:
-        logger.critical('Notify alarm except: {}'.format(e))
-        return False
+    return notifications.send(sub_data['callback'], callback_data)

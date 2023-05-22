@@ -12,6 +12,7 @@ httplib2
 babel
 PrettyTable<0.8,>=0.7.2
 
+requests-oauthlib
 retry
 ruamel.yaml==0.17.17
 

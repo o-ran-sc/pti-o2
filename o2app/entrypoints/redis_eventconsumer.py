@@ -18,6 +18,7 @@ import redis
 import json
 from o2app import bootstrap
 from o2common.config import config
+from o2common.adapter.notifications import SmoNotifications
 from o2dms.domain import commands
 from o2ims.domain import commands as imscmd
 from o2ims.domain.subscription_obj import Message2SMO, RegistrationMessage
@@ -36,7 +37,10 @@ inventory_api_version = config.get_o2ims_inventory_api_v1()
 
 def main():
     logger.info("Redis pubsub starting")
-    bus = bootstrap.bootstrap()
+
+    notifications = SmoNotifications()
+    bus = bootstrap.bootstrap(notifications=notifications)
+
     pubsub = r.pubsub(ignore_subscribe_messages=True)
     pubsub.subscribe("NfDeploymentStateChanged")
     pubsub.subscribe('OcloudChanged')

@@ -93,9 +93,7 @@ def callback_smo(notifications: AbstractNotifications, sub: AlarmSubscription,
         'perceivedSeverity': alarm_data['perceivedSeverity'],
         'extensions': json.loads(alarm_data['extensions'])
     }
-    # logger.warning(callback)
-    callback_data = json.dumps(callback)
     logger.info('callback URL: {}'.format(sub_data['callback']))
-    logger.debug('callback data: {}'.format(callback_data))
+    logger.debug('callback data: {}'.format(json.dumps(callback)))
 
-    return notifications.send(sub_data['callback'], callback_data)
+    return notifications.send(sub_data['callback'], callback)

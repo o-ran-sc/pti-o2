@@ -295,11 +295,10 @@ def callback_smo(notifications: AbstractNotifications, sub: Subscription,
         callback['postObjectState'] = json.dumps(obj_dict)
     if msg.notificationEventType == NotificationEventEnum.DELETE:
         callback.pop('objectRef')
-    callback_data = json.dumps(callback)
     logger.info('callback URL: {}'.format(sub_data['callback']))
-    logger.debug('callback data: {}'.format(callback_data))
+    logger.debug('callback data: {}'.format(json.dumps(callback)))
 
-    return notifications.send(sub_data['callback'], callback_data)
+    return notifications.send(sub_data['callback'], callback)
 
     # Call SMO through the SMO callback url
     # o = urlparse(sub_data['callback'])

@@ -129,12 +129,12 @@ def call_smo(notifications: AbstractNotifications, reg_data: dict):
         'smo_token_algo': 'RS256'
     }
 
-    callback_data = json.dumps({
+    callback = {
         'globalCloudId': reg_data['globalCloudId'],
         'oCloudId': reg_data['oCloudId'],
         'IMS_EP': config.get_api_url(),
         'smo_token_data': smo_token_info
-    })
+    }
     logger.info('callback URL: {}'.format(conf.DEFAULT.smo_register_url))
-    logger.debug('callback data: {}'.format(callback_data))
-    return notifications.send(conf.DEFAULT.smo_register_url, callback_data)
+    logger.debug('callback data: {}'.format(json.dumps(callback)))
+    return notifications.send(conf.DEFAULT.smo_register_url, callback)

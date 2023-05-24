@@ -14,7 +14,6 @@
 
 import os
 import requests
-import json
 import http.client
 import ssl
 from requests_oauthlib import OAuth2Session
@@ -147,8 +146,7 @@ class SMOClient:
 
         for _ in range(retries):
             try:
-                response = self.session.post(
-                    url, data=json.dumps(data))
+                response = self.session.post(url, json=data)
                 response.raise_for_status()
                 return self.handle_post_data(response)
             except (SSLError, RequestException) as e:

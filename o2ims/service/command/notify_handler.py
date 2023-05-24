@@ -50,6 +50,94 @@ def notify_change_to_smo(
         _notify_resource(uow, notifications, cmd.data)
 
 
+# def get_resource_dict(resource_type):
+#    return {
+#        'resourceTypeId': resource_type.resourceTypeId,
+#        'name': resource_type.name,
+#        'description': resource_type.description,
+#        'vendor': resource_type.vendor,
+#        'model': resource_type.model,
+#        'version': resource_type.version,
+#    }
+#
+#
+# def handle_filter(filter: str, f_type: str):
+#    if not filter:
+#        return
+#
+#    filter_list = filter.strip(' []').split('|')
+#
+#    match_type_count = 0
+#    filters = []
+#    for sub_filter in filter_list:
+#        objectType, objectTypeValue = get_object_type_and_value(sub_filter)
+#        if objectTypeValue == f_type:
+#            match_type_count += 1
+#            filters.append(sub_filter)
+#        elif not objectType and f_type == 'ResourceInfo':
+#            filters.append(sub_filter)
+#
+#    return match_type_count, filters
+#
+#
+# def get_object_type_and_value(sub_filter):
+#    exprs = sub_filter.split(';')
+#    for expr in exprs:
+#        items = expr.strip(' ()').split(',')
+#        item_key = items[1].strip()
+#        if item_key == 'objectType':
+#            return True, items[2].strip()
+#    return False, ''
+#
+#
+# def check_filters(filters, sub_data, uow, id):
+#    for filter in filters[1]:
+#        if isinstance(filter, bool) and filter:
+#            return True
+#
+#        try:
+#            args = gen_orm_filter(ocloud.ResourceType, filter)
+#        except KeyError:
+#            logger.warning(
+#                'Subscription {} filter {} has wrong attribute '
+#                'name or value. Ignore the filter.'.format(
+#                    sub_data['subscriptionId'],
+#                    sub_data['filter']))
+#            continue
+#
+#        if len(args) == 0 and 'objectType' in filter:
+#            return True
+#
+#        args.append(ocloud.ResourceType.resourceTypeId == id)
+#        obj_count, _ = uow.resource_types.list_with_count(*args)
+#        if obj_count > 0:
+#            return True
+#    return False
+#
+#
+# def _notify_resourcetype(uow, notifications, data):
+#    with uow:
+#        resource_type = uow.resource_types.get(data.id)
+#        if resource_type is None:
+#            logger.warning('ResourceType {} does not exists.'.format(data.id))
+#            return
+#
+#        resource_type_dict = get_resource_dict(resource_type)
+#
+#        subs = uow.subscriptions.list()
+#        for sub in subs:
+#            sub_data = sub.serialize()
+#            filters = handle_filter(sub_data['filter'], 'ResourceTypeInfo')
+#            logger.debug(f'filters: {filters}, sub_data: {sub_data}')
+#
+#            if not filters or filters[0] == 0 or check_filters(
+#                    filters, sub_data, uow, data.id):
+#                callback_smo(notifications, sub, data, resource_type_dict)
+#                continue
+#
+#            logger.info('Subscription {} filter hit, skip ResourceType {}.'
+#                        .format(sub_data['subscriptionId'], data.id))
+
 def _notify_resourcetype(uow, notifications, data):
     with uow:
         resource_type = uow.resource_types.get(data.id)
@@ -71,11 +159,14 @@ def _notify_resourcetype(uow, notifications, data):
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
             filters = handle_filter(sub_data['filter'], 'ResourceTypeInfo')
-            if not filters:
+            if not filters or filters[0] == 0:
                 callback_smo(notifications, sub, data, resource_type_dict)
                 continue
+            if filters[0] > 0 and not filters[1]:
+                continue
+
             filter_hit = False
-            for filter in filters:
+            for filter in filters[1]:
                 try:
                     args = gen_orm_filter(ocloud.ResourceType, filter)
                 except KeyError:
@@ -119,11 +210,13 @@ def _notify_resourcepool(uow, notifications, data):
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
             filters = handle_filter(sub_data['filter'], 'ResourcePoolInfo')
-            if not filters:
+            if not filters or filters[0] == 0:
                 callback_smo(notifications, sub, data, resource_pool_dict)
                 continue
+            if filters[0] > 0 and not filters[1]:
+                continue
             filter_hit = False
-            for filter in filters:
+            for filter in filters[1]:
                 try:
                     args = gen_orm_filter(ocloud.ResourcePool, filter)
                 except KeyError:
@@ -167,13 +260,15 @@ def _notify_dms(uow, notifications, data):
         for sub in subs:
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
-            filters = handle_filter(
+            filters_rst = handle_filter(
                 sub_data['filter'], 'DeploymentManagerInfo')
-            if not filters:
+            if not filters_rst or filters_rst[0] == 0:
                 callback_smo(notifications, sub, data, dms_dict)
                 continue
+            if filters_rst[0] > 0 and not filters_rst[1]:
+                continue
             filter_hit = False
-            for filter in filters:
+            for filter in filters_rst[1]:
                 try:
                     args = gen_orm_filter(ocloud.DeploymentManager, filter)
                 except KeyError:
@@ -197,7 +292,8 @@ def _notify_dms(uow, notifications, data):
                             'DeploymentManager {}.'
                             .format(sub_data['subscriptionId'], data.id))
             else:
-                callback_smo(notifications, sub, data, dms_dict)
+                continue
+                # callback_smo(notifications, sub, data, dms_dict)
 
 
 def _notify_resource(uow, notifications, data):
@@ -221,11 +317,13 @@ def _notify_resource(uow, notifications, data):
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
             filters = handle_filter(sub_data['filter'], 'ResourceInfo')
-            if not filters:
+            if not filters or filters[0] == 0:
                 callback_smo(notifications, sub, data, res_dict)
                 continue
+            if filters[0] > 0 and not filters[1]:
+                continue
             filter_hit = False
-            for filter in filters:
+            for filter in filters[1]:
                 try:
                     args = gen_orm_filter(ocloud.Resource, filter)
                 except KeyError:
@@ -254,8 +352,11 @@ def _notify_resource(uow, notifications, data):
 def handle_filter(filter: str, f_type: str):
     if not filter:
         return
+    match_type_count = 0
     filter_strip = filter.strip(' []')
     filter_list = filter_strip.split('|')
+    if not filter_list:
+        return
     filters = list()
     for sub_filter in filter_list:
         exprs = sub_filter.split(';')
@@ -274,8 +375,9 @@ def handle_filter(filter: str, f_type: str):
                 filters.append(sub_filter)
             continue
         if objectTypeValue == f_type:
+            match_type_count += 1
             filters.append(sub_filter)
-    return filters
+    return (match_type_count, filters)
 
 
 def callback_smo(notifications: AbstractNotifications, sub: Subscription,

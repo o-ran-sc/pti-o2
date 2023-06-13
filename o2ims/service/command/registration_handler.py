@@ -47,15 +47,7 @@ def registry_to_smo(
             logger.warning('Ocloud {} does not exists.'.format(data.id))
             return
         logger.debug('O-Cloud Global UUID: {}'.format(ocloud.globalCloudId))
-        # ocloud_dict = ocloud.serialize()
-        ocloud_dict = {
-            'oCloudId': ocloud.oCloudId,
-            'globalcloudId': ocloud.globalCloudId,
-            'globalCloudId': ocloud.globalCloudId,
-            'name': ocloud.name,
-            'description': ocloud.description,
-            'serviceUri': ocloud.serviceUri
-        }
+        ocloud_dict = ocloud.get_notification_dict()
         if data.notificationEventType == NotificationEventEnum.CREATE:
             register_smo(notifications, ocloud_dict)
         elif data.notificationEventType in [NotificationEventEnum.MODIFY,

@@ -16,7 +16,8 @@ from __future__ import annotations
 import json
 
 from o2common.config import config
-from o2common.domain.base import AgRoot, Serializer
+from o2common.domain.base import AgRoot, Serializer, \
+    InfrastructureInventoryObject
 # from dataclasses import dataclass
 # from datetime import date
 # from typing import Optional, List, Set
@@ -29,7 +30,7 @@ DeploymentManagerProfileSOL018 = 'sol018'
 DeploymentManagerProfileSOL018HelmCLI = 'sol018_helmcli'
 
 
-class DeploymentManager(AgRoot, Serializer):
+class DeploymentManager(InfrastructureInventoryObject, AgRoot, Serializer):
     def __init__(self, id: str, name: str, ocloudid: str,
                  dmsendpoint: str, description: str = '',
                  supportedLocations: str = '', capabilities: str = '',
@@ -67,8 +68,13 @@ class DeploymentManager(AgRoot, Serializer):
             d['capabilities'] = json.loads(d['capabilities'])
         return d
 
+    def get_notification_dict(self):
+        return self.get_fields_as_dict(
+            ['deploymentManagerId', 'name', 'oCloudId', 'serviceUri',
+             'description'])
 
-class ResourcePool(AgRoot, Serializer):
+
+class ResourcePool(InfrastructureInventoryObject, AgRoot, Serializer):
     def __init__(self, id: str, name: str, location: str,
                  ocloudid: str, gLocationId: str = '',
                  description: str = '') -> None:
@@ -84,8 +90,13 @@ class ResourcePool(AgRoot, Serializer):
 
         self.version_number = 0
 
+    def get_notification_dict(self):
+        return self.get_fields_as_dict(
+            ['resourcePoolId', 'oCloudId', 'globalLocationId', 'name',
+             'description'])
 
-class ResourceType(AgRoot, Serializer):
+
+class ResourceType(InfrastructureInventoryObject, AgRoot, Serializer):
     def __init__(self, typeid: str, name: str, typeEnum: ResourceTypeEnum,
                  vendor: str = '', model: str = '',
                  version: str = '',
@@ -112,8 +123,13 @@ class ResourceType(AgRoot, Serializer):
             d['alarmDictionary'] = d['alarmDictionary'].serialize()
         return d
 
+    def get_notification_dict(self):
+        return self.get_fields_as_dict(
+            ['resourceTypeId', 'name', 'description', 'vendor', 'model',
+             'version'])
 
-class Resource(AgRoot, Serializer):
+
+class Resource(InfrastructureInventoryObject, AgRoot, Serializer):
     def __init__(self, resourceId: str, resourceTypeId: str,
                  resourcePoolId: str, parentId: str = '',
                  gAssetId: str = '', elements: str = '',
@@ -153,8 +169,13 @@ class Resource(AgRoot, Serializer):
             d['children'].append(child.serialize())
         return d
 
+    def get_notification_dict(self):
+        return self.get_fields_as_dict(
+            ['resourceId', 'resourceTypeId', 'resourcePoolId', 'globalAssetId',
+             'description'])
 
-class Ocloud(AgRoot, Serializer):
+
+class Ocloud(InfrastructureInventoryObject, AgRoot, Serializer):
     def __init__(self, ocloudid: str, name: str, imsendpoint: str,
                  globalcloudId: str = '',
                  description: str = '', version_number: int = 0) -> None:
@@ -172,6 +193,10 @@ class Ocloud(AgRoot, Serializer):
 
         self.version_number = version_number
 
+    def get_notification_dict(self):
+        return self.get_fields_as_dict(
+            ['oCloudId', 'globalcloudId', 'globalCloudId', 'name',
+             'description', 'serviceUri'])
     # def addDeploymentManager(self,
     #                          deploymentManager: DeploymentManager):
 

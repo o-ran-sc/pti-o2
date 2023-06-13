@@ -20,6 +20,20 @@ from sqlalchemy.exc import NoInspectionAvailable
 from .events import Event
 
 
+class InfrastructureInventoryObject:
+    ObjectState = {}
+
+    def __init__(self) -> None:
+        # self.ObjectState = {}
+        pass
+
+    def get_fields_as_dict(self, fields):
+        for field in fields:
+            if hasattr(self, field):
+                self.ObjectState[field] = getattr(self, field)
+        return self.ObjectState
+
+
 class AgRoot:
 
     events = []

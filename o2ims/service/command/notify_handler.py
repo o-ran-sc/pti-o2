@@ -50,93 +50,62 @@ def notify_change_to_smo(
         _notify_resource(uow, notifications, cmd.data)
 
 
-# def get_resource_dict(resource_type):
-#    return {
-#        'resourceTypeId': resource_type.resourceTypeId,
-#        'name': resource_type.name,
-#        'description': resource_type.description,
-#        'vendor': resource_type.vendor,
-#        'model': resource_type.model,
-#        'version': resource_type.version,
-#    }
-#
-#
-# def handle_filter(filter: str, f_type: str):
-#    if not filter:
-#        return
-#
-#    filter_list = filter.strip(' []').split('|')
-#
-#    match_type_count = 0
-#    filters = []
-#    for sub_filter in filter_list:
-#        objectType, objectTypeValue = get_object_type_and_value(sub_filter)
-#        if objectTypeValue == f_type:
-#            match_type_count += 1
-#            filters.append(sub_filter)
-#        elif not objectType and f_type == 'ResourceInfo':
-#            filters.append(sub_filter)
-#
-#    return match_type_count, filters
-#
-#
-# def get_object_type_and_value(sub_filter):
-#    exprs = sub_filter.split(';')
-#    for expr in exprs:
-#        items = expr.strip(' ()').split(',')
-#        item_key = items[1].strip()
-#        if item_key == 'objectType':
-#            return True, items[2].strip()
-#    return False, ''
-#
-#
-# def check_filters(filters, sub_data, uow, id):
-#    for filter in filters[1]:
-#        if isinstance(filter, bool) and filter:
-#            return True
-#
-#        try:
-#            args = gen_orm_filter(ocloud.ResourceType, filter)
-#        except KeyError:
-#            logger.warning(
-#                'Subscription {} filter {} has wrong attribute '
-#                'name or value. Ignore the filter.'.format(
-#                    sub_data['subscriptionId'],
-#                    sub_data['filter']))
-#            continue
-#
-#        if len(args) == 0 and 'objectType' in filter:
-#            return True
-#
-#        args.append(ocloud.ResourceType.resourceTypeId == id)
-#        obj_count, _ = uow.resource_types.list_with_count(*args)
-#        if obj_count > 0:
-#            return True
-#    return False
-#
-#
-# def _notify_resourcetype(uow, notifications, data):
-#    with uow:
-#        resource_type = uow.resource_types.get(data.id)
-#        if resource_type is None:
-#            logger.warning('ResourceType {} does not exists.'.format(data.id))
-#            return
-#
-#        resource_type_dict = get_resource_dict(resource_type)
-#
-#        subs = uow.subscriptions.list()
-#        for sub in subs:
-#            sub_data = sub.serialize()
-#            filters = handle_filter(sub_data['filter'], 'ResourceTypeInfo')
-#            logger.debug(f'filters: {filters}, sub_data: {sub_data}')
-#
-#            if not filters or filters[0] == 0 or check_filters(
-#                    filters, sub_data, uow, data.id):
-#                callback_smo(notifications, sub, data, resource_type_dict)
-#                continue
-#
-#            logger.info('Subscription {} filter hit, skip ResourceType {}.'
-#                        .format(sub_data['subscriptionId'], data.id))
+def __get_object_type_and_value(sub_filter):
+    exprs = sub_filter.split(';')
+    for expr in exprs:
+        items = expr.strip(' ()').split(',')
+        item_key = items[1].strip()
+        if item_key == 'objectType':
+            return True, items[2].strip()
+    return False, ''
+
+
+def handle_filter(filter: str, f_type: str):
+    print(filter)
+    if not filter:
+        return
+
+    filter_list = filter.strip(' []').split('|')
+    if not filter_list:
+        return
+
+    match_type_count = 0
+    filters = []
+    for sub_filter in filter_list:
+        objectType, objectTypeValue = __get_object_type_and_value(sub_filter)
+        if objectTypeValue == f_type:
+            match_type_count += 1
+            filters.append(sub_filter)
+        elif not objectType and f_type == 'ResourceInfo':
+            match_type_count += 1
+            filters.append(sub_filter)
+
+    return match_type_count, filters
+
+
+def check_filters(filters, sub_data, uow_cls, obj_cls, attr_id, id):
+    for filter in filters[1]:
+        logger.debug(f'filter: {filter}')
+        try:
+            args = gen_orm_filter(obj_cls, filter)
+        except KeyError:
+            logger.warning(
+                'Subscription {} filter {} has wrong attribute '
+                'name or value. Ignore the filter.'.format(
+                    sub_data['subscriptionId'],
+                    sub_data['filter']))
+            continue
+        logger.debug(f'args: {args}')
+
+        if len(args) == 0 and 'objectType' in filter:
+            return False
+
+        args.append(attr_id == id)
+        obj_count, _ = uow_cls.list_with_count(*args)
+        if obj_count > 0:
+            return True
+    return False
+
 
 def _notify_resourcetype(uow, notifications, data):
     with uow:
@@ -144,51 +113,24 @@ def _notify_resourcetype(uow, notifications, data):
         if resource_type is None:
             logger.warning('ResourceType {} does not exists.'.format(data.id))
             return
-        resource_type_dict = {
-            'resourceTypeId': resource_type.resourceTypeId,
-            'name': resource_type.name,
-            'description': resource_type.description,
-            'vendor': resource_type.vendor,
-            'model': resource_type.model,
-            'version': resource_type.version,
-            # 'alarmDictionary': resource_type.alarmDictionary.serialize()
-        }
+
+        resource_type_dict = resource_type.get_notification_dict()
 
         subs = uow.subscriptions.list()
         for sub in subs:
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
             filters = handle_filter(sub_data['filter'], 'ResourceTypeInfo')
-            if not filters or filters[0] == 0:
+            logger.debug(f'filters: {filters}, sub_data: {sub_data}')
+
+            if not filters or filters[0] == 0 or check_filters(
+                filters, sub_data, uow.resource_types, ocloud.ResourceType,
+                    ocloud.ResourceType.resourceTypeId, data.id):
                 callback_smo(notifications, sub, data, resource_type_dict)
-                continue
-            if filters[0] > 0 and not filters[1]:
                 continue
 
-            filter_hit = False
-            for filter in filters[1]:
-                try:
-                    args = gen_orm_filter(ocloud.ResourceType, filter)
-                except KeyError:
-                    logger.warning(
-                        'Subscription {} filter {} has wrong attribute '
-                        'name or value. Ignore the filter.'.format(
-                            sub_data['subscriptionId'],
-                            sub_data['filter']))
-                    continue
-                if len(args) == 0 and 'objectType' in filter:
-                    filter_hit = True
-                    break
-                args.append(ocloud.ResourceType.resourceTypeId == data.id)
-                obj_count, _ = uow.resource_types.list_with_count(*args)
-                if obj_count > 0:
-                    filter_hit = True
-                    break
-            if filter_hit:
-                logger.info('Subscription {} filter hit, skip ResourceType {}.'
-                            .format(sub_data['subscriptionId'], data.id))
-            else:
-                callback_smo(notifications, sub, data, resource_type_dict)
+            logger.info('Subscription {} filter hit, skip ResourceType {}.'
+                        .format(sub_data['subscriptionId'], data.id))
 
 
 def _notify_resourcepool(uow, notifications, data):
@@ -197,48 +139,24 @@ def _notify_resourcepool(uow, notifications, data):
         if resource_pool is None:
             logger.warning('ResourcePool {} does not exists.'.format(data.id))
             return
-        resource_pool_dict = {
-            'resourcePoolId': resource_pool.resourcePoolId,
-            'oCloudId': resource_pool.oCloudId,
-            'globalLocationId': resource_pool.globalLocationId,
-            'name': resource_pool.name,
-            'description': resource_pool.description
-        }
+
+        resource_pool_dict = resource_pool.get_notification_dict()
 
         subs = uow.subscriptions.list()
         for sub in subs:
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
             filters = handle_filter(sub_data['filter'], 'ResourcePoolInfo')
-            if not filters or filters[0] == 0:
+            logger.debug(f'filters: {filters}, sub_data: {sub_data}')
+
+            if not filters or filters[0] == 0 or check_filters(
+                filters, sub_data, uow.resource_pools, ocloud.ResourcePool,
+                    ocloud.ResourcePool.resourcePoolId, data.id):
                 callback_smo(notifications, sub, data, resource_pool_dict)
                 continue
-            if filters[0] > 0 and not filters[1]:
-                continue
-            filter_hit = False
-            for filter in filters[1]:
-                try:
-                    args = gen_orm_filter(ocloud.ResourcePool, filter)
-                except KeyError:
-                    logger.warning(
-                        'Subscription {} filter {} has wrong attribute '
-                        'name or value. Ignore the filter.'.format(
-                            sub_data['subscriptionId'],
-                            sub_data['filter']))
-                    continue
-                if len(args) == 0 and 'objectType' in filter:
-                    filter_hit = True
-                    break
-                args.append(ocloud.ResourcePool.resourcePoolId == data.id)
-                obj_count, _ = uow.resource_pools.list_with_count(*args)
-                if obj_count > 0:
-                    filter_hit = True
-                    break
-            if filter_hit:
-                logger.info('Subscription {} filter hit, skip ResourcePool {}.'
-                            .format(sub_data['subscriptionId'], data.id))
-            else:
-                callback_smo(notifications, sub, data, resource_pool_dict)
+
+            logger.info('Subscription {} filter hit, skip ResourcePool {}.'
+                        .format(sub_data['subscriptionId'], data.id))
 
 
 def _notify_dms(uow, notifications, data):
@@ -248,52 +166,27 @@ def _notify_dms(uow, notifications, data):
             logger.warning(
                 'DeploymentManager {} does not exists.'.format(data.id))
             return
-        dms_dict = {
-            'deploymentManagerId': dms.deploymentManagerId,
-            'name': dms.name,
-            'description': dms.description,
-            'oCloudId': dms.oCloudId,
-            'serviceUri': dms.serviceUri
-        }
+
+        dms_dict = dms.get_notification_dict()
 
         subs = uow.subscriptions.list()
         for sub in subs:
             sub_data = sub.serialize()
             logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
-            filters_rst = handle_filter(
+            filters = handle_filter(
                 sub_data['filter'], 'DeploymentManagerInfo')
-            if not filters_rst or filters_rst[0] == 0:
+            logger.debug(f'filters: {filters}, sub_data: {sub_data}')
+
+            if not filters or filters[0] == 0 or check_filters(
+                    filters, sub_data, uow.deployment_managers,
+                    ocloud.DeploymentManager,
+                    ocloud.DeploymentManager.deploymentManagerId, data.id):
                 callback_smo(notifications, sub, data, dms_dict)
                 continue
-            if filters_rst[0] > 0 and not filters_rst[1]:
-                continue
-            filter_hit = False
-            for filter in filters_rst[1]:
-                try:
-                    args = gen_orm_filter(ocloud.DeploymentManager, filter)
-                except KeyError:
-                    logger.warning(
-                        'Subscription {} filter {} has wrong attribute '
-                        'name or value. Ignore the filter.'.format(
-                            sub_data['subscriptionId'],
-                            sub_data['filter']))
-                    continue
-                if len(args) == 0 and 'objectType' in filter:
-                    filter_hit = True
-                    break
-                args.append(
-                    ocloud.DeploymentManager.deploymentManagerId == data.id)
-                obj_count, _ = uow.deployment_managers.list_with_count(*args)
-                if obj_count > 0:
-                    filter_hit = True
-                    break
-            if filter_hit:
-                logger.info('Subscription {} filter hit, skip '
-                            'DeploymentManager {}.'
-                            .format(sub_data['subscriptionId'], data.id))
-            else:
-                continue
-                # callback_smo(notifications, sub, data, dms_dict)
+
+            logger.info('Subscription {} filter hit, skip '
+                        'DeploymentManager {}.'
+                        .format(sub_data['subscriptionId'], data.id))
 
 
 def _notify_resource(uow, notifications, data):
@@ -304,13 +197,8 @@ def _notify_resource(uow, notifications, data):
             return
         res_pool_id = resource.serialize()['resourcePoolId']
         logger.debug('res pool id is {}'.format(res_pool_id))
-        res_dict = {
-            'resourceId': resource.resourceId,
-            'description': resource.description,
-            'resourceTypeId': resource.resourceTypeId,
-            'resourcePoolId': resource.resourcePoolId,
-            'globalAssetId': resource.globalAssetId
-        }
+
+        res_dict = resource.get_notification_dict()
 
         subs = uow.subscriptions.list()
         for sub in subs:
@@ -349,37 +237,6 @@ def _notify_resource(uow, notifications, data):
                 callback_smo(notifications, sub, data, res_dict)
 
 
-def handle_filter(filter: str, f_type: str):
-    if not filter:
-        return
-    match_type_count = 0
-    filter_strip = filter.strip(' []')
-    filter_list = filter_strip.split('|')
-    if not filter_list:
-        return
-    filters = list()
-    for sub_filter in filter_list:
-        exprs = sub_filter.split(';')
-        objectType = False
-        objectTypeValue = ''
-        for expr in exprs:
-            expr_strip = expr.strip(' ()')
-            items = expr_strip.split(',')
-            item_key = items[1].strip()
-            if item_key != 'objectType':
-                continue
-            objectType = True
-            objectTypeValue = items[2].strip()
-        if not objectType:
-            if f_type == 'ResourceInfo':
-                filters.append(sub_filter)
-            continue
-        if objectTypeValue == f_type:
-            match_type_count += 1
-            filters.append(sub_filter)
-    return (match_type_count, filters)
-
-
 def callback_smo(notifications: AbstractNotifications, sub: Subscription,
                  msg: Message2SMO, obj_dict: dict = None):
     sub_data = sub.serialize()
@@ -401,33 +258,3 @@ def callback_smo(notifications: AbstractNotifications, sub: Subscription,
     logger.debug('callback data: {}'.format(json.dumps(callback)))
 
     return notifications.send(sub_data['callback'], callback)
-
-    # Call SMO through the SMO callback url
-    # o = urlparse(sub_data['callback'])
-    # if o.scheme == 'https':
-    #     conn = get_https_conn_default(o.netloc)
-    # else:
-    #     conn = get_http_conn(o.netloc)
-    # try:
-    #     rst, status = post_data(conn, o.path, callback_data)
-    #     if rst is True:
-    #         logger.info(
-    #             'Notify to SMO successed with status: {}'.format(status))
-    #         return
-    #     logger.error('Notify Response code is: {}'.format(status))
-    # except ssl.SSLCertVerificationError as e:
-    #     logger.debug(
-    #         'Notify try to post data with trusted ca failed: {}'.format(e))
-    #     if 'self signed' in str(e):
-    #         conn = get_https_conn_selfsigned(o.netloc)
-    #         try:
-    #             return post_data(conn, o.path, callback_data)
-    #         except Exception as e:
-    #             logger.info(
-    #                 'Notify post data with self-signed ca \
-    #                 failed: {}'.format(e))
-    #             return False
-    #     return False
-    # except Exception as e:
-    #     logger.critical('Notify except: {}'.format(e))
-    #     return False

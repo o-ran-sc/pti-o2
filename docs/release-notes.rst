@@ -1,13 +1,13 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2021-2022 Wind River Systems, Inc.
+.. Copyright (C) 2021-2023 Wind River Systems, Inc.
 
 
 Release-notes
 =============
 
 
-This document provides the release notes for 2.0.1 of INF O2 service.
+This document provides the release notes for 2.0.2 of INF O2 service.
 
 .. contents::
    :depth: 3
@@ -20,12 +20,37 @@ Version History
 +------------+----------+----------------------------------------------+-------------+
 | **Date**   | **Ver.** | **Author**                                   | **Comment** |
 +------------+----------+----------------------------------------------+-------------+
+| 2023-06-15 | 2.0.2    | Jon Zhang, Jackie Huang                      | H Release   |
++------------+----------+----------------------------------------------+-------------+
 | 2022-12-15 | 2.0.1    | Bin Yang, Jon Zhang, Jackie Huang, David Liu | G Release   |
 +------------+----------+----------------------------------------------+-------------+
 | 2022-06-15 | 1.0.1    | Bin Yang, Jon Zhang                          | F Release   |
 +------------+----------+----------------------------------------------+-------------+
 | 2021-12-15 | 1.0.0    | Bin Yang, Jon Zhang                          | E Release   |
 +------------+----------+----------------------------------------------+-------------+
+
+Version 2.0.2, 2023-06-15
+-------------------------
+
+-  Upgrade Inventory API
+
+   -  Support capabilities attribute of the DMS query to support the
+      PlugFest with SMO integration
+
+-  Update the Subscription and Notification part
+
+   -  Adding the oAuth2 configuration for the O2 service query the SMO
+   -  Registration and notification to SMO support oAuth2 verification
+   -  Rewrite the subscription filter part
+
+-  Specification compliance
+
+   -  Compliance to "O-RAN.WG6.O2IMS-INTERFACE-R003-v04.00"
+   -  Adding InfrastructureInventoryObject abstract class
+
+-  Other updates
+
+   -  Bugs fixed
 
 Version 2.0.1, 2022-12-15
 -------------------------
@@ -59,8 +84,8 @@ Version 2.0.1, 2022-12-15
 
    -  Add configuration file load at application starts
    -  Fix bugs
-   -  Replace POC O2DMS APIs with Kubernetes Native API Profile 
-      for Containerized NFs
+   -  Replace POC O2DMS APIs with Kubernetes Native API Profile for
+      Containerized NFs
 
 Version 1.0.1, 2022-06-15
 -------------------------
@@ -72,8 +97,10 @@ Version 1.0.1, 2022-06-15
 
 -  Add O2 DMS profiles
 
-   -  Support native_k8sapi profile that can get native Kubernetes API information
-   -  Support SOL018 specification, it includes native Kubernetes API profile and Helm CLI profile, "sol018", and "sol018_helmcli"
+   -  Support native_k8sapi profile that can get native Kubernetes API
+      information
+   -  Support SOL018 specification, it includes native Kubernetes API
+      profile and Helm CLI profile, "sol018", and "sol018_helmcli"
 
 Version 1.0.0, 2021-12-15
 -------------------------

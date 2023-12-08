@@ -1,4 +1,4 @@
-FROM nexus3.onap.org:10001/onap/integration-python:10.1.0
+FROM nexus3.onap.org:10001/onap/integration-python:12.0.0
 # https://nexus3.onap.org/#browse/search=keyword%3Dintegration-python:d406d405e4cfbf1186265b01088caf9a
 # https://git.onap.org/integration/docker/onap-python/tree/Dockerfile
 

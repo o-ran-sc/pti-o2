@@ -337,7 +337,7 @@ management of O-RAN cloudified NFs. See the following API reference for
 details:
 
 -  `API O-RAN O2
-   interface <https://docs.o-ran-sc.org/projects/o-ran-sc-pti-o2/en/g-release/api.html>`__
+   interface <https://docs.o-ran-sc.org/projects/o-ran-sc-pti-o2/en/latest/api.html>`__
 
 INF O2 Service Uninstall
 ========================

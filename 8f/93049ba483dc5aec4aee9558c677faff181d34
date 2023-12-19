@@ -1,0 +1,8 @@
+Verified+1: Jackie Huang <jackie.huang@windriver.com>
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Code-Review+2: Jackie Huang <jackie.huang@windriver.com>
+Submitted-by: Jon Zhang <rong.zhang@windriver.com>
+Submitted-at: Tue, 19 Dec 2023 02:44:30 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/pti/o2/+/12393
+Project: pti/o2
+Branch: refs/heads/master

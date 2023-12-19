@@ -258,7 +258,7 @@ You can install O-RAN O2 application on INF from the command line.
 
       To deploy other versions of an image required for a quick
       solution, to have early access to the features (eg.
-      oranscinf/pti-o2imsdms:2.0.0), and to authenticate images that are
+      oranscinf/pti-o2imsdms:2.0.3), and to authenticate images that are
       hosted by a private registry, follow the steps below:
 
       1. Create a docker-registry secret in ``oran-o2`` namespace.
@@ -283,7 +283,7 @@ You can install O-RAN O2 application on INF from the command line.
               serviceaccountname: admin-oran-o2
               images:
                 tags:
-                  o2service: ${O2SERVICE_IMAGE_REG}/docker.io/oranscinf/pti-o2imsdms:2.0.0
+                  o2service: ${O2SERVICE_IMAGE_REG}/docker.io/oranscinf/pti-o2imsdms:2.0.3
                   postgres: ${O2SERVICE_IMAGE_REG}/docker.io/library/postgres:9.6
                   redis: ${O2SERVICE_IMAGE_REG}/docker.io/library/redis:alpine
                 pullPolicy: IfNotPresent

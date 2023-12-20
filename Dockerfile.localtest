@@ -1,4 +1,4 @@
-FROM python:3.10-slim-buster
+FROM python:3.11-slim-buster
 
 RUN apt-get update && apt-get install -y git gcc \
     vim curl procps ssh
@@ -51,5 +51,7 @@ RUN tar -zxvf helm-v3.3.1-linux-amd64.tar.gz; cp linux-amd64/helm /usr/local/bin
 
 RUN mkdir -p /etc/kubeconfig/
 # COPY temp/kubeconfig/config /etc/kubeconfig/
+
+RUN mkdir -p /var/log/orano2
 
 WORKDIR /src

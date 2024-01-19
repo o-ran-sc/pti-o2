@@ -1,0 +1,8 @@
+Verified+1: Jon Zhang <rong.zhang@windriver.com>
+Code-Review+2: Jon Zhang <rong.zhang@windriver.com>
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Submitted-by: Jon Zhang <rong.zhang@windriver.com>
+Submitted-at: Fri, 19 Jan 2024 06:45:56 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/pti/o2/+/12465
+Project: pti/o2
+Branch: refs/heads/i-release

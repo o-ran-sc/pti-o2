@@ -35,6 +35,7 @@ Version 2.0.3, 2023-12-15
 -------------------------
 
 -  Bugs fixed
+-  Updated base image plus Python to 3.11
 
 Version 2.0.2, 2023-06-15
 -------------------------

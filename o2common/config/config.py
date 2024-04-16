@@ -356,7 +356,7 @@ def get_events_yaml_filename():
 def get_k8s_host():
     k8s_host = os.environ.get("KUBERNETES_SERVICE_HOST")
     if k8s_host is None:
-        raise Exception('Get k8s host failed.')
+        return ""
     return k8s_host
 
 
@@ -373,7 +373,7 @@ def get_review_url():
         return "{0}{1}:{2}{3}".format(
             'https://', get_k8s_host(), get_k8s_port(), api)
     except Exception:
-        raise Exception('Get k8s review url failed')
+        return ""
 
 
 # get reviewer token
@@ -386,7 +386,7 @@ def get_reviewer_token():
 
 
 def get_auth_provider():
-    return 'k8s'
+    return config.conf.auth_provider
 
 
 def get_dms_support_profiles():

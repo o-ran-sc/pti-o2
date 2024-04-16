@@ -16,19 +16,13 @@ from werkzeug.wrappers import Request, Response
 from o2common.helper import o2logging
 from o2common.authmw.authprov import auth_definer
 from flask_restx._http import HTTPStatus
+
+from o2common.authmw.exceptions import AuthRequiredExp
+from o2common.authmw.exceptions import AuthFailureExp
+
 import json
 
 logger = o2logging.get_logger(__name__)
-
-
-class AuthRequiredExp(Exception):
-    def __init__(self, value):
-        self.value = value
-
-    def dictize(self):
-        return {
-            'WWW-Authenticate': '{}'.format(self.value)}
-
 
 class AuthProblemDetails():
     def __init__(self, code: int, detail: str, path: str,
@@ -54,13 +48,7 @@ class AuthProblemDetails():
         return json.dumps(details, indent=True)
 
 
-class AuthFailureExp(Exception):
-    def __init__(self, value):
-        self.value = value
 
-    def dictize(self):
-        return {
-            'WWW-Authenticate': '{}'.format(self.value)}
 
 
 def _response_wrapper(environ, start_response, header, detail):

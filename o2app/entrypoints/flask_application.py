@@ -22,7 +22,6 @@ from o2common.views.route_exception import configure_exception
 
 from o2common.authmw import authmiddleware
 from o2common.authmw import authprov
-from o2common.config.config import get_review_url
 from o2common.helper import o2logging
 
 AUTH_ENABLED = True
@@ -32,18 +31,8 @@ FLASK_API_VERSION = '1.0.0'
 app = Flask(__name__)
 logger = o2logging.get_logger(__name__)
 
-
-def _get_k8s_url():
-    try:
-        token_review_url = get_review_url()
-        return token_review_url
-    except Exception:
-        raise Exception('Get k8s token review url failed')
-
-
 if AUTH_ENABLED:
     # perform service account identity&privilege check.
-    _get_k8s_url()
     ad = authprov.auth_definer('ad')
     ad.sanity_check()
     app.wsgi_app = authmiddleware.authmiddleware(app.wsgi_app)

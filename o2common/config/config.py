@@ -386,7 +386,7 @@ def get_reviewer_token():
 
 
 def get_auth_provider():
-    return 'k8s'
+    return config.conf.auth_provider
 
 
 def get_dms_support_profiles():

@@ -24,3 +24,6 @@ ruamel.yaml==0.17.17
 pyOpenSSL
 
 gunicorn
+
+# Import JWT to support OAuth2
+pyjwt==2.6.0

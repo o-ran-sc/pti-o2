@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2022 Wind River Systems, Inc.
+# Copyright (C) 2021-2024 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 
 #!/bin/bash
 
-gunicorn -b 0.0.0.0:80 o2app.entrypoints.flask_application:app --certfile /configs/server.crt  --keyfile /configs/server.key
+# The gunicorn start with [::] to listen on both IPv4 and IPv6
+gunicorn -b [::]:80 o2app.entrypoints.flask_application:app --certfile /configs/server.crt  --keyfile /configs/server.key
 
 sleep infinity

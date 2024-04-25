@@ -47,7 +47,7 @@ class AlarmEventRecordSqlAlchemyRepository(AlarmEventRecordRepository):
         return (count, result)
 
     def _update(self, alarm_event_record: alarm_obj.AlarmEventRecord):
-        self.session.add(alarm_event_record)
+        self.session.merge(alarm_event_record)
 
     def _delete(self, alarm_event_record_id):
         self.session.query(alarm_obj.AlarmEventRecord).filter_by(

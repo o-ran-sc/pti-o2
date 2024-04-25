@@ -138,3 +138,8 @@ class UpdatePserverAcc(UpdateResource):
 @dataclass
 class UpdateAlarm(UpdateFaultObject):
     parentid: str
+
+
+@dataclass
+class PurgeAlarmEvent(UpdateFaultObject):
+    data: AlarmEvent2SMO

@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2024 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ from o2common.service.messagebus import MessageBus
 from o2common.views.pagination_route import link_header, PAGE_PARAM
 from o2common.views.route_exception import NotFoundException, \
     BadRequestException
+from o2ims.domain.alarm_obj import PerceivedSeverityEnum
 from o2ims.views import alarm_view
 from o2ims.views.api_ns import api_ims_monitoring as api_monitoring_v1
 from o2ims.views.alarm_dto import AlarmDTO, SubscriptionDTO, \
@@ -130,6 +131,7 @@ class AlarmListRouter(Resource):
 class AlarmGetRouter(Resource):
 
     model = AlarmDTO.alarm_event_record_get
+    patch = AlarmDTO.alarm_event_record_patch
 
     @api_monitoring_v1.doc('Get Alarm Event Record Information')
     @api_monitoring_v1.marshal_with(model)
@@ -137,6 +139,39 @@ class AlarmGetRouter(Resource):
         result = alarm_view.alarm_event_record_one(alarmEventRecordId, bus.uow)
         if result is not None:
             return result
+        raise NotFoundException(
+            "Alarm Event Record {} doesn't exist".format(alarmEventRecordId))
+
+    @api_monitoring_v1.doc('Patch Alarm Event Record Information')
+    @api_monitoring_v1.expect(patch)
+    @api_monitoring_v1.marshal_with(patch)
+    def patch(self, alarmEventRecordId):
+        data = api_monitoring_v1.payload
+        ack = data.get('alarmAcknowledged', None)
+        clear = data.get('perceivedSeverity', None)
+
+        ack_is_none = ack is None
+        clear_is_none = clear is None
+        if (ack_is_none and clear_is_none) or (not ack_is_none and
+                                               not clear_is_none):
+            raise BadRequestException('Either "alarmAcknowledged" or '
+                                      '"perceivedSeverity" shall be included '
+                                      'in a request, but not both.')
+        if ack:
+            result = alarm_view.alarm_event_record_ack(alarmEventRecordId,
+                                                       bus.uow)
+            if result is not None:
+                return result
+        elif clear:
+            if clear != PerceivedSeverityEnum.CLEARED:
+                raise BadRequestException(
+                    'Only the value "5" for "CLEARED" is permitted of '
+                    '"perceivedSeverity".')
+
+            result = alarm_view.alarm_event_record_clear(alarmEventRecordId,
+                                                         bus.uow)
+            if result is not None:
+                return result
         raise NotFoundException(
             "Alarm Event Record {} doesn't exist".format(alarmEventRecordId))
 

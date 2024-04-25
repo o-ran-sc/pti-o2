@@ -125,6 +125,14 @@ class ClearingTypeEnum(str, Enum):
     MANUAL = 'MANUAL'
 
 
+class AlarmEventRecordModifications(AgRoot):
+    def __init__(self, ack: bool = None,
+                 clear: PerceivedSeverityEnum = None) -> None:
+        super().__init__()
+        self.alarmAcknowledged = ack
+        self.perceivedSeverity = clear
+
+
 class AlarmDefinition(AgRoot, Serializer):
     def __init__(self, id: str, name: str, change_type: AlarmChangeTypeEnum,
                  desc: str, prop_action: str, clearing_type: ClearingTypeEnum,
@@ -170,9 +178,8 @@ class AlarmNotificationEventEnum(str, Enum):
 
 class AlarmEvent2SMO(Serializer):
     def __init__(self, eventtype: AlarmNotificationEventEnum,
-                 id: str, ref: str, updatetime: str) -> None:
+                 id: str, updatetime: str) -> None:
         self.notificationEventType = eventtype
-        self.objectRef = ref
         self.id = id
         self.updatetime = updatetime
 

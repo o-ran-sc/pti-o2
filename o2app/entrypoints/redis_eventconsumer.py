@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2024 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -16,15 +16,16 @@
 
 import redis
 import json
+
 from o2app import bootstrap
-from o2common.config import config
 from o2common.adapter.notifications import SmoNotifications
+from o2common.config import config
+from o2common.helper import o2logging
 from o2dms.domain import commands
 from o2ims.domain import commands as imscmd
 from o2ims.domain.subscription_obj import Message2SMO, RegistrationMessage
 from o2ims.domain.alarm_obj import AlarmEvent2SMO
 
-from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
 r = redis.Redis(**config.get_redis_host_and_port())
@@ -49,6 +50,7 @@ def main():
     pubsub.subscribe('DmsChanged')
     pubsub.subscribe('ResourceChanged')
     pubsub.subscribe('AlarmEventChanged')
+    pubsub.subscribe('AlarmEventPurged')
 
     for m in pubsub.listen():
         try:
@@ -136,6 +138,14 @@ def handle_changed(m, bus):
         cmd = imscmd.PubAlarm2SMO(data=AlarmEvent2SMO(
             id=data['id'], ref=ref,
             eventtype=data['notificationEventType'],
+            updatetime=data['updatetime']))
+        bus.handle(cmd)
+    elif channel == 'AlarmEventPurged':
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('AlarmEventPurged with cmd:{}'.format(data))
+        cmd = imscmd.PurgeAlarmEvent(data=AlarmEvent2SMO(
+            id=data['id'], eventtype=data['notificationEventType'],
             updatetime=data['updatetime']))
         bus.handle(cmd)
     else:

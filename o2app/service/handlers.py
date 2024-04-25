@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2024 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ from o2ims.service.auditor import ocloud_handler, dms_handler, \
     pserver_dev_handler, agg_compute_handler, agg_network_handler,\
     agg_storage_handler, agg_undefined_handler
 from o2ims.service.command import notify_handler, registration_handler,\
-    notify_alarm_handler
+    notify_alarm_handler, purge_alarm_handler
 from o2ims.service.event import ocloud_event, resource_event, \
     resource_pool_event, alarm_event, dms_event, resource_type_event
 
@@ -63,6 +63,8 @@ EVENT_HANDLERS = {
                                  notify_resourcepool_change],
     events.AlarmEventChanged: [alarm_event.\
                                notify_alarm_event_change],
+    events.AlarmEventPurged: [alarm_event.\
+                               notify_alarm_event_purge],
 }  # type: Dict[Type[events.Event], Callable]
 
 
@@ -95,4 +97,5 @@ COMMAND_HANDLERS = {
     commands.PubMessage2SMO: notify_handler.notify_change_to_smo,
     commands.PubAlarm2SMO: notify_alarm_handler.notify_alarm_to_smo,
     commands.Register2SMO: registration_handler.registry_to_smo,
+    commands.PurgeAlarmEvent: purge_alarm_handler.purge_alarm_event,
 }  # type: Dict[Type[commands.Command], Callable]

@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2024 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -12,16 +12,20 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from datetime import datetime
 import uuid as uuid
 
-from o2common.service import unit_of_work
+from o2common.service import unit_of_work, messagebus
 from o2common.views.view import gen_filter, check_filter
 from o2common.views.pagination_view import Pagination
 from o2common.views.route_exception import BadRequestException, \
     NotFoundException
 
+from o2ims.domain import events
 from o2ims.views.alarm_dto import SubscriptionDTO
-from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEventRecord
+from o2ims.domain.alarm_obj import AlarmSubscription, AlarmEventRecord, \
+    AlarmNotificationEventEnum, AlarmEventRecordModifications, \
+    PerceivedSeverityEnum
 
 from o2common.helper import o2logging
 # from o2common.config import config
@@ -43,6 +47,58 @@ def alarm_event_record_one(alarmEventRecordId: str,
     with uow:
         first = uow.alarm_event_records.get(alarmEventRecordId)
         return first.serialize() if first is not None else None
+
+
+def alarm_event_record_ack(alarmEventRecordId: str,
+                           uow: unit_of_work.AbstractUnitOfWork):
+    with uow:
+        alarm_event_record = uow.alarm_event_records.get(alarmEventRecordId)
+        # Check the record does not exist, return None. Otherwise, the
+        # acknowledge request will update the record even if it is
+        # acknowledged.
+        if alarm_event_record is None:
+            return None
+        alarm_event_record.alarmAcknowledged = True
+        alarm_event_record.alarmAcknowledgeTime = datetime.\
+            now().strftime("%Y-%m-%dT%H:%M:%S")
+        uow.alarm_event_records.update(alarm_event_record)
+        uow.commit()
+
+        result = AlarmEventRecordModifications(True)
+    return result
+
+
+def alarm_event_record_clear(alarmEventRecordId: str,
+                             uow: unit_of_work.AbstractUnitOfWork):
+    with uow:
+        alarm_event_record = uow.alarm_event_records.get(alarmEventRecordId)
+        if alarm_event_record is None:
+            return None
+        elif alarm_event_record.perceivedSeverity == \
+                PerceivedSeverityEnum.CLEARED:
+            raise BadRequestException(
+                "Alarm Event Record {} has already been marked as CLEARED."
+                .format(alarmEventRecordId))
+        alarm_event_record.events.append(events.AlarmEventPurged(
+            id=alarm_event_record.alarmEventRecordId,
+            notificationEventType=AlarmNotificationEventEnum.CLEAR,
+            updatetime=alarm_event_record.alarmAcknowledgeTime))
+
+        uow.alarm_event_records.update(alarm_event_record)
+        uow.commit()
+
+        result = AlarmEventRecordModifications(
+            clear=PerceivedSeverityEnum.CLEARED)
+    _handle_events(messagebus.MessageBus.get_instance())
+    return result
+
+
+def _handle_events(bus: messagebus.MessageBus):
+    # handle events
+    events = bus.uow.collect_new_events()
+    for event in events:
+        bus.handle(event)
+    return True
 
 
 def subscriptions(uow: unit_of_work.AbstractUnitOfWork, **kwargs):

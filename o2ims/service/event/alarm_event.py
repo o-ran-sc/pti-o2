@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2024 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -24,7 +24,15 @@ def notify_alarm_event_change(
     event: events.AlarmEventChanged,
     publish: Callable,
 ):
-    logger.debug('In notify_alarm_event_change')
     publish("AlarmEventChanged", event)
     logger.debug("published Alarm Event Changed: {}".format(
+        event.id))
+
+
+def notify_alarm_event_purge(
+    event: events.AlarmEventPurged,
+    publish: Callable,
+):
+    publish("AlarmEventPurged", event)
+    logger.debug("published Alarm Event Purged: {}".format(
         event.id))

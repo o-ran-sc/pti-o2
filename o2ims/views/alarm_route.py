@@ -140,6 +140,15 @@ class AlarmGetRouter(Resource):
         raise NotFoundException(
             "Alarm Event Record {} doesn't exist".format(alarmEventRecordId))
 
+    @api_monitoring_v1.doc('Patch Alarm Event Record Information')
+    @api_monitoring_v1.marshal_with(model)
+    def patch(self, alarmEventRecordId):
+        result = alarm_view.alarm_event_record_ack(alarmEventRecordId, bus.uow)
+        if result is not None:
+            return result
+        raise NotFoundException(
+            "Alarm Event Record {} doesn't exist".format(alarmEventRecordId))
+
 
 # ----------  Alarm Subscriptions ---------- #
 @api_monitoring_v1.route("/v1/alarmSubscriptions")

@@ -62,3 +62,10 @@ class AlarmEventChanged(Event):
     id: str
     notificationEventType: AlarmNotificationEventEnum
     updatetime: datetime.now()
+
+
+@dataclass
+class AlarmEventPurged(Event):
+    id: str
+    notificationEventType: AlarmNotificationEventEnum
+    updatetime: datetime.now()

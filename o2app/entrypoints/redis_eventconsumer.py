@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2024 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ def main():
     pubsub.subscribe('DmsChanged')
     pubsub.subscribe('ResourceChanged')
     pubsub.subscribe('AlarmEventChanged')
+    pubsub.subscribe('AlarmEventPurged')
 
     for m in pubsub.listen():
         try:
@@ -136,6 +137,14 @@ def handle_changed(m, bus):
         cmd = imscmd.PubAlarm2SMO(data=AlarmEvent2SMO(
             id=data['id'], ref=ref,
             eventtype=data['notificationEventType'],
+            updatetime=data['updatetime']))
+        bus.handle(cmd)
+    elif channel == 'AlarmEventPurged':
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('AlarmEventPurged with cmd:{}'.format(data))
+        cmd = imscmd.PurgeAlarmEvent(data=AlarmEvent2SMO(
+            id=data['id'], eventtype=data['notificationEventType'],
             updatetime=data['updatetime']))
         bus.handle(cmd)
     else:

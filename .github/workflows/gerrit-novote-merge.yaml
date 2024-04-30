@@ -87,8 +87,8 @@ jobs:
             -Dsonar.build.sourceEncoding=UTF-8
             -Dsonar.organization=o-ran-sc
             -Dsonar.projectBaseDir=.
-            -Dsonar.projectKey=o-ran-sc_smo-o2
-            -Dsonar.projectName=smo-o2
+            -Dsonar.projectKey=o-ran-sc_pti-o2
+            -Dsonar.projectName=pti-o2
             -Dsonar.sources=.
             -Dsonar.verbose=true
 

@@ -1,0 +1,10 @@
+Verified+1: Jessica Wagantall <jwagantall@linuxfoundation.org>
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Code-Review+2: Jessica Wagantall <jwagantall@linuxfoundation.org>
+Verified+1: o-ran-sc release <collab-it+o-ran-sc-release@linuxfoundation.org>
+Verified+1: ORAN Jobbuilder <releng+oran-jobbuilder@linuxfoundation.org>
+Submitted-by: Jessica Wagantall <jwagantall@linuxfoundation.org>
+Submitted-at: Tue, 30 Apr 2024 20:52:09 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/pti/o2/+/12800
+Project: pti/o2
+Branch: refs/heads/master

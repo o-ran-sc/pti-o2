@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb2a90ea_3608adeb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-06T02:08:38Z",
+      "side": 1,
+      "message": "LGTM, I\u0027ll wait for the bug fix to be merged first.",
+      "revId": "95eeb8bc924e4d6bbf1d579593e39cc80182f063",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

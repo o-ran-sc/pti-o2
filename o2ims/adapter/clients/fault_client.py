@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2024 Wind River Systems, Inc.
+# Copyright (C) 2022 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -94,10 +94,9 @@ class StxAlarmClient(BaseClient):
 
 
 class StxEventClient(BaseClient):
-    def __init__(self, uow: unit_of_work.AbstractUnitOfWork, driver=None):
+    def __init__(self, driver=None):
         super().__init__()
         self.driver = driver if driver else StxFaultClientImp()
-        self.uow = uow
 
     def _get(self, id) -> alarmModel.FaultGenericModel:
         return self.driver.getEventInfo(id)
@@ -107,12 +106,6 @@ class StxEventClient(BaseClient):
 
     def _set_stx_client(self):
         self.driver.setFaultClient(self._pool_id)
-
-    def suppression_list(self, alarm_id) -> List[alarmModel.FaultGenericModel]:
-        return self.driver.getSuppressionList(alarm_id)
-
-    def suppress(self, id) -> alarmModel.FaultGenericModel:
-        return self.driver.suppressEvent(id)
 
 
 # internal driver which implement client call to Stx Fault Management instance
@@ -226,27 +219,6 @@ class StxFaultClientImp(object):
         return alarmModel.FaultGenericModel(
             alarmModel.EventTypeEnum.EVENT, self._eventconverter(event))
 
-    def suppressEvent(self, id) -> alarmModel.FaultGenericModel:
-        patch = [dict(path='/' + 'suppression_status', value='suppressed',
-                      op='replace')]
-        event = self.fmclient.event_suppression.update(id, patch)
-        logger.debug('suppressed event id ' + id + ':' + str(event.to_dict()))
-        return alarmModel.FaultGenericModel(
-            alarmModel.EventTypeEnum.EVENT, self._suppression_converter(event))
-
-    def getSuppressionList(self, alarm_id) -> alarmModel.FaultGenericModel:
-        suppression_list = []
-        queryAsArray = []
-        events = self.fmclient.event_suppression.list(q=queryAsArray)
-        for event in events:
-            if event.alarm_id == alarm_id:
-                # logger.debug('suppression event:' + str(event.to_dict()))
-                suppression_list.append(
-                    alarmModel.FaultGenericModel(
-                        alarmModel.EventTypeEnum.EVENT,
-                        self._suppression_converter(event)))
-        return suppression_list
-
     @ staticmethod
     def _alarmconverter(alarm):
         selected_keys = [
@@ -290,27 +262,6 @@ class StxFaultClientImp(object):
                 uuid.NAMESPACE_URL, event.alarm_id)))
         setattr(event, 'probable_cause_id', str(uuid.uuid3(
                 uuid.NAMESPACE_URL, event.probable_cause)))
-        return event
-
-    @ staticmethod
-    def _suppression_converter(event, clear=False):
-        selected_keys = [
-            'alarm_id', 'description', 'suppression_status',
-            'links'
-        ]
-        content = event.to_dict()
-        filtered = dict(
-            filter(lambda item: item[0] in selected_keys, content.items()))
-        setattr(event, 'filtered', filtered)
-        setattr(event, 'uuid', event.uuid)
-        setattr(event, 'alarm_id', event.alarm_id)
-        setattr(event, 'description', event.description)
-        setattr(event, 'suppression_status', event.suppression_status)
-        setattr(event, 'alarm_type', None)
-        setattr(event, 'alarm_def_id', None)
-        setattr(event, 'probable_cause_id', None)
-        setattr(event, 'state', None)
-        setattr(event, 'timestamp', None)
         return event
 
     @ staticmethod

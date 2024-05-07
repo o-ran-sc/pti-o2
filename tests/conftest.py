@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2024 Wind River Systems, Inc.
+# Copyright (C) 2022 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 # pylint: disable=redefined-outer-name
 import shutil
 import subprocess
-import sys
 import time
 from pathlib import Path
 
@@ -29,23 +28,6 @@ from sqlalchemy.orm import sessionmaker, clear_mappers
 from tenacity import retry, stop_after_delay
 from unittest.mock import MagicMock
 from mock_alchemy.mocking import UnifiedAlchemyMagicMock
-
-# Mock cgtsclient, dcmanagerclient, fmclient
-modules_to_mock = [
-    'cgtsclient',
-    'cgtsclient.client',
-    'cgtsclient.exc',
-    'dcmanagerclient',
-    'dcmanagerclient.api',
-    'dcmanagerclient.api.client',
-    'fmclient',
-    'fmclient.client',
-    'fmclient.common',
-    'fmclient.common.exceptions'
-]
-
-for module_name in modules_to_mock:
-    sys.modules[module_name] = MagicMock()
 
 from o2app.bootstrap import bootstrap
 from o2ims.views import configure_namespace

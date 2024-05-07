@@ -21,7 +21,7 @@ from cgtsclient.client import get_client as get_stx_client
 from cgtsclient.exc import EndpointException
 from dcmanagerclient.api.client import client as get_dc_client
 from fmclient.client import get_client as get_fm_client
-from fmclient.common.exceptions import HTTPNotFound
+from fmclient.common.exceptions import HTTPNotFound, HttpServerError
 
 from o2app.adapter import unit_of_work
 from o2common.config import config
@@ -84,6 +84,11 @@ class StxAlarmClient(BaseClient):
             except HTTPNotFound:
                 logger.debug('alarm {} not in this resource pool {}'
                              .format(alarm, self._pool_id))
+                continue
+            except HttpServerError:
+                # TODO(jon): This exception needs to be removed when the INF-457
+                # related FM client upgrade and issue fix occur.
+                logger.debug('alarm {} query failed'.format(alarm))
                 continue
             ret.append(event)
 

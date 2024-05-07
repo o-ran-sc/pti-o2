@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2024 Wind River Systems, Inc.
+# Copyright (C) 2021 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -135,15 +135,6 @@ class AlarmGetRouter(Resource):
     @api_monitoring_v1.marshal_with(model)
     def get(self, alarmEventRecordId):
         result = alarm_view.alarm_event_record_one(alarmEventRecordId, bus.uow)
-        if result is not None:
-            return result
-        raise NotFoundException(
-            "Alarm Event Record {} doesn't exist".format(alarmEventRecordId))
-
-    @api_monitoring_v1.doc('Patch Alarm Event Record Information')
-    @api_monitoring_v1.marshal_with(model)
-    def patch(self, alarmEventRecordId):
-        result = alarm_view.alarm_event_record_ack(alarmEventRecordId, bus.uow)
         if result is not None:
             return result
         raise NotFoundException(

@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2024 Wind River Systems, Inc.
+# Copyright (C) 2021 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -59,13 +59,6 @@ class ResourceChanged(Event):
 
 @dataclass
 class AlarmEventChanged(Event):
-    id: str
-    notificationEventType: AlarmNotificationEventEnum
-    updatetime: datetime.now()
-
-
-@dataclass
-class AlarmEventPurged(Event):
     id: str
     notificationEventType: AlarmNotificationEventEnum
     updatetime: datetime.now()

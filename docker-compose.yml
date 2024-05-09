@@ -20,6 +20,7 @@ services:
       - OS_USERNAME=${OS_USERNAME}
       - OS_PASSWORD=${OS_PASSWORD}
       - LOGGING_CONFIG_LEVEL=DEBUG
+      - CGTS_INSECURE_SSL=1
     volumes:
       - ./configs:/configs
       - ./o2ims:/o2ims
@@ -67,6 +68,7 @@ services:
       - OS_PASSWORD=${OS_PASSWORD}
       - LOGGING_CONFIG_LEVEL=DEBUG
       - HELM_USER_PASSWD=St8rlingX*
+      - CGTS_INSECURE_SSL=1
     volumes:
       - ./configs:/configs
       - ./share:/share
@@ -99,6 +101,7 @@ services:
       - OS_USERNAME=${OS_USERNAME}
       - OS_PASSWORD=${OS_PASSWORD}
       - LOGGING_CONFIG_LEVEL=DEBUG
+      - CGTS_INSECURE_SSL=1
     volumes:
       - ./configs:/configs
       - ./o2ims:/o2ims

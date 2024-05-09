@@ -1,4 +1,5 @@
-# Copyright (C) 2021-2023 Wind River Systems, Inc.
+---
+# Copyright (C) 2021-2024 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -59,6 +60,14 @@ o2ims:
       redis: docker.io/library/redis:alpine
     pullPolicy: IfNotPresent
   logginglevel: "WARNING"
+
+  # Mount certs from host system.
+  # Normally required to use CGTS client with SSL.
+  useHostCert: false
+  hostCertPath: /etc/ssl/certs/ca-certificates.crt
+
+  # Skip SSL verification when using CGTS client.
+  cgtsInsecureSSL: false
 
 o2dms:
   helm_cli_enable: false

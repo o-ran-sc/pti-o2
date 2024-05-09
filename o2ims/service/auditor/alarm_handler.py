@@ -41,10 +41,6 @@ def update_alarm(
 
         alarm_event_record = uow.alarm_event_records.get(fmobj.id)
         if not alarm_event_record:
-            logger.info("add alarm event record:" + fmobj.name
-                        + " update_at: " + str(fmobj.updatetime)
-                        + " id: " + str(fmobj.id)
-                        + " hash: " + str(fmobj.hash))
             localmodel = create_by(fmobj)
             content = json.loads(fmobj.content)
             entity_type_id = content['entity_type_id']
@@ -65,6 +61,14 @@ def update_alarm(
                     extensions = json.loads(host.extensions)
                     if extensions['hostname'] == hostname:
                         localmodel.resourceId = host.resourceId
+                        continue
+                else:
+                    # Example would be when alarm has host=controller
+                    # TODO: Handle host=controller better
+                    logger.warning(
+                        'Couldnt match alarm event '
+                        f'to hostname for: {content}')
+                    return
                 uow.alarm_event_records.add(localmodel)
                 logger.info("Add the alarm event record: " + fmobj.id
                             + ", name: " + fmobj.name)

@@ -43,6 +43,7 @@ global:
   namespace: oran-o2
 
 db:
+  persistence: true
   storageSize: 10Gi
 
 # ImagePullSecrets for operator ServiceAccount, list of secrets in the same

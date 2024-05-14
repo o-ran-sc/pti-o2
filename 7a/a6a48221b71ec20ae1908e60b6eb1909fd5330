@@ -1,0 +1,10 @@
+Code-Review+2: Jon Zhang <rong.zhang@windriver.com>
+Code-Review+2: Jackie Huang <jackie.huang@windriver.com>
+Verified+1: Jackie Huang <jackie.huang@windriver.com>
+Verified+1: Jon Zhang <rong.zhang@windriver.com>
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Submitted-by: Jessica Wagantall <jwagantall@linuxfoundation.org>
+Submitted-at: Tue, 14 May 2024 15:54:32 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/pti/o2/+/12807
+Project: pti/o2
+Branch: refs/heads/i-release

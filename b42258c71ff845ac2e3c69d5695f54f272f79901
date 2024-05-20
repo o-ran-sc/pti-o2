@@ -52,6 +52,24 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d11e5cd2_a6d02c2d",
+        "filename": "o2common/authmw/authmiddleware.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38d50295_b2995555",
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c13a11ee_e82365bf",
@@ -65,6 +83,24 @@
       "writtenOn": "2024-05-17T08:38:48Z",
       "side": 1,
       "message": "2 blank lines above the function do not belong to a class.",
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2ed11c1_fa09765b",
+        "filename": "o2common/authmw/authmiddleware.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c13a11ee_e82365bf",
       "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
@@ -86,6 +122,24 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3d5fd6c_26dcf907",
+        "filename": "o2common/authmw/authprov.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54284864_6cef21ae",
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "11a37587_9abc7163",
@@ -103,6 +157,24 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fce55bb2_0355c2d7",
+        "filename": "o2common/authmw/authprov.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11a37587_9abc7163",
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e8a3f86d_d6191389",
@@ -116,6 +188,30 @@
       "writtenOn": "2024-05-17T08:38:48Z",
       "side": 1,
       "message": "Use constants instead of strings in code.",
+      "range": {
+        "startLine": 64,
+        "startChar": 45,
+        "endLine": 64,
+        "endChar": 51
+      },
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cc8c85a_ed6d1d1d",
+        "filename": "o2common/authmw/authprov.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8a3f86d_d6191389",
       "range": {
         "startLine": 64,
         "startChar": 45,
@@ -149,6 +245,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac8fb1b4_e2deede2",
+        "filename": "o2common/authmw/authprov.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60c515e4_d74c1e18",
+      "range": {
+        "startLine": 145,
+        "startChar": 31,
+        "endLine": 145,
+        "endChar": 58
+      },
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e6fb2d2_3e25f71c",
@@ -162,6 +282,30 @@
       "writtenOn": "2024-05-17T08:38:48Z",
       "side": 1,
       "message": "Same as line 145.",
+      "range": {
+        "startLine": 147,
+        "startChar": 8,
+        "endLine": 147,
+        "endChar": 32
+      },
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08c03910_f91d014d",
+        "filename": "o2common/authmw/authprov.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "String content needs to be wrapped.",
+      "parentUuid": "4e6fb2d2_3e25f71c",
       "range": {
         "startLine": 147,
         "startChar": 8,
@@ -189,6 +333,24 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d01a1ee8_ca2fd228",
+        "filename": "o2common/authmw/authprov.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55a24911_c2f47f93",
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c606b7b6_e3deeea6",
@@ -202,6 +364,30 @@
       "writtenOn": "2024-05-17T08:38:48Z",
       "side": 1,
       "message": "Can you use the constants from requests package or defined a constants?",
+      "range": {
+        "startLine": 162,
+        "startChar": 35,
+        "endLine": 162,
+        "endChar": 38
+      },
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aedf898c_cc8a3fc2",
+        "filename": "o2common/authmw/authprov.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c606b7b6_e3deeea6",
       "range": {
         "startLine": 162,
         "startChar": 35,
@@ -235,6 +421,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce52c5f3_8267d667",
+        "filename": "o2common/authmw/exceptions.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a7385ea_2059f082",
+      "range": {
+        "startLine": 2,
+        "startChar": 16,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be23747c_19b19f59",
@@ -248,6 +458,24 @@
       "writtenOn": "2024-05-17T08:38:48Z",
       "side": 1,
       "message": "Remove if it doesn\u0027t need.",
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ce06eed_a9682d88",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be23747c_19b19f59",
       "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
@@ -269,6 +497,24 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c51e88d1_6e43d9df",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4fb0829a_8752206b",
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a6d0e58f_fc6f11a2",
@@ -282,6 +528,24 @@
       "writtenOn": "2024-05-17T08:38:48Z",
       "side": 1,
       "message": "Leave one blank line at the end of the file.",
+      "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8d411c6_298a56c3",
+        "filename": "requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-20T15:55:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6d0e58f_fc6f11a2",
       "revId": "b42258c71ff845ac2e3c69d5695f54f272f79901",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }

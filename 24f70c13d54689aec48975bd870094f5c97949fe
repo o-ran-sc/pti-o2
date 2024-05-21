@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "210f7d31_0b35b41e",
+        "filename": "o2ims/adapter/alarm_repository.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-21T01:32:09Z",
+      "side": 1,
+      "message": "Needs to update.",
+      "range": {
+        "startLine": 1,
+        "startChar": 16,
+        "endLine": 1,
+        "endChar": 21
+      },
+      "revId": "24f70c13d54689aec48975bd870094f5c97949fe",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67f5cb5b_02333b4d",
+        "filename": "o2ims/domain/alarm_repo.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-21T01:32:09Z",
+      "side": 1,
+      "message": "Remove this change since this file isn\u0027t modified.",
+      "range": {
+        "startLine": 1,
+        "startChar": 21,
+        "endLine": 1,
+        "endChar": 26
+      },
+      "revId": "24f70c13d54689aec48975bd870094f5c97949fe",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

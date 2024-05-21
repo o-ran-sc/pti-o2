@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "77ede14e_f87d8e45",
+        "filename": "o2ims/adapter/alarm_repository.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-21T09:07:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "210f7d31_0b35b41e",
+      "range": {
+        "startLine": 1,
+        "startChar": 16,
+        "endLine": 1,
+        "endChar": 21
+      },
+      "revId": "24f70c13d54689aec48975bd870094f5c97949fe",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "67f5cb5b_02333b4d",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-05-21T01:32:09Z",
       "side": 1,
       "message": "Remove this change since this file isn\u0027t modified.",
+      "range": {
+        "startLine": 1,
+        "startChar": 21,
+        "endLine": 1,
+        "endChar": 26
+      },
+      "revId": "24f70c13d54689aec48975bd870094f5c97949fe",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71994d55_06b516eb",
+        "filename": "o2ims/domain/alarm_repo.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-21T09:07:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67f5cb5b_02333b4d",
       "range": {
         "startLine": 1,
         "startChar": 21,

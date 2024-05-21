@@ -150,7 +150,7 @@ class StxFaultClientImp(object):
         try:
             sub_is_https = False
             os_client_args = config.get_stx_access_info(
-                region_name=subcloud[0].name,
+                region_name=subcloud[0].region_name,
                 subcloud_hostname=subcloud[0].oam_floating_ip)
             stx_client = get_stx_client(**os_client_args)
         except EndpointException as e:
@@ -158,7 +158,8 @@ class StxFaultClientImp(object):
             if CGTSCLIENT_ENDPOINT_ERROR_MSG in msg:
                 sub_is_https = True
                 os_client_args = config.get_stx_access_info(
-                    region_name=subcloud[0].name, sub_is_https=sub_is_https,
+                    region_name=subcloud[0].region_name,
+                    sub_is_https=sub_is_https,
                     subcloud_hostname=subcloud[0].oam_floating_ip)
                 stx_client = get_stx_client(**os_client_args)
             else:
@@ -192,8 +193,8 @@ class StxFaultClientImp(object):
         alarms = self.fmclient.alarm.list(expand=True)
         if len(alarms) == 0:
             return []
-        logger.debug('alarm 1:' + str(alarms[0].to_dict()))
-        # [print('alarm:' + str(alarm.to_dict())) for alarm in alarms if alarm]
+        [logger.debug(
+            'alarm:' + str(alarm.to_dict())) for alarm in alarms if alarm]
         return [alarmModel.FaultGenericModel(
             alarmModel.EventTypeEnum.ALARM, self._alarmconverter(alarm))
             for alarm in alarms if alarm]
@@ -201,7 +202,8 @@ class StxFaultClientImp(object):
     def getAlarmInfo(self, id) -> alarmModel.FaultGenericModel:
         try:
             alarm = self.fmclient.alarm.get(id)
-            logger.debug('get alarm id ' + id + ':' + str(alarm.to_dict()))
+            logger.debug(
+                'get alarm id: ' + id + ', result:' + str(alarm.to_dict()))
         except HTTPNotFound:
             event = self.fmclient.event_log.get(id)
             return alarmModel.FaultGenericModel(
@@ -212,8 +214,8 @@ class StxFaultClientImp(object):
 
     def getEventList(self, **filters) -> List[alarmModel.FaultGenericModel]:
         events = self.fmclient.event_log.list(alarms=True, expand=True)
-        logger.debug('event 1:' + str(events[0].to_dict()))
-        # [print('alarm:' + str(event.to_dict())) for event in events if event]
+        [logger.debug(
+            'alarm:' + str(event.to_dict())) for event in events if event]
         return [alarmModel.FaultGenericModel(
             alarmModel.EventTypeEnum.EVENT, self._eventconverter(event))
             for event in events if event]

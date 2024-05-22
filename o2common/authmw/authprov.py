@@ -27,11 +27,6 @@ logger = o2logging.get_logger(__name__)
 # read the conf from config file
 auth_prv_conf = get_auth_provider()
 
-try:
-    token_review_url = get_review_url()
-except Exception:
-    raise Exception('Get k8s token review url failed')
-
 
 class K8SAuthenticaException(Exception):
     def __init__(self, value):
@@ -71,6 +66,10 @@ class k8s_auth_provider(auth_definer):
 
     def __init__(self, name):
         self.name = name
+        try:
+            self.token_review_url = get_review_url()
+        except Exception:
+            raise Exception('Get k8s token review url failed')
 
     def tokenissue(self, **args2):
         pass
@@ -105,7 +104,7 @@ class k8s_auth_provider(auth_definer):
                   'Content-Type': 'application/json'}
         try:
             req = urllib.request.Request(
-                token_review_url, data=binary_data, headers=header)
+                self.token_review_url, data=binary_data, headers=header)
             response = urllib.request.urlopen(req)
             data = json.load(response)
             if data['status']['authenticated'] is True:

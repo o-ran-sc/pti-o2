@@ -179,6 +179,9 @@ spec:
               mountPath: /configs/server.key
               subPath: config.json
               readOnly: true
+            - name: smocacrt
+              mountPath: /configs/smoca.crt
+              subPath: config.json
         {{- if .Values.o2dms.helm_cli_enable }}
         - name: helmcli
           image: "{{ .Values.o2ims.images.tags.o2service }}"

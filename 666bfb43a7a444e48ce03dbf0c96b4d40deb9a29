@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5904472f_046737eb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6490145f_dce7cdc5",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 16
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f8ccdf1a_5acb6348",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "This commit implements the O2IMS API to support SMO\u0027s requests of\nalarm event acknowledgment or clearing.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 37
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b183355e_b9e1b3fc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8ccdf1a_5acb6348",
       "range": {
         "startLine": 13,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b870215_f73b9046",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec28ac9c_bde6ea0d",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 15
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "01599ee8_7834fb41",
@@ -83,6 +155,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "the acknowledged field as True.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 25
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4718e442_bd065abb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01599ee8_7834fb41",
       "range": {
         "startLine": 16,
         "startChar": 0,
@@ -116,6 +212,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "71a1d66d_cb2c35a0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b769b4d7_8e0858d3",
+      "range": {
+        "startLine": 17,
+        "startChar": 25,
+        "endLine": 17,
+        "endChar": 52
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "069dfbe1_bb2037a8",
@@ -129,6 +249,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "what does this mean?",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 9
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a310590_840e0b51",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "069dfbe1_bb2037a8",
       "range": {
         "startLine": 22,
         "startChar": 0,
@@ -162,6 +306,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9293736_2295a9a9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "60777941_32d1bd8f",
+      "range": {
+        "startLine": 24,
+        "startChar": 3,
+        "endLine": 24,
+        "endChar": 55
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a06aff9e_b61e27c3",
@@ -175,6 +343,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "do you mean following?\n\nAfter SMO requests the alarm clear to IMS via IMS monitoring API, fault client is requested to delete the alarm from the O-Cloud.",
+      "range": {
+        "startLine": 25,
+        "startChar": 3,
+        "endLine": 26,
+        "endChar": 23
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a124eca_0ac00bef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a06aff9e_b61e27c3",
       "range": {
         "startLine": 25,
         "startChar": 3,
@@ -208,6 +400,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9769db1d_832d328f",
+        "filename": "o2app/entrypoints/redis_eventconsumer.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28c9df97_8a6945b8",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 37
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5e54d0f2_c3e9673d",
@@ -221,6 +437,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "is this a Unexpected keyword argument in constructor?",
+      "range": {
+        "startLine": 138,
+        "startChar": 27,
+        "endLine": 138,
+        "endChar": 35
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47aa7c62_85a107e7",
+        "filename": "o2app/entrypoints/redis_eventconsumer.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "The AlarmEvent changes need this ref URL.",
+      "parentUuid": "5e54d0f2_c3e9673d",
       "range": {
         "startLine": 138,
         "startChar": 27,
@@ -254,6 +494,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b8a8c46_cbbebfb2",
+        "filename": "o2ims/adapter/clients/fault_client.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62ba35b5_b01e98db",
+      "range": {
+        "startLine": 253,
+        "startChar": 8,
+        "endLine": 253,
+        "endChar": 21
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8f0fbfd1_7811d780",
@@ -267,6 +531,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "order these",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 37
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5daa6180_d65f91cb",
+        "filename": "o2ims/service/command/purge_alarm_handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f0fbfd1_7811d780",
       "range": {
         "startLine": 17,
         "startChar": 0,
@@ -300,6 +588,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4273c5ce_7fcab22e",
+        "filename": "o2ims/service/command/purge_alarm_handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d156863e_18245d28",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 22
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "37835cbf_64bf7ebb",
@@ -313,6 +625,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "count,_ \u003d uow.alarm_event_records.list_with_count(*args)",
+      "range": {
+        "startLine": 73,
+        "startChar": 12,
+        "endLine": 73,
+        "endChar": 64
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1b02516_9ec5da0a",
+        "filename": "o2ims/service/command/purge_alarm_handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37835cbf_64bf7ebb",
       "range": {
         "startLine": 73,
         "startChar": 12,
@@ -348,6 +684,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "862e28c7_6391bd68",
+        "filename": "o2ims/service/command/purge_alarm_handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Based on the spec, the notification needs to rely on the SMO subscription. And the subscription may have a filter. Here it will skip the notification if the filter ignores this alarm notification.",
+      "parentUuid": "33ec02b0_3b89325e",
+      "range": {
+        "startLine": 75,
+        "startChar": 16,
+        "endLine": 79,
+        "endChar": 24
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fe93ddc0_34fd52f1",
         "filename": "o2ims/service/event/alarm_event.py",
         "patchSetId": 3
@@ -359,6 +719,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "this is like a quick debugging log, can you remove it or reword it?",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 47
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cceccdd4_3a94c1ba",
+        "filename": "o2ims/service/event/alarm_event.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe93ddc0_34fd52f1",
       "range": {
         "startLine": 37,
         "startChar": 4,
@@ -392,6 +776,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "63a09bb0_d381f3a3",
+        "filename": "o2ims/views/alarm_dto.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca382227_f9d0c848",
+      "range": {
+        "startLine": 137,
+        "startChar": 43,
+        "endLine": 137,
+        "endChar": 54
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1576a453_906869af",
@@ -405,6 +813,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "can we avoid using magic number here?",
+      "range": {
+        "startLine": 140,
+        "startChar": 16,
+        "endLine": 143,
+        "endChar": 59
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d95d9371_26ecf9d1",
+        "filename": "o2ims/views/alarm_dto.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "No, the value is defined by the spec.",
+      "parentUuid": "1576a453_906869af",
       "range": {
         "startLine": 140,
         "startChar": 16,
@@ -438,6 +870,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e059c154_ffe5a038",
+        "filename": "o2ims/views/alarm_route.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "The request should have ack or clear operations, but not both. It\u0027s from the spec.",
+      "parentUuid": "28dc7c7e_0085c2c4",
+      "range": {
+        "startLine": 155,
+        "startChar": 12,
+        "endLine": 155,
+        "endChar": 41
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6bd2e6be_a8dc7663",
@@ -451,6 +907,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "better to change `clear` to `action` or `ops` etc",
+      "range": {
+        "startLine": 166,
+        "startChar": 15,
+        "endLine": 166,
+        "endChar": 20
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cec833a7_1c68b29b",
+        "filename": "o2ims/views/alarm_route.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6bd2e6be_a8dc7663",
       "range": {
         "startLine": 166,
         "startChar": 15,
@@ -486,6 +966,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fc49fb04_b9d1c8b9",
+        "filename": "o2ims/views/alarm_view.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "Can you give me the scenario about the re-ack?",
+      "parentUuid": "521d67d9_706c2991",
+      "range": {
+        "startLine": 59,
+        "startChar": 12,
+        "endLine": 61,
+        "endChar": 44
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "20f59020_81a04b99",
         "filename": "o2ims/views/alarm_view.py",
         "patchSetId": 3
@@ -497,6 +1001,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "will this set `perceivedSeverity` to None unexpectedly?",
+      "range": {
+        "startLine": 68,
+        "startChar": 8,
+        "endLine": 68,
+        "endChar": 52
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99875bf9_17c41359",
+        "filename": "o2ims/views/alarm_view.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "It will be None by default.",
+      "parentUuid": "20f59020_81a04b99",
       "range": {
         "startLine": 68,
         "startChar": 8,
@@ -520,6 +1048,30 @@
       "writtenOn": "2024-05-22T09:02:27Z",
       "side": 1,
       "message": "is this aync call? i cannot see it in `handle_events`",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 23
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd004deb_bfc9e045",
+        "filename": "o2ims/views/alarm_view.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T14:45:53Z",
+      "side": 1,
+      "message": "It\u0027s an aync call.",
+      "parentUuid": "21094567_8ce660f4",
       "range": {
         "startLine": 94,
         "startChar": 4,

@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c0a2225_c306aec9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T07:10:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01e4207c_f2ec6529",
+      "range": {
+        "startLine": 9,
+        "startChar": 29,
+        "endLine": 9,
+        "endChar": 37
+      },
+      "revId": "37a1f2f529f8321f19d039d84e0a950141653d24",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4ecdad44_e68bcb71",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-05-23T05:31:58Z",
       "side": 1,
       "message": "global",
+      "range": {
+        "startLine": 11,
+        "startChar": 9,
+        "endLine": 11,
+        "endChar": 17
+      },
+      "revId": "37a1f2f529f8321f19d039d84e0a950141653d24",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "57067b7e_c9d1747b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T07:10:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ecdad44_e68bcb71",
       "range": {
         "startLine": 11,
         "startChar": 9,
@@ -70,6 +118,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "96a587e4_393617cb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T07:10:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6363f4a_bcb42d2d",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 59
+      },
+      "revId": "37a1f2f529f8321f19d039d84e0a950141653d24",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "03dfeec9_4d5b5d5d",
@@ -83,6 +155,30 @@
       "writtenOn": "2024-05-23T05:31:58Z",
       "side": 1,
       "message": "Failed to get k8s token review url.",
+      "range": {
+        "startLine": 71,
+        "startChar": 29,
+        "endLine": 71,
+        "endChar": 60
+      },
+      "revId": "37a1f2f529f8321f19d039d84e0a950141653d24",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fa3cd48_ac7529d2",
+        "filename": "o2common/authmw/authprov.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T07:10:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03dfeec9_4d5b5d5d",
       "range": {
         "startLine": 71,
         "startChar": 29,

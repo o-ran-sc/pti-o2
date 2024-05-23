@@ -92,10 +92,10 @@ class Config:
 
     def _get(self, name):
         if name in self._sections:
-            return self._sections(name)
+            return self._sections[name]
 
         if name in self.__cache:
-            return self.__cache(name)
+            return self.__cache[name]
 
     def __getattr__(self, name):
         try:

@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3949bab4_3cd22ca0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T07:09:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "361edfca_c01a10ca",
+      "range": {
+        "startLine": 10,
+        "startChar": 19,
+        "endLine": 11,
+        "endChar": 11
+      },
+      "revId": "5e92fcadc6fc0d7c869872f806680d9f7a3cf165",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "50b2b601_6117905e",
@@ -47,6 +71,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ede44c57_7f58a374",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T07:09:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50b2b601_6117905e",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 18
+      },
+      "revId": "5e92fcadc6fc0d7c869872f806680d9f7a3cf165",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0c70b201_94d0ad5c",
@@ -60,6 +108,30 @@
       "writtenOn": "2024-05-23T05:27:02Z",
       "side": 1,
       "message": "The O2 API which is configured with the client CA cert can serve\nthe client requests as expected.",
+      "range": {
+        "startLine": 16,
+        "startChar": 3,
+        "endLine": 17,
+        "endChar": 29
+      },
+      "revId": "5e92fcadc6fc0d7c869872f806680d9f7a3cf165",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0369846c_ed2dd251",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-23T07:09:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c70b201_94d0ad5c",
       "range": {
         "startLine": 16,
         "startChar": 3,

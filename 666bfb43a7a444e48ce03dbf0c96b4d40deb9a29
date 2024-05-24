@@ -706,6 +706,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc0ca057_8ba0c4d2",
+        "filename": "o2ims/service/command/purge_alarm_handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-24T08:57:48Z",
+      "side": 1,
+      "message": "The count attribute will indicate whether the filter for this alarmEventRecord exists.\nAccording to the specification, an alarm that is filtered does not need to be reported. If there is no filter, it means the alarm should be notified; otherwise, it will not be notified.",
+      "parentUuid": "862e28c7_6391bd68",
+      "range": {
+        "startLine": 75,
+        "startChar": 16,
+        "endLine": 79,
+        "endChar": 24
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fe93ddc0_34fd52f1",
@@ -978,6 +1002,30 @@
       "side": 1,
       "message": "Can you give me the scenario about the re-ack?",
       "parentUuid": "521d67d9_706c2991",
+      "range": {
+        "startLine": 59,
+        "startChar": 12,
+        "endLine": 61,
+        "endChar": 44
+      },
+      "revId": "666bfb43a7a444e48ce03dbf0c96b4d40deb9a29",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed4de133_c1cb725c",
+        "filename": "o2ims/views/alarm_view.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-05-24T08:57:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc49fb04_b9d1c8b9",
       "range": {
         "startLine": 59,
         "startChar": 12,

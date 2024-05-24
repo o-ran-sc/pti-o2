@@ -85,9 +85,6 @@ services:
       - "5005:80"
 
   watcher:
-    build:
-      context: .
-      dockerfile: Dockerfile.localtest
     image: o2imsdms
     depends_on:
       - redis_pubsub

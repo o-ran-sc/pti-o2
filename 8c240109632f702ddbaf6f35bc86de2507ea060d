@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3b926a9_6d7a46c6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000237
+      },
+      "writtenOn": "2024-05-24T14:37:04Z",
+      "side": 1,
+      "message": "It\u0027s better to mention the actual release version instead of \"latest\", it\u0027s not easy to know what the lastest release is when someone check the commit history in the future.",
+      "revId": "8c240109632f702ddbaf6f35bc86de2507ea060d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a883ec36_ac3c9f41",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000237
+      },
+      "writtenOn": "2024-05-24T14:37:04Z",
+      "side": 1,
+      "message": "It\u0027s better to say \"FM (Fault Management) client\" insted of fault client.",
+      "revId": "8c240109632f702ddbaf6f35bc86de2507ea060d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

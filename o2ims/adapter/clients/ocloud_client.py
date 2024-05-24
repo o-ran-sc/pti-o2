@@ -301,7 +301,7 @@ class StxClientImp(object):
                 subcloud_stxclient = self.getSubcloudClient(
                     subcloud.subcloud_id)
                 systems = subcloud_stxclient.isystem.list()
-                logger.debug('systems:' + str(systems[0].to_dict()))
+                logger.debug('subcloud system:' + str(systems[0].to_dict()))
                 pools.append(systems[0])
             except Exception as ex:
                 logger.warning('Failed get cgstclient of subcloud %s: %s' %

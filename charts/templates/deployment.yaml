@@ -124,6 +124,12 @@ spec:
               value: "1"
             - name: REDIS_HOST
               value: localhost
+            {{- if default false .Values.o2ims.useHostCert }}
+            - name: REQUESTS_CA_BUNDLE
+              value: /etc/ssl/custom-cert.pem
+            {{- end }}
+            - name: CGTS_INSECURE_SSL
+              value: {{ ternary "1" "0" (default false .Values.o2ims.cgtsInsecureSSL) | quote }}
           volumeMounts:
             - name: scripts
               mountPath: /opt
@@ -131,6 +137,11 @@ spec:
               mountPath: /configs/o2app.conf
               subPath: config.json
               readOnly: true
+            {{- if default false .Values.o2ims.useHostCert }}
+            - name: ca-certs
+              mountPath: /etc/ssl/custom-cert.pem
+              readOnly: true
+            {{- end }}
         - name: o2api
           image: "{{ .Values.o2ims.images.tags.o2service }}"
           ports:
@@ -222,4 +233,10 @@ spec:
         - name: db-pv
           persistentVolumeClaim:
             claimName: {{ .Chart.Name }}-db-pv
+        {{- if default false .Values.o2ims.useHostCert }}
+        - name: ca-certs
+          hostPath:
+            path: {{ .Values.o2ims.hostCertPath | quote }}
+            type: File
+        {{- end }}
 ---

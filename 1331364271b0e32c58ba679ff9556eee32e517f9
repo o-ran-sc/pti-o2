@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52efa903_26329b98",
+        "filename": "o2common/authmw/exceptions.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000398
+      },
+      "writtenOn": "2024-05-27T11:03:56Z",
+      "side": 1,
+      "message": "AuthGeneralException?",
+      "range": {
+        "startLine": 31,
+        "startChar": 21,
+        "endLine": 31,
+        "endChar": 30
+      },
+      "revId": "1331364271b0e32c58ba679ff9556eee32e517f9",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

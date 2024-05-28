@@ -64,8 +64,10 @@ spec:
           volumeMounts:
             - name: scripts
               mountPath: /opt
+            {{- if .Values.db.persistence }}
             - name: db-pv
               mountPath: /var/lib/postgresql/data
+            {{- end }}
         - name: redis
           image: "{{ .Values.o2ims.images.tags.redis }}"
           ports:
@@ -230,9 +232,11 @@ spec:
         - configMap:
             name: {{ .Chart.Name }}-smocacrt
           name: smocacrt
+        {{- if .Values.db.persistence }}
         - name: db-pv
           persistentVolumeClaim:
             claimName: {{ .Chart.Name }}-db-pv
+        {{- end }}
         {{- if default false .Values.o2ims.useHostCert }}
         - name: ca-certs
           hostPath:

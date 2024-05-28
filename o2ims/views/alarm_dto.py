@@ -129,6 +129,22 @@ class AlarmDTO:
         # 'alarmAcknowledgeTime,alarmAcknowledged,extensions}'
     )
 
+    alarm_event_record_patch = api_monitoring_v1.model(
+        "AlarmPatchDto",
+        {
+            'alarmAcknowledged': fields.Boolean(
+                example=True,
+                description='Boolean value indication of a management ' +
+                'system has acknowledged the alarm.'),
+            'perceivedSeverity': fields.String(
+                example='5',
+                description='indicate that the alarm record is requested ' +
+                'to be cleared. Only the value "5" for "CLEARED" is ' +
+                'permitted in a request message content. ')
+        },
+        mask='{alarmAcknowledged,}'
+    )
+
 
 class SubscriptionDTO:
 

@@ -12,22 +12,16 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from werkzeug.wrappers import Request, Response
-from o2common.helper import o2logging
-from o2common.authmw.authprov import auth_definer
-from flask_restx._http import HTTPStatus
 import json
+from flask_restx._http import HTTPStatus
+from werkzeug.wrappers import Request, Response
+
+from o2common.authmw.authprov import auth_definer
+from o2common.authmw.exceptions import AuthRequiredExp
+from o2common.authmw.exceptions import AuthFailureExp
+from o2common.helper import o2logging
 
 logger = o2logging.get_logger(__name__)
-
-
-class AuthRequiredExp(Exception):
-    def __init__(self, value):
-        self.value = value
-
-    def dictize(self):
-        return {
-            'WWW-Authenticate': '{}'.format(self.value)}
 
 
 class AuthProblemDetails():
@@ -54,15 +48,6 @@ class AuthProblemDetails():
         return json.dumps(details, indent=True)
 
 
-class AuthFailureExp(Exception):
-    def __init__(self, value):
-        self.value = value
-
-    def dictize(self):
-        return {
-            'WWW-Authenticate': '{}'.format(self.value)}
-
-
 def _response_wrapper(environ, start_response, header, detail):
     res = Response(headers=header,
                    mimetype='application/json', status=401, response=detail)
@@ -75,7 +60,6 @@ def _internal_err_response_wrapper(environ, start_response, detail):
 
 
 class authmiddleware():
-
     '''
     Auth WSGI middleware
     '''

@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 ---
+{{- if .Values.db.persistence }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -25,4 +26,5 @@ spec:
     requests:
       storage: {{ .Values.db.storageSize }}
   storageClassName: general
+{{- end }}
 ---

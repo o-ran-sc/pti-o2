@@ -178,9 +178,10 @@ class AlarmNotificationEventEnum(str, Enum):
 
 class AlarmEvent2SMO(Serializer):
     def __init__(self, eventtype: AlarmNotificationEventEnum,
-                 id: str, updatetime: str) -> None:
+                 id: str, ref: str, updatetime: str) -> None:
         self.notificationEventType = eventtype
         self.id = id
+        self.objectRef = ref
         self.updatetime = updatetime
 
 

@@ -270,38 +270,38 @@ class StxSaClientImp(object):
                                 'more than one system exists in the account.')
             return isystems[0]
 
-    @ staticmethod
+    @staticmethod
     def _hostconverter(host):
         setattr(host, 'name', host.hostname)
         return host
 
-    @ staticmethod
+    @staticmethod
     def _cpuconverter(cpu):
         setattr(cpu, 'name', cpu.ihost_uuid.split(
             '-', 1)[0] + '-cpu-'+str(cpu.cpu))
         return cpu
 
-    @ staticmethod
+    @staticmethod
     def _memconverter(mem):
         setattr(mem, 'name', mem.ihost_uuid.split('-', 1)[0] +
                 '-mem-node-'+str(mem.numa_node))
         return mem
 
-    @ staticmethod
+    @staticmethod
     def _ethconverter(eth):
         setattr(eth, 'name', eth.host_uuid.split('-', 1)[0] + '-'+eth.name)
         setattr(eth, 'updated_at', None)
         setattr(eth, 'created_at', None)
         return eth
 
-    @ staticmethod
+    @staticmethod
     def _ifconverter(ifs):
         setattr(ifs, 'name', ifs.ihost_uuid.split('-', 1)[0] + '-'+ifs.ifname)
         setattr(ifs, 'updated_at', None)
         setattr(ifs, 'created_at', None)
         return ifs
 
-    @ staticmethod
+    @staticmethod
     def _k8sconverter(cluster):
         setattr(cluster, 'name', cluster.cluster_name)
         setattr(cluster, 'uuid',
@@ -313,7 +313,7 @@ class StxSaClientImp(object):
                      cluster.name + '/' + str(cluster.uuid))
         return cluster
 
-    @ staticmethod
+    @staticmethod
     def _k8shasher(cluster):
         return str(hash((cluster.cluster_name,
                          cluster.cluster_api_endpoint, cluster.admin_user)))

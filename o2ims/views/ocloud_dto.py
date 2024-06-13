@@ -89,11 +89,11 @@ class OcloudDTO:
             # 'smoRegistrationService': fields.String
             'extensions': fields.String(
                 example='',
-                description='These are unspecified (not standardized) ' +\
-                'properties (keys) which are tailored by the vendor ' +\
+                description='These are unspecified (not standardized) ' +
+                'properties (keys) which are tailored by the vendor ' +
                 'to extend the information provided about the O-Cloud.'),
         },
-        mask='{oCloudId,globalCloudId,globalcloudId,name,description,' +\
+        mask='{oCloudId,globalCloudId,globalcloudId,name,description,' +
         'serviceUri}'
     )
 
@@ -264,9 +264,9 @@ class ResourcePoolDTO:
             # 'resources': fields.String,
             'extensions': fields.String(
                 example='',
-                description='List of metadata key-value pairs ' +\
-                'used to associate meaningful metadata to ' +\
-                'the related resource pool.')
+                description=('List of metadata key-value pairs '
+                             'used to associate meaningful metadata to '
+                             'the related resource pool.'))
         },
         mask='{resourcePoolId,oCloudId,globalLocationId,name,description}'
     )
@@ -367,6 +367,14 @@ class DeploymentManagerDTO:
                 'the Deployment Manager'),
         })
 
+    capacity = api_ims_inventory_v1.model(
+        "DeploymentManagerCapacity", {
+            'OS': fields.String(
+                example='low_latency',
+                description='Show the OS capacity of ' +
+                'the Deployment Manager'),
+        })
+
     deployment_manager_list = api_ims_inventory_v1.model(
         "DeploymentManagerListDto",
         {
@@ -389,11 +397,12 @@ class DeploymentManagerDTO:
                 example='https://128.224.115.51:6443',
                 description='The fully qualified URI to a Deployment ' +
                 'Management server for O2dms.'),
+            # Comment for the future implementation
             # 'deploymentManagementServiceEndpoint': fields.String(
             # attribute='serviceUri'),
-            # 'supportedLocations': fields.String,
+            'supportedLocations': fields.String,
             'capabilities': fields.Nested(capabilities, True, True),
-            # 'capacity': fields.String,
+            'capacity': fields.Nested(capacity, True, True),
             'profileSupportList': fields.List(
                 fields.String,
                 example=['native_k8sapi'],
@@ -405,8 +414,8 @@ class DeploymentManagerDTO:
                 'associate meaningful metadata to the related Deployment ' +
                 'Manager'),
         },
-        mask='{deploymentManagerId,name,description,oCloudId,serviceUri,' + \
-        'profileSupportList}'
+        mask='{deploymentManagerId,name,description,oCloudId,serviceUri,' +
+        'supportedLocations,capabilities,capacity,profileSupportList}'
     )
 
     profile = api_ims_inventory_v1.model("DeploymentManagerGetDtoProfile", {
@@ -480,12 +489,13 @@ class DeploymentManagerDTO:
                 'Management server for O2dms.'),
             # 'deploymentManagementServiceEndpoint': fields.String(
             # attribute='serviceUri'),
-            # 'supportedLocations': fields.String,
+            'supportedLocations': fields.String,
             'capabilities': fields.Nested(capabilities, True, True),
-            # 'capacity': fields.String,
+            'capacity': fields.Nested(capacity, True, True),
             'extensions': fields.Nested(extensions, True, True)
         },
-        mask='{deploymentManagerId,name,description,oCloudId,serviceUri,' +\
+        mask='{deploymentManagerId,name,description,oCloudId,serviceUri,' +
+        'supportedLocations,capabilities,capacity,' +
         'extensions{profileName,profileData}}'
     )
 

@@ -48,6 +48,8 @@ def notify_change_to_smo(
         _notify_dms(uow, notifications, cmd.data)
     elif msg_type == 'Resource':
         _notify_resource(uow, notifications, cmd.data)
+    elif msg_type == 'OCloud':
+        _notify_ocloud(uow, notifications, cmd.data)
 
 
 def __get_object_type_and_value(sub_filter):
@@ -61,7 +63,6 @@ def __get_object_type_and_value(sub_filter):
 
 
 def handle_filter(filter: str, f_type: str):
-    print(filter)
     if not filter:
         return
 
@@ -186,6 +187,35 @@ def _notify_dms(uow, notifications, data):
 
             logger.info('Subscription {} filter hit, skip '
                         'DeploymentManager {}.'
+                        .format(sub_data['subscriptionId'], data.id))
+
+
+def _notify_ocloud(uow, notifications, data):
+    with uow:
+        ocloud = uow.oclouds.get(data.id)
+        if ocloud is None:
+            logger.warning(
+                'oCloud {} does not exists.'.format(data.id))
+            return
+
+        ocloud_dict = ocloud.get_notification_dict()
+
+        subs = uow.subscriptions.list()
+        for sub in subs:
+            sub_data = sub.serialize()
+            logger.debug('Subscription: {}'.format(sub_data['subscriptionId']))
+            filters = handle_filter(
+                sub_data['filter'], 'CloudInfo')
+            logger.debug(f'filters: {filters}, sub_data: {sub_data}')
+
+            if not filters or filters[0] == 0 or check_filters(
+                    filters, sub_data, uow.oclouds,
+                    ocloud.Ocloud,
+                    ocloud.Ocloud.oCloudId, data.id):
+                callback_smo(notifications, sub, data, ocloud_dict)
+                continue
+
+            logger.info('Subscription {} filter hit, skip Cloud {}.'
                         .format(sub_data['subscriptionId'], data.id))
 
 

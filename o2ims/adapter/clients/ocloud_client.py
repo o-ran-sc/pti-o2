@@ -591,12 +591,12 @@ class StxClientImp(object):
                                 'more than one system exists in the account.')
             return isystems[0]
 
-    @ staticmethod
+    @staticmethod
     def _respoolconverter(res_pool):
         setattr(res_pool, 'name', res_pool.region_name)
         return res_pool
 
-    @ staticmethod
+    @staticmethod
     def _hostconverter(host):
         selected_keys = [
             "hostname", "personality", "id", "mgmt_ip", "mgmt_mac",
@@ -612,7 +612,7 @@ class StxClientImp(object):
         setattr(host, 'name', host.hostname)
         return host
 
-    @ staticmethod
+    @staticmethod
     def _labelconverter(label):
         selected_keys = [
             "uuid", "label_key", "label_value", "host_uuid"
@@ -628,7 +628,7 @@ class StxClientImp(object):
         setattr(label, 'created_at', None)
         return label
 
-    @ staticmethod
+    @staticmethod
     def _cpuconverter(cpu):
         selected_keys = [
             "cpu", "core", "thread", "allocated_function", "numa_node",
@@ -642,7 +642,7 @@ class StxClientImp(object):
             '-', 1)[0] + '-cpu-'+str(cpu.cpu))
         return cpu
 
-    @ staticmethod
+    @staticmethod
     def _memconverter(mem):
         selected_keys = [
             "memtotal_mib", "memavail_mib", "vm_hugepages_use_1G",
@@ -660,7 +660,7 @@ class StxClientImp(object):
                 '-mem-node-'+str(mem.numa_node))
         return mem
 
-    @ staticmethod
+    @staticmethod
     def _ethconverter(eth):
         selected_keys = [
             "name", "namedisplay", "dev_id", "pdevice", "capabilities",
@@ -678,7 +678,7 @@ class StxClientImp(object):
         setattr(eth, 'created_at', None)
         return eth
 
-    @ staticmethod
+    @staticmethod
     def _ifconverter(ifs):
         selected_keys = [
             "ifname", "iftype", "imac", "vlan_id", "imtu",
@@ -694,7 +694,7 @@ class StxClientImp(object):
         setattr(ifs, 'created_at', None)
         return ifs
 
-    @ staticmethod
+    @staticmethod
     def _devconverter(dev):
         selected_keys = [
             "name", "pdevice", "pciaddr", "pvendor_id", "pvendor",
@@ -708,7 +708,7 @@ class StxClientImp(object):
         setattr(dev, 'name', dev.host_uuid.split('-', 1)[0] + '-'+dev.name)
         return dev
 
-    @ staticmethod
+    @staticmethod
     def _k8sconverter(cluster):
         setattr(cluster, 'name', cluster.cloud_name +
                 '.' + cluster.cluster_name)
@@ -721,7 +721,7 @@ class StxClientImp(object):
                      cluster.name + '/' + str(cluster.uuid))
         return cluster
 
-    @ staticmethod
+    @staticmethod
     def _k8shasher(cluster):
         return str(hash((cluster.cluster_name, cluster.cloud_name,
                          cluster.cluster_api_endpoint, cluster.admin_user,

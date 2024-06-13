@@ -23,7 +23,8 @@ from o2common.config import config
 from o2common.helper import o2logging
 from o2dms.domain import commands
 from o2ims.domain import commands as imscmd
-from o2ims.domain.subscription_obj import Message2SMO, RegistrationMessage
+from o2ims.domain.subscription_obj import Message2SMO, RegistrationMessage, \
+    NotificationEventEnum
 from o2ims.domain.alarm_obj import AlarmEvent2SMO
 
 logger = o2logging.get_logger(__name__)
@@ -125,9 +126,17 @@ def handle_changed(m, bus):
         datastr = m['data']
         data = json.loads(datastr)
         logger.info('OcloudChanged with cmd:{}'.format(data))
-        cmd = imscmd.Register2SMO(data=RegistrationMessage(
-            id=data['id'], eventtype=data['notificationEventType'],
-            updatetime=data['updatetime']))
+        if data['notificationEventType'] == NotificationEventEnum.CREATE:
+            cmd = imscmd.Register2SMO(data=RegistrationMessage(
+                id=data['id'], eventtype=data['notificationEventType'],
+                updatetime=data['updatetime']))
+        elif data['notificationEventType'] == NotificationEventEnum.MODIFY:
+            ref = apibase + inventory_api_version
+            cmd = imscmd.PubMessage2SMO(data=Message2SMO(
+                id=data['id'], ref=ref,
+                eventtype=data['notificationEventType'],
+                updatetime=data['updatetime']),
+                type='OCloud')
         bus.handle(cmd)
     elif channel == 'AlarmEventChanged':
         datastr = m['data']
@@ -145,7 +154,7 @@ def handle_changed(m, bus):
         data = json.loads(datastr)
         logger.info('AlarmEventPurged with cmd:{}'.format(data))
         cmd = imscmd.PurgeAlarmEvent(data=AlarmEvent2SMO(
-            id=data['id'], eventtype=data['notificationEventType'],
+            id=data['id'], ref="", eventtype=data['notificationEventType'],
             updatetime=data['updatetime']))
         bus.handle(cmd)
     else:

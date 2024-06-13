@@ -367,6 +367,14 @@ class DeploymentManagerDTO:
                 'the Deployment Manager'),
         })
 
+    capacity = api_ims_inventory_v1.model(
+        "DeploymentManagerCapacity", {
+            'OS': fields.String(
+                example='low_latency',
+                description='Show the OS capacity of ' +
+                'the Deployment Manager'),
+        })
+
     deployment_manager_list = api_ims_inventory_v1.model(
         "DeploymentManagerListDto",
         {
@@ -391,9 +399,9 @@ class DeploymentManagerDTO:
                 'Management server for O2dms.'),
             # 'deploymentManagementServiceEndpoint': fields.String(
             # attribute='serviceUri'),
-            # 'supportedLocations': fields.String,
+            'supportedLocations': fields.String,
             'capabilities': fields.Nested(capabilities, True, True),
-            # 'capacity': fields.String,
+            'capacity': fields.Nested(capacity, True, True),
             'profileSupportList': fields.List(
                 fields.String,
                 example=['native_k8sapi'],
@@ -406,7 +414,7 @@ class DeploymentManagerDTO:
                 'Manager'),
         },
         mask='{deploymentManagerId,name,description,oCloudId,serviceUri,' + \
-        'profileSupportList}'
+        'supportedLocations,capabilities,capacity,profileSupportList}'
     )
 
     profile = api_ims_inventory_v1.model("DeploymentManagerGetDtoProfile", {
@@ -480,12 +488,13 @@ class DeploymentManagerDTO:
                 'Management server for O2dms.'),
             # 'deploymentManagementServiceEndpoint': fields.String(
             # attribute='serviceUri'),
-            # 'supportedLocations': fields.String,
+            'supportedLocations': fields.String,
             'capabilities': fields.Nested(capabilities, True, True),
-            # 'capacity': fields.String,
+            'capacity': fields.Nested(capacity, True, True),
             'extensions': fields.Nested(extensions, True, True)
         },
         mask='{deploymentManagerId,name,description,oCloudId,serviceUri,' +\
+        'supportedLocations,capabilities,capacity,' +\
         'extensions{profileName,profileData}}'
     )
 

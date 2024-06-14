@@ -62,6 +62,9 @@ def get_api_url():
         else port_external
     return f"https://{host}:{port}"
 
+def get_region_name():
+    region_name = os.environ.get("OS_REGION_NAME", "RegionOne")
+    return region_name
 
 def get_stx_url():
     try:
@@ -150,7 +153,8 @@ def is_ipv6(address):
         return False
 
 
-def get_stx_access_info(region_name="RegionOne", subcloud_hostname: str = "",
+def get_stx_access_info(region_name=get_region_name(),
+                        subcloud_hostname: str = "",
                         sub_is_https: bool = False):
     try:
         client_args = get_stx_client_args()

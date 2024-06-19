@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98fb8ba3_1fc6757c",
+        "filename": "o2ims/views/ocloud_dto.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1000237
+      },
+      "writtenOn": "2024-06-19T10:16:18Z",
+      "side": 1,
+      "message": "This might be better to use multi-line string with indentation:\n\n```\ndescription\u003d(\u0027List of metadata key-value pairs \u0027\n             \u0027used to associate meaningful metadata to \u0027\n             \u0027the related resource pool.\u0027))\n```          \nor\n```\ndescription\u003d(\n    \u0027List of metadata key-value pairs \u0027\n    \u0027used to associate meaningful metadata to \u0027\n    \u0027the related resource pool.\u0027\n))\n```",
+      "revId": "943f76df474ed44cef3709d5c55b3cd177ec79f0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b29e164b_6f0e35e5",
+        "filename": "o2ims/views/ocloud_dto.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1000237
+      },
+      "writtenOn": "2024-06-19T10:16:18Z",
+      "side": 1,
+      "message": "Is this commented for future implementation?",
+      "revId": "943f76df474ed44cef3709d5c55b3cd177ec79f0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

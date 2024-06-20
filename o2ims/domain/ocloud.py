@@ -66,6 +66,8 @@ class DeploymentManager(InfrastructureInventoryObject, AgRoot, Serializer):
 
         if 'capabilities' in d and d['capabilities'] != '':
             d['capabilities'] = json.loads(d['capabilities'])
+        if 'capacity' in d and d['capacity'] != '':
+            d['capacity'] = json.loads(d['capacity'])
         return d
 
     def get_notification_dict(self):

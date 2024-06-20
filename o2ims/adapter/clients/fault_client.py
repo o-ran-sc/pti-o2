@@ -263,7 +263,7 @@ class StxFaultClientImp(object):
                         self._suppression_converter(event)))
         return suppression_list
 
-    @ staticmethod
+    @staticmethod
     def _alarmconverter(alarm):
         selected_keys = [
             'alarm_id', 'alarm_state', 'entity_type_id', 'entity_instance_id',
@@ -285,7 +285,7 @@ class StxFaultClientImp(object):
                 uuid.NAMESPACE_URL, alarm.probable_cause)))
         return alarm
 
-    @ staticmethod
+    @staticmethod
     def _eventconverter(event, clear=False):
         selected_keys = [
             'event_log_id', 'state', 'entity_type_id',
@@ -308,7 +308,7 @@ class StxFaultClientImp(object):
                 uuid.NAMESPACE_URL, event.probable_cause)))
         return event
 
-    @ staticmethod
+    @staticmethod
     def _suppression_converter(event, clear=False):
         selected_keys = [
             'alarm_id', 'description', 'suppression_status',
@@ -329,7 +329,7 @@ class StxFaultClientImp(object):
         setattr(event, 'timestamp', None)
         return event
 
-    @ staticmethod
+    @staticmethod
     def _alarmeventhasher(event, state=''):
         # The event model and the alarm model have different parameter name
         # of the state. alarm model is alarm_state, event model is state.

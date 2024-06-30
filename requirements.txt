@@ -27,3 +27,5 @@ gunicorn
 
 # Import JWT to support OAuth2
 pyjwt==2.6.0
+
+kubernetes>=30.0.0

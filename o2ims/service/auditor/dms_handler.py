@@ -82,7 +82,7 @@ def create_by(stxobj: StxGenericModel, parentid: str) -> DeploymentManager:
     # logger.info(content)
     supportedLocations = ''
     capabilities = content['capabilities']
-    capacity = ''
+    capacity = content['capacity']
     dmsendpoint = content['cluster_api_endpoint']
     profile = _convert_content(content)
     localmodel = DeploymentManager(
@@ -113,6 +113,7 @@ def update_by(target: DeploymentManager, stxobj: StxGenericModel,
     target.hash = stxobj.hash
     target.oCloudId = parentid
     target.capabilities = content['capabilities']
+    target.capacity = content['capacity']
     target.version_number = target.version_number + 1
     target.profile = _convert_content(content)
 

@@ -14,6 +14,7 @@
 
 # client talking to Stx standalone
 
+import base64
 import uuid
 import json
 from typing import List
@@ -22,6 +23,7 @@ from typing import List
 from cgtsclient.client import get_client as get_stx_client
 from cgtsclient.exc import EndpointException
 from dcmanagerclient.api.client import client as get_dc_client
+from kubernetes import client as k8sclient, config as k8sconfig
 
 from o2common.config import config
 from o2common.service.client.base_client import BaseClient
@@ -249,6 +251,24 @@ class StxClientImp(object):
 
         return config_client
 
+    def getK8sClient(self, k8scluster):
+        def _b64_encode_str(msg: str, encode: str = 'utf-8') -> str:
+            msg_bytes = msg.encode('utf-8')
+            base64_bytes = base64.b64encode(msg_bytes)
+            base64_msg = base64_bytes.decode('utf-8')
+            return base64_msg
+
+        conf_dict = config.gen_k8s_config_dict(
+            k8scluster.cluster_api_endpoint,
+            _b64_encode_str(k8scluster.cluster_ca_cert),
+            k8scluster.admin_user,
+            _b64_encode_str(k8scluster.admin_client_cert),
+            _b64_encode_str(k8scluster.admin_client_key),
+        )
+        k8sconfig.load_kube_config_from_dict(conf_dict)
+        v1 = k8sclient.CoreV1Api()
+        return v1
+
     def setStxClient(self, resource_pool_id):
         systems = self.stxclient.isystem.list()
         if resource_pool_id == systems[0].uuid:
@@ -365,13 +385,57 @@ class StxClientImp(object):
                 return True
         return False
 
-    def _setK8sCapabilities(self, client, k8scluster):
+    def _getK8sNodes(self, k8sclient):
+        return k8sclient.list_node()
+
+    def _getK8sNodeDetail(self, k8sclient, node_name):
+        return k8sclient.read_node(name=node_name)
+
+    def _getK8sCapabilities(self, k8s_client):
+        k8s_capabilities = {}
+        nodes = self._getK8sNodes(k8s_client)
+        for node in nodes.items:
+            logger.debug(f'k8s node {node.metadata.name} allocatable: '
+                         f'{node.status.allocatable}')
+            for allocatable in node.status.allocatable:
+                if allocatable.startswith('intel.com/pci_sriov_net_'):
+                    k8s_capabilities[f'{node.metadata.name}_sriov'] = True
+                if allocatable == 'windriver.com/isolcpus':
+                    k8s_capabilities[f'{node.metadata.name}_isolcpus'] = True
+        return k8s_capabilities
+
+    def _setK8sCapabilities(self, k8scluster, client, k8s_client):
         capabilities = {}
         label_OS_2chk = {'key': 'OS', 'value': 'low_latency'}
         if self._checkLabelExistOnCluster(client, label_OS_2chk, True):
             logger.debug("low latency host inside of the k8s cluster")
             capabilities[label_OS_2chk['key']] = label_OS_2chk['value']
+
+        # Add Kubernetes capabilities
+        k8s_capabilities = self._getK8sCapabilities(k8s_client)
+        capabilities.update(k8s_capabilities)
+
         setattr(k8scluster, 'capabilities', json.dumps(capabilities))
+        return k8scluster
+
+    def _getK8sCapacity(self, k8s_client):
+        k8s_capacity = {}
+        nodes = self._getK8sNodes(k8s_client)
+        for node in nodes.items:
+            logger.debug(f'k8s node {node.metadata.name} capacity: '
+                         f'{node.status.capacity}')
+            for key, value in node.status.capacity.items():
+                k8s_capacity[f'{node.metadata.name}_{key}'] = value
+        return k8s_capacity
+
+    def _setK8sCapacity(self, k8scluster, client, k8s_client):
+        capacity = {}
+
+        # Add Kubernetes capacity
+        k8s_capacity = self._getK8sCapacity(k8s_client)
+        capacity.update(k8s_capacity)
+
+        setattr(k8scluster, 'capacity', json.dumps(capacity))
         return k8scluster
 
     def getLabelList(self, **filters) -> List[ocloudModel.StxGenericModel]:
@@ -386,7 +450,11 @@ class StxClientImp(object):
         def process_cluster(client, cluster):
             setattr(cluster, 'cloud_name', systems[0].name)
             setattr(cluster, 'cloud_uuid', systems[0].uuid)
-            cluster = self._setK8sCapabilities(client, cluster)
+
+            k8s_client = self.getK8sClient(cluster)
+            cluster = self._setK8sCapabilities(cluster, client, k8s_client)
+            cluster = self._setK8sCapacity(cluster, client, k8s_client)
+
             logger.debug('k8sresources cluster_api_endpoint: ' +
                          str(cluster.cluster_api_endpoint))
             return ocloudModel.StxGenericModel(ResourceTypeEnum.DMS,
@@ -436,7 +504,10 @@ class StxClientImp(object):
         def process_k8s_cluster(client, k8s_cluster, cloud_name, cloud_uuid):
             setattr(k8s_cluster, 'cloud_name', cloud_name)
             setattr(k8s_cluster, 'cloud_uuid', cloud_uuid)
-            k8s_cluster = self._setK8sCapabilities(client, k8s_cluster)
+
+            k8s_client = self.getK8sClient(cluster)
+            cluster = self._setK8sCapabilities(cluster, client, k8s_client)
+            cluster = self._setK8sCapacity(cluster, client, k8s_client)
             return k8s_cluster
 
         systems = self.stxclient.isystem.list()

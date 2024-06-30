@@ -369,9 +369,17 @@ class DeploymentManagerDTO:
 
     capacity = api_ims_inventory_v1.model(
         "DeploymentManagerCapacity", {
-            'OS': fields.String(
-                example='low_latency',
-                description='Show the OS capacity of ' +
+            'cpu': fields.String(
+                example='32',
+                description='Show the cpu capacity of ' +
+                'the Deployment Manager'),
+            'hugepages-2Mi': fields.String(
+                example='2048',
+                description='Show the 2Mi hugepages capacity of ' +
+                'the Deployment Manager'),
+            'hugepages-1Gi': fields.String(
+                example='2048',
+                description='Show the 1Gi hugepages capacity of ' +
                 'the Deployment Manager'),
         })
 

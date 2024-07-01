@@ -1,7 +1,7 @@
 ---
 
 #
-# Copyright (c) 2013-2021 Wind River Systems, Inc.
+# Copyright (c) 2013-2024 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -58,6 +58,11 @@
 #       // lowest alarm level of this type that will block forced upgrades & orchestration actions
 #   Degrade_Affecting_Severity: < none | critical | major | minor >
 #       // lowest alarm level of this type sets a host to 'degraded'
+#   Context: < none | starlingx | openstack >
+#       // Identifies where the alarm/log is used. If it should be ignored by
+#       // the documentation generating scripts, the value has to be 'none'.
+#       // If any of the other values is used, the alarm/log will be included
+#       // in the documentation and classified by the chosen value.
 #
 #
 #   Other Notes:
@@ -106,6 +111,7 @@
     Suppression: True
     Management_Affecting_Severity: major
     Degrade_Affecting_Severity: critical
+    Context: starlingx
 
 100.102:
     Type: Alarm
@@ -127,6 +133,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: none
 
 100.103:
     Type: Alarm
@@ -154,6 +161,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: critical
+    Context: starlingx
 
 100.104:    # NOTE This should really be split into two different Alarms.
     Type: Alarm
@@ -181,6 +189,7 @@
     Suppression: True
     Management_Affecting_Severity: critical
     Degrade_Affecting_Severity: critical
+    Context: starlingx
 
 100.105:
     Type: Alarm
@@ -190,7 +199,7 @@
     Entity_Instance_ID: fs_name=<image-conversion>
     Severity: critical
     Proposed_Repair_Action: "Add image-conversion filesystem on both controllers.
-                             Consult the System Administration Manual for more details.
+                             See the |prod-long| documentation at |docs-url| for more details.
                              If problem persists, contact next level of support."
     Maintenance_Action: degrade
     Inhibit_Alarms:
@@ -200,6 +209,7 @@
     Suppression: False
     Management_Affecting_Severity: major
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 #--------
 # 100.105: Retired (with R2 release): previously monitored /etc/nova/instances
@@ -220,6 +230,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: major
+    Context: starlingx
 
 100.107:
     Type: Alarm
@@ -240,6 +251,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: major
+    Context: starlingx
 
 100.108:
     Type: Alarm
@@ -255,6 +267,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: major
+    Context: starlingx
 
 100.109:
     Type: Alarm
@@ -275,6 +288,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: major
+    Context: starlingx
 
 100.110:
     Type: Alarm
@@ -290,6 +304,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: major
+    Context: starlingx
 
 100.111:
     Type: Alarm
@@ -310,6 +325,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: major
+    Context: starlingx
 
 100.112:
     Type: Alarm
@@ -325,6 +341,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: major
+    Context: openstack
 
 100.113:
     Type: Alarm
@@ -344,6 +361,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: major
+    Context: openstack
 
 100.114:
     Type: Alarm
@@ -363,6 +381,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 100.115:
     Type: Alarm
@@ -380,6 +399,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: critical
+    Context: none
 
 100.116:
     Type: Alarm
@@ -397,6 +417,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: critical
+    Context: none
 
 100.117:
     Type: Alarm
@@ -414,6 +435,7 @@
     Suppression: True
     Management_Affecting_Severity: major
     Degrade_Affecting_Severity: critical
+    Context: none
 
 100.118:
     Type: Alarm
@@ -429,6 +451,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 100.119:
     Type: Alarm
@@ -437,7 +460,7 @@
         OR
         <hostname> PTP clocking is out-of-tolerance
         OR
-        <hostname> is not locked to remote PTP Grand Master
+        <hostname> is not locked to remote PTP Primary source
         OR
         <hostname> GNSS signal loss state:<state>
         OR
@@ -468,6 +491,39 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
+
+100.120:
+    Type: Alarm
+    Description: Controllers running mismatched kernels.
+    Entity_Instance_ID: host=<hostname>.kernel=<kernel>
+    Severity: minor
+    Proposed_Repair_Action: "Modify controllers using 'system host-kernel-modify' so that both are running the desired 'standard' or 'lowlatency' kernel."
+    Maintenance_Action: none
+    Inhibit_Alarms: False
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+100.121:
+    Type: Alarm
+    Description: Host not running the provisioned kernel.
+    Entity_Instance_ID: host=<hostname>.kernel=<kernel>
+    Severity: major
+    Proposed_Repair_Action: "Retry 'system host-kernel-modify' and if condition persists, contact next level of support."
+    Maintenance_Action: none
+    Inhibit_Alarms: False
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: major
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 100.150:
     Type: Alarm
@@ -486,6 +542,8 @@
     Suppression: False
     Management_Affecting_Severity: critical
     Degrade_Affecting_Severity: critical
+    Context: starlingx
+
 
 #---------------------------------------------------------------------------
 #   MAINTENANCE
@@ -506,6 +564,23 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
+
+200.003:
+    Type: Alarm
+    Description: <hostname> pxeboot network communication failure.
+    Entity_Instance_ID: host=<hostname>
+    Severity: minor
+    Proposed_Repair_Action: Administratively Lock and Unlock host to recover. If problem persists, contact next level of support.
+    Maintenance_Action: none
+    Inhibit_Alarms: False
+    Alarm_Type: communication
+    Probable_Cause: unknown
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 200.004:
     Type: Alarm
@@ -523,6 +598,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 200.011:
     Type: Alarm
@@ -538,6 +614,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 200.010:
     Type: Alarm
@@ -553,25 +630,11 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
-
-200.012:
-    Type: Alarm
-    Description: <hostname> controller function has in-service failure while compute services remain healthy.
-    Entity_Instance_ID: host=<hostname>
-    Severity: major
-    Proposed_Repair_Action: Lock and then Unlock host to recover. Avoid using 'Force Lock' action as that will impact compute services running on this host.  If lock action fails then contact next level of support to investigate and recover.
-    Maintenance_Action: "degrade - requires manual action"
-    Inhibit_Alarms: False
-    Alarm_Type: operational-violation
-    Probable_Cause: communication-subsystem-failure
-    Service_Affecting: True
-    Suppression: True
-    Management_Affecting_Severity: warning
-    Degrade_Affecting_Severity: major
+    Context: starlingx
 
 200.013:
     Type: Alarm
-    Description: <hostname> compute service of the only available controller is not poperational. Auto-recovery is disabled. Deggrading host instead.
+    Description: <hostname> compute service of the only available controller is not proportional. Auto-recovery is disabled. Degrading host instead.
     Entity_Instance_ID: host=<hostname>
     Severity: major
     Proposed_Repair_Action: Enable second controller and Switch Activity (Swact) over to it as soon as possible. Then Lock and Unlock host to recover its local compute service.
@@ -583,12 +646,13 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: major
+    Context: starlingx
 
 200.005:
     Type: Alarm
     Description: |-
         Degrade:
-        <hostname> is experiencing an intermittent 'Management Network'  communication failures that have exceeded its lower alarming threshold.
+        <hostname> is experiencing an intermittent 'Management Network' communication failure that have exceeded its lower alarming threshold.
 
         Failure:
         <hostname> is experiencing a persistent critical 'Management Network' communication failure."
@@ -603,6 +667,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 200.009:
     Type: Alarm
@@ -623,6 +688,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 
 200.006:
@@ -658,6 +724,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: major
+    Context: starlingx
 
 # 200.006:      // NOTE using duplicate ID of a completely analogous Alarm for this
 #     Type: Log
@@ -703,13 +770,14 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: critical
+    Context: starlingx
 
 200.014:
     Type: Alarm
-    Description: "The Hardware Monitor was unable to load, configure and monitor one or more hardware sensors."
+    Description: The Hardware Monitor was unable to load, configure and monitor one or more hardware sensors.
     Entity_Instance_ID: host=<hostname>
     Severity: minor
-    Proposed_Repair_Action: Check Board Management Controller provisioning. Try reprovisioning the BMC. If problem persists try power cycling the host and then the entire server including the BMC power. If problem persists then contact next level of support.
+    Proposed_Repair_Action: Check Board Management Controller provisioning. Try reprovisioning the BMC. If problem persists, try power cycling the host and then the entire server including the BMC power. If problem persists, then contact next level of support.
     Maintenance_Action: None
     Inhibit_Alarms: False
     Alarm_Type: operational-violation
@@ -718,13 +786,14 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 200.015:
     Type: Alarm
     Description: Unable to read one or more sensor groups from this host's board management controller
     Entity_Instance_ID: host=<hostname>
     Severity: major
-    Proposed_Repair_Action: Check board management connectivity and try rebooting the board management controller. If problem persists contact next level of support or lock and replace failing host.
+    Proposed_Repair_Action: Check board management connectivity and try rebooting the board management controller. If problem persists, contact next level of support or lock and replace failing host.
     Maintenance_Action: None
     Inhibit_Alarms: False
     Alarm_Type: operational-violation
@@ -733,76 +802,141 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
+200.016:
+    Type: Alarm
+    Description: Issue in creation or unsealing of LUKS volume
+    Entity_Instance_ID: host=<hostname>
+    Severity: critical
+    Proposed_Repair_Action: If auto-recovery is consistently unable to recover host to the unlocked-enabled state contact next level of support or lock and replace failing host.
+    Maintenance_Action: None
+    Inhibit_Alarms: False
+    Alarm_Type: operational-violation
+    Probable_Cause: unknown
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: major
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 200.020:
     Type: Log
-    Description: ["<hostname> has been 'discovered' on the network",
-                  "<hostname> has been 'added' to the system",
-                  "<hostname> has 'entered' multi-node failure avoidance",
-                  "<hostname> has 'exited' multi-node failure avoidance"]
-    Entity_Instance_ID: [host=<hostname>.event=discovered,
-                         host=<hostname>.event=add,
-                         host=<hostname>.event=mnfa_enter,
-                         host=<hostname>.event=mnfa_exit]
+    Description: |-
+        <hostname> has been 'discovered' on the network
+        OR
+        <hostname> has been 'added' to the system
+        OR
+        <hostname> has 'entered' multi-node failure avoidance
+        OR
+        <hostname> has 'exited' multi-node failure avoidance
+    Entity_Instance_ID:
+        host=<hostname>.event=discovered
+        OR
+        host=<hostname>.event=add
+        OR
+        host=<hostname>.event=mnfa_enter
+        OR
+        host=<hostname>.event=mnfa_exit
     Severity: warning
     Alarm_Type: other
     Probable_Cause: unspecified-reason
     Service_Affecting: True
+    Context: starlingx
 
 
 200.021:
     Type: Log
-    Description: ["<hostname> board management controller has been 'provisioned'",
-                  "<hostname> board management controller has been 're-provisioned'",
-                  "<hostname> board management controller has been 'de-provisioned'",
-                  "<hostname> manual 'unlock' request",
-                  "<hostname> manual 'reboot' request",
-                  "<hostname> manual 'reset' request",
-                  "<hostname> manual 'power-off' request",
-                  "<hostname> manual 'power-on' request",
-                  "<hostname> manual 'reinstall' request",
-                  "<hostname> manual 'force-lock' request",
-                  "<hostname> manual 'delete' request",
-                  "<hostname> manual 'controller switchover' request"]
-    Entity_Instance_ID: [host=<hostname>.command=provision,
-                         host=<hostname>.command=reprovision,
-                         host=<hostname>.command=deprovision,
-                         host=<hostname>.command=unlock,
-                         host=<hostname>.command=reboot,
-                         host=<hostname>.command=reset,
-                         host=<hostname>.command=power-off,
-                         host=<hostname>.command=power-on,
-                         host=<hostname>.command=reinstall,
-                         host=<hostname>.command=force-lock,
-                         host=<hostname>.command=delete,
-                         host=<hostname>.command=swact]
+    Description: |-
+        <hostname> board management controller has been 'provisioned'
+        OR
+        <hostname> board management controller has been 're-provisioned'
+        OR
+        <hostname> board management controller has been 'de-provisioned'
+        OR
+        <hostname> manual 'unlock' request
+        OR
+        <hostname> manual 'reboot' request
+        OR
+        <hostname> manual 'reset' request
+        OR
+        <hostname> manual 'power-off' request
+        OR
+        <hostname> manual 'power-on' request
+        OR
+        <hostname> manual 'reinstall' request
+        OR
+        <hostname> manual 'force-lock' request
+        OR
+        <hostname> manual 'delete' request
+        OR
+        <hostname> manual 'controller switchover' request
+    Entity_Instance_ID: |-
+        host=<hostname>.command=provision
+        OR
+        host=<hostname>.command=reprovision
+        OR
+        host=<hostname>.command=deprovision
+        OR
+        host=<hostname>.command=unlock
+        OR
+        host=<hostname>.command=reboot
+        OR
+        host=<hostname>.command=reset
+        OR
+        host=<hostname>.command=power-off
+        OR
+        host=<hostname>.command=power-on
+        OR
+        host=<hostname>.command=reinstall
+        OR
+        host=<hostname>.command=force-lock
+        OR
+        host=<hostname>.command=delete
+        OR
+        host=<hostname>.command=swact
     Severity: warning
     Alarm_Type: other
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 
 200.022:
     Type: Log
-    Description: ["<hostname> is now 'disabled'",
-                  "<hostname> is now 'enabled'",
-                  "<hostname> is now 'online'",
-                  "<hostname> is now 'offline'",
-                  "<hostname> is 'disabled-failed' to the system",
-                  "<hostname> reinstall failed",
-                  "<hostname> reinstall completed successfully"]
-    Entity_Instance_ID: [host=<hostname>.state=disabled,
-                         host=<hostname>.state=enabled,
-                         host=<hostname>.status=online,
-                         host=<hostname>.status=offline,
-                         host=<hostname>.status=failed,
-                         host=<hostname>.status=reinstall-failed,
-                         host=<hostname>.status=reinstall-complete]
+    Description: |-
+        <hostname> is now 'disabled'
+        OR
+        <hostname> is now 'enabled'
+        OR
+        <hostname> is now 'online'
+        OR
+        <hostname> is now 'offline'
+        OR
+        <hostname> is 'disabled-failed' to the system
+        OR
+        <hostname> reinstall failed
+        OR
+        <hostname> reinstall completed successfully
+    Entity_Instance_ID: |-
+        host=<hostname>.state=disabled
+        OR
+        host=<hostname>.state=enabled
+        OR
+        host=<hostname>.status=online
+        OR
+        host=<hostname>.status=offline
+        OR
+        host=<hostname>.status=failed
+        OR
+        host=<hostname>.status=reinstall-failed
+        OR
+        host=<hostname>.status=reinstall-complete
     Severity: warning
     Alarm_Type: other
     Probable_Cause: unspecified-reason
     Service_Affecting: True
+    Context: starlingx
 
 
 #---------------------------------------------------------------------------
@@ -823,6 +957,23 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
+
+210.002:
+    Type: Alarm
+    Description: System Restore in progress.
+    Entity_Instance_ID: host=controller
+    Severity: minor
+    Proposed_Repair_Action: Run 'system restore-complete' to complete restore if running restore manually.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 
 #---------------------------------------------------------------------------
@@ -843,21 +994,8 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
-250.002:
-    Type: Alarm
-    Description: <hostname> Ceph cache tiering configuration is out-of-date.
-    Entity_Instance_ID: cluster=<dist-fs-uuid>
-    Severity: major
-    Proposed_Repair_Action: Apply Ceph service parameter settings.
-    Maintenance_Action:
-    Inhibit_Alarms:
-    Alarm_Type: operational-violation
-    Probable_Cause: unspecified-reason
-    Service_Affecting: False
-    Suppression: False
-    Management_Affecting_Severity: warning
-    Degrade_Affecting_Severity: none
 
 250.003:
     Type: Alarm
@@ -873,13 +1011,30 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
+
+250.004:
+    Type: Alarm
+    Description: "IPsec certificates renewal failed on host[, reason = <reason_text>]"
+    Entity_Instance_ID: host=<hostname>
+    Severity: major
+    Proposed_Repair_Action: Check cron.log and ipsec-auth.log, fix the issue and rerun the renewal cron job.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 #---------------------------------------------------------------------------
-#   Deployment Manager Monitor
+#   DEPLOYMENT
 #---------------------------------------------------------------------------
 260.001:
     Type: Alarm
-    Description: "Deployment Manager resource not reconciled: <name>"
+    Description: "Deployment resource not reconciled: <name>"
     Entity_Instance_ID: resource=<crd-resource>,name=<resource-name>
     Severity: major
     Proposed_Repair_Action: Monitor and if condition persists, validate deployment configuration.
@@ -891,25 +1046,27 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
+
+260.002:
+    Type: Alarm
+    Description: "Deployment resource not synchronized: <name>"
+    Entity_Instance_ID: resource=<crd-resource>,name=<resource-name>
+    Severity: minor
+    Proposed_Repair_Action: Monitor and if condition persists, validate deployment configuration.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: configuration-out-of-date
+    Service_Affecting: False
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 #---------------------------------------------------------------------------
 #   VM Compute Services
 #---------------------------------------------------------------------------
-270.001:
-    Type: Alarm
-    Description: "Host <host_name> compute services failure[, reason = <reason_text>]"
-    Entity_Instance_ID: host=<host_name>.services=compute
-    Severity: critical
-    Proposed_Repair_Action: Wait for host services recovery to complete; if problem persists contact next level of support
-    Maintenance_Action:
-    Inhibit_Alarms:
-    Alarm_Type: processing-error
-    Probable_Cause: unspecified-reason
-    Service_Affecting: True
-    Suppression: True
-    Management_Affecting_Severity: warning
-    Degrade_Affecting_Severity: none
-
 270.101:
     Type: Log
     Description: "Host <host_name> compute services failure[, reason = <reason_text>]"
@@ -918,6 +1075,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 270.102:
     Type: Log
@@ -927,6 +1085,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 270.103:
     Type: Log
@@ -936,6 +1095,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 
 275.001:
@@ -946,6 +1106,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 
 #---------------------------------------------------------------------------
@@ -966,6 +1127,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 280.002:
     Type: Alarm
@@ -981,13 +1143,14 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 280.003:
     Type: Alarm
-    Description: Subcloud Backup Failure
+    Description: Subcloud backup failure
     Entity_Instance_ID: subcloud=<subcloud>
     Severity: minor
-    Proposed_Repair_Action: Retry subcloud backup after checking backup input file. If problem persists contact next level of support.
+    Proposed_Repair_Action: Retry subcloud backup after checking backup input file. If problem persists, contact next level of support.
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: processing-error
@@ -996,6 +1159,43 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: none
+
+280.004:
+    Type: Alarm
+    Description: |-
+        Critical: Peer <peer_uuid> is in disconnected state. The following subcloud peer groups are impacted: <peer-groups>.
+        Major:    Peer <peer_uuid> connections in disconnected state.
+    Entity_Instance_ID: |-
+        peer=<peer_uuid>
+    Severity: [critical, major]
+    Proposed_Repair_Action: "Check the connectivity between the current system and the reported peer site. If the peer system is down, migrate the affected peer group(s) to the current system for continued subcloud management."
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: communication
+    Probable_Cause: unknown
+    Service_Affecting: False
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+280.005:
+    Type: Alarm
+    Description: |-
+        Subcloud peer group <peer_group_name> is managed by remote system <peer_uuid> with a lower priority.
+    Entity_Instance_ID: peer_group=<peer_group_name>,peer=<peer_uuid>
+    Severity: [major]
+    Proposed_Repair_Action: "Check the reported peer group state. Migrate it back to the current system if the state is 'rehomed' and the current system is stable. Otherwise, wait until these conditions are met."
+    Maintenance_Action:
+    Inhibit_Alarms: False
+    Alarm_Type: other
+    Probable_Cause: unknown
+    Service_Affecting: False
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 #---------------------------------------------------------------------------
 #   NETWORK
@@ -1015,6 +1215,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 
 300.002:
@@ -1034,6 +1235,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: critical
+    Context: openstack
 
 
 300.003:
@@ -1050,6 +1252,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 
 300.004:
@@ -1066,6 +1269,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 
 300.005:
@@ -1076,7 +1280,7 @@
         Communication failure detected over provider network x% on host z%.
     Entity_Instance_ID: host=<hostname>.service=networking.providernet=<pnet-uuid>
     Severity: major
-    Proposed_Repair_Action: Check neighbour switch port VLAN assignments.
+    Proposed_Repair_Action: Check neighbor switch port VLAN assignments.
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: operational-violation
@@ -1085,6 +1289,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 
 300.010:
@@ -1108,6 +1313,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 
 300.012:
@@ -1124,6 +1330,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: critical
+    Context: openstack
 
 
 300.013:
@@ -1143,6 +1350,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: critical
+    Context: openstack
 
 
 300.014:
@@ -1159,6 +1367,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: critical
+    Context: none
 
 
 300.015:
@@ -1175,6 +1384,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: critical
+    Context: openstack
 
 300.016:
     Type: Alarm
@@ -1190,6 +1400,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 
 #---------------------------------------------------------------------------
@@ -1215,6 +1426,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: major
+    Context: starlingx
 
 
 400.002:
@@ -1238,6 +1450,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 
 400.003:
@@ -1261,6 +1474,7 @@
     Suppression: False
     Management_Affecting_Severity: critical
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 
 # 400.004:    // NOTE Removed
@@ -1294,6 +1508,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 
 #---------------------------------------------------------------------------
@@ -1308,6 +1523,7 @@
     Alarm_Type: processing-error
     Probable_Cause: unspecified-reason
     Service_Affecting: True
+    Context: openstack
 
 401.002:
     Type: Log
@@ -1324,6 +1540,7 @@
     Alarm_Type: processing-error
     Probable_Cause: unspecified-reason
     Service_Affecting: True
+    Context: openstack
 
 401.003:
     Type: Log
@@ -1338,6 +1555,7 @@
     Alarm_Type: processing-error
     Probable_Cause: unspecified-reason
     Service_Affecting: True
+    Context: starlingx
 
 401.005:
     Type: Log
@@ -1352,6 +1570,7 @@
     Alarm_Type: processing-error
     Probable_Cause: unspecified-reason
     Service_Affecting: True
+    Context: starlingx
 
 401.007:
     Type: Log
@@ -1361,6 +1580,7 @@
     Alarm_Type: processing-error
     Probable_Cause: unspecified-reason
     Service_Affecting: True
+    Context: starlingx
 
 
 #---------------------------------------------------------------------------
@@ -1381,6 +1601,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: none
 
 500.101:
     Type: Alarm
@@ -1396,6 +1617,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 500.200:
     Type: Alarm
@@ -1423,6 +1645,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 500.210:
     Type: Alarm
@@ -1450,6 +1673,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 500.500:
     Type: Log
@@ -1459,6 +1683,7 @@
     Alarm_Type: integrity-violation
     Probable_Cause: information-modification-detected
     Service_Affecting: False
+    Context: none
 
 
 #---------------------------------------------------------------------------
@@ -1481,13 +1706,14 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.002:
     Type: Alarm
     Description: Instance <instance_name> owned by <tenant_name> is paused on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
-    Proposed_Repair_Action: Unpause the instance
+    Proposed_Repair_Action: Un-pause the instance
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: processing-error
@@ -1496,6 +1722,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.003:
     Type: Alarm
@@ -1511,6 +1738,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.004:
     Type: Alarm
@@ -1526,6 +1754,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.005:
     Type: Alarm
@@ -1541,6 +1770,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.006:
     Type: Alarm
@@ -1556,6 +1786,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.007:
     Type: Alarm
@@ -1571,6 +1802,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.008:
     Type: Alarm
@@ -1586,6 +1818,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.009:
     Type: Alarm
@@ -1601,6 +1834,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.010:
     Type: Alarm
@@ -1616,6 +1850,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.011:
     Type: Alarm
@@ -1631,6 +1866,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.012:
     Type: Alarm
@@ -1646,6 +1882,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.013:
     Type: Alarm
@@ -1661,6 +1898,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.014:
     Type: Alarm
@@ -1676,6 +1914,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.015:
     Type: Alarm
@@ -1691,6 +1930,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: none
 
 700.016:
     Type: Alarm
@@ -1706,6 +1946,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 700.017:
     Type: Alarm
@@ -1721,6 +1962,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 
 700.101:
@@ -1731,6 +1973,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.102:
     Type: Log
@@ -1741,6 +1984,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.103:
     Type: Log
@@ -1750,6 +1994,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.104:
     Type: Log
@@ -1759,6 +2004,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.105:
     Type: Log
@@ -1768,6 +2014,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.106:
     Type: Log
@@ -1777,6 +2024,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.107:
     Type: Log
@@ -1786,6 +2034,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.108:
     Type: Log
@@ -1795,6 +2044,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.109:
     Type: Log
@@ -1804,15 +2054,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.110:
     Type: Log
-    Description: Deleting instance <instance_name> owned by <tenatn_name>
+    Description: Deleting instance <instance_name> owned by <tenant_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.111:
     Type: Log
@@ -1822,6 +2074,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.112:
     Type: Log
@@ -1831,6 +2084,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.113:
     Type: Log
@@ -1840,6 +2094,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.114:
     Type: Log
@@ -1849,6 +2104,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.115:
     Type: Log
@@ -1858,15 +2114,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.116:
     Type: Log
-    Description: Pause inprogress for instance <instance_name> on host <host_name>
+    Description: Pause in progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.117:
     Type: Log
@@ -1876,6 +2134,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.118:
     Type: Log
@@ -1885,6 +2144,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.119:
     Type: Log
@@ -1894,6 +2154,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.120:
     Type: Log
@@ -1903,60 +2164,67 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.121:
     Type: Log
-    Description: "Unpause issued <by <tenant_name>|by the system>  against instance <instance_name> owned by <tenant_name> on host <host_name>[, reason = <reason_text>]"
+    Description: "Un-pause issued <by <tenant_name>|by the system>  against instance <instance_name> owned by <tenant_name> on host <host_name>[, reason = <reason_text>]"
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.122:
     Type: Log
-    Description: Unpause inprogress for instance <instance_name> on host <host_name>
+    Description: Un-pause in-progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.123:
     Type: Log
-    Description: "Unpause rejected for instance <instance_name> paused on host <host_name>[, reason = <reason_text>]"
+    Description: "Un-pause rejected for instance <instance_name> paused on host <host_name>[, reason = <reason_text>]"
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.124:
     Type: Log
-    Description: "Unpause cancelled for instance <instance_name> on host <host_name>[, reason = <reason_text>]"
+    Description: "Un-pause cancelled for instance <instance_name> on host <host_name>[, reason = <reason_text>]"
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.125:
     Type: Log
-    Description: "Unpause failed for instance <instance_name> on host <host_name>[, reason = <reason_text>]"
+    Description: "Un-pause failed for instance <instance_name> on host <host_name>[, reason = <reason_text>]"
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.126:
     Type: Log
-    Description: Unpause complete for instance <instance_name> now enabled on host <host_name>
+    Description: Un-pause complete for instance <instance_name> now enabled on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.127:
     Type: Log
@@ -1966,15 +2234,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.128:
     Type: Log
-    Description: Suspend inprogress for instance <instance_name> on host <host_name>
+    Description: Suspend in-progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.129:
     Type: Log
@@ -1984,6 +2254,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.130:
     Type: Log
@@ -1993,6 +2264,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.131:
     Type: Log
@@ -2002,6 +2274,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.132:
     Type: Log
@@ -2011,6 +2284,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.133:
     Type: Log
@@ -2020,15 +2294,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.134:
     Type: Log
-    Description: Resume inprogress for instance <instance_name> on host <host_name>
+    Description: Resume in-progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.135:
     Type: Log
@@ -2038,6 +2314,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.136:
     Type: Log
@@ -2047,6 +2324,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.137:
     Type: Log
@@ -2056,6 +2334,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.138:
     Type: Log
@@ -2065,6 +2344,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.139:
     Type: Log
@@ -2074,15 +2354,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.140:
     Type: Log
-    Description: Start inprogress for instance <instance_name> on host <host_name>
+    Description: Start in-progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.141:
     Type: Log
@@ -2092,6 +2374,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.142:
     Type: Log
@@ -2101,6 +2384,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.143:
     Type: Log
@@ -2110,6 +2394,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.144:
     Type: Log
@@ -2119,6 +2404,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.145:
     Type: Log
@@ -2128,15 +2414,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.146:
     Type: Log
-    Description: Stop inprogress for instance <instance_name> on host <host_name>
+    Description: Stop in progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.147:
     Type: Log
@@ -2146,6 +2434,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.148:
     Type: Log
@@ -2155,6 +2444,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.149:
     Type: Log
@@ -2164,6 +2454,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.150:
     Type: Log
@@ -2173,6 +2464,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.151:
     Type: Log
@@ -2182,15 +2474,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.152:
     Type: Log
-    Description: Live-Migrate inprogress for instance <instance_name> from host <host_name>
+    Description: Live-Migrate in progress for instance <instance_name> from host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.153:
     Type: Log
@@ -2200,6 +2494,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.154:
     Type: Log
@@ -2209,6 +2504,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.155:
     Type: Log
@@ -2218,6 +2514,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.156:
     Type: Log
@@ -2227,6 +2524,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.157:
     Type: Log
@@ -2236,15 +2534,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.158:
     Type: Log
-    Description: Cold-Migrate inprogress for instance <instance_name> from host <host_name>
+    Description: Cold-Migrate in progress for instance <instance_name> from host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.159:
     Type: Log
@@ -2254,6 +2554,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.160:
     Type: Log
@@ -2263,6 +2564,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.161:
     Type: Log
@@ -2272,6 +2574,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.162:
     Type: Log
@@ -2281,6 +2584,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.163:
     Type: Log
@@ -2290,15 +2594,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.164:
     Type: Log
-    Description: Cold-Migrate-Confirm inprogress for instance <instance_name> on host <host_name>
+    Description: Cold-Migrate-Confirm in progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.165:
     Type: Log
@@ -2308,6 +2614,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.166:
     Type: Log
@@ -2317,6 +2624,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.167:
     Type: Log
@@ -2326,6 +2634,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.168:
     Type: Log
@@ -2335,6 +2644,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.169:
     Type: Log
@@ -2344,15 +2654,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.170:
     Type: Log
-    Description: Cold-Migrate-Revert inprogress for instance <instance_name> from host <host_name>
+    Description: Cold-Migrate-Revert in progress for instance <instance_name> from host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.171:
     Type: Log
@@ -2362,6 +2674,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.172:
     Type: Log
@@ -2371,6 +2684,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.173:
     Type: Log
@@ -2380,6 +2694,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.174:
     Type: Log
@@ -2389,6 +2704,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.175:
     Type: Log
@@ -2398,6 +2714,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.176:
     Type: Log
@@ -2407,6 +2724,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.177:
     Type: Log
@@ -2416,6 +2734,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.178:
     Type: Log
@@ -2425,6 +2744,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.179:
     Type: Log
@@ -2434,6 +2754,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.180:
     Type: Log
@@ -2443,6 +2764,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.181:
     Type: Log
@@ -2452,15 +2774,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.182:
     Type: Log
-    Description: Reboot inprogress for instance <instance_name> on host <host_name>
+    Description: Reboot in progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.183:
     Type: Log
@@ -2470,6 +2794,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.184:
     Type: Log
@@ -2479,6 +2804,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.185:
     Type: Log
@@ -2488,6 +2814,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.186:
     Type: Log
@@ -2497,6 +2824,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.187:
     Type: Log
@@ -2506,15 +2834,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.188:
     Type: Log
-    Description: Rebuild inprogress for instance <instance_name> on host <host_name>
+    Description: Rebuild in progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.189:
     Type: Log
@@ -2524,6 +2854,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.190:
     Type: Log
@@ -2533,6 +2864,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.191:
     Type: Log
@@ -2542,6 +2874,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.192:
     Type: Log
@@ -2551,6 +2884,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.193:
     Type: Log
@@ -2560,15 +2894,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.194:
     Type: Log
-    Description: Resize inprogress for instance <instance_name> on host <host_name>
+    Description: Resize in progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.195:
     Type: Log
@@ -2578,6 +2914,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.196:
     Type: Log
@@ -2587,6 +2924,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.197:
     Type: Log
@@ -2596,6 +2934,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.198:
     Type: Log
@@ -2605,6 +2944,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.199:
     Type: Log
@@ -2614,15 +2954,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.200:
     Type: Log
-    Description: Resize-Confirm inprogress for instance <instance_name> on host <host_name>
+    Description: Resize-Confirm in progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.201:
     Type: Log
@@ -2632,6 +2974,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.202:
     Type: Log
@@ -2641,6 +2984,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.203:
     Type: Log
@@ -2650,6 +2994,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.204:
     Type: Log
@@ -2659,6 +3004,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.205:
     Type: Log
@@ -2668,15 +3014,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.206:
     Type: Log
-    Description: Resize-Revert inprogress for instance <instance_name> on host <host_name>
+    Description: Resize-Revert in progress for instance <instance_name> on host <host_name>
     Entity_Instance_ID: tenant=<tenant-uuid>.instance=<instance-uuid>
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.207:
     Type: Log
@@ -2686,6 +3034,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.208:
     Type: Log
@@ -2695,6 +3044,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.209:
     Type: Log
@@ -2704,6 +3054,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.210:
     Type: Log
@@ -2713,6 +3064,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.211:
     Type: Log
@@ -2722,6 +3074,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 700.212:
     Type: Log
@@ -2731,6 +3084,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 700.213:
     Type: Log
@@ -2740,6 +3094,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 700.214:
     Type: Log
@@ -2749,6 +3104,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.215:
     Type: Log
@@ -2758,6 +3114,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 700.216:
     Type: Log
@@ -2767,6 +3124,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 
 700.217:
@@ -2777,6 +3135,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: openstack
 
 #---------------------------------------------------------------------------
 #   APPLICATION
@@ -2796,6 +3155,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 750.002:
     Type: Alarm
@@ -2812,6 +3172,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 750.003:
     Type: Alarm
@@ -2827,6 +3188,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 750.004:
     Type: Alarm
@@ -2842,6 +3204,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 750.005:
     Type: Alarm
@@ -2857,6 +3220,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 750.006:
     Type: Alarm
@@ -2872,6 +3236,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 #---------------------------------------------------------------------------
 #   STORAGE
@@ -2880,11 +3245,12 @@
 800.001:
     Type: Alarm
     Description: |-
-        Storage Alarm Condition:
-        1 mons down, quorum 1,2 controller-1,storage-0
+        Possible data loss. Any mds, mon or osd is unavailable in storage replication group.
     Entity_Instance_ID: cluster=<dist-fs-uuid>
     Severity: [critical, major]
-    Proposed_Repair_Action: "If problem persists, contact next level of support."
+    Proposed_Repair_Action: "Manually restart Ceph processes and check the state of the Ceph cluster with
+                             'ceph -s'
+                             If problem persists, contact next level of support."
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: equipment
@@ -2895,6 +3261,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 800.010:
     Type: Alarm
@@ -2903,8 +3270,11 @@
     Entity_Instance_ID: cluster=<dist-fs-uuid>.peergroup=<group-x>
     Severity: [critical]
     Proposed_Repair_Action: "Ensure storage hosts from replication group are unlocked and available.
+                             Check replication group state with 'system host-list'
                              Check if OSDs of each storage host are up and running.
-                             If problem persists contact next level of support."
+                             Manually restart Ceph processes and check the state of the Ceph OSDs with
+                             'ceph osd stat' OR 'ceph osd tree'
+                             If problem persists, contact next level of support."
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: equipment
@@ -2914,6 +3284,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 800.011:
     Type: Alarm
@@ -2922,8 +3293,11 @@
     Entity_Instance_ID: cluster=<dist-fs-uuid>.peergroup=<group-x>
     Severity: [major]
     Proposed_Repair_Action: "Ensure storage hosts from replication group are unlocked and available.
+                             Check replication group state with 'system host-list'
                              Check if OSDs of each storage host are up and running.
-                             If problem persists contact next level of support."
+                             Manually restart Ceph processes and check the state of the Ceph OSDs with
+                             'ceph osd stat' AND/OR 'ceph osd tree'
+                             If problem persists, contact next level of support."
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: equipment
@@ -2933,31 +3307,54 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 800.002:
     Type: Alarm
-    Description: ["Image storage media is full: There is not enough disk space on the image storage media.",
-                  "Instance <instance name> snapshot failed: There is not enough disk space on the image storage media.",
-                  "Supplied <attrs> (<supplied>) and <attrs> generated from uploaded image (<actual>) did not match. Setting image status to 'killed'.",
-                  "Error in store configuration. Adding images to store is disabled.",
-                  "Forbidden upload attempt: <exception>",
-                  "Insufficient permissions on image storage media: <exception>",
-                  "Denying attempt to upload image larger than <size> bytes.",
-                  "Denying attempt to upload image because it exceeds the quota: <exception>",
-                  "Received HTTP error while uploading image <image_id>",
-                  "Client disconnected before sending all data to backend",
-                  "Failed to upload image <image_id>"]
-    Entity_Instance_ID: ["image=<image-uuid>, instance=<instance-uuid>",
-                         "tenant=<tenant-uuid>, instance=<instance-uuid>",
-                         "image=<image-uuid>, instance=<instance-uuid>",
-                         "image=<image-uuid>, instance=<instance-uuid>",
-                         "image=<image-uuid>, instance=<instance-uuid>",
-                         "image=<image-uuid>, instance=<instance-uuid>",
-                         "image=<image-uuid>, instance=<instance-uuid>",
-                         "image=<image-uuid>, instance=<instance-uuid>",
-                         "image=<image-uuid>, instance=<instance-uuid>",
-                         "image=<image-uuid>, instance=<instance-uuid>",
-                         "image=<image-uuid>, instance=<instance-uuid>"]
+    Description: |-
+        Image storage media is full: There is not enough disk space on the image storage media.
+        OR
+        Instance <instance name> snapshot failed: There is not enough disk space on the image storage media.
+        OR
+        Supplied <attrs> (<supplied>) and <attrs> generated from uploaded image (<actual>) did not match. Setting image status to 'killed'.
+        OR
+        Error in store configuration. Adding images to store is disabled.
+        OR
+        Forbidden upload attempt: <exception>.
+        OR
+        Insufficient permissions on image storage media: <exception>.
+        OR
+        Denying attempt to upload image larger than <size> bytes.
+        OR
+        Denying attempt to upload image because it exceeds the quota: <exception>.
+        OR
+        Received HTTP error while uploading image <image_id>.
+        OR
+        Client disconnected before sending all data to backend.
+        OR
+        Failed to upload image <image_id>.
+    Entity_Instance_ID:
+        image=<image-uuid> instance=<instance-uuid>
+        OR
+        tenant=<tenant-uuid> instance=<instance-uuid>
+        OR
+        image=<image-uuid> instance=<instance-uuid>
+        OR
+        image=<image-uuid> instance=<instance-uuid>
+        OR
+        image=<image-uuid> instance=<instance-uuid>
+        OR
+        image=<image-uuid> instance=<instance-uuid>
+        OR
+        image=<image-uuid> instance=<instance-uuid>
+        OR
+        image=<image-uuid> instance=<instance-uuid>
+        OR
+        image=<image-uuid> instance=<instance-uuid>
+        OR
+        image=<image-uuid> instance=<instance-uuid>
+        OR
+        image=<image-uuid> instance=<instance-uuid>
     Alarm_Type: [physical-violation,
                  physical-violation,
                  integrity-violation,
@@ -2978,6 +3375,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 800.100:
     Type: Alarm
@@ -2996,6 +3394,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: openstack
 
 800.101:
     Type: Alarm
@@ -3015,26 +3414,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-
-800.103:
-    Type: Alarm
-    Description: |-
-        Storage Alarm Condition:
-        [ Metadata usage for LVM thin pool <VG name>/<Pool name> exceeded threshold and automatic extension failed,
-          Metadata usage for LVM thin pool <VG name>/<Pool name> exceeded threshold ]; threshold x%, actual y%.
-    Entity_Instance_ID: <hostname>.lvmthinpool=<VG name>/<Pool name>
-    Severity: critical
-    Proposed_Repair_Action: "Increase Storage Space Allotment for Cinder on the 'lvm' backend.
-                             Consult the System Administration Manual for more details.
-                             If problem persists, contact next level of support."
-    Maintenance_Action:
-    Inhibit_Alarms:
-    Alarm_Type: operational-violation
-    Probable_Cause: threshold-crossed
-    Service_Affecting: False
-    Suppression: False
-    Management_Affecting_Severity: major
-    Degrade_Affecting_Severity: none
+    Context: openstack
 
 800.104:
     Type: Alarm
@@ -3044,7 +3424,11 @@
     Entity_Instance_ID: storage_backend=<storage-backend-name>
     Severity: critical
     Proposed_Repair_Action: "Update backend setting to reapply configuration.
-                             Consult the System Administration Manual for more details.
+                             Use the following commands to try again:
+                             'system storage-backend-delete <storage-backend-name>'
+                             AND
+                             'system storage-backend-add <storage-backend-name>'
+                             See the |prod-long| documentation at |docs-url| for more details.
                              If problem persists, contact next level of support."
     Maintenance_Action:
     Inhibit_Alarms:
@@ -3054,6 +3438,27 @@
     Suppression: False
     Management_Affecting_Severity: major
     Degrade_Affecting_Severity: none
+    Context: starlingx
+
+800.105:
+    Type: Alarm
+    Description: |-
+        Filesystem Alarm Condition:
+        <controllerfs_name> controller filesystem was not created/deleted successfully.
+    Entity_Instance_ID: host=<hostname>.controllerfs=<controllerfs_name>
+    Severity: major
+    Proposed_Repair_Action: "Use the create or delete command again:
+                             'system controllerfs-delete' or 'system controllerfs-add'.
+                             If problem persists, contact next level of support."
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: processing-error
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: major
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 #---------------------------------------------------------------------------
 #   KUBERNETES
@@ -3076,6 +3481,24 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
+    Context: none
+
+850.002:
+    Type: Alarm
+    Description: Kubernetes cluster unreachable
+    Entity_Instance_ID: kubernetes=k8s-health-check-failed
+    Severity: major
+    Proposed_Repair_Action: "If problem persists
+                             contact next level of support."
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: communication
+    Probable_Cause: out-of-service
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: major
+    Degrade_Affecting_Severity: none
+    Context: none
 
 #---------------------------------------------------------------------------
 #   SOFTWARE
@@ -3095,6 +3518,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.002:
     Type: Alarm
@@ -3110,6 +3534,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.003:
     Type: Alarm
@@ -3125,6 +3550,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.004:
     Type: Alarm
@@ -3140,6 +3566,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.005:
     Type: Alarm
@@ -3155,6 +3582,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.006:
     Type: Alarm
@@ -3170,6 +3598,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.007:
     Type: Alarm
@@ -3185,6 +3614,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.008:
     Type: Alarm
@@ -3200,6 +3630,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.009:
     Type: Alarm
@@ -3215,10 +3646,75 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.010:
+    Type: Alarm
+    Description: System Config update in progress
+    Entity_Instance_ID: host=controller
+    Severity: minor
+    Proposed_Repair_Action: Wait for system config update to complete
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.011:
+    Type: Alarm
+    Description: System Config update aborted, configurations may not be fully updated
+    Entity_Instance_ID: host=<hostname>
+    Severity: minor
+    Proposed_Repair_Action: Lock the host, wait for the host resource in the deployment namespace to become in-sync, then unlock the host
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.020:
+    Type: Alarm
+    Description: Deploy host completed with success
+    Entity_Instance_ID: host=<hostname>
+    Severity: warning
+    Proposed_Repair_Action: Unlock host
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.021:
+    Type: Alarm
+    Description: Deploy host failed
+    Entity_Instance_ID: host=<hostname>
+    Severity: major
+    Proposed_Repair_Action: Check the logs for errors, fix the issues manually and retry
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.101:
     Type: Alarm
-    Description: Software patch auto-apply inprogress
+    Description: Software patch auto-apply in progress
     Entity_Instance_ID: orchestration=sw-patch
     Severity: major
     Proposed_Repair_Action: Wait for software patch auto-apply to complete; if problem persists contact next level of support
@@ -3230,6 +3726,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.102:
     Type: Alarm
@@ -3245,6 +3742,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.103:
     Type: Alarm
@@ -3260,6 +3758,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.111:
     Type: Log
@@ -3269,15 +3768,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.112:
     Type: Log
-    Description: Software patch auto-apply inprogress
+    Description: Software patch auto-apply in progress
     Entity_Instance_ID: orchestration=sw-patch
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.113:
     Type: Log
@@ -3287,6 +3788,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.114:
     Type: Log
@@ -3296,6 +3798,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.115:
     Type: Log
@@ -3305,6 +3808,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.116:
     Type: Log
@@ -3314,6 +3818,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.117:
     Type: Log
@@ -3323,6 +3828,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.118:
     Type: Log
@@ -3332,6 +3838,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.119:
     Type: Log
@@ -3341,6 +3848,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.120:
     Type: Log
@@ -3350,6 +3858,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.121:
     Type: Log
@@ -3359,10 +3868,11 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.201:
     Type: Alarm
-    Description: Software upgrade auto-apply inprogress
+    Description: Software upgrade auto-apply in progress
     Entity_Instance_ID: orchestration=sw-upgrade
     Severity: major
     Proposed_Repair_Action: Wait for software upgrade auto-apply to complete; if problem persists contact next level of support
@@ -3374,6 +3884,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.202:
     Type: Alarm
@@ -3389,6 +3900,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.203:
     Type: Alarm
@@ -3404,6 +3916,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.211:
     Type: Log
@@ -3413,15 +3926,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.212:
     Type: Log
-    Description: Software upgrade auto-apply inprogress
+    Description: Software upgrade auto-apply in progress
     Entity_Instance_ID: orchestration=sw-upgrade
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.213:
     Type: Log
@@ -3431,6 +3946,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.214:
     Type: Log
@@ -3440,6 +3956,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.215:
     Type: Log
@@ -3449,6 +3966,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.216:
     Type: Log
@@ -3458,6 +3976,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.217:
     Type: Log
@@ -3467,6 +3986,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.218:
     Type: Log
@@ -3476,6 +3996,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.219:
     Type: Log
@@ -3485,6 +4006,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.220:
     Type: Log
@@ -3494,6 +4016,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.221:
     Type: Log
@@ -3503,10 +4026,27 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
+
+900.231:
+    Type: Alarm
+    Description: Software deploy state out of sync
+    Entity_Instance_ID: orchestration=sw-upgrade
+    Severity: major
+    Proposed_Repair_Action: Wait for the deployment on the active controller to complete. If problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.301:
     Type: Alarm
-    Description: Firmware Update auto-apply inprogress
+    Description: Firmware Update auto-apply in progress
     Entity_Instance_ID: orchestration=fw-update
     Severity: major
     Proposed_Repair_Action: Wait for firmware update auto-apply to complete; if problem persists contact next level of support
@@ -3518,6 +4058,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.302:
     Type: Alarm
@@ -3533,6 +4074,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.303:
     Type: Alarm
@@ -3548,6 +4090,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.311:
     Type: Log
@@ -3557,15 +4100,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.312:
     Type: Log
-    Description: Firmware update auto-apply inprogress
+    Description: Firmware update auto-apply in progress
     Entity_Instance_ID: orchestration=fw-update
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.313:
     Type: Log
@@ -3575,6 +4120,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.314:
     Type: Log
@@ -3584,6 +4130,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.315:
     Type: Log
@@ -3593,6 +4140,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.316:
     Type: Log
@@ -3602,6 +4150,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.317:
     Type: Log
@@ -3611,6 +4160,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.318:
     Type: Log
@@ -3620,6 +4170,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.319:
     Type: Log
@@ -3629,6 +4180,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.320:
     Type: Log
@@ -3638,6 +4190,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.321:
     Type: Log
@@ -3647,10 +4200,11 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.401:
     Type: Alarm
-    Description: Kubernetes upgrade auto-apply inprogress
+    Description: Kubernetes upgrade auto-apply in progress
     Entity_Instance_ID: orchestration=kube-upgrade
     Severity: major
     Proposed_Repair_Action: Wait for kubernetes upgrade auto-apply to complete; if problem persists contact next level of support
@@ -3662,6 +4216,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: none
 
 900.402:
     Type: Alarm
@@ -3677,6 +4232,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: none
 
 900.403:
     Type: Alarm
@@ -3692,6 +4248,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: none
 
 900.411:
     Type: Log
@@ -3701,15 +4258,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.412:
     Type: Log
-    Description: Kubernetes upgrade auto-apply inprogress
+    Description: Kubernetes upgrade auto-apply in progress
     Entity_Instance_ID: orchestration=kube-upgrade
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.413:
     Type: Log
@@ -3719,6 +4278,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.414:
     Type: Log
@@ -3728,6 +4288,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.415:
     Type: Log
@@ -3737,6 +4298,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.416:
     Type: Log
@@ -3746,6 +4308,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.417:
     Type: Log
@@ -3755,6 +4318,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.418:
     Type: Log
@@ -3764,6 +4328,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.419:
     Type: Log
@@ -3773,6 +4338,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.420:
     Type: Log
@@ -3782,6 +4348,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.421:
     Type: Log
@@ -3791,10 +4358,11 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: none
 
 900.501:
     Type: Alarm
-    Description: Kubernetes rootca update auto-apply inprogress
+    Description: Kubernetes rootca update auto-apply in progress
     Entity_Instance_ID: orchestration=kube-rootca-update
     Severity: major
     Proposed_Repair_Action: Wait for kubernetes rootca update auto-apply to complete; if problem persists contact next level of support
@@ -3806,6 +4374,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.502:
     Type: Alarm
@@ -3821,6 +4390,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.503:
     Type: Alarm
@@ -3836,6 +4406,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
+    Context: starlingx
 
 900.511:
     Type: Log
@@ -3845,15 +4416,17 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.512:
     Type: Log
-    Description: Kubernetes rootca update auto-apply inprogress
+    Description: Kubernetes rootca update auto-apply in progress
     Entity_Instance_ID: orchestration=kube-rootca-update
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.513:
     Type: Log
@@ -3863,6 +4436,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.514:
     Type: Log
@@ -3872,6 +4446,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.515:
     Type: Log
@@ -3881,6 +4456,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.516:
     Type: Log
@@ -3890,6 +4466,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.517:
     Type: Log
@@ -3899,6 +4476,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.518:
     Type: Log
@@ -3908,6 +4486,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.519:
     Type: Log
@@ -3917,6 +4496,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.520:
     Type: Log
@@ -3926,6 +4506,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
 
 900.521:
     Type: Log
@@ -3935,4 +4516,183 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
+
+900.601:
+    Type: Alarm
+    Description: System config update auto-apply in progress
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: major
+    Proposed_Repair_Action: Wait for system config update auto-apply to complete; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.602:
+    Type: Alarm
+    Description: System config update auto-apply aborting
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: major
+    Proposed_Repair_Action: Wait for system config update auto-apply abort to complete; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.603:
+    Type: Alarm
+    Description: System config update auto-apply failed. Command "sw-manager kube-upgrade-strategy apply" failed
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Proposed_Repair_Action: Attempt to apply system config update manually; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: underlying-resource-unavailable
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.611:
+    Type: Log
+    Description: System config update auto-apply start
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.612:
+    Type: Log
+    Description: System config update auto-apply in progress
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.613:
+    Type: Log
+    Description: System config update auto-apply rejected
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.614:
+    Type: Log
+    Description: System config update auto-apply cancelled
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.615:
+    Type: Log
+    Description: System config update auto-apply failed
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.616:
+    Type: Log
+    Description: System config update auto-apply completed
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.617:
+    Type: Log
+    Description: System config update auto-apply abort
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.618:
+    Type: Log
+    Description: System config update auto-apply aborting
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.619:
+    Type: Log
+    Description: System config update auto-apply abort rejected
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.620:
+    Type: Log
+    Description: System config update auto-apply abort failed
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.621:
+    Type: Log
+    Description: System config update auto-apply aborted
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.701:
+    Type: Alarm
+    Description: Node <hostname> tainted.
+    Entity_Instance_ID: host=<hostname>
+    Severity: major
+    Proposed_Repair_Action: |-
+            "Execute 'kubectl taint nodes <hostname> services=disabled:NoExecute-'
+            If it fails, Execute 'system host-lock <hostname>' followed by
+            'system host-unlock <hostname>'.
+            If issue still persists, contact next level of support."
+    Maintenance_Action: none
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unknown
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: major
+    Context: starlingx
 ...

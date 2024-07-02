@@ -1,0 +1,8 @@
+Verified+1: o-ran-sc release <collab-it+o-ran-sc-release@linuxfoundation.org>
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Code-Review+2: Jon Zhang <rong.zhang@windriver.com>
+Submitted-by: Jon Zhang <rong.zhang@windriver.com>
+Submitted-at: Tue, 02 Jul 2024 03:13:32 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/pti/o2/+/12822
+Project: pti/o2
+Branch: refs/heads/j-release

@@ -20,6 +20,8 @@ Version History
 +------------+----------+----------------------------------------------+-------------+
 | **Date**   | **Ver.** | **Author**                                   | **Comment** |
 +------------+----------+----------------------------------------------+-------------+
+| 2024-06-15 | 2.0.4    | Jon Zhang, Jackie Huang, Joshua Kraitberg    | J Release   |
++------------+----------+----------------------------------------------+-------------+
 | 2023-12-15 | 2.0.3    | Jon Zhang, Jackie Huang                      | I Release   |
 +------------+----------+----------------------------------------------+-------------+
 | 2023-06-15 | 2.0.2    | Jon Zhang, Jackie Huang                      | H Release   |
@@ -30,6 +32,25 @@ Version History
 +------------+----------+----------------------------------------------+-------------+
 | 2021-12-15 | 1.0.0    | Bin Yang, Jon Zhang                          | E Release   |
 +------------+----------+----------------------------------------------+-------------+
+
+Version 2.0.4, 2023-06-15
+-------------------------
+
+-  Upgrade Monitoring API
+
+   -  Support SMO's requests of alarm event acknowledgment and clearing
+
+-  Support mTLS for API endpoint
+
+   -  Support mutual TLS for API endpoint
+
+-  Support authentication with OAuth2 token of API
+
+   -  Support OAuth2 token for API authentication
+
+-  Other updates
+
+   -  Bugs fixed
 
 Version 2.0.3, 2023-12-15
 -------------------------

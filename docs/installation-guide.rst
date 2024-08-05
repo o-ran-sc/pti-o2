@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2021-2022 Wind River Systems, Inc.
+.. Copyright (C) 2021-2024 Wind River Systems, Inc.
 
 
 Installation Guide
@@ -58,6 +58,11 @@ Configuration and Management: `Enable ReadWriteOnce PVC Support in
 Additional
 Namespaces <https://docs.starlingx.io/storage/kubernetes/enable-readwriteonce-pvc-support-in-additional-namespaces.html#enable-readwriteonce-pvc-support-in-additional-namespaces>`__.
 
+Set up an OAuth 2.0 server and configure it to use either JWT with
+Shared Key or Token Introspection. Since the J-release, OAuth2 has
+been mandatory when starting the O2 application.
+
+
 2. Procedure
 ------------
 
@@ -95,73 +100,56 @@ You can install O-RAN O2 application on INF from the command line.
 
 6. Prepare the override ``yaml`` file.
 
-   1. Create a service account for SMO application.
+   a. Create a client on the OAuth Server.
 
-      Create a ServiceAccount which can be used to provide SMO
-      application with minimal access permission credentials.
+      Create a client on OAuth Server to provide O2 application with
+      access permission credentials.
 
-      ::
-
-         export SMO_SERVICEACCOUNT=smo1
-
-         cat <<EOF > smo-serviceaccount.yaml
-         apiVersion: rbac.authorization.k8s.io/v1
-         kind: Role
-         metadata:
-           namespace: default
-           name: pod-reader
-         rules:
-         - apiGroups: [""] # "" indicates the core API group
-           resources: ["pods"]
-           verbs: ["get", "watch", "list"]
-         ---
-         apiVersion: v1
-         kind: ServiceAccount
-         metadata:
-           name: ${SMO_SERVICEACCOUNT}
-           namespace: default
-         ---
-         apiVersion: rbac.authorization.k8s.io/v1
-         kind: RoleBinding
-         metadata:
-           name: read-pods
-           namespace: default
-         roleRef:
-           apiGroup: rbac.authorization.k8s.io
-           kind: Role
-           name: pod-reader
-         subjects:
-         - kind: ServiceAccount
-           name: ${SMO_SERVICEACCOUNT}
-           namespace: default
-         EOF
-
-         kubectl apply -f smo-serviceaccount.yaml
-
-   2. Create a secret for service account and obtain an access token.
-
-      Create a secret with the type service-account-token and pass the
-      ServiceAccount in the annotation section as shown below:
+      Here is a reference 3rd-party OAuth Server (`Keycloak <https://github.com/keycloak/keycloak>`__)
 
       ::
 
-         export SMO_SECRET=smo1-secret
+         docker run \
+            --name keycloak \
+            -p 8080:8080 \
+            -e KEYCLOAK_ADMIN=admin \
+            -e KEYCLOAK_ADMIN_PASSWORD=admin \
+            -e KC_HOSTNAME=localhost \
+            quay.io/keycloak/keycloak:latest \
+            start-dev
 
-         cat <<EOF > smo-secret.yaml
-         apiVersion: v1
-         kind: Secret
-         metadata:
-           name: ${SMO_SECRET}
-           annotations:
-             kubernetes.io/service-account.name: ${SMO_SERVICEACCOUNT}
-         type: kubernetes.io/service-account-token
-         EOF
+         docker exec -it keycloak /bin/bash
+            bash-5.1$ cd /opt/keycloak/bin
+            bash-5.1$ ./kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin
+            bash-5.1$ ./kcadm.sh update realms/master -s sslRequired=NONE
 
-         kubectl apply -f smo-secret.yaml
+      When you create a client, you will get a client ID and client secret.
 
-         export SMO_TOKEN_DATA=$(kubectl get secrets $SMO_SECRET -o jsonpath='{.data.token}' | base64 -d -w 0)
+      ::
 
-   3. Create certificates for the O2 service.
+         OAUTH2_TOKEN_ENDPOINT=http://<3rd-party OAuth Server Address>:8080/realms/master/protocol/openid-connect/token
+         OAUTH2_CLIENT_ID=<oran-o2-client-id>
+         OAUTH2_CLIENT_SECRET=<oran-o2-client-secret>
+
+   b. Prepare the OAuth2 variables for authenticate information.
+
+      When using JWT with Shared Key, the following attributes need to be
+      configured. Here's an example for preparation:
+
+      ::
+      
+         OAUTH2_ALGORITHM=RS256
+         OAUTH2_PUB_KEY=<3rd-party OAuth Server Public Key>
+
+      For Token Introspection, here are examples of the required preparation:
+
+      ::
+      
+         OAUTH2_INTROSPECTION_ENDPOINT=http://<3rd-party OAuth Server Address>:8080/realms/master/protocol/openid-connect/token/introspect
+         OAUTH2_CLIENT_ID=<oran-o2-client-id>
+         OAUTH2_CLIENT_SECRET=<oran-o2-client-secret>
+
+   c. Create certificates for the O2 service.
 
       Obtain an intermediate or Root CA-signed certificate and key from
       a trusted intermediate or Root Certificate Authority (CA). Refer
@@ -190,7 +178,7 @@ You can install O-RAN O2 application on INF from the command line.
          shared with the SMO application for the O2 server certificate
          verification.
 
-   4. Prepare the O2 service application configuration file.
+   d. Prepare the O2 service application configuration file.
 
       As per the Cloudification and Orchestration use case defined in
       O-RAN Working Group 6, the following information should be
@@ -212,13 +200,23 @@ You can install O-RAN O2 application on INF from the command line.
 
          ocloud_global_id = ${OCLOUD_GLOBAL_ID}
          smo_register_url = ${SMO_REGISTER_URL}
-         smo_token_data = ${SMO_TOKEN_DATA}
 
          [OCLOUD]
          OS_AUTH_URL = ${OS_AUTH_URL}
          OS_USERNAME = ${OS_USERNAME}
          OS_PASSWORD = ${OS_PASSWORD}
          API_HOST_EXTERNAL_FLOATING = ${API_HOST_EXTERNAL_FLOATING}
+
+         [OAUTH2]
+         oauth2_verify_type = jwt
+         oauth2_public_key = ${OAUTH2_PUB_KEY}
+         oauth2_algorithm = ${OAUTH2_ALGORITHM}
+
+         # required if oauth2_verify_type = introspection
+         #oauth2_verify_type = introspection
+         #oauth2_introspection_endpoint = ${OAUTH2_INTROSPECTION_ENDPOINT}
+         #oauth2_client_id = ${OAUTH2_CLIENT_ID}
+         #oauth2_client_secret = ${OAUTH2_CLIENT_SECRET}
 
          [API]
 
@@ -227,7 +225,7 @@ You can install O-RAN O2 application on INF from the command line.
          [PUBSUB]
          EOF
 
-   5. Retrieve the CA certificate from your SMO vendor.
+   e. Retrieve the CA certificate from your SMO vendor.
 
       If the SMO application provides service via HTTPS, and the server
       certificate is self-signed, the CA certficate should be retrieved
@@ -236,7 +234,21 @@ You can install O-RAN O2 application on INF from the command line.
       This procedure assumes that the name of the certificate is
       ``smo-ca.pem``
 
-   6. Populate the override yaml file.
+   f. Prepare client certificate for mTLS (Mutual TLS).
+
+      When you request the O2 application from SMO, it needs the
+      certificate for mTLS.
+      We assume you have the CA certificate and CA key of the SMO
+      client, you can follow the guide to generate the client
+      certficate.
+
+      ::
+
+         openssl genrsa -out client-key.pem 2048
+         openssl req -new -key client-key.pem -out client.csr
+         openssl x509 -req -in client.csr -CA smo-ca.pem -CAkey smo-ca-key.pem -CAcreateserial -out client-cert.pem -days 365
+
+   j. Populate the override yaml file.
 
       Refer to the previous step for the required override values.
 
@@ -288,6 +300,7 @@ You can install O-RAN O2 application on INF from the command line.
                   redis: ${O2SERVICE_IMAGE_REG}/docker.io/library/redis:alpine
                 pullPolicy: IfNotPresent
               logginglevel: "DEBUG"
+              useHostCert: true
 
             applicationconfig: ${APPLICATION_CONFIG}
             servercrt: ${SERVER_CERT}

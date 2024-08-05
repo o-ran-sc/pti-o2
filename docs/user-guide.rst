@@ -9,12 +9,35 @@ This guide will introduce the process that make INF O2 interface work
 with SMO.
 
 -  Assume you have an O2 service with INF platform environment, and you
-   have the token of the O2 service.
+   have the OAuth Server configured with the O2 service.
 
    .. code:: bash
 
       export OAM_IP=<INF_OAM_IP>
-      export SMO_TOKEN_DATA=<TOKEN of O2 Service>
+
+      export OAUTH2_TOKEN_ENDPOINT=http://<3rd-party OAuth Server Address>:8080/realms/master/protocol/openid-connect/token
+      export OAUTH2_CLIENT_ID=<oran-o2-client-id>
+      export OAUTH2_CLIENT_SECRET=<oran-o2-client-secret>
+
+   Get berar token from the OAuth Server for request O2 application API.
+
+   .. code:: shell
+
+      curl -k -X POST ${OAUTH2_TOKEN_ENDPOINT} \
+         -H "Content-Type: application/x-www-form-urlencoded" \
+         -d "grant_type=client_credentials" \
+         -d "client_id=${OAUTH2_CLIENT_ID}" \
+         -d "client_secret=${OAUTH2_CLIENT_SECRET}"
+
+   Set "access_token" value from the above step to the bash environment.
+   And copy the client certificate into the bash folder that you are working on.
+
+   .. code:: bash
+
+      export BEARER_TOKEN=<access_token>
+
+      ls
+      client-cert.pem  client-key.pem  my-root-ca-cert.pem 
 
 -  Discover INF platform inventory
 
@@ -28,9 +51,12 @@ with SMO.
 
       .. code:: shell
 
-         curl -k -X 'GET' \
-           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/" \
-           -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
+         curl -X 'GET' \
+           --cacert my-root-ca-cert.pem \
+           --cert client-cert.pem --key client-key.pem \
+           -H "Authorization: Bearer ${BEARER_TOKEN}" \
+           -H 'accept: application/json'
+           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/"
 
    -  Resource pool
 
@@ -44,12 +70,15 @@ with SMO.
 
       .. code:: shell
 
-         curl -k -X 'GET' \
-           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools" \
-           -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
+         curl -X 'GET' \
+           --cacert my-root-ca-cert.pem \
+           --cert client-cert.pem --key client-key.pem \
+           -H "Authorization: Bearer ${BEARER_TOKEN}" \
+           -H 'accept: application/json'
+           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools"
 
          # export the first resource pool id
-         export resourcePoolId=`curl -k -X 'GET' "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools"   -H 'accept: application/json' -H "Authorization: Bearer $SMO_TOKEN_DATA" 2>/dev/null | jq .[0].resourcePoolId | xargs echo`
+         export resourcePoolId=`curl -k -X 'GET' --cert client-cert.pem --key client-key.pem "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools"   -H 'accept: application/json' -H "Authorization: Bearer ${BEARER_TOKEN}" 2>/dev/null | jq .[0].resourcePoolId | xargs echo`
 
          echo ${resourcePoolId} # check the exported resource pool id
 
@@ -62,9 +91,12 @@ with SMO.
 
       .. code:: shell
 
-         curl -k -X 'GET' \
-           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourceTypes" \
-           -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
+         curl -X 'GET' \
+           --cacert my-root-ca-cert.pem \
+           --cert client-cert.pem --key client-key.pem \
+           -H "Authorization: Bearer ${BEARER_TOKEN}" \
+           -H 'accept: application/json'
+           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourceTypes"
 
    -  Resource
 
@@ -73,9 +105,12 @@ with SMO.
 
       .. code:: shell
 
-         curl -k -X 'GET' \
-         "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources" \
-         -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
+         curl -X 'GET' \
+           --cacert my-root-ca-cert.pem \
+           --cert client-cert.pem --key client-key.pem \
+           -H "Authorization: Bearer ${BEARER_TOKEN}" \
+           -H 'accept: application/json'
+         "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources"
 
       To get the detail of one resource, need to export one specific
       resource id that wants to check
@@ -83,7 +118,7 @@ with SMO.
       .. code:: shell
 
          # export the first resource id in the resource pool
-         export resourceId=`curl -k -X 'GET' "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources"   -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" 2>/dev/null | jq .[0].resourceId | xargs echo`
+         export resourceId=`curl -k -X 'GET' --cert client-cert.pem --key client-key.pem "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/resourcePools/${resourcePoolId}/resources"   -H 'accept: application/json' -H "Authorization: Bearer ${BEARER_TOKEN}" 2>/dev/null | jq .[0].resourceId | xargs echo`
 
          echo ${resourceId} # check the exported resource id
 
@@ -99,9 +134,12 @@ with SMO.
 
       .. code:: shell
 
-         curl -k -X 'GET' \
-           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers" \
-           -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}"
+         curl -X 'GET' \
+           --cacert my-root-ca-cert.pem \
+           --cert client-cert.pem --key client-key.pem \
+           -H "Authorization: Bearer ${BEARER_TOKEN}" \
+           -H 'accept: application/json'
+           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers"
 
 -  Provisioning INF platform with SMO endpoint configuration
 
@@ -139,11 +177,13 @@ with SMO.
          export SMO_SUBSCRIBE_CALLBACK=<The Callback URL for SMO Subscribe resource>
          export SMO_CONSUMER_SUBSCRIPTION_ID=<The Subscription ID of the SMO Consumer>
 
-         curl -k -X 'POST' \
-           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/subscriptions" \
+         curl -X 'POST' \
+           --cacert my-root-ca-cert.pem \
+           --cert client-cert.pem --key client-key.pem \
+           -H "Authorization: Bearer ${BEARER_TOKEN}" \
            -H 'accept: application/json' \
            -H 'Content-Type: application/json' \
-           -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+           "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/subscriptions" \
            -d '{
            "callback": "'${SMO_SUBSCRIBE_CALLBACK}'",
            "consumerSubscriptionId": "'${SMO_CONSUMER_SUBSCRIPTION_ID}'",
@@ -168,11 +208,13 @@ with SMO.
          export SMO_SUBSCRIBE_CALLBACK=<The Callback URL for SMO Subscribe alarm>
          export SMO_CONSUMER_SUBSCRIPTION_ID=<The Subscription ID of the SMO Consumer>
 
-         curl -k -X 'POST' \
-           "https://${OAM_IP}:30205/o2ims-infrastructureMonitoring/v1/alarmSubscriptions" \
+         curl -X 'POST' \
+           --cacert my-root-ca-cert.pem \
+           --cert client-cert.pem --key client-key.pem \
+           -H "Authorization: Bearer ${BEARER_TOKEN}" \
            -H 'accept: application/json' \
            -H 'Content-Type: application/json' \
-           -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+           "https://${OAM_IP}:30205/o2ims-infrastructureMonitoring/v1/alarmSubscriptions" \
            -d '{
            "callback": "'${SMO_SUBSCRIBE_CALLBACK}'",
            "consumerSubscriptionId": "'${SMO_CONSUMER_SUBSCRIPTION_ID}'",
@@ -216,16 +258,16 @@ with SMO.
    .. code:: bash
 
       # Get all DMS ID, and print them with command
-      dmsIDs=$(curl -k -s -X 'GET' \
+      dmsIDs=$(curl -k -s -X 'GET' --cert client-cert.pem --key client-key.pem \
       "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers" \
-      -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+      -H 'accept: application/json' -H "Authorization: Bearer ${BEARER_TOKEN}" \
       | jq --raw-output '.[]["deploymentManagerId"]')
       for i in $dmsIDs;do echo ${i};done;
 
       # Choose one DMS and set it to bash environment, here I set the first one
-      export dmsID=$(curl -k -s -X 'GET' \
+      export dmsID=$(curl -k -s -X 'GET' --cert client-cert.pem --key client-key.pem \
         "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers" \
-        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${BEARER_TOKEN}" \
         | jq --raw-output '.[0]["deploymentManagerId"]')
 
       echo ${dmsID} # check the exported DMS Id
@@ -241,26 +283,26 @@ with SMO.
 
       CLUSTER_NAME="o2dmsk8s1" # set the cluster name
 
-      K8S_SERVER=$(curl -k -s -X 'GET' \
+      K8S_SERVER=$(curl -k -s -X 'GET' --cert client-cert.pem --key client-key.pem \
         "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=native_k8sapi" \
-        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${BEARER_TOKEN}" \
         | jq --raw-output '.["extensions"]["profileData"]["cluster_api_endpoint"]')
-      K8S_CA_DATA=$(curl -k -s -X 'GET' \
+      K8S_CA_DATA=$(curl -k -s -X 'GET' --cert client-cert.pem --key client-key.pem \
         "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=native_k8sapi" \
-        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${BEARER_TOKEN}" \
         | jq --raw-output '.["extensions"]["profileData"]["cluster_ca_cert"]')
 
-      K8S_USER_NAME=$(curl -k -s -X 'GET' \
+      K8S_USER_NAME=$(curl -k -s -X 'GET' --cert client-cert.pem --key client-key.pem \
         "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=native_k8sapi" \
-        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${BEARER_TOKEN}" \
         | jq --raw-output '.["extensions"]["profileData"]["admin_user"]')
-      K8S_USER_CLIENT_CERT_DATA=$(curl -k -s -X 'GET' \
+      K8S_USER_CLIENT_CERT_DATA=$(curl -k -s -X 'GET' --cert client-cert.pem --key client-key.pem \
         "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=native_k8sapi" \
-        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${BEARER_TOKEN}" \
         | jq --raw-output '.["extensions"]["profileData"]["admin_client_cert"]')
-      K8S_USER_CLIENT_KEY_DATA=$(curl -k -s -X 'GET' \
+      K8S_USER_CLIENT_KEY_DATA=$(curl -k -s -X 'GET' --cert client-cert.pem --key client-key.pem \
         "https://${OAM_IP}:30205/o2ims-infrastructureInventory/v1/deploymentManagers/${dmsID}?profile=native_k8sapi" \
-        -H 'accept: application/json' -H "Authorization: Bearer ${SMO_TOKEN_DATA}" \
+        -H 'accept: application/json' -H "Authorization: Bearer ${BEARER_TOKEN}" \
         | jq --raw-output '.["extensions"]["profileData"]["admin_client_key"]')
 
       # If you do not want to set up the CA data, you can execute following command without the secure checking

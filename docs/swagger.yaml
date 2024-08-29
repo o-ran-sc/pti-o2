@@ -1,966 +1,1033 @@
----
-swagger: "2.0"
-info:
-  description: Swagger OpenAPI document for the INF O2 Services
-  version: 1.0.0
-  title: INF O2 Services API
+swagger: '2.0'
 basePath: /
-tags:
-- name: O2IMS-InfrastructureInventory
-  description: O2 IMS Inventory related operations.
-- name: O2IMS-InfrastructureMonitoring
-  description: O2 IMS Monitoring related operations.
-consumes:
-- application/json
-produces:
-- application/json
 paths:
   /o2ims-infrastructureInventory/api_versions:
     get:
-      tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Inventory Version
-      parameters: []
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/InventoryAPIVersion'
+      operationId: Get Inventory Version
+      tags:
+        - O2IMS-InfrastructureInventory
   /o2ims-infrastructureInventory/v1:
+    parameters:
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
+        type: string
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
+        type: string
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
+        type: string
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
+        type: string
     get:
-      tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Ocloud Information
-      parameters:
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
-        type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/OcloudDto'
-        "404":
+        '404':
           description: oCloud not found
+      operationId: Get Ocloud Information
+      tags:
+        - O2IMS-InfrastructureInventory
   /o2ims-infrastructureInventory/v1/:
+    parameters:
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
+        type: string
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
+        type: string
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
+        type: string
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
+        type: string
     get:
-      tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Ocloud Information
-      parameters:
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
-        type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/OcloudDto'
-        "404":
+        '404':
           description: oCloud not found
+      operationId: Get Ocloud Information
+      tags:
+        - O2IMS-InfrastructureInventory
   /o2ims-infrastructureInventory/v1/api_versions:
     get:
-      tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Inventory API version
-      parameters: []
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/InventoryV1APIVersion'
-  /o2ims-infrastructureInventory/v1/deploymentManagers:
-    get:
+      operationId: Get Inventory API version
       tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Deployment Manager List
-      parameters:
-      - name: filter
-        in: query
+        - O2IMS-InfrastructureInventory
+  /o2ims-infrastructureInventory/v1/deploymentManagers:
+    parameters:
+      - in: query
         description: Filter of the query.
-        required: false
+        name: filter
         type: string
-      - name: exclude_default
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
+        type: string
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
+        type: string
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
+        type: string
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
+        type: string
+      - default: 1
         in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
+        description: 'Page number of the results to fetch. Default: 1'
+        name: nextpage_opaque_marker
         type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
-      - name: nextpage_opaque_marker
-        in: query
-        description: "Page number of the results to fetch. Default: 1"
-        required: false
-        type: string
-        default: "1"
+    get:
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/DeploymentManagerListDto'
-  /o2ims-infrastructureInventory/v1/deploymentManagers/{deploymentManagerID}:
-    get:
+      operationId: Get Deployment Manager List
       tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Deployment Manager Information
-      parameters:
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
+        - O2IMS-InfrastructureInventory
+  /o2ims-infrastructureInventory/v1/deploymentManagers/{deploymentManagerID}:
+    parameters:
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
         type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
         type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
         type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
         type: string
-      - name: profile
-        in: query
-        description: "DMS profile: value supports \"native_k8sapi\""
-        required: false
+      - in: query
+        description: 'DMS profile: value supports "native_k8sapi"'
+        name: profile
         type: string
-      - name: deploymentManagerID
-        in: path
+      - in: path
         description: ID of the deployment manager
+        name: deploymentManagerID
         required: true
         type: string
+    get:
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/DeploymentManagerGetDto'
-        "404":
+        '404':
           description: Deployment manager not found
-  /o2ims-infrastructureInventory/v1/resourcePools:
-    get:
+      operationId: Get Deployment Manager Information
       tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Resource Pool List
-      parameters:
-      - name: filter
-        in: query
+        - O2IMS-InfrastructureInventory
+  /o2ims-infrastructureInventory/v1/resourcePools:
+    parameters:
+      - in: query
         description: Filter of the query.
-        required: false
+        name: filter
         type: string
-      - name: exclude_default
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
+        type: string
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
+        type: string
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
+        type: string
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
+        type: string
+      - default: 1
         in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
+        description: 'Page number of the results to fetch. Default: 1'
+        name: nextpage_opaque_marker
         type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
-      - name: nextpage_opaque_marker
-        in: query
-        description: "Page number of the results to fetch. Default: 1"
-        required: false
-        type: string
-        default: "1"
+    get:
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/ResourcePoolGetDto'
-  /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}:
-    get:
+      operationId: Get Resource Pool List
       tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Resource Pool Information
-      parameters:
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
+        - O2IMS-InfrastructureInventory
+  /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}:
+    parameters:
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
         type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
         type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
         type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
         type: string
-      - name: resourcePoolID
-        in: path
+      - in: path
         description: ID of the resource pool
+        name: resourcePoolID
         required: true
         type: string
+    get:
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/ResourcePoolGetDto'
-        "404":
+        '404':
           description: Resource pool not found
-  /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}/resources:
-    get:
+      operationId: Get Resource Pool Information
       tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Resource List
-      parameters:
-      - name: filter
-        in: query
+        - O2IMS-InfrastructureInventory
+  /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}/resources:
+    parameters:
+      - in: query
         description: Filter of the query.
-        required: false
+        name: filter
         type: string
-      - name: exclude_default
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
+        type: string
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
+        type: string
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
+        type: string
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
+        type: string
+      - default: 1
         in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
+        description: 'Page number of the results to fetch. Default: 1'
+        name: nextpage_opaque_marker
         type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
-      - name: nextpage_opaque_marker
-        in: query
-        description: "Page number of the results to fetch. Default: 1"
-        required: false
-        type: string
-        default: "1"
-      - name: resourcePoolID
-        in: path
+      - in: path
         description: ID of the resource pool
+        name: resourcePoolID
         required: true
         type: string
+    get:
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/ResourceListDto'
-        "404":
+        '404':
           description: Resource pool not found
-  /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}/resources/{resourceID}:
-    get:
+      operationId: Get Resource List
       tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Resource Information
-      parameters:
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
+        - O2IMS-InfrastructureInventory
+  /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}/resources/{resourceID}:
+    parameters:
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
         type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
         type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
         type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
         type: string
-      - name: resourceID
-        in: path
+      - in: path
         description: ID of the resource
+        name: resourceID
         required: true
         type: string
-      - name: resourcePoolID
-        in: path
+      - in: path
         description: ID of the resource pool
+        name: resourcePoolID
         required: true
         type: string
+    get:
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/ResourceGetDto2'
-        "404":
+        '404':
           description: Resource not found
-  /o2ims-infrastructureInventory/v1/resourceTypes:
-    get:
+      operationId: Get Resource Information
       tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Resource Type List
-      parameters:
-      - name: filter
-        in: query
+        - O2IMS-InfrastructureInventory
+  /o2ims-infrastructureInventory/v1/resourceTypes:
+    parameters:
+      - in: query
         description: Filter of the query.
-        required: false
+        name: filter
         type: string
-      - name: exclude_default
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
+        type: string
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
+        type: string
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
+        type: string
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
+        type: string
+      - default: 1
         in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
+        description: 'Page number of the results to fetch. Default: 1'
+        name: nextpage_opaque_marker
         type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
-      - name: nextpage_opaque_marker
-        in: query
-        description: "Page number of the results to fetch. Default: 1"
-        required: false
-        type: string
-        default: "1"
+    get:
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/ResourceTypeGetDto'
-  /o2ims-infrastructureInventory/v1/resourceTypes/{resourceTypeID}:
-    get:
+      operationId: Get Resource Type List
       tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Resource Type Information
-      parameters:
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
+        - O2IMS-InfrastructureInventory
+  /o2ims-infrastructureInventory/v1/resourceTypes/{resourceTypeID}:
+    parameters:
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
         type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
         type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
         type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
         type: string
-      - name: resourceTypeID
-        in: path
+      - in: path
         description: ID of the resource type
+        name: resourceTypeID
         required: true
         type: string
+    get:
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/ResourceTypeGetDto'
-        "404":
+        '404':
           description: Resource type not found
+      operationId: Get Resource Type Information
+      tags:
+        - O2IMS-InfrastructureInventory
   /o2ims-infrastructureInventory/v1/subscriptions:
     get:
-      tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Get Subscription List
-      parameters:
-      - name: filter
-        in: query
-        description: Filter of the query.
-        required: false
-        type: string
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
-        type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
-      - name: nextpage_opaque_marker
-        in: query
-        description: "Page number of the results to fetch. Default: 1"
-        required: false
-        type: string
-        default: "1"
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/SubscriptionGetDto'
-    post:
+      operationId: Get Subscription List
+      parameters:
+        - in: query
+          description: Filter of the query.
+          name: filter
+          type: string
+        - in: query
+          description: Exclude showing all default fields, Set "true" to enable.
+          name: exclude_default
+          type: string
+        - in: query
+          description: >-
+            Set fields to exclude showing, split by comma, "/" for parent and
+            children. Like "name,parent/children". This value will cover
+            "exclude_default".
+          name: exclude_fields
+          type: string
+        - in: query
+          description: >-
+            Set fields to show, split by comma, "/" for parent and children.
+            Like "name,parent/children". This value will cover "exculde_fields".
+          name: fields
+          type: string
+        - in: query
+          description: >-
+            Set any value for show all fields. This value will cover "fields"
+            and "all_fields".
+          name: all_fields
+          type: string
+        - default: 1
+          in: query
+          description: 'Page number of the results to fetch. Default: 1'
+          name: nextpage_opaque_marker
+          type: string
       tags:
-      - O2IMS-InfrastructureInventory
+        - O2IMS-InfrastructureInventory
+    post:
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/SubscriptionGetDto'
       operationId: Create a Subscription
       parameters:
-      - in: body
-        name: payload
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/SubscriptionCreateDto'
+      tags:
+        - O2IMS-InfrastructureInventory
+  /o2ims-infrastructureInventory/v1/subscriptions/{subscriptionID}:
+    parameters:
+      - in: path
+        description: ID of the subscription
+        name: subscriptionID
         required: true
-        schema:
-          $ref: '#/definitions/SubscriptionCreateDto'
+        type: string
+    get:
       responses:
-        "201":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/SubscriptionGetDto'
-  /o2ims-infrastructureInventory/v1/subscriptions/{subscriptionID}:
-    get:
-      tags:
-      - O2IMS-InfrastructureInventory
+        '404':
+          description: Subscription not found
       operationId: Get Subscription Information
       parameters:
-      - name: subscriptionID
-        in: path
-        description: ID of the subscription
-        required: true
-        type: string
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
-        type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: '#/definitions/SubscriptionGetDto'
-        "404":
-          description: Subscription not found
-    delete:
+        - in: query
+          description: Exclude showing all default fields, Set "true" to enable.
+          name: exclude_default
+          type: string
+        - in: query
+          description: >-
+            Set fields to exclude showing, split by comma, "/" for parent and
+            children. Like "name,parent/children". This value will cover
+            "exclude_default".
+          name: exclude_fields
+          type: string
+        - in: query
+          description: >-
+            Set fields to show, split by comma, "/" for parent and children.
+            Like "name,parent/children". This value will cover "exculde_fields".
+          name: fields
+          type: string
+        - in: query
+          description: >-
+            Set any value for show all fields. This value will cover "fields"
+            and "all_fields".
+          name: all_fields
+          type: string
       tags:
-      - O2IMS-InfrastructureInventory
-      operationId: Delete a Subscription
-      parameters:
-      - name: subscriptionID
-        in: path
-        description: ID of the subscription
-        required: true
-        type: string
+        - O2IMS-InfrastructureInventory
+    delete:
       responses:
-        "200":
+        '200':
           description: Subscription deleted
-        "404":
+        '404':
           description: Subscription not found
+      operationId: Delete a Subscription
+      tags:
+        - O2IMS-InfrastructureInventory
   /o2ims-infrastructureMonitoring/api_versions:
     get:
-      tags:
-      - O2IMS-InfrastructureMonitoring
-      operationId: Get Monitoring Version
-      parameters: []
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/MonitoringAPIVersion'
+      operationId: Get Monitoring Version
+      tags:
+        - O2IMS-InfrastructureMonitoring
   /o2ims-infrastructureMonitoring/v1/alarmSubscriptions:
     get:
-      tags:
-      - O2IMS-InfrastructureMonitoring
-      operationId: Get Alarm Subscription List
-      parameters:
-      - name: filter
-        in: query
-        description: Filter of the query.
-        required: false
-        type: string
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
-        type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
-      - name: nextpage_opaque_marker
-        in: query
-        description: "Page number of the results to fetch. Default: 1"
-        required: false
-        type: string
-        default: "1"
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/AlarmSubscriptionGetDto'
-    post:
+      operationId: Get Alarm Subscription List
+      parameters:
+        - in: query
+          description: Filter of the query.
+          name: filter
+          type: string
+        - in: query
+          description: Exclude showing all default fields, Set "true" to enable.
+          name: exclude_default
+          type: string
+        - in: query
+          description: >-
+            Set fields to exclude showing, split by comma, "/" for parent and
+            children. Like "name,parent/children". This value will cover
+            "exclude_default".
+          name: exclude_fields
+          type: string
+        - in: query
+          description: >-
+            Set fields to show, split by comma, "/" for parent and children.
+            Like "name,parent/children". This value will cover "exculde_fields".
+          name: fields
+          type: string
+        - in: query
+          description: >-
+            Set any value for show all fields. This value will cover "fields"
+            and "all_fields".
+          name: all_fields
+          type: string
+        - default: 1
+          in: query
+          description: 'Page number of the results to fetch. Default: 1'
+          name: nextpage_opaque_marker
+          type: string
       tags:
-      - O2IMS-InfrastructureMonitoring
+        - O2IMS-InfrastructureMonitoring
+    post:
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/AlarmSubscriptionGetDto'
       operationId: Create a Alarm Subscription
       parameters:
-      - in: body
-        name: payload
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/AlarmSubscriptionCreateDto'
+      tags:
+        - O2IMS-InfrastructureMonitoring
+  /o2ims-infrastructureMonitoring/v1/alarmSubscriptions/{alarmSubscriptionID}:
+    parameters:
+      - in: path
+        description: ID of the Alarm Subscription
+        name: alarmSubscriptionID
         required: true
-        schema:
-          $ref: '#/definitions/AlarmSubscriptionCreateDto'
+        type: string
+    get:
       responses:
-        "201":
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/AlarmSubscriptionGetDto'
-  /o2ims-infrastructureMonitoring/v1/alarmSubscriptions/{alarmSubscriptionID}:
-    get:
-      tags:
-      - O2IMS-InfrastructureMonitoring
+        '404':
+          description: Alarm Subscription not found
       operationId: Get Alarm Subscription Information
       parameters:
-      - name: alarmSubscriptionID
-        in: path
-        description: ID of the Alarm Subscription
-        required: true
-        type: string
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
-        type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: '#/definitions/AlarmSubscriptionGetDto'
-        "404":
-          description: Alarm Subscription not found
+        - in: query
+          description: Exclude showing all default fields, Set "true" to enable.
+          name: exclude_default
+          type: string
+        - in: query
+          description: >-
+            Set fields to exclude showing, split by comma, "/" for parent and
+            children. Like "name,parent/children". This value will cover
+            "exclude_default".
+          name: exclude_fields
+          type: string
+        - in: query
+          description: >-
+            Set fields to show, split by comma, "/" for parent and children.
+            Like "name,parent/children". This value will cover "exculde_fields".
+          name: fields
+          type: string
+        - in: query
+          description: >-
+            Set any value for show all fields. This value will cover "fields"
+            and "all_fields".
+          name: all_fields
+          type: string
+      tags:
+        - O2IMS-InfrastructureMonitoring
     delete:
-      tags:
-      - O2IMS-InfrastructureMonitoring
-      operationId: Delete an Alarm Subscription
-      parameters:
-      - name: alarmSubscriptionID
-        in: path
-        description: ID of the Alarm Subscription
-        required: true
-        type: string
       responses:
-        "200":
+        '200':
           description: Subscription deleted
-        "404":
+        '404':
           description: Alarm Subscription not found
-  /o2ims-infrastructureMonitoring/v1/alarms:
-    get:
+      operationId: Delete an Alarm Subscription
       tags:
-      - O2IMS-InfrastructureMonitoring
-      operationId: Get Alarm Event Record List
-      parameters:
-      - name: filter
-        in: query
+        - O2IMS-InfrastructureMonitoring
+  /o2ims-infrastructureMonitoring/v1/alarms:
+    parameters:
+      - in: query
         description: Filter of the query.
-        required: false
+        name: filter
         type: string
-      - name: exclude_default
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
+        type: string
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
+        type: string
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
+        type: string
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
+        type: string
+      - default: 1
         in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
+        description: 'Page number of the results to fetch. Default: 1'
+        name: nextpage_opaque_marker
         type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
-        type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
-        type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
-        type: string
-      - name: nextpage_opaque_marker
-        in: query
-        description: "Page number of the results to fetch. Default: 1"
-        required: false
-        type: string
-        default: "1"
+    get:
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/AlarmGetDto'
-  /o2ims-infrastructureMonitoring/v1/alarms/{alarmEventRecordId}:
-    get:
+      operationId: Get Alarm Event Record List
       tags:
-      - O2IMS-InfrastructureMonitoring
-      operationId: Get Alarm Event Record Information
-      parameters:
-      - name: exclude_default
-        in: query
-        description: "Exclude showing all default fields, Set \"true\" to enable."
-        required: false
+        - O2IMS-InfrastructureMonitoring
+  /o2ims-infrastructureMonitoring/v1/alarms/{alarmEventRecordId}:
+    parameters:
+      - in: query
+        description: Exclude showing all default fields, Set "true" to enable.
+        name: exclude_default
         type: string
-      - name: exclude_fields
-        in: query
-        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
-        required: false
+      - in: query
+        description: >-
+          Set fields to exclude showing, split by comma, "/" for parent and
+          children. Like "name,parent/children". This value will cover
+          "exclude_default".
+        name: exclude_fields
         type: string
-      - name: fields
-        in: query
-        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
-        required: false
+      - in: query
+        description: >-
+          Set fields to show, split by comma, "/" for parent and children. Like
+          "name,parent/children". This value will cover "exculde_fields".
+        name: fields
         type: string
-      - name: all_fields
-        in: query
-        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
-        required: false
+      - in: query
+        description: >-
+          Set any value for show all fields. This value will cover "fields" and
+          "all_fields".
+        name: all_fields
         type: string
-      - name: alarmEventRecordId
-        in: path
+      - in: path
         description: ID of the alarm event record
+        name: alarmEventRecordId
         required: true
         type: string
+    patch:
       responses:
-        "200":
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/AlarmPatchDto'
+        '404':
+          description: Alarm Event Record not found
+      operationId: Patch Alarm Event Record Information
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/AlarmPatchDto'
+      tags:
+        - O2IMS-InfrastructureMonitoring
+    get:
+      responses:
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/AlarmGetDto'
-        "404":
+        '404':
           description: Alarm Event Record not found
+      operationId: Get Alarm Event Record Information
+      tags:
+        - O2IMS-InfrastructureMonitoring
   /o2ims-infrastructureMonitoring/v1/api_versions:
     get:
-      tags:
-      - O2IMS-InfrastructureMonitoring
-      operationId: Get Monitoring API version
-      parameters: []
       responses:
-        "200":
+        '200':
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/MonitoringV1APIVersion'
+      operationId: Get Monitoring API version
+      tags:
+        - O2IMS-InfrastructureMonitoring
+info:
+  title: INF O2 Services API
+  version: 1.0.0
+  description: Swagger OpenAPI document for the INF O2 Services
+produces:
+  - application/json
+consumes:
+  - application/json
+tags:
+  - name: O2IMS-InfrastructureInventory
+    description: O2 IMS Inventory related operations.
+  - name: O2IMS-InfrastructureMonitoring
+    description: O2 IMS Monitoring related operations.
 definitions:
   InventoryAPIVersion:
-    type: object
     required:
-    - uriPrefix
+      - uriPrefix
     properties:
       uriPrefix:
         type: string
-        example: https://128.224.115.36:30205/o2ims-infrastructureInventory
         description: Specifies the URI prefix for the API
+        example: https://128.224.115.36:30205/o2ims-infrastructureInventory
       apiVersions:
         type: array
-        example:
-        - version: 1.0.0
         description: Version(s) supported for the API signaled by the uriPrefix attribute.
+        example:
+          - version: 1.0.0
         items:
           $ref: '#/definitions/InventoryApiVersionStructure'
-    x-mask: "{uriPrefix,apiVersions}"
-  InventoryApiVersionStructure:
+    x-mask: '{uriPrefix,apiVersions}'
     type: object
+  InventoryApiVersionStructure:
     required:
-    - version
+      - version
     properties:
       version:
         type: string
-        example: 1.0.0
         description: Identifies a supported version.
-    x-mask: "{version}"
-  InventoryV1APIVersion:
+        example: 1.0.0
+    x-mask: '{version}'
     type: object
+  InventoryV1APIVersion:
     required:
-    - uriPrefix
+      - uriPrefix
     properties:
       uriPrefix:
         type: string
-        example: https://128.224.115.36:30205/o2ims-infrastructureInventory/v1
         description: Specifies the URI prefix for the API
+        example: https://128.224.115.36:30205/o2ims-infrastructureInventory/v1
       apiVersions:
         type: array
-        example:
-        - version: 1.0.0
         description: Version(s) supported for the API signaled by the uriPrefix attribute.
+        example:
+          - version: 1.0.0
         items:
           $ref: '#/definitions/InventoryV1ApiVersionStructure'
-    x-mask: "{uriPrefix,apiVersions}"
-  InventoryV1ApiVersionStructure:
+    x-mask: '{uriPrefix,apiVersions}'
     type: object
+  InventoryV1ApiVersionStructure:
     required:
-    - version
+      - version
     properties:
       version:
         type: string
-        example: 1.0.0
         description: Identifies a supported version.
-    x-mask: "{version}"
-  OcloudDto:
+        example: 1.0.0
+    x-mask: '{version}'
     type: object
+  OcloudDto:
     required:
-    - oCloudId
+      - oCloudId
     properties:
       oCloudId:
         type: string
-        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
         description: Identifier for the containing O-Cloud.
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
       globalCloudId:
         type: string
+        description: >-
+          Identifier of the O-Cloud instance. Globally unique across O-Cloud
+          instances.
         example: 10a07219-4201-4b3e-a52d-81ab6a755d8a
-        description: Identifier of the O-Cloud instance. Globally unique across O-Cloud instances.
       globalcloudId:
         type: string
+        description: >-
+          Identifier of the O-Cloud instance. Globally unique across O-Cloud
+          instances.(Specification)
         example: 10a07219-4201-4b3e-a52d-81ab6a755d8a
-        description: Identifier of the O-Cloud instance. Globally unique across O-Cloud instances.(Specification)
       name:
         type: string
-        example: 95b818b8-b315-4d9f-af37-b82c492101f1
         description: Human readable name of the O-Cloud.
+        example: 95b818b8-b315-4d9f-af37-b82c492101f1
       description:
         type: string
-        example: An ocloud
         description: Human readable description of the O-Cloud.
+        example: An ocloud
       serviceUri:
         type: string
+        description: >-
+          The fully qualified URI root to all services provided by the O2ims
+          interface
         example: https://128.224.115.51:30205
-        description: The fully qualified URI root to all services provided by the O2ims interface
       extensions:
         type: string
-        example: ""
-        description: These are unspecified (not standardized) properties (keys) which are tailored by the vendor to extend the information provided about the O-Cloud.
-    x-mask: "{oCloudId,globalCloudId,globalcloudId,name,description,serviceUri}"
-  ResourceTypeGetDto:
+        description: >-
+          These are unspecified (not standardized) properties (keys) which are
+          tailored by the vendor to extend the information provided about the
+          O-Cloud.
+        example: ''
+    x-mask: '{oCloudId,globalCloudId,globalcloudId,name,description,serviceUri}'
     type: object
+  ResourceTypeGetDto:
     required:
-    - resourceTypeId
+      - resourceTypeId
     properties:
       resourceTypeId:
         type: string
-        example: 60cba7be-e2cd-3b8c-a7ff-16e0f10573f9
         description: Identifier for the Resource Type.
+        example: 60cba7be-e2cd-3b8c-a7ff-16e0f10573f9
       name:
         type: string
-        example: pserver
         description: Human readable name of the resource type.
+        example: pserver
       description:
         type: string
-        example: The Physical Server resource type
         description: Human readable description of the resource type.
+        example: The Physical Server resource type
       vendor:
         type: string
-        example: ""
         description: Provider of the Resource.
+        example: ''
       model:
         type: string
-        example: ""
-        description: Information about the model of the resource as defined by its provider.
+        description: >-
+          Information about the model of the resource as defined by its
+          provider.
+        example: ''
       version:
         type: string
-        example: ""
         description: Version or generation of the resource as defined by its provider.
+        example: ''
       alarmDictionary:
         $ref: '#/definitions/AlarmDictionaryDto'
       extensions:
         type: string
-        example: ""
-        description: List of metadata key-value pairs used to associate meaningful metadata to the related resource type.
-    x-mask: "{resourceTypeId,name,description,model,vendor,version}"
-  AlarmDictionaryDto:
+        description: >-
+          List of metadata key-value pairs used to associate meaningful metadata
+          to the related resource type.
+        example: ''
+    x-mask: '{resourceTypeId,name,description,model,vendor,version}'
     type: object
+  AlarmDictionaryDto:
     properties:
       id:
         type: string
-        example: 7e1e59c3-c99e-3d1c-9934-21548a3a699a
         description: Identifier for the Alarm Dictionary.
+        example: 7e1e59c3-c99e-3d1c-9934-21548a3a699a
       alarmDictionaryVersion:
         type: string
-        example: "0.1"
         description: Version of the Alarm Dictionary.
+        example: '0.1'
       alarmDictionarySchemaVersion:
         type: string
-        example: "0.1"
-        description: Version of the Alarm Dictionary Schema to which this alarm dictionary conforms.
+        description: >-
+          Version of the Alarm Dictionary Schema to which this alarm dictionary
+          conforms.
+        example: '0.1'
       entityType:
         type: string
+        description: >-
+          O-RAN entity type emitting the alarm: This shall be unique per vendor
+          ResourceType.model and ResourceType.version
         example: pserver
-        description: "O-RAN entity type emitting the alarm: This shall be unique per vendor ResourceType.model and ResourceType.version"
       vendor:
         type: string
-        example: ""
-        description: Vendor of the Entity Type to whom this Alarm Dictionary applies. This should be the same value as in the ResourceType.vendor attribute.
+        description: >-
+          Vendor of the Entity Type to whom this Alarm Dictionary applies. This
+          should be the same value as in the ResourceType.vendor attribute.
+        example: ''
       managementInterfaceId:
         type: string
+        description: >-
+          List of management interface over which alarms are transmitted for
+          this Entity Type.
         example: O2IMS
-        description: List of management interface over which alarms are transmitted for this Entity Type.
       pkNotificationField:
         type: string
-        example: ""
-        description: Identifies which field or list of fields in the alarm notification contains the primary key (PK) into the Alarm Dictionary for this interface; i.e. which field contains the Alarm Definition ID.
+        description: >-
+          Identifies which field or list of fields in the alarm notification
+          contains the primary key (PK) into the Alarm Dictionary for this
+          interface; i.e. which field contains the Alarm Definition ID.
+        example: ''
       alarmDefinition:
         type: array
-        example: ""
-        description: Contains the list of alarms that can be detected against this ResourceType.
+        description: >-
+          Contains the list of alarms that can be detected against this
+          ResourceType.
+        example: ''
         items:
           $ref: '#/definitions/AlarmDefinitionDto'
-  AlarmDefinitionDto:
     type: object
+  AlarmDefinitionDto:
     properties:
       alarmDefinitionId:
         type: string
-        example: eaefa070-7cb6-3403-be46-177bd9ccc2d3
         description: Provides a unique identifier of the alarm being raised.
+        example: eaefa070-7cb6-3403-be46-177bd9ccc2d3
       alarmName:
         type: string
-        example: "100.104"
         description: Provides short name for the alarm.
+        example: '100.104'
       alarmLastChange:
         type: string
-        example: "0.1"
-        description: Indicates the Alarm Dictionary Version in which this alarm last changed.
+        description: >-
+          Indicates the Alarm Dictionary Version in which this alarm last
+          changed.
+        example: '0.1'
       alarmChangeType:
         type: string
+        description: >-
+          Indicates the type of change that occurred during the alarm last
+          change; added, deleted, modified.
         example: ADDED
-        description: "Indicates the type of change that occurred during the alarm last change; added, deleted, modified."
       alarmDescription:
         type: string
+        description: >-
+          Provides a longer descriptive meaning of the alarm condition and a
+          description of the consequences of the alarm condition.
         example: |-
           host=<hostname>.filesystem=<mount-dir>
               File System threshold exceeded; threshold x%, actual y% .
@@ -969,521 +1036,618 @@ definitions:
           OR
           host=<hostname>.volumegroup=<volumegroup-name>
               Monitor and if condition persists, consider addin ...
-        description: Provides a longer descriptive meaning of the alarm condition and a description of the consequences of the alarm condition.
       proposedRepairActions:
         type: string
-        example: Reduce usage or resize filesystem.
         description: Provides guidance for proposed repair actions.
+        example: Reduce usage or resize filesystem.
       clearingType:
         type: string
-        example: MANUAL
         description: Identifies whether alarm is cleared automatically or manually.
+        example: MANUAL
       managementInterfaceId:
         type: string
+        description: >-
+          List of management interface over which alarms are transmitted for
+          this Entity Type.
         example: O2IMS
-        description: List of management interface over which alarms are transmitted for this Entity Type.
       pkNotificationField:
         type: string
-        example: ""
-        description: Identifies which field or list of fields in the alarm notification contains the primary key (PK) into the Alarm Dictionary for this interface; i.e. which field contains the Alarm Definition ID.
+        description: >-
+          Identifies which field or list of fields in the alarm notification
+          contains the primary key (PK) into the Alarm Dictionary for this
+          interface; i.e. which field contains the Alarm Definition ID.
+        example: ''
       alarmAdditionalFields:
         type: string
-        example: ""
-        description: List of metadata key-value pairs used to associate meaningful metadata to the related resource type.
-  ResourcePoolGetDto:
+        description: >-
+          List of metadata key-value pairs used to associate meaningful metadata
+          to the related resource type.
+        example: ''
     type: object
+  ResourcePoolGetDto:
     required:
-    - resourcePoolId
+      - resourcePoolId
     properties:
       resourcePoolId:
         type: string
-        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
         description: Identifier for the Resource Pool in the O-Cloud instance.
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
       globalLocationId:
         type: string
-        example: ""
-        description: This identifier is copied from the O-Cloud Id assigned by the SMO during the O-Cloud deployment.
+        description: >-
+          This identifier is copied from the O-Cloud Id assigned by the SMO
+          during the O-Cloud deployment.
+        example: ''
       name:
         type: string
-        example: RegionOne
         description: Human readable name of the resource pool.
+        example: RegionOne
       description:
         type: string
-        example: A Resource Pool
         description: Human readable description of the resource pool.
+        example: A Resource Pool
       oCloudId:
         type: string
-        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
         description: Identifier for the containing O-Cloud.
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
       location:
         type: string
-        example: ""
-        description: Information about the geographical location of the resource pool as detected by the O-Cloud.
+        description: >-
+          Information about the geographical location of the resource pool as
+          detected by the O-Cloud.
+        example: ''
       extensions:
         type: string
-        example: ""
-        description: List of metadata key-value pairs used to associate meaningful metadata to the related resource pool.
-    x-mask: "{resourcePoolId,oCloudId,globalLocationId,name,description}"
+        description: >-
+          List of metadata key-value pairs used to associate meaningful metadata
+          to the related resource pool.
+        example: ''
+    x-mask: '{resourcePoolId,oCloudId,globalLocationId,name,description}'
+    type: object
   ResourceListDto:
-    type: object
     required:
-    - resourceId
+      - resourceId
     properties:
       resourceId:
         type: string
-        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
         description: Identifier for the Resource.
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
       resourceTypeId:
         type: string
+        description: Identifier for the Resource Type of this resource.
         example: 60cba7be-e2cd-3b8c-a7ff-16e0f10573f9
-        description: Identifier for the Resource Type of this resource.
       resourcePoolId:
         type: string
-        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
         description: Identifier of the Resource Pool containing this resource.
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
       globalAssetId:
         type: string
-        example: ""
         description: Identifier or serial number of the resource.
+        example: ''
       parentId:
         type: string
-        example: None
         description: Identifier for the parent resource.
+        example: None
       description:
         type: string
-        example: "id:1;hostname:controller-0;mgmt_mac:00:00:00:00:00:00;mgmt_ip:192.168.204.2;personality:controller;subfunctions:controller,worker;administrative:unlocked;operational:enabled;availability:available;clock_synchronization:ntp;capabilities:{'is_max_cpu_configurable': 'configurable', 'stor_function': 'monitor', 'Personality': 'Controller-Active'};boot_device:/dev/disk/by-path/pci-0000:02:00.0-scsi-0:1:0:0;rootfs_device:/dev/disk/by-path/pci-0000:02:00.0-scsi-0:1:0:0;software_load:22.12;install_state:None;max_cpu_mhz_allowed:None"
         description: Human readable description of the resource.
+        example: >-
+          id:1;hostname:controller-0;mgmt_mac:00:00:00:00:00:00;mgmt_ip:192.168.204.2;personality:controller;subfunctions:controller,worker;administrative:unlocked;operational:enabled;availability:available;clock_synchronization:ntp;capabilities:{'is_max_cpu_configurable':
+          'configurable', 'stor_function': 'monitor', 'Personality':
+          'Controller-Active'};boot_device:/dev/disk/by-path/pci-0000:02:00.0-scsi-0:1:0:0;rootfs_device:/dev/disk/by-path/pci-0000:02:00.0-scsi-0:1:0:0;software_load:22.12;install_state:None;max_cpu_mhz_allowed:None
       extensions:
         type: object
-        properties: {}
-    x-mask: "{resourceId,resourcePoolId,resourceTypeId,description,parentId}"
-  ResourceGetDto2:
+    x-mask: '{resourceId,resourcePoolId,resourceTypeId,description,parentId}'
     type: object
+  ResourceGetDto2:
     required:
-    - resourceId
+      - resourceId
     properties:
       resourceId:
         type: string
-        example: eee8b101-6b7f-4f0a-b54b-89adc0f3f906
         description: Identifier for the Resource.
+        example: eee8b101-6b7f-4f0a-b54b-89adc0f3f906
       resourceTypeId:
         type: string
-        example: a45983bb-199a-30ec-b7a1-eab2455f333c
         description: Identifier for the Resource Type of this resource.
+        example: a45983bb-199a-30ec-b7a1-eab2455f333c
       resourcePoolId:
         type: string
-        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
         description: Identifier of the Resource Pool containing this resource.
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
       globalAssetId:
         type: string
-        example: ""
         description: Identifier or serial number of the resource.
+        example: ''
       parentId:
         type: string
-        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
         description: Identifier for the parent resource.
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
       description:
         type: string
-        example: cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0
         description: Human readable description of the resource.
+        example: >-
+          cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU
+          E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0
       extensions:
         type: object
-        properties: {}
       elements:
         type: array
         items:
           $ref: '#/definitions/ResourceGetDto1'
-    x-mask: "{resourceId,resourcePoolId,resourceTypeId,description,parentId}"
-  ResourceGetDto1:
+    x-mask: '{resourceId,resourcePoolId,resourceTypeId,description,parentId}'
     type: object
+  ResourceGetDto1:
     required:
-    - resourceId
+      - resourceId
     properties:
       resourceId:
         type: string
-        example: eee8b101-6b7f-4f0a-b54b-89adc0f3f906
         description: Identifier for the Resource.
+        example: eee8b101-6b7f-4f0a-b54b-89adc0f3f906
       resourceTypeId:
         type: string
-        example: a45983bb-199a-30ec-b7a1-eab2455f333c
         description: Identifier for the Resource Type of this resource.
+        example: a45983bb-199a-30ec-b7a1-eab2455f333c
       resourcePoolId:
         type: string
-        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
         description: Identifier of the Resource Pool containing this resource.
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
       globalAssetId:
         type: string
-        example: ""
         description: Identifier or serial number of the resource.
+        example: ''
       parentId:
         type: string
-        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
         description: Identifier for the parent resource.
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
       description:
         type: string
-        example: cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0
         description: Human readable description of the resource.
+        example: >-
+          cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU
+          E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0
       extensions:
         type: object
-        properties: {}
       elements:
         type: array
         items:
           $ref: '#/definitions/ResourceGetDto0'
-    x-mask: "{resourceId,resourcePoolId,resourceTypeId,description,parentId}"
-  ResourceGetDto0:
+    x-mask: '{resourceId,resourcePoolId,resourceTypeId,description,parentId}'
     type: object
+  ResourceGetDto0:
     required:
-    - resourceId
+      - resourceId
     properties:
       resourceId:
         type: string
-        example: eee8b101-6b7f-4f0a-b54b-89adc0f3f906
         description: Identifier for the Resource.
+        example: eee8b101-6b7f-4f0a-b54b-89adc0f3f906
       resourceTypeId:
         type: string
-        example: a45983bb-199a-30ec-b7a1-eab2455f333c
         description: Identifier for the Resource Type of this resource.
+        example: a45983bb-199a-30ec-b7a1-eab2455f333c
       resourcePoolId:
         type: string
-        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
         description: Identifier of the Resource Pool containing this resource.
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
       globalAssetId:
         type: string
-        example: ""
         description: Identifier or serial number of the resource.
+        example: ''
       parentId:
         type: string
-        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
         description: Identifier for the parent resource.
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
       description:
         type: string
-        example: cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0
         description: Human readable description of the resource.
+        example: >-
+          cpu:0;core:0;thread:0;cpu_family:6;cpu_model:Intel(R) Xeon(R) CPU
+          E5-2670 v2 @ 2.50GHz;allocated_function:Platform;numa_node:0
       extensions:
         type: object
-        properties: {}
-    x-mask: "{resourceId,resourcePoolId,resourceTypeId,description,parentId}"
-  DeploymentManagerListDto:
+    x-mask: '{resourceId,resourcePoolId,resourceTypeId,description,parentId}'
     type: object
+  DeploymentManagerListDto:
     required:
-    - deploymentManagerId
+      - deploymentManagerId
     properties:
       deploymentManagerId:
         type: string
-        example: c765516a-a84e-30c9-b954-9c3031bf71c8
         description: Identifier for the Deployment Manager.
+        example: c765516a-a84e-30c9-b954-9c3031bf71c8
       name:
         type: string
-        example: 95b818b8-b315-4d9f-af37-b82c492101f1.kubernetes
         description: Human readable name of the deployment manager.
+        example: 95b818b8-b315-4d9f-af37-b82c492101f1.kubernetes
       description:
         type: string
-        example: A DMS
         description: Human readable description of the deployment manager.
+        example: A DMS
       oCloudId:
         type: string
-        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
         description: Identifier for the containing O-Cloud.
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
       serviceUri:
         type: string
-        example: https://128.224.115.51:6443
         description: The fully qualified URI to a Deployment Management server for O2dms.
+        example: https://128.224.115.51:6443
+      supportedLocations:
+        type: string
       capabilities:
         $ref: '#/definitions/DeploymentManagerCapabilities'
+      capacity:
+        $ref: '#/definitions/DeploymentManagerCapacity'
       profileSupportList:
         type: array
+        description: Profile support list, use default for the return endpoint
         example:
-        - native_k8sapi
-        description: "Profile support list, use default for the return endpoint"
+          - native_k8sapi
         items:
           type: string
       extensions:
         type: string
-        example: ""
-        description: List of metadata key-value pairs used to associate meaningful metadata to the related Deployment Manager
-    x-mask: "{deploymentManagerId,name,description,oCloudId,serviceUri,profileSupportList}"
-  DeploymentManagerCapabilities:
+        description: >-
+          List of metadata key-value pairs used to associate meaningful metadata
+          to the related Deployment Manager
+        example: ''
+    x-mask: >-
+      {deploymentManagerId,name,description,oCloudId,serviceUri,supportedLocations,capabilities,capacity,profileSupportList}
     type: object
+  DeploymentManagerCapabilities:
     properties:
       OS:
         type: string
-        example: low_latency
         description: Show the OS capablities of the Deployment Manager
-  DeploymentManagerGetDto:
+        example: low_latency
     type: object
+  DeploymentManagerCapacity:
+    properties:
+      cpu:
+        type: string
+        description: Show the cpu capacity of the Deployment Manager
+        example: '32'
+      hugepages-2Mi:
+        type: string
+        description: Show the 2Mi hugepages capacity of the Deployment Manager
+        example: '2048'
+      hugepages-1Gi:
+        type: string
+        description: Show the 1Gi hugepages capacity of the Deployment Manager
+        example: '2048'
+    type: object
+  DeploymentManagerGetDto:
     required:
-    - deploymentManagerId
+      - deploymentManagerId
     properties:
       deploymentManagerId:
         type: string
-        example: c765516a-a84e-30c9-b954-9c3031bf71c8
         description: Identifier for the Deployment Manager.
+        example: c765516a-a84e-30c9-b954-9c3031bf71c8
       name:
         type: string
-        example: 95b818b8-b315-4d9f-af37-b82c492101f1.kubernetes
         description: Human readable name of the deployment manager.
+        example: 95b818b8-b315-4d9f-af37-b82c492101f1.kubernetes
       description:
         type: string
-        example: A DMS
         description: Human readable description of the deployment manager.
+        example: A DMS
       oCloudId:
         type: string
-        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
         description: Identifier for the containing O-Cloud.
+        example: f078a1d3-56df-46c2-88a2-dd659aa3f6bd
       serviceUri:
         type: string
-        example: https://128.224.115.51:6443
         description: The fully qualified URI to a Deployment Management server for O2dms.
+        example: https://128.224.115.51:6443
+      supportedLocations:
+        type: string
       capabilities:
         $ref: '#/definitions/DeploymentManagerCapabilities'
+      capacity:
+        $ref: '#/definitions/DeploymentManagerCapacity'
       extensions:
         $ref: '#/definitions/DeploymentManagerExtensions'
-    x-mask: "{deploymentManagerId,name,description,oCloudId,serviceUri,extensions{profileName,profileData}}"
-  DeploymentManagerExtensions:
+    x-mask: >-
+      {deploymentManagerId,name,description,oCloudId,serviceUri,supportedLocations,capabilities,capacity,extensions{profileName,profileData}}
     type: object
+  DeploymentManagerExtensions:
     properties:
       profileName:
         type: string
-        example: ""
-        description: ""
+        description: ''
+        example: ''
       profileData:
         $ref: '#/definitions/DeploymentManagerGetDtoProfile'
-  DeploymentManagerGetDtoProfile:
     type: object
+  DeploymentManagerGetDtoProfile:
     properties:
       cluster_api_endpoint:
         type: string
-        example: https://128.224.115.51:6443
         description: Kubernetes Cluster API Endpoint
+        example: https://128.224.115.51:6443
       cluster_ca_cert:
         type: string
-        example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZEakNDQX.....
         description: Kubernetes Cluster CA cert
+        example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZEakNDQX.....
       admin_user:
         type: string
-        example: kubernetes-admin
         description: Kubernetes Admin username
+        example: kubernetes-admin
       admin_client_cert:
         type: string
-        example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVJRENDQW.....
         description: Kubernetes Admin client cert
+        example: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVJRENDQW.....
       admin_client_key:
         type: string
-        example: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcE.....
         description: Kubernetes Admin client key
+        example: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcE.....
       helmcli_host_with_port:
         type: string
-        example: 128.224.115.34:30022
         description: Helm CLI Host address with SSH port
+        example: 128.224.115.34:30022
       helmcli_username:
         type: string
-        example: helm
         description: Helm CLI SSH login username
+        example: helm
       helmcli_password:
         type: string
-        example: password
         description: Helm CLI SSH login password
+        example: password
       helmcli_kubeconfig:
         type: string
-        example: /share/kubeconfig_c765516a.config
         description: Helm CLI KUBECONFIG path
-  SubscriptionCreateDto:
+        example: /share/kubeconfig_c765516a.config
     type: object
+  SubscriptionCreateDto:
     required:
-    - callback
+      - callback
     properties:
       callback:
         type: string
-        example: https://128.224.115.15:1081/smo/v1/o2ims_inventory_observer
         description: Identifier for the Subscription.
+        example: https://128.224.115.15:1081/smo/v1/o2ims_inventory_observer
       consumerSubscriptionId:
         type: string
-        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
         description: Identifier for the consumer of events sent due to the Subscription.
+        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
       filter:
         type: string
-        example: ""
-        description: "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported."
-  SubscriptionGetDto:
+        description: >-
+          Criteria for events which do not need to be reported or will be
+          filtered by the subscription notification service. Therefore, if a
+          filter is not provided then all events are reported.
+        example: ''
     type: object
+  SubscriptionGetDto:
     required:
-    - subscriptionId
+      - subscriptionId
     properties:
       subscriptionId:
         type: string
-        example: 0bea3e71-d2f7-4bf3-9c06-41d8d35806f9
         description: Identifier for the Subscription.
+        example: 0bea3e71-d2f7-4bf3-9c06-41d8d35806f9
       callback:
         type: string
+        description: >-
+          The fully qualified URI to a consumer procedure which can process a
+          Post of the InventoryEventNotification.
         example: https://128.224.115.15:1081/smo/v1/o2ims_inventory_observer
-        description: The fully qualified URI to a consumer procedure which can process a Post of the InventoryEventNotification.
       consumerSubscriptionId:
         type: string
-        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
         description: Identifier for the consumer of events sent due to the Subscription.
+        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
       filter:
         type: string
-        example: ""
-        description: "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported."
-    x-mask: "{subscriptionId,callback}"
-  MonitoringAPIVersion:
+        description: >-
+          Criteria for events which do not need to be reported or will be
+          filtered by the subscription notification service. Therefore, if a
+          filter is not provided then all events are reported.
+        example: ''
+    x-mask: '{subscriptionId,callback}'
     type: object
+  MonitoringAPIVersion:
     required:
-    - uriPrefix
+      - uriPrefix
     properties:
       uriPrefix:
         type: string
-        example: https://128.224.115.36:30205/o2ims-infrastructureMonitoring
         description: Specifies the URI prefix for the API
+        example: https://128.224.115.36:30205/o2ims-infrastructureMonitoring
       apiVersions:
         type: array
-        example:
-        - version: 1.0.0
         description: Version(s) supported for the API signaled by the uriPrefix attribute.
+        example:
+          - version: 1.0.0
         items:
           $ref: '#/definitions/MonitoringApiVersionStructure'
-    x-mask: "{uriPrefix,apiVersions}"
-  MonitoringApiVersionStructure:
+    x-mask: '{uriPrefix,apiVersions}'
     type: object
+  MonitoringApiVersionStructure:
     required:
-    - version
+      - version
     properties:
       version:
         type: string
-        example: 1.0.0
         description: Identifies a supported version.
-    x-mask: "{version}"
-  MonitoringV1APIVersion:
+        example: 1.0.0
+    x-mask: '{version}'
     type: object
+  MonitoringV1APIVersion:
     required:
-    - uriPrefix
+      - uriPrefix
     properties:
       uriPrefix:
         type: string
-        example: https://128.224.115.36:30205/o2ims-infrastructureMonitoring/v1
         description: Specifies the URI prefix for the API
+        example: https://128.224.115.36:30205/o2ims-infrastructureMonitoring/v1
       apiVersions:
         type: array
-        example:
-        - version: 1.0.0
         description: Version(s) supported for the API signaled by the uriPrefix attribute.
+        example:
+          - version: 1.0.0
         items:
           $ref: '#/definitions/MonitoringV1ApiVersionStructure'
-    x-mask: "{uriPrefix,apiVersions}"
-  MonitoringV1ApiVersionStructure:
+    x-mask: '{uriPrefix,apiVersions}'
     type: object
+  MonitoringV1ApiVersionStructure:
     required:
-    - version
+      - version
     properties:
       version:
         type: string
-        example: 1.0.0
         description: Identifies a supported version.
-    x-mask: "{version}"
-  AlarmGetDto:
+        example: 1.0.0
+    x-mask: '{version}'
     type: object
+  AlarmGetDto:
     required:
-    - alarmEventRecordId
+      - alarmEventRecordId
     properties:
       alarmEventRecordId:
         type: string
-        example: 97cc2b01-0e71-4a93-a911-2e87f04d996f
         description: The identifier for the AlarmEventRecord Object.
+        example: 97cc2b01-0e71-4a93-a911-2e87f04d996f
       resourceTypeId:
         type: string
-        example: 60cba7be-e2cd-3b8c-a7ff-16e0f10573f9
         description: A reference to the type of resource which caused the alarm.
+        example: 60cba7be-e2cd-3b8c-a7ff-16e0f10573f9
       resourceTypeID:
         type: string
+        description: >-
+          A reference to the type of resource which caused the
+          alarm.(Specification)
         example: 60cba7be-e2cd-3b8c-a7ff-16e0f10573f9
-        description: A reference to the type of resource which caused the alarm.(Specification)
       resourceId:
         type: string
-        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
         description: A reference to the resource instance which caused the alarm.
+        example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
       resourceID:
         type: string
+        description: >-
+          A reference to the resource instance which caused the
+          alarm.(Specification)
         example: 5b3a2da8-17da-466c-b5f7-972590c7baf2
-        description: A reference to the resource instance which caused the alarm.(Specification)
       alarmDefinitionId:
         type: string
+        description: >-
+          A reference to the Alarm Definition record in the Alarm Dictionary
+          associated with the referenced Resource Type.
         example: 1197f463-b3d4-3aa3-9c14-faa493baa069
-        description: A reference to the Alarm Definition record in the Alarm Dictionary associated with the referenced Resource Type.
       alarmDefinitionID:
         type: string
+        description: >-
+          A reference to the Alarm Definition record in the Alarm Dictionary
+          associated with the referenced Resource Type.(Specification)
         example: 1197f463-b3d4-3aa3-9c14-faa493baa069
-        description: A reference to the Alarm Definition record in the Alarm Dictionary associated with the referenced Resource Type.(Specification)
       probableCauseId:
         type: string
-        example: f52054c9-6f3c-39a0-aab8-e00e01d8c4d3
         description: A reference to the ProbableCause of the Alarm.
+        example: f52054c9-6f3c-39a0-aab8-e00e01d8c4d3
       probableCauseID:
         type: string
-        example: f52054c9-6f3c-39a0-aab8-e00e01d8c4d3
         description: A reference to the ProbableCause of the Alarm.(Specification)
+        example: f52054c9-6f3c-39a0-aab8-e00e01d8c4d3
       alarmRaisedTime:
         type: string
-        example: 2022-12-22 09:42:53
         description: Date/Time stamp value when the AlarmEventRecord has been created.
+        example: '2022-12-22 09:42:53'
       alarmChangedTime:
         type: string
-        example: ""
-        description: Date/Time stamp value when any value of the AlarmEventRecord has been modified.
+        description: >-
+          Date/Time stamp value when any value of the AlarmEventRecord has been
+          modified.
+        example: ''
       alarmAcknowledgeTime:
         type: string
-        example: ""
         description: Date/Time stamp value when the alarm condition is acknowledged.
+        example: ''
       alarmAcknowledged:
         type: boolean
+        description: >-
+          Boolean value indicating of a management system has acknowledged the
+          alarm.
         example: false
-        description: Boolean value indicating of a management system has acknowledged the alarm.
       perceivedSeverity:
         type: string
-        example: "1"
-        description: "One of the following values: \n 0 for \"CRITICAL\" \n1 for \"MAJOR\" \n2 for \"MINOR\" \n3 for \"WARNING\" \n4 for \"INDETERMINATE\" \n5 for \"CLEARED\""
+        description: |-
+          One of the following values: 
+           0 for "CRITICAL" 
+          1 for "MAJOR" 
+          2 for "MINOR" 
+          3 for "WARNING" 
+          4 for "INDETERMINATE" 
+          5 for "CLEARED"
+        example: '1'
       extensions:
         type: object
-        properties: {}
-  AlarmSubscriptionCreateDto:
     type: object
+  AlarmPatchDto:
+    properties:
+      alarmAcknowledged:
+        type: boolean
+        description: >-
+          Boolean value indication of a management system has acknowledged the
+          alarm.
+        example: true
+      perceivedSeverity:
+        type: string
+        description: >-
+          indicate that the alarm record is requested to be cleared. Only the
+          value "5" for "CLEARED" is permitted in a request message content. 
+        example: '5'
+    x-mask: '{alarmAcknowledged}'
+    type: object
+  AlarmSubscriptionCreateDto:
     required:
-    - callback
+      - callback
     properties:
       callback:
         type: string
+        description: >-
+          The fully qualified URI to a consumer procedure which can process a
+          Post of the InventoryEventNotification.
         example: https://128.224.115.15:1081/smo/v1/o2ims_alarm_observer
-        description: The fully qualified URI to a consumer procedure which can process a Post of the InventoryEventNotification.
       consumerSubscriptionId:
         type: string
-        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
         description: Identifier for the consumer of events sent due to the Subscription.
+        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
       filter:
         type: string
-        example: ""
-        description: "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported."
-  AlarmSubscriptionGetDto:
+        description: >-
+          Criteria for events which do not need to be reported or will be
+          filtered by the subscription notification service. Therefore, if a
+          filter is not provided then all events are reported.
+        example: ''
     type: object
+  AlarmSubscriptionGetDto:
     required:
-    - alarmSubscriptionId
+      - alarmSubscriptionId
     properties:
       alarmSubscriptionId:
         type: string
-        example: e320da6d-27a8-4948-8b52-3bf3355b45f3
         description: Identifier for the Alarm Subscription.
+        example: e320da6d-27a8-4948-8b52-3bf3355b45f3
       callback:
         type: string
+        description: >-
+          The fully qualified URI to a consumer procedure which can process a
+          Post of the InventoryEventNotification.
         example: https://128.224.115.15:1081/smo/v1/o2ims_alarm_observer
-        description: The fully qualified URI to a consumer procedure which can process a Post of the InventoryEventNotification.
       consumerSubscriptionId:
         type: string
-        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
         description: Identifier for the consumer of events sent due to the Subscription.
+        example: 3F20D850-AF4F-A84F-FB5A-0AD585410361
       filter:
         type: string
-        example: ""
-        description: "Criteria for events which do not need to be reported or will be filtered by the subscription notification service. Therefore, if a filter is not provided then all events are reported."
-    x-mask: "{alarmSubscriptionId,callback}"
+        description: >-
+          Criteria for events which do not need to be reported or will be
+          filtered by the subscription notification service. Therefore, if a
+          filter is not provided then all events are reported.
+        example: ''
+    x-mask: '{alarmSubscriptionId,callback}'
+    type: object
 responses:
   ParseError:
     description: When a mask can't be parsed

@@ -47,14 +47,14 @@
             ],
             "get": {
                 "responses": {
+                    "404": {
+                        "description": "oCloud not found"
+                    },
                     "200": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/OcloudDto"
                         }
-                    },
-                    "404": {
-                        "description": "oCloud not found"
                     }
                 },
                 "operationId": "Get Ocloud Information",
@@ -92,14 +92,14 @@
             ],
             "get": {
                 "responses": {
+                    "404": {
+                        "description": "oCloud not found"
+                    },
                     "200": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/OcloudDto"
                         }
-                    },
-                    "404": {
-                        "description": "oCloud not found"
                     }
                 },
                 "operationId": "Get Ocloud Information",
@@ -224,14 +224,14 @@
             ],
             "get": {
                 "responses": {
+                    "404": {
+                        "description": "Deployment manager not found"
+                    },
                     "200": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/DeploymentManagerGetDto"
                         }
-                    },
-                    "404": {
-                        "description": "Deployment manager not found"
                     }
                 },
                 "operationId": "Get Deployment Manager Information",
@@ -334,14 +334,14 @@
             ],
             "get": {
                 "responses": {
+                    "404": {
+                        "description": "Resource pool not found"
+                    },
                     "200": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/ResourcePoolGetDto"
                         }
-                    },
-                    "404": {
-                        "description": "Resource pool not found"
                     }
                 },
                 "operationId": "Get Resource Pool Information",
@@ -399,6 +399,9 @@
             ],
             "get": {
                 "responses": {
+                    "404": {
+                        "description": "Resource pool not found"
+                    },
                     "200": {
                         "description": "Success",
                         "schema": {
@@ -407,9 +410,6 @@
                                 "$ref": "#/definitions/ResourceListDto"
                             }
                         }
-                    },
-                    "404": {
-                        "description": "Resource pool not found"
                     }
                 },
                 "operationId": "Get Resource List",
@@ -461,14 +461,14 @@
             ],
             "get": {
                 "responses": {
+                    "404": {
+                        "description": "Resource not found"
+                    },
                     "200": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/ResourceGetDto2"
                         }
-                    },
-                    "404": {
-                        "description": "Resource not found"
                     }
                 },
                 "operationId": "Get Resource Information",
@@ -571,14 +571,14 @@
             ],
             "get": {
                 "responses": {
+                    "404": {
+                        "description": "Resource type not found"
+                    },
                     "200": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/ResourceTypeGetDto"
                         }
-                    },
-                    "404": {
-                        "description": "Resource type not found"
                     }
                 },
                 "operationId": "Get Resource Type Information",
@@ -681,14 +681,14 @@
             ],
             "get": {
                 "responses": {
+                    "404": {
+                        "description": "Subscription not found"
+                    },
                     "200": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/SubscriptionGetDto"
                         }
-                    },
-                    "404": {
-                        "description": "Subscription not found"
                     }
                 },
                 "operationId": "Get Subscription Information",
@@ -724,11 +724,11 @@
             },
             "delete": {
                 "responses": {
-                    "200": {
-                        "description": "Subscription deleted"
-                    },
                     "404": {
                         "description": "Subscription not found"
+                    },
+                    "200": {
+                        "description": "Subscription deleted"
                     }
                 },
                 "operationId": "Delete a Subscription",
@@ -847,14 +847,14 @@
             ],
             "get": {
                 "responses": {
+                    "404": {
+                        "description": "Alarm Subscription not found"
+                    },
                     "200": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/AlarmSubscriptionGetDto"
                         }
-                    },
-                    "404": {
-                        "description": "Alarm Subscription not found"
                     }
                 },
                 "operationId": "Get Alarm Subscription Information",
@@ -890,11 +890,11 @@
             },
             "delete": {
                 "responses": {
-                    "200": {
-                        "description": "Subscription deleted"
-                    },
                     "404": {
                         "description": "Alarm Subscription not found"
+                    },
+                    "200": {
+                        "description": "Subscription deleted"
                     }
                 },
                 "operationId": "Delete an Alarm Subscription",
@@ -995,16 +995,43 @@
                     "type": "string"
                 }
             ],
+            "patch": {
+                "responses": {
+                    "404": {
+                        "description": "Alarm Event Record not found"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/AlarmPatchDto"
+                        }
+                    }
+                },
+                "operationId": "Patch Alarm Event Record Information",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/AlarmPatchDto"
+                        }
+                    }
+                ],
+                "tags": [
+                    "O2IMS-InfrastructureMonitoring"
+                ]
+            },
             "get": {
                 "responses": {
+                    "404": {
+                        "description": "Alarm Event Record not found"
+                    },
                     "200": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/AlarmGetDto"
                         }
-                    },
-                    "404": {
-                        "description": "Alarm Event Record not found"
                     }
                 },
                 "operationId": "Get Alarm Event Record Information",
@@ -1583,8 +1610,14 @@
                     "description": "The fully qualified URI to a Deployment Management server for O2dms.",
                     "example": "https://128.224.115.51:6443"
                 },
+                "supportedLocations": {
+                    "type": "string"
+                },
                 "capabilities": {
                     "$ref": "#/definitions/DeploymentManagerCapabilities"
+                },
+                "capacity": {
+                    "$ref": "#/definitions/DeploymentManagerCapacity"
                 },
                 "profileSupportList": {
                     "type": "array",
@@ -1602,7 +1635,7 @@
                     "example": ""
                 }
             },
-            "x-mask": "{deploymentManagerId,name,description,oCloudId,serviceUri,profileSupportList}",
+            "x-mask": "{deploymentManagerId,name,description,oCloudId,serviceUri,supportedLocations,capabilities,capacity,profileSupportList}",
             "type": "object"
         },
         "DeploymentManagerCapabilities": {
@@ -1611,6 +1644,26 @@
                     "type": "string",
                     "description": "Show the OS capablities of the Deployment Manager",
                     "example": "low_latency"
+                }
+            },
+            "type": "object"
+        },
+        "DeploymentManagerCapacity": {
+            "properties": {
+                "cpu": {
+                    "type": "string",
+                    "description": "Show the cpu capacity of the Deployment Manager",
+                    "example": "32"
+                },
+                "hugepages-2Mi": {
+                    "type": "string",
+                    "description": "Show the 2Mi hugepages capacity of the Deployment Manager",
+                    "example": "2048"
+                },
+                "hugepages-1Gi": {
+                    "type": "string",
+                    "description": "Show the 1Gi hugepages capacity of the Deployment Manager",
+                    "example": "2048"
                 }
             },
             "type": "object"
@@ -1645,14 +1698,20 @@
                     "description": "The fully qualified URI to a Deployment Management server for O2dms.",
                     "example": "https://128.224.115.51:6443"
                 },
+                "supportedLocations": {
+                    "type": "string"
+                },
                 "capabilities": {
                     "$ref": "#/definitions/DeploymentManagerCapabilities"
+                },
+                "capacity": {
+                    "$ref": "#/definitions/DeploymentManagerCapacity"
                 },
                 "extensions": {
                     "$ref": "#/definitions/DeploymentManagerExtensions"
                 }
             },
-            "x-mask": "{deploymentManagerId,name,description,oCloudId,serviceUri,extensions{profileName,profileData}}",
+            "x-mask": "{deploymentManagerId,name,description,oCloudId,serviceUri,supportedLocations,capabilities,capacity,extensions{profileName,profileData}}",
             "type": "object"
         },
         "DeploymentManagerExtensions": {
@@ -1929,6 +1988,22 @@
                     "type": "object"
                 }
             },
+            "type": "object"
+        },
+        "AlarmPatchDto": {
+            "properties": {
+                "alarmAcknowledged": {
+                    "type": "boolean",
+                    "description": "Boolean value indication of a management system has acknowledged the alarm.",
+                    "example": true
+                },
+                "perceivedSeverity": {
+                    "type": "string",
+                    "description": "indicate that the alarm record is requested to be cleared. Only the value \"5\" for \"CLEARED\" is permitted in a request message content. ",
+                    "example": "5"
+                }
+            },
+            "x-mask": "{alarmAcknowledged}",
             "type": "object"
         },
         "AlarmSubscriptionCreateDto": {

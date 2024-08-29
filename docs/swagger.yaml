@@ -25,7 +25,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/InventoryAPIVersion'
+            $ref: "#/definitions/InventoryAPIVersion"
   /o2ims-infrastructureInventory/v1:
     get:
       tags:
@@ -56,7 +56,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/OcloudDto'
+            $ref: "#/definitions/OcloudDto"
         "404":
           description: oCloud not found
   /o2ims-infrastructureInventory/v1/:
@@ -89,7 +89,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/OcloudDto'
+            $ref: "#/definitions/OcloudDto"
         "404":
           description: oCloud not found
   /o2ims-infrastructureInventory/v1/api_versions:
@@ -102,7 +102,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/InventoryV1APIVersion'
+            $ref: "#/definitions/InventoryV1APIVersion"
   /o2ims-infrastructureInventory/v1/deploymentManagers:
     get:
       tags:
@@ -146,7 +146,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/DeploymentManagerListDto'
+              $ref: "#/definitions/DeploymentManagerListDto"
   /o2ims-infrastructureInventory/v1/deploymentManagers/{deploymentManagerID}:
     get:
       tags:
@@ -187,7 +187,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/DeploymentManagerGetDto'
+            $ref: "#/definitions/DeploymentManagerGetDto"
         "404":
           description: Deployment manager not found
   /o2ims-infrastructureInventory/v1/resourcePools:
@@ -233,7 +233,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/ResourcePoolGetDto'
+              $ref: "#/definitions/ResourcePoolGetDto"
   /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}:
     get:
       tags:
@@ -269,7 +269,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/ResourcePoolGetDto'
+            $ref: "#/definitions/ResourcePoolGetDto"
         "404":
           description: Resource pool not found
   /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}/resources:
@@ -320,7 +320,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/ResourceListDto'
+              $ref: "#/definitions/ResourceListDto"
         "404":
           description: Resource pool not found
   /o2ims-infrastructureInventory/v1/resourcePools/{resourcePoolID}/resources/{resourceID}:
@@ -363,7 +363,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/ResourceGetDto2'
+            $ref: "#/definitions/ResourceGetDto2"
         "404":
           description: Resource not found
   /o2ims-infrastructureInventory/v1/resourceTypes:
@@ -409,7 +409,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/ResourceTypeGetDto'
+              $ref: "#/definitions/ResourceTypeGetDto"
   /o2ims-infrastructureInventory/v1/resourceTypes/{resourceTypeID}:
     get:
       tags:
@@ -445,7 +445,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/ResourceTypeGetDto'
+            $ref: "#/definitions/ResourceTypeGetDto"
         "404":
           description: Resource type not found
   /o2ims-infrastructureInventory/v1/subscriptions:
@@ -491,7 +491,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/SubscriptionGetDto'
+              $ref: "#/definitions/SubscriptionGetDto"
     post:
       tags:
       - O2IMS-InfrastructureInventory
@@ -501,12 +501,12 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/SubscriptionCreateDto'
+          $ref: "#/definitions/SubscriptionCreateDto"
       responses:
         "201":
           description: Success
           schema:
-            $ref: '#/definitions/SubscriptionGetDto'
+            $ref: "#/definitions/SubscriptionGetDto"
   /o2ims-infrastructureInventory/v1/subscriptions/{subscriptionID}:
     get:
       tags:
@@ -542,7 +542,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/SubscriptionGetDto'
+            $ref: "#/definitions/SubscriptionGetDto"
         "404":
           description: Subscription not found
     delete:
@@ -570,7 +570,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/MonitoringAPIVersion'
+            $ref: "#/definitions/MonitoringAPIVersion"
   /o2ims-infrastructureMonitoring/v1/alarmSubscriptions:
     get:
       tags:
@@ -614,7 +614,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/AlarmSubscriptionGetDto'
+              $ref: "#/definitions/AlarmSubscriptionGetDto"
     post:
       tags:
       - O2IMS-InfrastructureMonitoring
@@ -624,12 +624,12 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/AlarmSubscriptionCreateDto'
+          $ref: "#/definitions/AlarmSubscriptionCreateDto"
       responses:
         "201":
           description: Success
           schema:
-            $ref: '#/definitions/AlarmSubscriptionGetDto'
+            $ref: "#/definitions/AlarmSubscriptionGetDto"
   /o2ims-infrastructureMonitoring/v1/alarmSubscriptions/{alarmSubscriptionID}:
     get:
       tags:
@@ -665,7 +665,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/AlarmSubscriptionGetDto'
+            $ref: "#/definitions/AlarmSubscriptionGetDto"
         "404":
           description: Alarm Subscription not found
     delete:
@@ -726,7 +726,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/AlarmGetDto'
+              $ref: "#/definitions/AlarmGetDto"
   /o2ims-infrastructureMonitoring/v1/alarms/{alarmEventRecordId}:
     get:
       tags:
@@ -762,7 +762,49 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/AlarmGetDto'
+            $ref: "#/definitions/AlarmGetDto"
+        "404":
+          description: Alarm Event Record not found
+    patch:
+      tags:
+      - O2IMS-InfrastructureMonitoring
+      operationId: Patch Alarm Event Record Information
+      parameters:
+      - name: exclude_default
+        in: query
+        description: "Exclude showing all default fields, Set \"true\" to enable."
+        required: false
+        type: string
+      - name: exclude_fields
+        in: query
+        description: "Set fields to exclude showing, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exclude_default\"."
+        required: false
+        type: string
+      - name: fields
+        in: query
+        description: "Set fields to show, split by comma, \"/\" for parent and children. Like \"name,parent/children\". This value will cover \"exculde_fields\"."
+        required: false
+        type: string
+      - name: all_fields
+        in: query
+        description: Set any value for show all fields. This value will cover "fields" and "all_fields".
+        required: false
+        type: string
+      - name: alarmEventRecordId
+        in: path
+        description: ID of the alarm event record
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: "#/definitions/AlarmPatchDto"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/AlarmPatchDto"
         "404":
           description: Alarm Event Record not found
   /o2ims-infrastructureMonitoring/v1/api_versions:
@@ -777,7 +819,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/MonitoringV1APIVersion'
+              $ref: "#/definitions/MonitoringV1APIVersion"
 definitions:
   InventoryAPIVersion:
     type: object
@@ -794,7 +836,7 @@ definitions:
         - version: 1.0.0
         description: Version(s) supported for the API signaled by the uriPrefix attribute.
         items:
-          $ref: '#/definitions/InventoryApiVersionStructure'
+          $ref: "#/definitions/InventoryApiVersionStructure"
     x-mask: "{uriPrefix,apiVersions}"
   InventoryApiVersionStructure:
     type: object
@@ -821,7 +863,7 @@ definitions:
         - version: 1.0.0
         description: Version(s) supported for the API signaled by the uriPrefix attribute.
         items:
-          $ref: '#/definitions/InventoryV1ApiVersionStructure'
+          $ref: "#/definitions/InventoryV1ApiVersionStructure"
     x-mask: "{uriPrefix,apiVersions}"
   InventoryV1ApiVersionStructure:
     type: object
@@ -897,7 +939,7 @@ definitions:
         example: ""
         description: Version or generation of the resource as defined by its provider.
       alarmDictionary:
-        $ref: '#/definitions/AlarmDictionaryDto'
+        $ref: "#/definitions/AlarmDictionaryDto"
       extensions:
         type: string
         example: ""
@@ -939,7 +981,7 @@ definitions:
         example: ""
         description: Contains the list of alarms that can be detected against this ResourceType.
         items:
-          $ref: '#/definitions/AlarmDefinitionDto'
+          $ref: "#/definitions/AlarmDefinitionDto"
   AlarmDefinitionDto:
     type: object
     properties:
@@ -1092,7 +1134,7 @@ definitions:
       elements:
         type: array
         items:
-          $ref: '#/definitions/ResourceGetDto1'
+          $ref: "#/definitions/ResourceGetDto1"
     x-mask: "{resourceId,resourcePoolId,resourceTypeId,description,parentId}"
   ResourceGetDto1:
     type: object
@@ -1129,7 +1171,7 @@ definitions:
       elements:
         type: array
         items:
-          $ref: '#/definitions/ResourceGetDto0'
+          $ref: "#/definitions/ResourceGetDto0"
     x-mask: "{resourceId,resourcePoolId,resourceTypeId,description,parentId}"
   ResourceGetDto0:
     type: object
@@ -1189,8 +1231,12 @@ definitions:
         type: string
         example: https://128.224.115.51:6443
         description: The fully qualified URI to a Deployment Management server for O2dms.
+      supportedLocations:
+        type: string
       capabilities:
-        $ref: '#/definitions/DeploymentManagerCapabilities'
+        $ref: "#/definitions/DeploymentManagerCapabilities"
+      capacity:
+        $ref: "#/definitions/DeploymentManagerCapacity"
       profileSupportList:
         type: array
         example:
@@ -1202,7 +1248,7 @@ definitions:
         type: string
         example: ""
         description: List of metadata key-value pairs used to associate meaningful metadata to the related Deployment Manager
-    x-mask: "{deploymentManagerId,name,description,oCloudId,serviceUri,profileSupportList}"
+    x-mask: "{deploymentManagerId,name,description,oCloudId,serviceUri,supportedLocations,capabilities,capacity,profileSupportList}"
   DeploymentManagerCapabilities:
     type: object
     properties:
@@ -1210,6 +1256,21 @@ definitions:
         type: string
         example: low_latency
         description: Show the OS capablities of the Deployment Manager
+  DeploymentManagerCapacity:
+    type: object
+    properties:
+      cpu:
+        type: string
+        example: "32"
+        description: Show the cpu capacity of the Deployment Manager
+      hugepages-2Mi:
+        type: string
+        example: "2048"
+        description: Show the 2Mi hugepages capacity of the Deployment Manager
+      hugepages-1Gi:
+        type: string
+        example: "2048"
+        description: Show the 1Gi hugepages capacity of the Deployment Manager
   DeploymentManagerGetDto:
     type: object
     required:
@@ -1235,11 +1296,15 @@ definitions:
         type: string
         example: https://128.224.115.51:6443
         description: The fully qualified URI to a Deployment Management server for O2dms.
+      supportedLocations:
+        type: string
       capabilities:
-        $ref: '#/definitions/DeploymentManagerCapabilities'
+        $ref: "#/definitions/DeploymentManagerCapabilities"
+      capacity:
+        $ref: "#/definitions/DeploymentManagerCapacity"
       extensions:
-        $ref: '#/definitions/DeploymentManagerExtensions'
-    x-mask: "{deploymentManagerId,name,description,oCloudId,serviceUri,extensions{profileName,profileData}}"
+        $ref: "#/definitions/DeploymentManagerExtensions"
+    x-mask: "{deploymentManagerId,name,description,oCloudId,serviceUri,supportedLocations,capabilities,capacity,extensions{profileName,profileData}}"
   DeploymentManagerExtensions:
     type: object
     properties:
@@ -1248,7 +1313,7 @@ definitions:
         example: ""
         description: ""
       profileData:
-        $ref: '#/definitions/DeploymentManagerGetDtoProfile'
+        $ref: "#/definitions/DeploymentManagerGetDtoProfile"
   DeploymentManagerGetDtoProfile:
     type: object
     properties:
@@ -1342,7 +1407,7 @@ definitions:
         - version: 1.0.0
         description: Version(s) supported for the API signaled by the uriPrefix attribute.
         items:
-          $ref: '#/definitions/MonitoringApiVersionStructure'
+          $ref: "#/definitions/MonitoringApiVersionStructure"
     x-mask: "{uriPrefix,apiVersions}"
   MonitoringApiVersionStructure:
     type: object
@@ -1369,7 +1434,7 @@ definitions:
         - version: 1.0.0
         description: Version(s) supported for the API signaled by the uriPrefix attribute.
         items:
-          $ref: '#/definitions/MonitoringV1ApiVersionStructure'
+          $ref: "#/definitions/MonitoringV1ApiVersionStructure"
     x-mask: "{uriPrefix,apiVersions}"
   MonitoringV1ApiVersionStructure:
     type: object
@@ -1445,6 +1510,18 @@ definitions:
       extensions:
         type: object
         properties: {}
+  AlarmPatchDto:
+    type: object
+    properties:
+      alarmAcknowledged:
+        type: boolean
+        example: true
+        description: Boolean value indication of a management system has acknowledged the alarm.
+      perceivedSeverity:
+        type: string
+        example: "5"
+        description: 'indicate that the alarm record is requested to be cleared. Only the value "5" for "CLEARED" is permitted in a request message content. '
+    x-mask: "{alarmAcknowledged}"
   AlarmSubscriptionCreateDto:
     type: object
     required:

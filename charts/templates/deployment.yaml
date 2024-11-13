@@ -25,6 +25,8 @@ spec:
   selector:
     matchLabels:
       app: o2api
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:

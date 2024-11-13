@@ -94,6 +94,10 @@ spec:
               value: localhost
             - name: K8S_KUBECONFIG
               value: {{ .Values.ocloud.K8S_KUBECONFIG }}
+            {{- if default false .Values.o2ims.useHostCert }}
+            - name: REQUESTS_CA_BUNDLE
+              value: /etc/ssl/custom-cert.pem
+            {{- end }}
           volumeMounts:
             - name: scripts
               mountPath: /opt
@@ -104,6 +108,11 @@ spec:
             - name: smocacrt
               mountPath: /configs/smoca.crt
               subPath: config.json
+            {{- if default false .Values.o2ims.useHostCert }}
+            - name: ca-certs
+              mountPath: /etc/ssl/custom-cert.pem
+              readOnly: true
+            {{- end }}
         - name: watcher
           image: "{{ .Values.o2ims.images.tags.o2service }}"
           command: ["/bin/bash", "/opt/o2watcher_start.sh"]

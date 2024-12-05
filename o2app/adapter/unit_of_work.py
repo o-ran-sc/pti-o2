@@ -75,6 +75,8 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
             .AlarmSubscriptionSqlAlchemyRepository(self.session)
         self.alarm_probable_causes = alarm_repository\
             .AlarmProbableCauseSqlAlchemyRepository(self.session)
+        self.alarm_service_config = alarm_repository\
+            .AlarmServiceConfigurationSqlAlchemyRepository(self.session)
 
         return super().__enter__()
 

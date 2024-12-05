@@ -15,6 +15,7 @@
 from flask import request
 from flask_restx import Resource, reqparse
 
+from o2common.config import config
 from o2common.service.messagebus import MessageBus
 from o2common.views.pagination_route import link_header, PAGE_PARAM
 from o2common.views.route_exception import NotFoundException, \
@@ -23,7 +24,7 @@ from o2ims.domain.alarm_obj import PerceivedSeverityEnum
 from o2ims.views import alarm_view
 from o2ims.views.api_ns import api_ims_monitoring as api_monitoring_v1
 from o2ims.views.alarm_dto import AlarmDTO, SubscriptionDTO, \
-    MonitoringApiV1DTO
+    MonitoringApiV1DTO, AlarmServiceConfigurationDTO
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -46,7 +47,7 @@ class VersionRouter(Resource):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
             'apiVersions': [{
-                'version': '1.0.0',
+                'version': '1.1.0',
                 # 'isDeprecated': 'False',
                 # 'retirementDate': ''
             }]
@@ -285,3 +286,88 @@ class SubscriptionGetDelRouter(Resource):
     def delete(self, alarmSubscriptionID):
         result = alarm_view.subscription_delete(alarmSubscriptionID, bus.uow)
         return result, 200
+
+
+# ----------  Alarm Event Record ---------- #
+@api_monitoring_v1.route("/v1/alarmServiceConfiguration")
+@api_monitoring_v1.param(
+    'all_fields',
+    'Set any value for show all fields. This value will cover "fields" ' +
+    'and "all_fields".',
+    _in='query')
+@api_monitoring_v1.param(
+    'fields',
+    'Set fields to show, split by comma, "/" for parent and children.' +
+    ' Like "name,parent/children". This value will cover' +
+    ' "exculde_fields".',
+    _in='query')
+@api_monitoring_v1.param(
+    'exclude_fields',
+    'Set fields to exclude showing, split by comma, "/" for parent and ' +
+    'children. Like "name,parent/children". This value will cover ' +
+    '"exclude_default".',
+    _in='query')
+@api_monitoring_v1.param(
+    'exclude_default',
+    'Exclude showing all default fields, Set "true" to enable.',
+    _in='query')
+class AlarmServiceConfigurationRouter(Resource):
+
+    model = AlarmServiceConfigurationDTO.alarm_service_configuration_get
+    expect = AlarmServiceConfigurationDTO.alarm_service_configuration_expect
+
+    @api_monitoring_v1.doc('Get Alarm Service Configuration')
+    @api_monitoring_v1.marshal_with(model)
+    def get(self):
+        result = alarm_view.alarm_service_configuration(bus.uow)
+        if result is not None:
+            return result
+
+    @api_monitoring_v1.doc('Patch Alarm Service Configuration')
+    @api_monitoring_v1.expect(expect)
+    @api_monitoring_v1.marshal_with(model)
+    def patch(self):
+        data = api_monitoring_v1.payload
+        retention_period = data.get('retentionPeriod', None)
+
+        min_retention_period = config.get_min_retention_period()
+        print(min_retention_period)
+
+        if retention_period is None:
+            raise BadRequestException(
+                'The "retentionPeriod" parameter is required')
+        elif retention_period < min_retention_period:
+            raise BadRequestException(
+                f'The "retentionPeriod" parameter shall more than '
+                f'{min_retention_period} days')
+
+        result = alarm_view.alarm_service_configuration_update(data, bus.uow)
+        if result is not None:
+            return result
+
+        raise BadRequestException(
+            'Failed to update alarm service configuration')
+
+    @api_monitoring_v1.doc('Update Alarm Service Configuration')
+    @api_monitoring_v1.expect(expect)
+    @api_monitoring_v1.marshal_with(model)
+    def put(self):
+        data = api_monitoring_v1.payload
+        retention_period = data.get('retentionPeriod', None)
+
+        min_retention_period = config.get_min_retention_period()
+
+        if retention_period is None:
+            raise BadRequestException(
+                'The "retentionPeriod" parameter is required')
+        elif retention_period < min_retention_period:
+            raise BadRequestException(
+                f'The "retentionPeriod" parameter shall more than '
+                f'{min_retention_period} days')
+
+        result = alarm_view.alarm_service_configuration_update(data, bus.uow)
+        if result is not None:
+            return result
+
+        raise BadRequestException(
+            'Failed to update alarm service configuration')

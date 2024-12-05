@@ -197,3 +197,29 @@ class SubscriptionDTO:
                 'provided then all events are reported.'),
         }
     )
+
+
+class AlarmServiceConfigurationDTO:
+
+    alarm_service_configuration_get = api_monitoring_v1.model(
+        "AlarmServiceConfigurationDto",
+        {
+            'retentionPeriod': fields.Integer(
+                required=True,
+                example=14,
+                description='Number of days for alarm history to be retained.'
+                ),
+            'extensions': Json2Dict(attribute='extensions')
+        }
+    )
+
+    alarm_service_configuration_expect = api_monitoring_v1.model(
+        "AlarmServiceConfigurationDto",
+        {
+            'retentionPeriod': fields.Integer(
+                required=True,
+                example=14,
+                description='Number of days for alarm history to be retained.'
+                )
+        }
+    )

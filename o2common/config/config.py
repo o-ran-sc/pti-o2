@@ -28,6 +28,9 @@ _DEFAULT_STX_URL = "http://192.168.204.1:5000/v3"
 _DCMANAGER_URL_PORT = os.environ.get("DCMANAGER_API_PORT", "8119")
 _DCMANAGER_URL_PATH = os.environ.get("DCMANAGER_API_PATH", "/v1.0")
 
+_DEFAULT_MIN_RETENTION_PERIOD = 14
+_MIN_MIN_RETENTION_PERIOD = 1
+
 
 def get_config_path():
     path = os.environ.get("O2APP_CONFIG", "/configs/o2app.conf")
@@ -392,7 +395,7 @@ def get_reviewer_token():
 
 
 def get_auth_provider():
-    return config.conf.auth_provider
+    return config.conf.DEFAULT.auth_provider
 
 
 def get_dms_support_profiles():
@@ -406,3 +409,16 @@ def get_dms_support_profiles():
     if 'native_k8sapi' not in profiles_list:
         profiles_list.append('native_k8sapi')
     return profiles_list
+
+
+def get_min_retention_period():
+    try:
+        min_retention_period_str = config.conf.DEFAULT.min_retention_period
+        if min_retention_period_str is not None:
+            min_retention_period_int = int(min_retention_period_str)
+            if min_retention_period_int >= _MIN_MIN_RETENTION_PERIOD:
+                return min_retention_period_int
+    except (ValueError, TypeError) as e:
+        logger.warning(f"Invalid min_retention_period value: {e}")
+
+    return _DEFAULT_MIN_RETENTION_PERIOD

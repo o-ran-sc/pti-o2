@@ -110,7 +110,7 @@ class MonitoringVersion(Resource):
         return {
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
             'apiVersions': [{
-                'version': '1.0.0',
+                'version': '1.1.0',
                 # 'isDeprecated': 'False',
                 # 'retirementDate': ''
             }]

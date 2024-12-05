@@ -239,3 +239,31 @@ class AlarmProbableCauseRepository(abc.ABC):
     @abc.abstractmethod
     def _delete(self, probable_cause_id):
         raise NotImplementedError
+
+
+class AlarmServiceConfigurationRepository(abc.ABC):
+    def __init__(self):
+        self.seen = set()  # type: Set[obj.AlarmServiceConfiguration]
+
+    def get(self) -> obj.AlarmServiceConfiguration:
+        service_config = self._get()
+        if service_config:
+            self.seen.add(service_config)
+        else:
+            service_config = self._add_default()
+        return service_config
+
+    def update(self, service_config: obj.AlarmServiceConfiguration):
+        self._update(service_config)
+
+    @abc.abstractmethod
+    def _add_default(self) -> obj.AlarmServiceConfiguration:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _get(self) -> obj.AlarmServiceConfiguration:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _update(self, service_config: obj.AlarmServiceConfiguration):
+        raise NotImplementedError

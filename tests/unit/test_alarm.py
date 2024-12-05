@@ -221,6 +221,14 @@ def test_flask_not_allowed(mock_flask_uow):
         resp = client.delete(uri)
         assert resp.status == '405 METHOD NOT ALLOWED'
 
+        # Testing alarm service configuration not support method
+        ##########################
+        uri = apibase + "/alarmServiceConfiguration"
+        resp = client.post(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+        resp = client.delete(uri)
+        assert resp.status == '405 METHOD NOT ALLOWED'
+
 
 class FakeAlarmClient(BaseClient):
     def __init__(self):
@@ -371,3 +379,117 @@ def test_watchers_worker():
     count3 = fakewatcher.fakeOcloudWatcherCounter
     time.sleep(3)
     assert fakewatcher.fakeOcloudWatcherCounter == count3
+
+
+def test_view_alarm_service_configuration(mock_uow):
+    session, uow = mock_uow
+
+    # Test the first time call the view will generate the default data
+    session.return_value.query.return_value.first.return_value = None
+    result = alarm_view.alarm_service_configuration(uow)
+    assert result is not None
+    assert result.get("retentionPeriod") == 14
+
+    config1 = MagicMock()
+    config1.serialize.return_value = {
+        "id": 1,
+        "retentionPeriod": 30
+    }
+    session.return_value.query.return_value.first.return_value = config1
+
+    result = alarm_view.alarm_service_configuration(uow)
+    assert result is not None
+    assert result.get("id") == 1
+    assert result.get("retentionPeriod") == 30
+
+
+def test_view_alarm_service_configuration_update(mock_uow):
+    session, uow = mock_uow
+
+    config1 = MagicMock()
+    config1.serialize.return_value = {
+        "id": 1,
+        "retentionPeriod": 60
+    }
+    session.return_value.query.return_value.first.return_value = config1
+
+    # Test update the config
+    update_data = {
+        "retentionPeriod": 60
+    }
+    result = alarm_view.alarm_service_configuration_update(update_data, uow)
+
+    assert result is not None
+    assert result.get("id") == 1
+    assert result.get("retentionPeriod") == 60
+    # Verify the update and commit is called
+    session.return_value.query.return_value.first.return_value.\
+        retentionPeriod = 60
+    assert session.return_value.commit.called
+
+
+def test_flask_get_alarm_config(mock_flask_uow):
+    session, app = mock_flask_uow
+    apibase = config.get_o2ims_monitoring_api_base() + '/v1'
+
+    config1 = MagicMock()
+    config1.serialize.return_value = {
+        "retentionPeriod": 30
+    }
+
+    session.return_value.query.return_value.first.return_value = config1
+
+    with app.test_client() as client:
+        resp = client.get(apibase+"/alarmServiceConfiguration")
+        assert resp.status_code == 200
+        data = resp.get_json()
+        assert data["retentionPeriod"] == 30
+
+
+def test_flask_patch_alarm_config(mock_flask_uow):
+    session, app = mock_flask_uow
+    apibase = config.get_o2ims_monitoring_api_base() + '/v1'
+
+    config1 = MagicMock()
+    config1.serialize.return_value = {
+        "retentionPeriod": 60
+    }
+    session.return_value.query.return_value.first.return_value = config1
+
+    with app.test_client() as client:
+        # Test updating retention period
+        resp = client.patch(apibase+"/alarmServiceConfiguration", json={
+            "retentionPeriod": 60
+        })
+        assert resp.status_code == 200
+
+        # Test invalid retention period
+        resp = client.patch(apibase+"/alarmServiceConfiguration", json={
+            "retentionPeriod": -1
+        })
+        assert resp.status_code == 400
+
+
+def test_flask_put_alarm_config(mock_flask_uow):
+    session, app = mock_flask_uow
+    apibase = config.get_o2ims_monitoring_api_base() + '/v1'
+
+    config1 = MagicMock()
+    config1.serialize.return_value = {
+        "alarmServiceId": "alarm-service-1",
+        "retentionPeriod": 60
+    }
+    session.return_value.query.return_value.first.return_value = config1
+
+    with app.test_client() as client:
+        # Test updating retention period
+        resp = client.put(apibase+"/alarmServiceConfiguration", json={
+            "retentionPeriod": 60
+        })
+        assert resp.status_code == 200
+
+        # Test invalid retention period
+        resp = client.put(apibase+"/alarmServiceConfiguration", json={
+            "retentionPeriod": -1
+        })
+        assert resp.status_code == 400

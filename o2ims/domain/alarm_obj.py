@@ -133,6 +133,12 @@ class AlarmEventRecordModifications(AgRoot):
         self.perceivedSeverity = clear
 
 
+class AlarmServiceConfiguration(AgRoot, Serializer):
+    def __init__(self, retention_period: int = None) -> None:
+        super().__init__()
+        self.retentionPeriod = retention_period
+
+
 class AlarmDefinition(AgRoot, Serializer):
     def __init__(self, id: str, name: str, change_type: AlarmChangeTypeEnum,
                  desc: str, prop_action: str, clearing_type: ClearingTypeEnum,

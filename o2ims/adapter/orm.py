@@ -243,6 +243,16 @@ alarm_subscription = Table(
     Column("filter", String(255)),
 )
 
+alarm_service_configuration = Table(
+    "alarmServiceConfiguration",
+    metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("retentionPeriod", Integer, default=15)
+)
+
 
 @retry((exc.IntegrityError), tries=3, delay=2)
 def wait_for_metadata_ready(engine):
@@ -255,6 +265,7 @@ def start_o2ims_mappers(engine=None):
     logger.info("Starting O2 IMS mappers")
 
     # IMS Infrastruture Monitoring Mappering
+    mapper(alarmModel.AlarmServiceConfiguration, alarm_service_configuration)
     mapper(alarmModel.AlarmEventRecord, alarm_event_record)
     alarmdefinition_mapper = mapper(
         alarmModel.AlarmDefinition, alarm_definition)

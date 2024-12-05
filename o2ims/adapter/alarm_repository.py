@@ -17,7 +17,8 @@ from typing import List, Tuple
 from o2ims.domain import alarm_obj
 from o2ims.domain.alarm_repo import AlarmDefinitionRepository, \
     AlarmEventRecordRepository, AlarmSubscriptionRepository, \
-    AlarmProbableCauseRepository, AlarmDictionaryRepository
+    AlarmProbableCauseRepository, AlarmDictionaryRepository, \
+    AlarmServiceConfigurationRepository
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -150,3 +151,31 @@ class AlarmProbableCauseSqlAlchemyRepository(AlarmProbableCauseRepository):
     def _delete(self, probable_cause_id):
         self.session.query(alarm_obj.ProbableCause).filter_by(
             probableCauseId=probable_cause_id).delete()
+
+
+class AlarmServiceConfigurationSqlAlchemyRepository(
+        AlarmServiceConfigurationRepository):
+    def __init__(self, session):
+        super().__init__()
+        self.session = session
+
+    def _add_default(self) -> alarm_obj.AlarmServiceConfiguration:
+        query = self.session.query(
+            alarm_obj.AlarmServiceConfiguration).first()
+        if not query:
+            default_config = alarm_obj.AlarmServiceConfiguration(
+                retention_period=14
+            )
+            self.session.add(default_config)
+            self.session.commit()
+            logger.info(
+                "Inserted default AlarmServiceConfiguration record.")
+            return default_config
+        return query
+
+    def _get(self) -> alarm_obj.AlarmServiceConfiguration:
+        return self.session.query(alarm_obj.AlarmServiceConfiguration).first()
+
+    def _update(self, service_config: alarm_obj.AlarmServiceConfiguration):
+        print(service_config.retentionPeriod)
+        self.session.merge(service_config)

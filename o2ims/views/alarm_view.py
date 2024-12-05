@@ -155,3 +155,19 @@ def subscription_delete(subscriptionId: str,
         uow.alarm_subscriptions.delete(subscriptionId)
         uow.commit()
     return True
+
+
+def alarm_service_configuration(uow: unit_of_work.AbstractUnitOfWork):
+    with uow:
+        first = uow.alarm_service_config.get()
+        return first.serialize() if first is not None else None
+
+
+def alarm_service_configuration_update(data: dict,
+                                       uow: unit_of_work.AbstractUnitOfWork):
+    with uow:
+        first = uow.alarm_service_config.get()
+        first.retentionPeriod = data.get('retentionPeriod')
+        uow.alarm_service_config.update(first)
+        uow.commit()
+        return first.serialize()

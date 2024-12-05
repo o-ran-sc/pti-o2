@@ -14,7 +14,7 @@
 
 from retry import retry
 import inspect
-from typing import Callable
+from typing import Callable, Optional
 
 from o2common.adapter.notifications import AbstractNotifications,\
     NoneNotifications
@@ -44,24 +44,26 @@ def wait_for_db_ready(engine):
 def bootstrap(
     start_orm: bool = True,
     uow: unit_of_work.AbstractUnitOfWork = SqlAlchemyUnitOfWork(),
-    notifications: AbstractNotifications = None,
+    notifications: Optional[AbstractNotifications] = None,
     publish: Callable = redis_eventpublisher.publish,
 ) -> messagebus.MessageBus:
-
-    if notifications is None:
-        notifications = NoneNotifications()
+    """
+    Bootstrap the application with dependencies.
+    """
+    notifications = notifications or NoneNotifications()
 
     if start_orm:
         with uow:
-            # get default engine if uow is by default
             engine = uow.session.get_bind()
-
             wait_for_db_ready(engine)
             o2ims_orm.start_o2ims_mappers(engine)
             o2dms_orm.start_o2dms_mappers(engine)
 
-    dependencies = {"uow": uow, "notifications": notifications,
-                    "publish": publish}
+    dependencies = {
+        "uow": uow,
+        "notifications": notifications,
+        "publish": publish
+    }
     injected_event_handlers = {
         event_type: [
             inject_dependencies(handler, dependencies)

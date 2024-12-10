@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "65828673_2e313e70",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-12-10T05:52:41Z",
+      "side": 1,
+      "message": "This part will be included in another commit.",
+      "parentUuid": "49eb91ad_de3458c7",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 23
+      },
+      "revId": "837996016e67cd59cd546059db6753aa0fd685bf",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e66ba350_3be7fb5e",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-12-06T09:50:31Z",
       "side": 1,
       "message": "Please avoid using magic number. and please check other places also.",
+      "range": {
+        "startLine": 356,
+        "startChar": 32,
+        "endLine": 356,
+        "endChar": 34
+      },
+      "revId": "837996016e67cd59cd546059db6753aa0fd685bf",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c47251a6_0b093ca4",
+        "filename": "o2ims/views/alarm_route.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-12-10T05:52:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e66ba350_3be7fb5e",
       "range": {
         "startLine": 356,
         "startChar": 32,

@@ -141,5 +141,10 @@ class UpdateAlarm(UpdateFaultObject):
 
 
 @dataclass
+class ClearAlarmEvent(UpdateFaultObject):
+    data: AlarmEvent2SMO
+
+
+@dataclass
 class PurgeAlarmEvent(UpdateFaultObject):
     data: AlarmEvent2SMO

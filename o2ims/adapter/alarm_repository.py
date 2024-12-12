@@ -41,6 +41,7 @@ class AlarmEventRecordSqlAlchemyRepository(AlarmEventRecordRepository):
         offset = kwargs.pop('start') if 'start' in kwargs else 0
 
         result = self.session.query(alarm_obj.AlarmEventRecord).filter(
+            alarm_obj.AlarmEventRecord.deleted == False).filter(  # noqa: E712
             *args).order_by('alarmEventRecordId')
         count = result.count()
         if size is not None and size != -1:

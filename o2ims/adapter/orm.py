@@ -25,7 +25,7 @@ from sqlalchemy import (
     # Date,
     DateTime,
     ForeignKey,
-    # Boolean,
+    Boolean,
     # engine,
     # event,
     exc,
@@ -204,6 +204,8 @@ alarm_event_record = Table(
     Column("updatetime", DateTime),
     Column("createtime", DateTime),
     Column("hash", String(255)),
+    # Add deleted flag with default value False
+    Column("deleted", Boolean, default=False),
 
     Column("alarmEventRecordId", String(255), primary_key=True),
     Column("resourceTypeId", ForeignKey("resourceType.resourceTypeId")),
@@ -214,6 +216,7 @@ alarm_event_record = Table(
     Column("perceivedSeverity", Integer),
     Column("alarmRaisedTime", String(255)),
     Column("alarmChangedTime", String(255)),
+    Column("alarmClearedTime", String(255)),
     Column("alarmAcknowledgeTime", String(255)),
     Column("alarmAcknowledged", String(255)),
     Column("extensions", String())

@@ -224,7 +224,7 @@ class StxFaultClientImp(object):
 
     def deleteAlarm(self, id) -> alarmModel.FaultGenericModel:
         alarm = self.fmclient.alarm.delete(id)
-        logger.debug('delete alarm id ' + id + ':' + str(alarm.to_dict()))
+        logger.debug('delete alarm id: ' + id)
         return alarmModel.FaultGenericModel(
             alarmModel.EventTypeEnum.ALARM, self._alarmconverter(alarm))
 

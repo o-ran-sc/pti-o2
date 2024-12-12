@@ -19,6 +19,9 @@ from o2common.service.client.base_client import BaseClient
 
 from o2ims.domain import commands
 from o2ims.domain.stx_object import StxGenericModel
+from o2ims.domain.alarm_obj import PerceivedSeverityEnum, \
+    AlarmNotificationEventEnum
+from o2ims.domain import events
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -40,6 +43,10 @@ class AlarmWatcher(BaseWatcher):
         self._set_respool_client()
 
         resourcepoolid = parent.id
+        
+        # Check and delete expired alarms before getting new alarms
+        self._check_and_delete_expired_alarms()
+        
         newmodels = self._client.list()
         return [commands.UpdateAlarm(m, resourcepoolid) for m in newmodels] \
             if len(newmodels) > 0 else []
@@ -47,3 +54,67 @@ class AlarmWatcher(BaseWatcher):
     def _set_respool_client(self):
         self.poolid = self._tags.pool
         self._client.set_pool_driver(self.poolid)
+
+    def _check_and_delete_expired_alarms(self):
+        """Check and delete expired alarms based on retention period.
+        Only delete alarms that are both cleared and acknowledged."""
+        try:
+            with self._bus.uow as uow:
+                # Get retention period from alarm service configuration
+                # This will create default config if not exists
+                alarm_config = uow.alarm_service_config.get()
+                retention_period = alarm_config.retentionPeriod
+
+                # Query expired alarms that are both cleared and acknowledged
+                rs = uow.session.execute(
+                    '''
+                    SELECT "alarmEventRecordId", "alarmAcknowledgeTime"
+                    FROM "alarmEventRecord"
+                    WHERE "perceivedSeverity" = :perceived_severity_enum
+                    AND "alarmAcknowledged" = true
+                    AND "lastEpochMicrosec" < (EXTRACT(EPOCH FROM NOW()) * 1000000) 
+                        - (:retention_period * 1000000)
+                    ''',
+                    dict(
+                        retention_period=retention_period,
+                        perceived_severity_enum=PerceivedSeverityEnum.CLEARED
+                    )
+                )
+
+                # Process expired alarms
+                for row in rs:
+                    alarm_id = row[0]
+                    ack_time = row[1]
+                    try:
+                        logger.debug(
+                            f'Processing expired alarm for deletion: '
+                            f'{alarm_id}')
+
+                        # Add purge event before deletion
+                        alarm_event = events.AlarmEventPurged(
+                            id=alarm_id,
+                            notificationEventType=AlarmNotificationEventEnum.CLEAR,
+                            updatetime=ack_time
+                        )
+
+                        # Update alarm event record with purge event
+                        alarm_record = uow.alarm_event_records.get(alarm_id)
+                        if alarm_record:
+                            alarm_record.events.append(alarm_event)
+                            uow.alarm_event_records.update(alarm_record)
+                            uow.commit()
+
+                            # Handle events after commit
+                            events_to_process = \
+                                self._bus.uow.collect_new_events()
+                            for event in events_to_process:
+                                self._bus.handle(event)
+
+                            logger.debug(f'Successfully purged alarm: '
+                                         f'{alarm_id}')
+                    except Exception as e:
+                        logger.error(f'Failed to process expired alarm '
+                                     f'{alarm_id}: {str(e)}')
+
+        except Exception as e:
+            logger.error(f'Error checking expired alarms: {str(e)}')

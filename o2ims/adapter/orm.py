@@ -214,6 +214,7 @@ alarm_event_record = Table(
     Column("perceivedSeverity", Integer),
     Column("alarmRaisedTime", String(255)),
     Column("alarmChangedTime", String(255)),
+    Column("alarmClearedTime", String(255)),
     Column("alarmAcknowledgeTime", String(255)),
     Column("alarmAcknowledged", String(255)),
     Column("extensions", String())

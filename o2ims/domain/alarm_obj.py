@@ -101,6 +101,7 @@ class AlarmEventRecord(AgRoot, Serializer):
         self.perceivedSeverity = perc_severity
         self.alarmRaisedTime = raised_time
         self.alarmChangedTime = ''
+        self.alarmClearedTime = ''
         self.alarmAcknowledgeTime = ''
         self.alarmAcknowledged = False
         self.extensions = ''
@@ -222,6 +223,7 @@ class AlarmEventNotification(AgRoot, Serializer):
         self.perceivedSeverity = alarm.perceivedSeverity
         self.alarmRaisedTime = alarm.alarmRaisedTime
         self.alarmChangedTime = alarm.alarmChangedTime
+        self.alarmClearedTime = alarm.alarmClearedTime
         self.alarmAcknowledgeTime = alarm.alarmAcknowledgeTime
         self.alarmAcknowledged = alarm.alarmAcknowledged
         self.extensions = alarm.extensions

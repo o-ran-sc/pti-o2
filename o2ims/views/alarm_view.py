@@ -74,15 +74,14 @@ def alarm_event_record_clear(alarmEventRecordId: str,
         alarm_event_record = uow.alarm_event_records.get(alarmEventRecordId)
         if alarm_event_record is None:
             return None
-        elif alarm_event_record.perceivedSeverity == \
-                PerceivedSeverityEnum.CLEARED:
+        elif str(alarm_event_record.perceivedSeverity) == \
+                PerceivedSeverityEnum.CLEARED.value:
             raise BadRequestException(
                 "Alarm Event Record {} has already been marked as CLEARED."
                 .format(alarmEventRecordId))
-        alarm_event_record.events.append(events.AlarmEventPurged(
+        alarm_event_record.events.append(events.AlarmEventCleared(
             id=alarm_event_record.alarmEventRecordId,
-            notificationEventType=AlarmNotificationEventEnum.CLEAR,
-            updatetime=alarm_event_record.alarmAcknowledgeTime))
+            notificationEventType=AlarmNotificationEventEnum.CLEAR))
 
         uow.alarm_event_records.update(alarm_event_record)
         uow.commit()

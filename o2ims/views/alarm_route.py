@@ -164,7 +164,7 @@ class AlarmGetRouter(Resource):
             if result is not None:
                 return result
         elif clear_action:
-            if clear_action != PerceivedSeverityEnum.CLEARED:
+            if clear_action != PerceivedSeverityEnum.CLEARED.value:
                 raise BadRequestException(
                     'Only the value "5" for "CLEARED" is permitted of '
                     '"perceivedSeverity".')

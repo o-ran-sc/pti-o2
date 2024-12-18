@@ -80,7 +80,7 @@ services:
       - ./tests:/tests
     entrypoint:
       - /bin/sh
-      - /tests/o2app-api-entry2.sh
+      - /tests/o2app-api-entry.sh
     ports:
       - "5005:80"
 

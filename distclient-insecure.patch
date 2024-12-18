@@ -1,0 +1,13 @@
+diff --git a/distributedcloud-client/dcmanagerclient/api/v1/client.py b/distributedcloud-client/dcmanagerclient/api/v1/client.py
+index 6a23103..d68d05d 100644
+--- a/distributedcloud-client/dcmanagerclient/api/v1/client.py
++++ b/distributedcloud-client/dcmanagerclient/api/v1/client.py
+@@ -202,7 +202,7 @@ def authenticate(
+                 "a password (api_key) and a user."
+             )
+         if auth:
+-            session = ks_session.Session(auth=auth)
++            session = ks_session.Session(auth=auth, verify=False)
+ 
+     if session:
+         token = session.get_token()

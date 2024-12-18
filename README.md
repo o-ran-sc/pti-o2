@@ -6,13 +6,11 @@ cloned into temp before docker building
 ```sh
 mkdir -p temp
 cd temp
-git clone --branch r/stx.7.0 https://opendev.org/starlingx/config.git
-git clone --branch master https://opendev.org/starlingx/distcloud-client.git
-(cd distcloud-client && git reset --hard eb4e7eeeb09bdf2e1b80984b378c5a8ea9930f04)
-git clone --depth 1 --branch r/stx.7.0 https://opendev.org/starlingx/fault.git
-cd config
-git checkout bca406d1
-patch -p1 < ../../cgtsclient-insecure.patch
+git clone --branch r/stx.9.0 https://opendev.org/starlingx/config.git
+git clone --branch r/stx.9.0 https://opendev.org/starlingx/distcloud-client.git
+git clone --branch r/stx.9.0 https://opendev.org/starlingx/fault.git
+cd distcloud-client
+patch -p1 < ../../distclient-insecure.patch
 cd -
 ```
 

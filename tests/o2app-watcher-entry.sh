@@ -16,5 +16,10 @@ cp -r /o2app/* /src/o2app
 mkdir -p /src/helm_sdk
 cp -r /helm_sdk/* /src/helm_sdk
 
+# test only
+if [ -e '/etc/ssl/custom-cert.pem' ]; then
+    update-ca-certificates
+fi
+
 pip install -e /src
 python /o2app/entrypoints/resource_watcher.py

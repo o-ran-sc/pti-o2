@@ -171,6 +171,9 @@ def get_stx_access_info(region_name=get_region_name(),
     os_client_args = {}
     for key, val in client_args.items():
         os_client_args['os_{key}'.format(key=key)] = val
+
+    os_client_args['insecure'] = CGTS_INSECURE_SSL
+
     if "" != subcloud_hostname:
         if is_ipv6(subcloud_hostname):
             subcloud_hostname = "[" + subcloud_hostname + "]"
@@ -222,6 +225,7 @@ def get_dc_access_info():
     os_client_args['project_name'] = os_client_args.pop('os_project_name')
     os_client_args['user_domain_name'] = 'Default'
     os_client_args['project_domain_name'] = 'Default'
+    os_client_args['insecure'] = CGTS_INSECURE_SSL
 
     return os_client_args
 

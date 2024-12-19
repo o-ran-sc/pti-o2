@@ -16,6 +16,24 @@
       "message": "It\u0027s better to put the local patches into sub-dirs in case there are more patches in the future for different upstrem repos, e.g.\npatches/stx-distcloud-client/\npatches/stx-config/\npatches/stx-falut/",
       "revId": "6cd897a244e70dc975150af79c0b469b9831098c",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "295be366_549ed70d",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2024-12-19T14:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a16a9fc4_c93e5ece",
+      "revId": "6cd897a244e70dc975150af79c0b469b9831098c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

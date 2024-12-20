@@ -30,8 +30,7 @@ Orchestration (SMO), in the O-RAN Architecture.
 The O2 interfaces enable the management of the O-Cloud (INF)
 infrastructure and the deployment life-cycle management of O-RAN
 cloudified NFs that run on O-Cloud (INF). See `O-RAN O2 General Aspects
-and Principles
-2.0 <https://orandownloadsweb.azurewebsites.net/specifications>`__, and
+and Principles <https://orandownloadsweb.azurewebsites.net/specifications>`__, and
 `INF O2
 documentation <https://docs.o-ran-sc.org/projects/o-ran-sc-pti-o2/en/latest/>`__.
 

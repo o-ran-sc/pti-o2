@@ -111,6 +111,10 @@ def get_o2ims_monitoring_api_base():
     return get_root_api_base() + 'o2ims-infrastructureMonitoring'
 
 
+def get_o2ims_performance_api_base():
+    return get_root_api_base() + 'o2ims-infrastructurePerformance'
+
+
 def get_o2dms_api_base():
     return get_root_api_base() + "o2dms/v1"
 

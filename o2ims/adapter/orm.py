@@ -25,7 +25,7 @@ from sqlalchemy import (
     # Date,
     DateTime,
     ForeignKey,
-    # Boolean,
+    Boolean,
     # engine,
     # event,
     exc,
@@ -39,6 +39,7 @@ from o2ims.domain import subscription_obj as subModel
 from o2ims.domain import alarm_obj as alarmModel
 from o2ims.domain.resource_type import ResourceTypeEnum, ResourceKindEnum
 # from o2ims.domain.alarm_obj import AlarmLastChangeEnum, PerceivedSeverityEnum
+from o2ims.domain import performance_obj as perfModel
 
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
@@ -254,6 +255,55 @@ alarm_service_configuration = Table(
     Column("retentionPeriod", Integer, default=15)
 )
 
+measurement_job = Table(
+    "measurementJob",
+    metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+    Column("version_number", Integer),
+
+    Column("performanceMeasurementJobId", String(255), primary_key=True),
+    Column("consumerPerformanceJobId", String(255)),
+    Column("state", String(255)),  # MeasurementJobState enum
+    Column("collectionInterval", Integer),
+    Column("resourceScopeCriteria", Text),  # JSON stored as text
+    Column("measurementSelectionCriteria", Text),  # JSON stored as text
+    Column("status", String(255)),  # MeasurementJobStatus enum
+    Column("preinstalledJob", Boolean),
+    Column("qualifiedResourceTypes", Text),  # JSON array stored as text
+    Column("extensions", Text)  # JSON stored as text
+)
+
+measured_resource = Table(
+    "measuredResource",
+    metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+    Column("version_number", Integer),
+
+    Column("id", String(255), primary_key=True),
+    Column("resourceId", String(255)),
+    Column("resourceTypeId", String(255)),
+    Column("measurementJobId", ForeignKey(
+        "measurementJob.performanceMeasurementJobId"))
+)
+
+collected_measurement = Table(
+    "collectedMeasurement",
+    metadata,
+    Column("updatetime", DateTime),
+    Column("createtime", DateTime),
+    Column("hash", String(255)),
+    Column("version_number", Integer),
+
+    Column("id", String(255), primary_key=True),
+    Column("measurementId", String(255)),
+    Column("measurementJobId", ForeignKey(
+        "measurementJob.performanceMeasurementJobId"))
+)
+
 
 @retry((exc.IntegrityError), tries=3, delay=2)
 def wait_for_metadata_ready(engine):
@@ -314,6 +364,32 @@ def start_o2ims_mappers(engine=None):
         }
     )
     mapper(subModel.Subscription, subscription)
+
+    # Performance Monitoring Mappering
+    measured_resource_mapper = mapper(
+        perfModel.MeasuredResource,
+        measured_resource
+    )
+
+    collected_measurement_mapper = mapper(
+        perfModel.CollectedMeasurement,
+        collected_measurement
+    )
+
+    mapper(
+        perfModel.MeasurementJob,
+        measurement_job,
+        properties={
+            "measuredResources": relationship(
+                measured_resource_mapper,
+                cascade="all, delete-orphan"
+            ),
+            "collectedMeasurements": relationship(
+                collected_measurement_mapper,
+                cascade="all, delete-orphan"
+            )
+        }
+    )
 
     if engine is not None:
         wait_for_metadata_ready(engine)

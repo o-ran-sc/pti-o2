@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2022 Wind River Systems, Inc.
+# Copyright (C) 2021-2025 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -29,6 +29,12 @@ api_provision_v1 = O2Namespace(
 api_ims_monitoring = O2Namespace(
     "O2IMS-InfrastructureMonitoring",
     description='O2 IMS Monitoring related operations.')
+
+api_ims_performance = O2Namespace(
+    'O2IMS-InfrastructurePerformance',
+    description='O2 IMS Infrastructure Performance API',
+    validate=True
+)
 
 
 @api_ims_inventory.route('/api_versions')
@@ -111,6 +117,50 @@ class MonitoringVersion(Resource):
             'uriPrefix': request.base_url.rsplit('/', 1)[0],
             'apiVersions': [{
                 'version': '1.1.0',
+                # 'isDeprecated': 'False',
+                # 'retirementDate': ''
+            }]
+        }
+
+
+@api_ims_performance.route('/api_version')
+class PerformanceVersion(Resource):
+    api_version = api_ims_inventory.model(
+        'PerformanceApiVersionStructure',
+        {
+            'version': fields.String(
+                required=True,
+                example='1.0.0',
+                description='Identifies a supported version.'
+            )
+        },
+        mask='{version,}'
+    )
+    model = api_ims_inventory.model(
+        "PerformanceAPIVersion",
+        {
+            'uriPrefix': fields.String(
+                required=True,
+                example='https://128.224.115.36:30205/' +
+                'o2ims-infrastructurePerformance',
+                description='Specifies the URI prefix for the API'),
+            'apiVersions': fields.List(
+                fields.Nested(api_version),
+                example=[{'version': '1.0.0'}],
+                description='Version(s) supported for the API ' +
+                'signaled by the uriPrefix attribute.'),
+        },
+        mask='{uriPrefix,apiVersions}'
+    )
+
+    @api_ims_performance.doc('Get Performance Version')
+    @api_ims_monitoring.marshal_with(model)
+    def get(self):
+        """Get Performance Version"""
+        return {
+            'uriPrefix': request.base_url.rsplit('/', 1)[0],
+            'apiVersions': [{
+                'version': '1.0.0',
                 # 'isDeprecated': 'False',
                 # 'retirementDate': ''
             }]

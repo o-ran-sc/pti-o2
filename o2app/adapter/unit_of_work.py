@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Wind River Systems, Inc.
+# Copyright (C) 2021-2025 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@ from sqlalchemy.orm.session import Session
 from o2common.config import config
 from o2common.service.unit_of_work import AbstractUnitOfWork
 
-from o2ims.adapter import ocloud_repository, alarm_repository
+from o2ims.adapter import ocloud_repository, alarm_repository, \
+    performance_repository
 from o2dms.adapter import dms_repository
 
 from o2common.helper import o2logging
@@ -77,6 +78,8 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
             .AlarmProbableCauseSqlAlchemyRepository(self.session)
         self.alarm_service_config = alarm_repository\
             .AlarmServiceConfigurationSqlAlchemyRepository(self.session)
+        self.measurement_jobs = performance_repository\
+            .MeasurementJobSqlAlchemyRepository(self.session)
 
         return super().__enter__()
 

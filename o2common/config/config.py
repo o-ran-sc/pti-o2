@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2024 Wind River Systems, Inc.
+# Copyright (C) 2021-2025 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -109,6 +109,10 @@ def get_o2ims_inventory_api_v1():
 
 def get_o2ims_monitoring_api_base():
     return get_root_api_base() + 'o2ims-infrastructureMonitoring'
+
+
+def get_o2ims_performance_api_base():
+    return get_root_api_base() + 'o2ims-infrastructurePerformance'
 
 
 def get_o2dms_api_base():

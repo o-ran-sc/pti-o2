@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0ed164a_fb776313",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000398
+      },
+      "writtenOn": "2024-12-26T09:37:47Z",
+      "side": 1,
+      "message": "Purge or clear? seems that you used clear in code implementation instead of Purge, can you share more why use purge before and need to change to clear now (showed in File 12)?",
+      "range": {
+        "startLine": 7,
+        "startChar": 17,
+        "endLine": 7,
+        "endChar": 23
+      },
+      "revId": "34e4e30e1c1bbdbb81c98ad86a7d61795d33af02",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "255ba8f4_bc8d76ff",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000398
+      },
+      "writtenOn": "2024-12-26T09:37:47Z",
+      "side": 1,
+      "message": "correct the syntax errors in this.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 64
+      },
+      "revId": "34e4e30e1c1bbdbb81c98ad86a7d61795d33af02",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

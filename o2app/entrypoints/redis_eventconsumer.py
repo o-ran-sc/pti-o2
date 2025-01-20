@@ -51,6 +51,7 @@ def main():
     pubsub.subscribe('DmsChanged')
     pubsub.subscribe('ResourceChanged')
     pubsub.subscribe('AlarmEventChanged')
+    pubsub.subscribe('AlarmEventCleared')
     pubsub.subscribe('AlarmEventPurged')
 
     for m in pubsub.listen():
@@ -147,6 +148,14 @@ def handle_changed(m, bus):
         cmd = imscmd.PubAlarm2SMO(data=AlarmEvent2SMO(
             id=data['id'], ref=ref,
             eventtype=data['notificationEventType'],
+            updatetime=data['updatetime']))
+        bus.handle(cmd)
+    elif channel == 'AlarmEventCleared':
+        datastr = m['data']
+        data = json.loads(datastr)
+        logger.info('AlarmEventCleared with cmd:{}'.format(data))
+        cmd = imscmd.ClearAlarmEvent(data=AlarmEvent2SMO(
+            id=data['id'], ref="", eventtype=data['notificationEventType'],
             updatetime=data['updatetime']))
         bus.handle(cmd)
     elif channel == 'AlarmEventPurged':

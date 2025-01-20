@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 # pylint: disable=too-few-public-methods
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
 from o2common.domain.events import Event
@@ -65,7 +65,14 @@ class AlarmEventChanged(Event):
 
 
 @dataclass
+class AlarmEventCleared(Event):
+    id: str
+    notificationEventType: AlarmNotificationEventEnum
+    updatetime: datetime = field(default_factory=datetime.now)
+
+
+@dataclass
 class AlarmEventPurged(Event):
     id: str
     notificationEventType: AlarmNotificationEventEnum
-    updatetime: datetime.now()
+    updatetime: datetime = field(default_factory=datetime.now)

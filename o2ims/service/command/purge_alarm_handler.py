@@ -14,9 +14,8 @@
 
 import json
 
+from fmclient.common.exceptions import HTTPNotFound
 from o2common.adapter.notifications import AbstractNotifications
-from o2common.config import conf
-from o2common.domain.filter import gen_orm_filter
 from o2common.helper import o2logging
 from o2common.service.unit_of_work import AbstractUnitOfWork
 from o2ims.adapter.clients.fault_client import StxAlarmClient
@@ -30,17 +29,13 @@ def purge_alarm_event(
     notifications: AbstractNotifications,
 ):
     """
-    Purges an alarm event and notifies relevant subscribers.
+    Purge an alarm event.
 
     This method performs the following steps:
     1. Retrieves data from the command object and initializes the fault client.
     2. Uses the Unit of Work pattern to find and delete the corresponding
        alarm event record.
-    3. Updates the alarm event record's hash, extensions, changed time,
-       and perceived severity.
-    4. Commits the changes to the database.
-    5. Finds and processes all alarm subscriptions, deciding whether to
-       send notifications based on subscription filters.
+    3. Commits the changes to the database.
 
     Parameters:
     - cmd (commands.PubAlarm2SMO): Command object containing the alarm
@@ -58,75 +53,23 @@ def purge_alarm_event(
     data = cmd.data
     with uow:
         alarm_event_record = uow.alarm_event_records.get(data.id)
-        alarm = fault_client.delete(alarm_event_record.alarmEventRecordId)
-        alarm_event_record.hash = alarm.hash
-        alarm_event_record.extensions = json.dumps(alarm.filtered)
-        alarm_event_record.alarmChangedTime = alarm.updatetime.\
-            strftime("%Y-%m-%dT%H:%M:%S")
-        alarm_event_record.perceivedSeverity = \
-            alarm_obj.PerceivedSeverityEnum.CLEARED
-
-        uow.alarm_event_records.update(alarm_event_record)
-
-        uow.commit()
-
-        alarm = uow.alarm_event_records.get(data.id)
-        subs = uow.alarm_subscriptions.list()
-        for sub in subs:
-            sub_data = sub.serialize()
-            logger.debug('Alarm Subscription: {}'.format(
-                sub_data['alarmSubscriptionId']))
-
-            if not sub_data.get('filter', None):
-                callback_smo(notifications, sub, data, alarm)
-                continue
+        if str(alarm_event_record.perceivedSeverity) != \
+                alarm_obj.PerceivedSeverityEnum.CLEARED.value:
             try:
-                args = gen_orm_filter(alarm_obj.AlarmEventRecord,
-                                      sub_data['filter'])
-            except KeyError:
+                fault_client.delete(alarm_event_record.alarmEventRecordId)
+            except HTTPNotFound:
+                logger.info(
+                    f'Alarm {alarm_event_record.alarmEventRecordId} '
+                    'already deleted from fault management system'
+                )
+            except Exception as e:
                 logger.warning(
-                    'Alarm Subscription {} filter {} has wrong attribute '
-                    'name or value. Ignore the filter'.format(
-                        sub_data['alarmSubscriptionId'],
-                        sub_data['filter']))
-                callback_smo(notifications, sub, data, alarm)
-                continue
-            args.append(alarm_obj.AlarmEventRecord.
-                        alarmEventRecordId == data.id)
-            count, _ = uow.alarm_event_records.list_with_count(*args)
-            if count != 0:
-                logger.debug(
-                    'Alarm Event {} skip for subscription {} because of '
-                    'the filter.'
-                    .format(data.id, sub_data['alarmSubscriptionId']))
-                continue
-            callback_smo(notifications, sub, data, alarm)
+                    f'Failed to delete alarm '
+                    f'{alarm_event_record.alarmEventRecordId} '
+                    f'from fault management system: {str(e)}. '
+                    'Continuing with database purge.'
+                )
 
-
-def callback_smo(notifications: AbstractNotifications,
-                 sub: alarm_obj.AlarmSubscription,
-                 msg: alarm_obj.AlarmEvent2SMO,
-                 alarm: alarm_obj.AlarmEventRecord):
-    sub_data = sub.serialize()
-    alarm_data = alarm.serialize()
-    callback = {
-        'globalCloudID': conf.DEFAULT.ocloud_global_id,
-        'consumerSubscriptionId': sub_data['consumerSubscriptionId'],
-        'notificationEventType': msg.notificationEventType,
-        'objectRef': msg.objectRef,
-        'alarmEventRecordId': alarm_data['alarmEventRecordId'],
-        'resourceTypeID': alarm_data['resourceTypeId'],
-        'resourceID': alarm_data['resourceId'],
-        'alarmDefinitionID': alarm_data['alarmDefinitionId'],
-        'probableCauseID': alarm_data['probableCauseId'],
-        'alarmRaisedTime': alarm_data['alarmRaisedTime'],
-        'alarmChangedTime': alarm_data['alarmChangedTime'],
-        'alarmAcknowledgeTime': alarm_data['alarmAcknowledgeTime'],
-        'alarmAcknowledged': alarm_data['alarmAcknowledged'],
-        'perceivedSeverity': alarm_data['perceivedSeverity'],
-        'extensions': json.loads(alarm_data['extensions'])
-    }
-    logger.info('callback URL: {}'.format(sub_data['callback']))
-    logger.debug('callback data: {}'.format(json.dumps(callback)))
-
-    return notifications.send(sub_data['callback'], callback)
+        uow.alarm_event_records.delete(alarm_event_record)
+        uow.commit()
+        logger.debug(f'Successfully purge alarm event record: {data.id}')

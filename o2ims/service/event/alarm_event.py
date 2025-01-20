@@ -29,6 +29,15 @@ def notify_alarm_event_change(
         event.id))
 
 
+def notify_alarm_event_clear(
+    event: events.AlarmEventCleared,
+    publish: Callable,
+):
+    publish("AlarmEventCleared", event)
+    logger.debug("published Alarm Event Cleared: {}".format(
+        event.id))
+
+
 def notify_alarm_event_purge(
     event: events.AlarmEventPurged,
     publish: Callable,

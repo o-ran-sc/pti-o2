@@ -2,7 +2,7 @@
 # -e git+https://opendev.org/starlingx/config.git@master#egg=cgtsclient&subdirectory=sysinv/cgts-client/cgts-client
 # -e git+https://opendev.org/starlingx/fault.git@master#egg=fmclient&subdirectory=python-fmclient/fmclient
 
--e git+https://opendev.org/starlingx/distcloud-client.git@b4a8ec19dc6078952a3762d7eee8d426d520a1f0#egg=distributedcloud-client&subdirectory=distributedcloud-client
-# Updated to lastest commit at May 24th 2024
--e git+https://opendev.org/starlingx/config.git@04271215320b8ab9824be837ac5aae07883d363b#egg=cgtsclient&subdirectory=sysinv/cgts-client/cgts-client
--e git+https://opendev.org/starlingx/fault.git@b213c9155b2323831143977447f41efc2f84b76a#egg=fmclient&subdirectory=python-fmclient/fmclient
+# Updated to lastest commit at stx 9.0
+-e git+https://opendev.org/starlingx/distcloud-client.git@r/stx.9.0#egg=distributedcloud-client&subdirectory=distributedcloud-client
+-e git+https://opendev.org/starlingx/config.git@r/stx.9.0#egg=cgtsclient&subdirectory=sysinv/cgts-client/cgts-client
+-e git+https://opendev.org/starlingx/fault.git@r/stx.9.0#egg=fmclient&subdirectory=python-fmclient/fmclient

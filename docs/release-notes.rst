@@ -20,6 +20,8 @@ Version History
 +------------+----------+----------------------------------------------+-------------+
 | **Date**   | **Ver.** | **Author**                                   | **Comment** |
 +------------+----------+----------------------------------------------+-------------+
+| 2025-01-15 | 2.1.0    | Jon Zhang, Jackie Huang                      | K Release   |
++------------+----------+----------------------------------------------+-------------+
 | 2024-06-15 | 2.0.4    | Jon Zhang, Jackie Huang, Joshua Kraitberg    | J Release   |
 +------------+----------+----------------------------------------------+-------------+
 | 2023-12-15 | 2.0.3    | Jon Zhang, Jackie Huang                      | I Release   |
@@ -32,6 +34,19 @@ Version History
 +------------+----------+----------------------------------------------+-------------+
 | 2021-12-15 | 1.0.0    | Bin Yang, Jon Zhang                          | E Release   |
 +------------+----------+----------------------------------------------+-------------+
+
+Version 2.1.0, 2025-01-15
+-------------------------
+
+-  Upgrade Monitoring API to version 1.1
+
+   -  Support Alarm Service Configuration initial and update
+   -  Autonomous Alarm Purge based on Alarm Service Configuration
+   -  Upgrade Monitoring API version from v1.0 to v1.1
+
+-  Other updates
+
+   -  Bugs fixed
 
 Version 2.0.4, 2024-06-15
 -------------------------

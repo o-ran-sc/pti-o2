@@ -19,6 +19,7 @@ from dataclasses import dataclass
 
 from o2ims.domain.stx_object import StxGenericModel
 from o2ims.domain.alarm_obj import AlarmEvent2SMO, FaultGenericModel
+from o2ims.domain.performance_obj import MeasurementJob
 from o2ims.domain.subscription_obj import Message2SMO, RegistrationMessage
 # from o2ims.domain.resource_type import ResourceTypeEnum
 from o2common.domain.commands import Command
@@ -32,6 +33,11 @@ class UpdateStxObject(Command):
 @dataclass
 class UpdateFaultObject(Command):
     data: FaultGenericModel
+
+
+@dataclass
+class UpdatePmObject(Command):
+    pass
 
 
 @dataclass
@@ -148,3 +154,9 @@ class ClearAlarmEvent(UpdateFaultObject):
 @dataclass
 class PurgeAlarmEvent(UpdateFaultObject):
     data: AlarmEvent2SMO
+
+
+@dataclass
+class UpdateMeasurement(UpdatePmObject):
+    measurement: MeasurementJob
+    parentid: str

@@ -6,3 +6,5 @@
 -e git+https://opendev.org/starlingx/distcloud-client.git@r/stx.9.0#egg=distributedcloud-client&subdirectory=distributedcloud-client
 -e git+https://opendev.org/starlingx/config.git@r/stx.9.0#egg=cgtsclient&subdirectory=sysinv/cgts-client/cgts-client
 -e git+https://opendev.org/starlingx/fault.git@r/stx.9.0#egg=fmclient&subdirectory=python-fmclient/fmclient
+
+elasticsearch

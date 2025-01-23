@@ -15,6 +15,7 @@
 from __future__ import annotations
 from enum import Enum
 from typing import List, Dict
+import json
 from o2common.domain.base import AgRoot, Serializer
 
 
@@ -78,11 +79,50 @@ class MeasurementJob(AgRoot, Serializer):
         self.consumerPerformanceJobId = consumer_job_id
         self.state = state
         self.collectionInterval = collection_interval
-        self.resourceScopeCriteria = resource_criteria or {}
-        self.measurementSelectionCriteria = measurement_criteria
+        self._resourceScopeCriteria = json.dumps(resource_criteria) if resource_criteria else '{}'  # noqa: E501
+        self._measurementSelectionCriteria = json.dumps(measurement_criteria) if measurement_criteria else '[]'  # noqa: E501
         self.status = status
         self.preinstalledJob = preinstalled_job
-        self.qualifiedResourceTypes: List[str] = []
+        self._qualifiedResourceTypes = '[]'
         self.measuredResources: List[MeasuredResource] = []
         self.collectedMeasurements: List[CollectedMeasurement] = []
         self.extensions = ''
+
+    @property
+    def resourceScopeCriteria(self) -> Dict:
+        return json.loads(self._resourceScopeCriteria)
+
+    @resourceScopeCriteria.setter
+    def resourceScopeCriteria(self, value: Dict):
+        self._resourceScopeCriteria = json.dumps(value) if value else '{}'
+
+    @property
+    def measurementSelectionCriteria(self) -> List:
+        return json.loads(self._measurementSelectionCriteria)
+
+    @measurementSelectionCriteria.setter
+    def measurementSelectionCriteria(self, value: List):
+        self._measurementSelectionCriteria = \
+            json.dumps(value) if value else '[]'
+
+    @property
+    def qualifiedResourceTypes(self) -> List:
+        return json.loads(self._qualifiedResourceTypes)
+
+    @qualifiedResourceTypes.setter
+    def qualifiedResourceTypes(self, value: List):
+        self._qualifiedResourceTypes = json.dumps(value) if value else '[]'
+
+    def __composite_values__(self):
+        return [
+            self.performanceMeasurementJobId,
+            self.consumerPerformanceJobId,
+            self.state,
+            self.collectionInterval,
+            self._resourceScopeCriteria,
+            self._measurementSelectionCriteria,
+            self.status,
+            self.preinstalledJob,
+            self._qualifiedResourceTypes,
+            self.extensions
+        ]

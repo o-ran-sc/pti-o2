@@ -60,6 +60,9 @@ from o2ims.service.watcher.agg_undefined_watcher import UndefinedAggWatcher
 from o2ims.adapter.clients.aggregate_client import ComputeAggClient, \
     NetworkAggClient, StorageAggClient, UndefinedAggClient
 
+from o2ims.adapter.clients.pm_client import MeasurementJobClient
+from o2ims.service.watcher.measurement_watcher import MeasurementWatcher
+
 from o2common.helper import o2logging
 logger = o2logging.get_logger(__name__)
 
@@ -80,9 +83,7 @@ class WatcherService(cotyledon.Service):
             root = WatcherTree(OcloudWatcher(
                 StxOcloudClient(), self.bus))
             root.addchild(
-                DmsWatcher(StxDmsClient(), self.bus))
-            # root.addchild(
-            #     AlarmWatcher(StxFaultClient(), self.bus))
+               DmsWatcher(StxDmsClient(), self.bus))
 
             child_respool = root.addchild(
                 ResourcePoolWatcher(StxResourcePoolClient(),
@@ -119,6 +120,11 @@ class WatcherService(cotyledon.Service):
             # Add Alarm watch
             child_respool.addchild(
                 AlarmWatcher(StxAlarmClient(self.bus.uow), self.bus))
+
+            # Add Measurement watch
+            child_respool.addchild(
+                MeasurementWatcher(MeasurementJobClient(self.bus.uow),
+                                   self.bus))
 
             self.worker.add_watcher(root)
 

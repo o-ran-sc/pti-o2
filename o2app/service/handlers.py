@@ -28,7 +28,7 @@ from o2ims.service.auditor import ocloud_handler, dms_handler, \
     pserver_mem_handler, pserver_port_handler, pserver_if_handler,\
     pserver_eth_handler, pserver_acc_handler, alarm_handler, \
     pserver_dev_handler, agg_compute_handler, agg_network_handler,\
-    agg_storage_handler, agg_undefined_handler
+    agg_storage_handler, agg_undefined_handler, measurement_handler
 from o2ims.service.command import notify_handler, registration_handler,\
     notify_alarm_handler, clear_alarm_handler, purge_alarm_handler
 from o2ims.service.event import ocloud_event, resource_event, \
@@ -101,4 +101,5 @@ COMMAND_HANDLERS = {
     commands.Register2SMO: registration_handler.registry_to_smo,
     commands.ClearAlarmEvent: clear_alarm_handler.clear_alarm_event,
     commands.PurgeAlarmEvent: purge_alarm_handler.purge_alarm_event,
+    commands.UpdateMeasurement: measurement_handler.update_measurement,
 }  # type: Dict[Type[commands.Command], Callable]

@@ -430,3 +430,39 @@ def get_min_retention_period():
         logger.warning(f"Invalid min_retention_period value: {e}")
 
     return _DEFAULT_MIN_RETENTION_PERIOD
+
+
+def get_es_access_info(ip=None):
+    """Get Elasticsearch access information.
+
+    Args:
+        ip (str, optional): IP address of the Elasticsearch server. 
+            Defaults to None and will use environment variable.
+
+    Returns:
+        dict: Dictionary containing Elasticsearch connection details
+    """
+    # Get values from config file
+    username = config.conf.PM.ES_USERNAME
+    password = config.conf.PM.ES_PASSWORD
+    port = config.conf.PM.ES_PORT
+    path = config.conf.PM.ES_PATH
+
+    # Allow environment variables to override config file
+    username = os.getenv('ES_USERNAME', username)
+    password = os.getenv('ES_PASSWORD', password)
+    port = os.getenv('ES_PORT', port)
+    path = os.getenv('ES_PATH', path)
+
+    # Use provided IP or fallback to environment variable
+    ip = "128.224.207.114"
+    # ip = ip or os.getenv('ES_IP', None)
+
+    # Construct the URL
+    url = f'https://{ip}:{port}{path}'
+
+    return {
+        'url': url,
+        'username': username,
+        'password': password,
+    }

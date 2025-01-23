@@ -283,8 +283,7 @@ measured_resource = Table(
     Column("hash", String(255)),
     Column("version_number", Integer),
 
-    Column("id", String(255), primary_key=True),
-    Column("resourceId", String(255)),
+    Column("resourceId", String(255), primary_key=True),
     Column("resourceTypeId", String(255)),
     Column("measurementJobId", ForeignKey(
         "measurementJob.performanceMeasurementJobId"))
@@ -298,8 +297,7 @@ collected_measurement = Table(
     Column("hash", String(255)),
     Column("version_number", Integer),
 
-    Column("id", String(255), primary_key=True),
-    Column("measurementId", String(255)),
+    Column("measurementId", String(255), primary_key=True),
     Column("measurementJobId", ForeignKey(
         "measurementJob.performanceMeasurementJobId"))
 )

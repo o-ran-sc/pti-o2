@@ -384,3 +384,87 @@ You can uninstall the O-RAN O2 application on INF from the command line.
 ----------
 
 You have uninstalled the O2 application from the system.
+
+Enable O2 Performance Management API Service
+============================================
+
+1. Prerequisites
+----------------
+
+Ensure Elasticsearch is installed and accessible.
+
+   ::
+
+      # Example command (adjust based on your environment)
+      ~(keystone_admin)]$ system application-show wr-analytics
+
+
+2. Procedure
+------------
+
+You can enable Performance Management API on O2 from the command line.
+
+1. Configure O2 application configuration file with Elasticsearch.
+
+   For example:
+
+      ::
+
+         cat <<EOF >> app.conf
+
+         [PM]
+         # Elasticsearch connection settings
+         ES_USERNAME = sysadmin
+         ES_PASSWORD = sysadmin
+         ES_PORT = 31001
+         ES_PATH = /mon-elasticsearch-client
+         EOF
+
+2. Update the override file for O2 service.
+
+   Remove old configurations and inject the new app.conf into o2service-override.yaml
+
+   ::
+
+      # Remove existing applicationconfig entries
+      (keystone_admin)]$ sed -i "/applicationconfig:/d" o2service-override.yaml
+
+      # Encode app.conf and append to override file
+      (keystone_admin)]$ APPLICATION_CONFIG=$(base64 -w 0 app.conf)
+      (keystone_admin)]$ echo "applicationconfig: $APPLICATION_CONFIG" >> o2service-override.yaml
+
+3. Update the overrides for the oran-o2 application.
+
+   Apply the updated overrides to the O2 Helm chart
+
+   ::
+
+      ~(keystone_admin)]$ system helm-override-update oran-o2 oran-o2 oran-o2 --values o2service-override.yaml
+
+      # Check the overrides
+      ~(keystone_admin)]$ system helm-override-show oran-o2 oran-o2 oran-o2
+
+4. Run the **system application-apply** command to apply the updates.
+
+   ::
+
+      ~(keystone_admin)]$ system application-apply oran-o2
+
+5. Monitor the status using the command below.
+
+   ::
+
+      ~(keystone_admin)]$ watch -n 5 system application-list
+
+   OR
+
+   ::
+
+      ~(keystone_admin)]$ watch kubectl get all -n oran-o2
+
+3. Results
+----------
+
+The O2 Performance Management API Service is now enabled with Elasticsearch
+integration. The application status should transition to applied in the
+system application list.

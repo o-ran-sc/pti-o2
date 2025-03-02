@@ -43,6 +43,7 @@ Version 2.1.0, 2025-01-15
    -  Support Alarm Service Configuration initial and update
    -  Autonomous Alarm Purge based on Alarm Service Configuration
    -  Upgrade Monitoring API version from v1.0 to v1.1
+   -  Add Performance Management Jobs query API
 
 -  Other updates
 

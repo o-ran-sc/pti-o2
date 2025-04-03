@@ -1,9 +1,9 @@
 FROM nexus3.onap.org:10001/onap/integration-python:12.0.0 as build
 # https://nexus3.onap.org/#browse/search=keyword%3Dintegration-python:d406d405e4cfbf1186265b01088caf9a
 # https://git.onap.org/integration/docker/onap-python/tree/Dockerfile
-
+ 
 USER root
-
+ 
 RUN apk add --no-cache \
     git \
     curl \
@@ -32,31 +32,31 @@ RUN apk add --no-cache \
     && tar -zxvf helm-v3.3.1-linux-amd64.tar.gz \
     && cp linux-amd64/helm /usr/local/bin \
     && rm -f helm-v3.3.1-linux-amd64.tar.gz
-
+ 
 COPY requirements.txt /tmp/
 COPY requirements-stx.txt /tmp/
 COPY constraints.txt /tmp/
 COPY setup.py /src/
-
+ 
 ENV PATH="/.venv/bin:${PATH}"
-
+ 
 RUN mkdir -p /.venv && \
     python -m venv /.venv \
     && pip install --no-cache-dir -r /tmp/requirements.txt -r /tmp/requirements-stx.txt -c /tmp/constraints.txt \
     && pip install --no-cache-dir -e /src
-
+ 
 FROM nexus3.onap.org:10001/onap/integration-python:12.0.0
-
+ 
 ARG user=orano2
 ARG group=orano2
-
+ 
 USER root
-
+ 
 RUN apk add --no-cache bash
-
+ 
 COPY --from=build /.venv /.venv
 COPY --from=build /src /src
-
+ 
 # Create a group and user
 RUN addgroup -S $group \
     && adduser -S -D -h /home/$user $user $group \
@@ -71,19 +71,25 @@ RUN addgroup -S $group \
     && chown -R $user:$group /src \
     && chown -R $user:$group /configs \
     && chown -R $user:$group /etc/o2/
-
+ 
 COPY helm_sdk/ /src/helm_sdk/
-
+ 
 COPY configs/ /etc/o2/
 COPY configs/ /configs/
-
+ 
 COPY o2common/ /src/o2common/
 COPY o2app/ /src/o2app/
 COPY o2dms/ /src/o2dms/
 COPY o2ims/ /src/o2ims/
-
+ 
+# Upgrade expat to latest version to mitigate CVE-2024-45492
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    apk add --upgrade expat && \
+    apk info expat
+ 
 WORKDIR /src
-
+ 
 # USER $user
 ENV PYTHONHASHSEED=0
 ENV PATH="/.venv/bin:${PATH}"

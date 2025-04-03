@@ -82,6 +82,12 @@ COPY o2app/ /src/o2app/
 COPY o2dms/ /src/o2dms/
 COPY o2ims/ /src/o2ims/
 
+# Upgrade expat to latest version to mitigate CVE-2024-45492
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    apk add --upgrade expat && \
+    apk info expat
+
 WORKDIR /src
 
 # USER $user

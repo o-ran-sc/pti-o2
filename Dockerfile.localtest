@@ -40,13 +40,13 @@ COPY helm_sdk/ /src/helm_sdk/
 COPY configs/ /etc/o2/
 COPY configs/ /configs/
 
+# First install base packages from stable repository
 RUN apk add --no-cache \
     git \
     curl \
     bluez-dev \
     bzip2-dev \
     dpkg-dev dpkg \
-    expat-dev \
     gcc \
     libc-dev \
     libffi-dev \
@@ -54,7 +54,6 @@ RUN apk add --no-cache \
     libtirpc-dev \
     linux-headers \
     make \
-    ncurses-dev \
     openssl-dev \
     pax-utils \
     sqlite-dev \
@@ -65,16 +64,70 @@ RUN apk add --no-cache \
     xz-dev \
     zlib-dev
 
+# Then add edge main repository and install dependencies
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    # Install ncurses packages first from edge repository
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main \
+        ncurses-dev \
+        ncurses-terminfo-base \
+        ncurses-libs && \
+    # Install other build dependencies
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main \
+        python3-dev \
+        gcc \
+        musl-dev \
+        libffi-dev \
+        openssl-dev \
+        bzip2-dev \
+        zlib-dev \
+        readline-dev \
+        sqlite-dev \
+        tcl-dev \
+        tk-dev \
+        make \
+        linux-headers && \
+    # Install expat and fontconfig-dev
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main expat=2.7.0-r0 expat-dev=2.7.0-r0 fontconfig-dev && \
+    # Download and build Python from source
+    cd /tmp && \
+    curl -O https://www.python.org/ftp/python/3.12.2/Python-3.12.2.tgz && \
+    tar xzf Python-3.12.2.tgz && \
+    cd Python-3.12.2 && \
+    ./configure --with-system-expat --without-readline && \
+    make && \
+    make install && \
+    cd /tmp && \
+    rm -rf Python-3.12.2 Python-3.12.2.tgz && \
+    # Clean up build dependencies
+    apk del --no-cache \
+        python3-dev \
+        gcc \
+        musl-dev \
+        libffi-dev \
+        openssl-dev \
+        bzip2-dev \
+        zlib-dev \
+        readline-dev \
+        sqlite-dev \
+        tcl-dev \
+        tk-dev \
+        make \
+        linux-headers
+
 RUN set -ex \
-    && apk add --no-cache bash \
-        && apk add --no-cache --virtual .fetch2-deps \
-    && pip install -r /tmp/requirements.txt -c /tmp/constraints.txt \
-    && pip install -r /tmp/requirements-test.txt \
-    && pip install -e /cgtsclient/sysinv/cgts-client/cgts-client/ \
-    && pip install -e /distcloud-client/distributedcloud-client \
-    && pip install -e /faultclient/python-fmclient/fmclient/ \
-    && pip install -e /src \
-    && apk del --no-network .fetch2-deps
+    && echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    apk add --no-cache bash && \
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main expat=2.7.0-r0 && \
+    apk add --no-cache --virtual .fetch2-deps && \
+    pip install -r /tmp/requirements.txt -c /tmp/constraints.txt && \
+    pip install -r /tmp/requirements-test.txt && \
+    pip install -e /cgtsclient/sysinv/cgts-client/cgts-client/ && \
+    pip install -e /distcloud-client/distributedcloud-client && \
+    pip install -e /faultclient/python-fmclient/fmclient/ && \
+    pip install -e /src && \
+    apk del --no-network .fetch2-deps
 
 COPY tests/ /tests/
 

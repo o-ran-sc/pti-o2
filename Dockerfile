@@ -4,13 +4,13 @@ FROM nexus3.onap.org:10001/onap/integration-python:12.0.0 as build
 
 USER root
 
+# First install base packages from stable repository
 RUN apk add --no-cache \
     git \
     curl \
     bluez-dev \
     bzip2-dev \
     dpkg-dev dpkg \
-    expat-dev \
     gcc \
     libc-dev \
     libffi-dev \
@@ -18,7 +18,6 @@ RUN apk add --no-cache \
     libtirpc-dev \
     linux-headers \
     make \
-    ncurses-dev \
     openssl-dev \
     pax-utils \
     sqlite-dev \
@@ -27,11 +26,16 @@ RUN apk add --no-cache \
     tk-dev \
     util-linux-dev \
     xz-dev \
-    zlib-dev \
-    && curl -O https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz \
-    && tar -zxvf helm-v3.3.1-linux-amd64.tar.gz \
-    && cp linux-amd64/helm /usr/local/bin \
-    && rm -f helm-v3.3.1-linux-amd64.tar.gz
+    zlib-dev
+
+# Then add edge main repository and install expat and fontconfig-dev
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main expat=2.7.0-r0 expat-dev=2.7.0-r0 fontconfig-dev && \
+    curl -O https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz && \
+    tar -zxvf helm-v3.3.1-linux-amd64.tar.gz && \
+    cp linux-amd64/helm /usr/local/bin && \
+    rm -f helm-v3.3.1-linux-amd64.tar.gz
 
 COPY requirements.txt /tmp/
 COPY requirements-stx.txt /tmp/
@@ -52,7 +56,59 @@ ARG group=orano2
 
 USER root
 
-RUN apk add --no-cache bash
+# First install base packages from stable repository
+RUN apk add --no-cache bash curl
+
+# Then add edge main repository and install dependencies
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    # Install ncurses packages first from edge repository
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main \
+        ncurses-dev \
+        ncurses-terminfo-base \
+        ncurses-libs && \
+    # Install other build dependencies
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main \
+        python3-dev \
+        gcc \
+        musl-dev \
+        libffi-dev \
+        openssl-dev \
+        bzip2-dev \
+        zlib-dev \
+        readline-dev \
+        sqlite-dev \
+        tcl-dev \
+        tk-dev \
+        make \
+        linux-headers && \
+    # Install expat
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main expat=2.7.0-r0 && \
+    # Download and build Python from source
+    cd /tmp && \
+    curl -O https://www.python.org/ftp/python/3.12.2/Python-3.12.2.tgz && \
+    tar xzf Python-3.12.2.tgz && \
+    cd Python-3.12.2 && \
+    ./configure --with-system-expat --without-readline && \
+    make && \
+    make install && \
+    cd /tmp && \
+    rm -rf Python-3.12.2 Python-3.12.2.tgz && \
+    # Clean up build dependencies
+    apk del --no-cache \
+        python3-dev \
+        gcc \
+        musl-dev \
+        libffi-dev \
+        openssl-dev \
+        bzip2-dev \
+        zlib-dev \
+        readline-dev \
+        sqlite-dev \
+        tcl-dev \
+        tk-dev \
+        make \
+        linux-headers
 
 COPY --from=build /.venv /.venv
 COPY --from=build /src /src

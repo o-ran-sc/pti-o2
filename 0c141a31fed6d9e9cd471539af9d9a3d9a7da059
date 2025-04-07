@@ -22,6 +22,46 @@
       },
       "revId": "0c141a31fed6d9e9cd471539af9d9a3d9a7da059",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a80d077f_6a2d9c8f",
+        "filename": "Dockerfile.localtest",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2025-04-07T02:58:25Z",
+      "side": 1,
+      "message": "Make the format consistent, and use \"\u0026\u0026\" at the end or beginning of the line.",
+      "range": {
+        "startLine": 119,
+        "startChar": 4,
+        "endLine": 124,
+        "endChar": 69
+      },
+      "revId": "0c141a31fed6d9e9cd471539af9d9a3d9a7da059",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92015223_153c6b49",
+        "filename": "Dockerfile.localtest",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2025-04-07T02:58:25Z",
+      "side": 1,
+      "message": "left one blank line only.",
+      "revId": "0c141a31fed6d9e9cd471539af9d9a3d9a7da059",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

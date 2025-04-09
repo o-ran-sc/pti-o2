@@ -52,11 +52,11 @@ ARG group=orano2
 
 USER root
 
-# Upgrade expat to latest version to mitigate CVE-2024-45492
+# Upgrade expat and busybox to latest versions to mitigate CVEs
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     apk update && \
-    apk add --upgrade expat && \
-    apk info expat
+    apk add --upgrade expat busybox && \
+    apk info expat busybox
 
 RUN apk add --no-cache bash
 
@@ -87,6 +87,12 @@ COPY o2common/ /src/o2common/
 COPY o2app/ /src/o2app/
 COPY o2dms/ /src/o2dms/
 COPY o2ims/ /src/o2ims/
+
+# Upgrade expat and krb5 to latest versions to mitigate CVEs
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    apk add --upgrade expat krb5 && \
+    apk info expat krb5
 
 WORKDIR /src
 

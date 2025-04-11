@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88d2c190_1f67d3d5",
+        "filename": "Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-04-11T14:25:47Z",
+      "side": 1,
+      "message": "can you be consistent with \u0026\u0026 in file \n\nPlease change it to \nRUN echo \"https://dl-cdn.alpinelinux.org/alpine/edge/main\" \u003e\u003e /etc/apk/repositories \u0026\u0026 \\\n    apk update \\\n    \u0026\u0026 apk add --upgrade expat busybox \\\n    \u0026\u0026 apk info expat busybox",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 26
+      },
+      "revId": "5e42681288c6478880f304246ec266645243be3c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f1e4ae0_e2028ac8",
+        "filename": "Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-04-11T14:25:47Z",
+      "side": 1,
+      "message": "Like this",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 42
+      },
+      "revId": "5e42681288c6478880f304246ec266645243be3c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef44a582_fcd9a0ed",
+        "filename": "Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-04-11T14:25:47Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 23
+      },
+      "revId": "5e42681288c6478880f304246ec266645243be3c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

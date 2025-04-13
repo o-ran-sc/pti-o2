@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86a2cd10_c6a65033",
+        "filename": "Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-04-13T07:30:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88d2c190_1f67d3d5",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 26
+      },
+      "revId": "5e42681288c6478880f304246ec266645243be3c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f1e4ae0_e2028ac8",
@@ -47,6 +71,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbace42e_37441543",
+        "filename": "Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-04-13T07:30:15Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "7f1e4ae0_e2028ac8",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 42
+      },
+      "revId": "5e42681288c6478880f304246ec266645243be3c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef44a582_fcd9a0ed",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-04-11T14:25:47Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 23
+      },
+      "revId": "5e42681288c6478880f304246ec266645243be3c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb9ddcb4_ca2686d6",
+        "filename": "Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-04-13T07:30:15Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ef44a582_fcd9a0ed",
       "range": {
         "startLine": 92,
         "startChar": 0,

@@ -18,8 +18,10 @@ RUN apk add --no-cache \
     libtirpc-dev \
     linux-headers \
     make \
+    ncurses-dev \
     openssl-dev \
     pax-utils \
+    sqlite-dev \
     tcl-dev \
     tk \
     tk-dev \
@@ -40,9 +42,9 @@ ENV PATH="/.venv/bin:${PATH}"
 
 RUN mkdir -p /.venv && \
     python -m venv /.venv \
-    && pip install --no-cache-dir --upgrade pip setuptools==70.0 \
     && pip install --no-cache-dir -r /tmp/requirements.txt -r /tmp/requirements-stx.txt -c /tmp/constraints.txt \
-    && pip install --no-cache-dir -e /src
+    && pip install --no-cache-dir -e /src \
+    && pip install --no-cache-dir --upgrade pip setuptools==78.1.1
 
 FROM nexus3.onap.org:10001/onap/integration-python:12.0.0
 
@@ -51,7 +53,7 @@ ARG group=orano2
 
 USER root
 
-# Upgrade packages to latest versions to mitigate CVEs
+# Upgrade expat to latest version to mitigate CVE-2024-45492
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     apk update \
     && apk add --upgrade expat busybox krb5 ncurses ncurses-dev sqlite sqlite-dev \

@@ -1,4 +1,4 @@
-FROM nexus3.onap.org:10001/onap/integration-python:12.0.0 as build
+FROM nexus3.onap.org:10001/onap/integration-python:12.0.0 AS build
 # https://nexus3.onap.org/#browse/search=keyword%3Dintegration-python:d406d405e4cfbf1186265b01088caf9a
 # https://git.onap.org/integration/docker/onap-python/tree/Dockerfile
 
@@ -40,7 +40,7 @@ ENV PATH="/.venv/bin:${PATH}"
 
 RUN mkdir -p /.venv && \
     python -m venv /.venv \
-    && pip install --no-cache-dir --upgrade pip setuptools==70.0 \
+    && pip install --no-cache-dir --upgrade pip setuptools==78.1.1 \
     && pip install --no-cache-dir -r /tmp/requirements.txt -r /tmp/requirements-stx.txt -c /tmp/constraints.txt \
     && pip install --no-cache-dir -e /src
 
@@ -92,3 +92,4 @@ WORKDIR /src
 # USER $user
 ENV PYTHONHASHSEED=0
 ENV PATH="/.venv/bin:${PATH}"
+ENV PYTHONPATH="/src"

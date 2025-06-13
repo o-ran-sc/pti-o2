@@ -40,9 +40,9 @@ ENV PATH="/.venv/bin:${PATH}"
 
 RUN mkdir -p /.venv && \
     python -m venv /.venv \
-    && pip install --no-cache-dir --upgrade pip setuptools==70.0 \
     && pip install --no-cache-dir -r /tmp/requirements.txt -r /tmp/requirements-stx.txt -c /tmp/constraints.txt \
-    && pip install --no-cache-dir -e /src
+    && pip install --no-cache-dir -e /src \
+    && pip install --no-cache-dir --upgrade pip setuptools==78.1.1
 
 FROM nexus3.onap.org:10001/onap/integration-python:12.0.0
 

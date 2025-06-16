@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf51e527_29c53eb4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-06-16T13:50:10Z",
+      "side": 1,
+      "message": "You can probably uninstall setup tools completely if you going to update it after running pip install...",
+      "revId": "cd1c544f9d250b11f845d1e28af4aef474644aa0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

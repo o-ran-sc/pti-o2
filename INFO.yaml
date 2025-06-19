@@ -50,6 +50,11 @@ committers:
       company: 'Wind River'
       id: 'jackiehjm'
       timezone: 'Asia/Shanghai'
+    - name: 'Jon Zhang'
+      email: 'rong.zhang@windriver.com'
+      company: 'Wind River'
+      id: 'jonzhang'
+      timezone: 'Asia/Shanghai'
 tsc:
     # yamllint disable rule:line-length
     approval: 'https://wiki.o-ran-sc.org/display/TOC#ORANSCTechnicalOversightCommittee(TOC)-20210929'

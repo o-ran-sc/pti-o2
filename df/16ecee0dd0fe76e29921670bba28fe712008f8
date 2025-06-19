@@ -1,0 +1,9 @@
+Verified+1: o-ran-sc release <collab-it+o-ran-sc-release@linuxfoundation.org>
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Verified+1: Jackie Huang <jackie.huang@windriver.com>
+Code-Review+2: Jackie Huang <jackie.huang@windriver.com>
+Submitted-by: Jackie Huang <jackie.huang@windriver.com>
+Submitted-at: Thu, 19 Jun 2025 02:28:42 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/pti/o2/+/14572
+Project: pti/o2
+Branch: refs/heads/master

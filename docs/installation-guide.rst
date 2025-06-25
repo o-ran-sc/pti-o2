@@ -55,7 +55,7 @@ Backend <https://docs.starlingx.io/storage/kubernetes/configure-the-internal-cep
 Enable PVC support in ``oran-o2`` namespace, see INF Storage
 Configuration and Management: `Enable ReadWriteOnce PVC Support in
 Additional
-Namespaces <https://docs.starlingx.io/storage/kubernetes/enable-readwriteonce-pvc-support-in-additional-namespaces.html#enable-readwriteonce-pvc-support-in-additional-namespaces>`__.
+Namespaces <https://docs.starlingx.io/r/stx.8.0/storage/kubernetes/enable-readwriteonce-pvc-support-in-additional-namespaces.html>`__.
 
 Set up an OAuth 2.0 server and configure it to use either JWT with
 Shared Key or Token Introspection. Since the J-release, OAuth2 has

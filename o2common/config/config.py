@@ -85,9 +85,16 @@ def get_dc_manager_url():
     if auth_url is None:
         temp_url = get_stx_url()
         u = urlparse(temp_url)
-        u = u._replace(netloc=f"{u.hostname}:{_DCMANAGER_URL_PORT}")
-        u = u._replace(path=_DCMANAGER_URL_PATH)
+        hostname = u.hostname  # always unbracketed
+        port = _DCMANAGER_URL_PORT
+        # Added to Properly handle IPv6
+        if is_ipv6(hostname):
+            netloc = f'[{hostname}]:{port}'
+        else:
+            netloc = f'{hostname}:{port}'
+        u = u._replace(netloc=netloc, path=_DCMANAGER_URL_PATH)
         auth_url = u.geturl()
+        logger.info(f"Using default DC Manager URL: {auth_url}")
     return auth_url
 
 
@@ -179,9 +186,9 @@ def get_stx_access_info(region_name=get_region_name(),
     os_client_args['insecure'] = CGTS_INSECURE_SSL
 
     if "" != subcloud_hostname:
-        if is_ipv6(subcloud_hostname):
-            subcloud_hostname = "[" + subcloud_hostname + "]"
         orig_auth_url = urlparse(get_stx_url())
+
+        # If the subcloud_hostname is an IPv6 address, we need to bracket it
         new_auth_url = orig_auth_url._replace(
             netloc=orig_auth_url.netloc.replace(
                 orig_auth_url.hostname, subcloud_hostname))
@@ -216,11 +223,8 @@ def get_dc_access_info():
     for key, val in client_args.items():
         os_client_args['os_{key}'.format(key=key)] = val
     auth_url = urlparse(os_client_args.pop('os_auth_url'))
-    hostname = f"[{auth_url.hostname}]" if is_ipv6(auth_url.hostname) \
-        else auth_url.hostname
     dcmanager_url = urlparse(get_dc_manager_url())
-    dcmanager_url = dcmanager_url._replace(netloc=dcmanager_url.netloc.replace(
-        dcmanager_url.hostname, hostname))
+    dcmanager_url = dcmanager_url._replace(netloc=dcmanager_url.netloc)
 
     os_client_args['dcmanager_url'] = dcmanager_url.geturl()
     os_client_args['auth_url'] = auth_url.geturl()
@@ -251,8 +255,6 @@ def get_fm_access_info(subcloud_hostname: str = "",
     os_client_args['auth_url'] = auth_url.geturl()
 
     if "" != subcloud_hostname:
-        subcloud_hostname = f"[{subcloud_hostname}]" if \
-            is_ipv6(subcloud_hostname) else subcloud_hostname
         orig_auth_url = urlparse(get_stx_url())
         new_auth_url = orig_auth_url._replace(
             netloc=orig_auth_url.netloc.replace(
@@ -454,8 +456,11 @@ def get_es_access_info(ip=None):
     port = os.getenv('ES_PORT', port)
     path = os.getenv('ES_PATH', path)
 
-    # Use provided IP or fallback to environment variable
-    ip = ip or os.getenv('ES_IP', None)
+    # To handle IPv6 addresses, we need to bracket them.
+    if is_ipv6(ip):
+        ip = f'[{ip}]' or os.getenv('ES_IP', None)
+    else:
+        ip = ip or os.getenv('ES_IP', None)
 
     # Construct the URL
     url = f'https://{ip}:{port}{path}'

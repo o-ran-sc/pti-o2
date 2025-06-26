@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2021-2024 Wind River Systems, Inc.
+.. Copyright (C) 2021-2025 Wind River Systems, Inc.
 
 
 Installation Guide
@@ -294,7 +294,7 @@ You can install O-RAN O2 application on INF from the command line.
               serviceaccountname: admin-oran-o2
               images:
                 tags:
-                  o2service: ${O2SERVICE_IMAGE_REG}/docker.io/oranscinf/pti-o2imsdms:2.0.3
+                  o2service: ${O2SERVICE_IMAGE_REG}/docker.io/oranscinf/pti-o2imsdms:2.2.0
                   postgres: ${O2SERVICE_IMAGE_REG}/docker.io/library/postgres:9.6
                   redis: ${O2SERVICE_IMAGE_REG}/docker.io/library/redis:alpine
                 pullPolicy: IfNotPresent

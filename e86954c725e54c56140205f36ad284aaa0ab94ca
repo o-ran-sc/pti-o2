@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d64ac69_9f1285eb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2025-06-26T06:30:55Z",
+      "side": 1,
+      "message": "The doc build failed with this line:\nhttps://gerrit.o-ran-sc.org/r/gitweb?p\u003dpti/o2.git;a\u003dblob;f\u003ddocs/installation-guide.rst;h\u003dc70946f553887c86aed2051c67ded6bdc07474c9;hb\u003de86954c725e54c56140205f36ad284aaa0ab94ca#l55\n\nIt was because this link was deprecated.\n```\n/home/runner/work/pti-o2/pti-o2/docs/installation-guide.rst:55:broken link: https://docs.starlingx.io/storage/kubernetes/enable-readwriteonce-pvc-support-in-additional-namespaces.html#enable-readwriteonce-pvc-support-in-additional-namespaces (404 Client Error: Not Found for url: https://docs.starlingx.io/storage/kubernetes/enable-readwriteonce-pvc-support-in-additional-namespaces.html)\n```\n\nI found this link. Will this link be fit with the previous description?\nhttps://docs.starlingx.io/storage/kubernetes/create-readwritemany-persistent-volume-claims.html",
+      "revId": "e86954c725e54c56140205f36ad284aaa0ab94ca",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+---
+
+distribution_type: container
+container_release_tag: 2.2.0
+container_pull_registry: nexus3.o-ran-sc.org:10004
+container_push_registry: nexus3.o-ran-sc.org:10002
+project: pti-o2
+ref: 5df78dcda3f7fe8b35de949192b2f816ca7ed90a
+containers:
+    - name: pti-o2imsdms
+      version: 2.2.0

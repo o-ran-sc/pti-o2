@@ -68,6 +68,8 @@ class EsPmClientImp(object):
 
         # Get ES connection info using OAM floating IP
         es_config = config.get_es_access_info(ip=oam_ip)
+        if es_config is None:
+            return None
 
         es_client = Elasticsearch(
             es_config['url'],

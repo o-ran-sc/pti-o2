@@ -442,13 +442,19 @@ def get_es_access_info(ip=None):
             Defaults to None and will use environment variable.
 
     Returns:
-        dict: Dictionary containing Elasticsearch connection details
+        Dictionary containing Elasticsearch connection details,
+            None if [PM] section is missing
     """
-    # Get values from config file
-    username = config.conf.PM.ES_USERNAME
-    password = config.conf.PM.ES_PASSWORD
-    port = config.conf.PM.ES_PORT
-    path = config.conf.PM.ES_PATH
+    # Get values from config file (safely, [PM] section is optional)
+    pm_section = getattr(config.conf, "PM", None)
+    if pm_section is None:
+        logger.warning("No [PM] section found in config.")
+        return None
+
+    username = getattr(pm_section, "ES_USERNAME", None)
+    password = getattr(pm_section, "ES_PASSWORD", None)
+    port = getattr(pm_section, "ES_PORT", None)
+    path = getattr(pm_section, "ES_PATH", None)
 
     # Allow environment variables to override config file
     username = os.getenv('ES_USERNAME', username)

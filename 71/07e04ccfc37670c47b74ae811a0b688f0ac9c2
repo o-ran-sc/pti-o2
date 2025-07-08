@@ -1,0 +1,10 @@
+Code-Review+2: Jon Zhang <rong.zhang@windriver.com>
+Code-Review+2: Joshua Kraitberg <joshua.kraitberg@windriver.com>
+Verified+1: o-ran-sc release <collab-it+o-ran-sc-release@linuxfoundation.org>
+Verified+1: Joshua Kraitberg <joshua.kraitberg@windriver.com>
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Submitted-by: Joshua Kraitberg <joshua.kraitberg@windriver.com>
+Submitted-at: Tue, 08 Jul 2025 12:34:16 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/pti/o2/+/14703
+Project: pti/o2
+Branch: refs/heads/master

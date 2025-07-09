@@ -55,6 +55,11 @@ committers:
       company: 'Wind River'
       id: 'jonzhang'
       timezone: 'Asia/Shanghai'
+    - name: 'Joshua Kraitberg'
+      email: 'joshua.kraitberg@windriver.com'
+      company: 'Wind River'
+      id: 'jkraitbewr'
+      timezone: 'America/New_York'
 tsc:
     # yamllint disable rule:line-length
     approval: 'https://wiki.o-ran-sc.org/display/TOC#ORANSCTechnicalOversightCommittee(TOC)-20210929'

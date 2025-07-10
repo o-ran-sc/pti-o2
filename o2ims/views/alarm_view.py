@@ -18,7 +18,7 @@ import uuid as uuid
 from o2common.service import unit_of_work, messagebus
 from o2common.views.view import gen_filter, check_filter
 from o2common.views.pagination_view import Pagination
-from o2common.views.route_exception import BadRequestException, \
+from o2common.views.route_exception import BadRequestException, ConflictException, \
     NotFoundException
 
 from o2ims.domain import events
@@ -137,7 +137,7 @@ def subscription_create(subscriptionDto: SubscriptionDTO.subscription_create,
                     'consumerSubscriptionId') == consumer_subs_id)
         count, _ = uow.alarm_subscriptions.list_with_count(*args)
         if count > 0:
-            raise BadRequestException("The value of parameters is duplicated")
+            raise ConflictException("The value of parameters is duplicated")
         uow.alarm_subscriptions.add(subscription)
         uow.commit()
         first = uow.alarm_subscriptions.get(sub_uuid)

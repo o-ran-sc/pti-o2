@@ -19,6 +19,7 @@ from werkzeug.exceptions import (
     NotFound,
     InternalServerError,
     HTTPException,
+    Conflict,
 )
 
 
@@ -35,6 +36,9 @@ class NotFoundException(NotFound):
     def __init__(self, desc=None, resp=None):
         super().__init__(description=desc, response=resp)
 
+class ConflictException(Conflict):
+    def __init__(self, desc=None, resp=None):
+        super().__init__(description=desc, response=resp)
 
 class ProblemDetails():
     def __init__(self, code: int, detail: str,
@@ -87,6 +91,12 @@ def configure_exception(app):
         '''Return a custom message and 404 status code'''
         problem = ProblemDetails(404, str(error))
         return problem.serialize(), 404
+
+    @app.errorhandler(ConflictException)
+    def handle_notfound_exception(error):
+        '''Return a custom message and 409 status code'''
+        problem = ProblemDetails(409, str(error))
+        return problem.serialize(), 409
 
     @app.errorhandler(MethodNotAllowed)
     def handle_methodnotallowed_exception(error):

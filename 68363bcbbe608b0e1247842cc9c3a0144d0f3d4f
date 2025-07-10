@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02bf6a36_16e7bb41",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-07-10T07:07:31Z",
+      "side": 1,
+      "message": "one method name change and 1 tox error",
+      "revId": "68363bcbbe608b0e1247842cc9c3a0144d0f3d4f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "807f910c_66528e11",
+        "filename": "o2common/views/route_exception.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-07-10T07:07:31Z",
+      "side": 1,
+      "message": "handle_conflict_exception",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 96,
+        "endChar": 33
+      },
+      "revId": "68363bcbbe608b0e1247842cc9c3a0144d0f3d4f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

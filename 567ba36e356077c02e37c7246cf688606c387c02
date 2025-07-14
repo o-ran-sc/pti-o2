@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b93e804c_cd2ef435",
+        "filename": "charts/templates/deployment.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-07-14T16:04:32Z",
+      "side": 1,
+      "message": "2021-2023,2025",
+      "range": {
+        "startLine": 1,
+        "startChar": 16,
+        "endLine": 1,
+        "endChar": 25
+      },
+      "revId": "567ba36e356077c02e37c7246cf688606c387c02",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a47fab4_a4d9f68b",
+        "filename": "charts/values.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-07-14T16:04:32Z",
+      "side": 1,
+      "message": "2021-2025",
+      "range": {
+        "startLine": 2,
+        "startChar": 16,
+        "endLine": 2,
+        "endChar": 25
+      },
+      "revId": "567ba36e356077c02e37c7246cf688606c387c02",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3cbb9b97_4f07e1d5",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-07-14T16:04:32Z",
+      "side": 1,
+      "message": "2021,2025",
+      "range": {
+        "startLine": 1,
+        "startChar": 16,
+        "endLine": 1,
+        "endChar": 20
+      },
+      "revId": "567ba36e356077c02e37c7246cf688606c387c02",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5468fec1_61892ff5",
+        "filename": "o2ims/adapter/clients/ocloud_client.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-07-14T16:04:32Z",
+      "side": 1,
+      "message": "2022,2025",
+      "range": {
+        "startLine": 1,
+        "startChar": 16,
+        "endLine": 1,
+        "endChar": 20
+      },
+      "revId": "567ba36e356077c02e37c7246cf688606c387c02",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

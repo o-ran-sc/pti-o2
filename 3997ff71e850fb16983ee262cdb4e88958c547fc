@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58f7003e_900502af",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2025-07-14T09:12:31Z",
+      "side": 0,
+      "message": "Since you are removing \u0027OS_REGION_NAME\u0027, please confirm whether the project relies on this value. If not, remove it from the Helm chart.\n\nhttps://gerrit.o-ran-sc.org/r/gitweb?p\u003dpti/o2.git;a\u003dblob;f\u003dcharts/templates/deployment.yaml;h\u003d5b7967e2eeb6345de019c4a033e4db3ed0c4562c;hb\u003d58aa02a9a40929225a873ff82a8fca03e69e0407#l136",
+      "range": {
+        "startLine": 70,
+        "startChar": 34,
+        "endLine": 70,
+        "endChar": 48
+      },
+      "revId": "3997ff71e850fb16983ee262cdb4e88958c547fc",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

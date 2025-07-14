@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb5c6e65_ba18e23a",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2025-07-14T09:12:31Z",
+      "side": 1,
+      "message": "\"API_HOST_EXTERNAL_FLOATING\" is used for external access to the O2IMS API. Typically, it refers to the OAM IP address, but it should be noted that O2IMS runs outside WRCP/StarlingX.\nTherefore, it’s recommended to obtain this value from \"OS_AUTH_URL\".",
+      "range": {
+        "startLine": 75,
+        "startChar": 36,
+        "endLine": 75,
+        "endChar": 62
+      },
+      "revId": "58aa02a9a40929225a873ff82a8fca03e69e0407",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

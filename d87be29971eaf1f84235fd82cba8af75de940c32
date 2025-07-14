@@ -18,6 +18,24 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "955628d9_6fe0a98b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-07-14T15:47:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cc36e5e_4d1be15f",
+      "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b447ddcb_4713761e",
@@ -31,6 +49,30 @@
       "writtenOn": "2025-07-14T14:21:15Z",
       "side": 1,
       "message": "nit: Make var name more generic",
+      "range": {
+        "startLine": 70,
+        "startChar": 3,
+        "endLine": 72,
+        "endChar": 35
+      },
+      "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07fb73e5_21ea0a2d",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-07-14T15:47:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b447ddcb_4713761e",
       "range": {
         "startLine": 70,
         "startChar": 3,
@@ -64,6 +106,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d84cf35_d3e71a9a",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-07-14T15:47:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "331eba6b_cfa3c5de",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 46
+      },
+      "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "366463db_ef50c34a",
@@ -87,6 +153,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7afbde84_d675fae1",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-07-14T15:47:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "366463db_ef50c34a",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 39
+      },
+      "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2a76644_77d13ca9",
@@ -100,6 +190,24 @@
       "writtenOn": "2025-07-14T14:21:15Z",
       "side": 1,
       "message": "nit: newline",
+      "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c57db1b_b26d99fd",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-07-14T15:47:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2a76644_77d13ca9",
       "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }

@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2021-2024 Wind River Systems, Inc.
+# Copyright (C) 2021-2025 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -77,7 +77,6 @@ ocloud:
   OS_AUTH_URL: ""
   OS_USERNAME: ""
   OS_PASSWORD: ""
-  OS_REGION_NAME: "RegionOne"
   K8S_KUBECONFIG: ""
   API_HOST_EXTERNAL_FLOATING: ""
   HELM_USER_PASSWD: "St8rlingX*"

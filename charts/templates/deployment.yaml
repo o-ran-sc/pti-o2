@@ -133,8 +133,6 @@ spec:
               value: {{ .Values.ocloud.OS_PASSWORD }}
             - name: OS_USERNAME
               value: {{ .Values.ocloud.OS_USERNAME }}
-            - name: OS_REGION_NAME
-              value: {{ .Values.ocloud.OS_REGION_NAME }}
             - name: PYTHONDONTWRITEBYTECODE
               value: "1"
             - name: REDIS_HOST

@@ -77,7 +77,6 @@ ocloud:
   OS_AUTH_URL: ""
   OS_USERNAME: ""
   OS_PASSWORD: ""
-  OS_REGION_NAME: "RegionOne"
   K8S_KUBECONFIG: ""
   API_HOST_EXTERNAL_FLOATING: ""
   HELM_USER_PASSWD: "St8rlingX*"

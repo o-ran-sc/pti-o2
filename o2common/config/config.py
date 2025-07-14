@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2025 Wind River Systems, Inc.
+# Copyright (C) 2025 Wind River Systems, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 import os
 import sys
 import ipaddress
+import requests
 from urllib.parse import urlparse
 
 from o2common import config
@@ -66,9 +67,41 @@ def get_api_url():
     return f"https://{host}:{port}"
 
 
-def get_region_name():
-    region_name = os.environ.get("OS_REGION_NAME", "RegionOne")
-    return region_name
+def get_region_name(region_name=None):
+    if region_name:
+        return region_name
+
+    # For main STX client, fetch from API
+    auth_url = os.environ.get("OS_AUTH_URL")
+    if config.conf.OCLOUD.OS_AUTH_URL:
+        auth_url = config.conf.OCLOUD.OS_AUTH_URL
+
+    if auth_url:
+        try:
+            parsed_url = urlparse(auth_url)
+            ip_addr = parsed_url.hostname
+
+            if is_ipv6(ip_addr):
+                host = f'[{ip_addr}]'
+            else:
+                host = ip_addr
+
+            url = f"https://{host}:6385/v1/isystems/region_id"
+            response = requests.get(url, timeout=60, verify=False)
+
+            if response.status_code == 200:
+                data = response.json()
+                if "region_name" in data:
+                    return data["region_name"]
+                else:
+                    logger.error(f"Missing 'region_name' in response: {data}")
+            else:
+                logger.error(
+                    f"Failed to fetch region: status {response.status_code}, "
+                    f"body: {response.text}"
+                )
+        except Exception as e:
+            logger.warning(f"Failed to fetch region from API: {e}")
 
 
 def get_stx_url():
@@ -169,7 +202,7 @@ def is_ipv6(address):
         return False
 
 
-def get_stx_access_info(region_name=get_region_name(),
+def get_stx_access_info(region_name=None,
                         subcloud_hostname: str = "",
                         sub_is_https: bool = False):
     try:
@@ -184,6 +217,9 @@ def get_stx_access_info(region_name=get_region_name(),
         os_client_args['os_{key}'.format(key=key)] = val
 
     os_client_args['insecure'] = CGTS_INSECURE_SSL
+
+    # Determine region name based on context
+    region_name = get_region_name(region_name)
 
     if "" != subcloud_hostname:
         orig_auth_url = urlparse(get_stx_url())

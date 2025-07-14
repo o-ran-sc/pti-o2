@@ -231,18 +231,19 @@ class StxClientImp(object):
         if subcloud[0].oam_floating_ip == 'unavailable':
             raise EnvironmentError(f"{subcloud[0].name} was unavailable")
         try:
+            # Pass subcloud region name to get_region_name via get_stx_access_info
+            region_name = config.get_region_name(subcloud[0].region_name)
             os_client_args = config.get_stx_access_info(
-                region_name=subcloud[0].region_name,
+                region_name=region_name,
                 subcloud_hostname=subcloud[0].oam_floating_ip)
-            # logger.info(os_client_args)
             config_client = get_stx_client(**os_client_args)
         except EndpointException as e:
             msg = e.format_message()
             if CGTSCLIENT_ENDPOINT_ERROR_MSG in msg:
+                region_name = config.get_region_name(subcloud[0].region_name)
                 os_client_args = config.get_stx_access_info(
-                    region_name=subcloud[0].region_name, sub_is_https=True,
+                    region_name=region_name, sub_is_https=True,
                     subcloud_hostname=subcloud[0].oam_floating_ip)
-                # logger.info(os_client_args)
                 config_client = get_stx_client(**os_client_args)
             else:
                 raise ValueError('Stx endpoint exception: %s' % msg)

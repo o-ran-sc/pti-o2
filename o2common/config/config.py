@@ -15,6 +15,7 @@
 import os
 import sys
 import ipaddress
+import requests
 from urllib.parse import urlparse
 
 from o2common import config
@@ -66,9 +67,31 @@ def get_api_url():
     return f"https://{host}:{port}"
 
 
-def get_region_name():
-    region_name = os.environ.get("OS_REGION_NAME", "RegionOne")
-    return region_name
+def get_region_name(subcloud_region_name=None):
+    if subcloud_region_name:
+        return subcloud_region_name
+
+    # For main STX client, fetch from API
+    host_external = os.environ.get("API_HOST_EXTERNAL_FLOATING")
+    if config.conf.OCLOUD.API_HOST_EXTERNAL_FLOATING:
+        host_external = config.conf.OCLOUD.API_HOST_EXTERNAL_FLOATING
+
+    if host_external:
+        try:
+            if is_ipv6(host_external):
+                host = f'[{host_external}]'
+            else:
+                host = host_external
+
+            url = f"https://{host}:6385/v1/isystems/region_id"
+            response = requests.get(url, timeout=60, verify=False)
+
+            if response.status_code == 200:
+                data = response.json()
+                if "region_name" in data:
+                    return data["region_name"]
+        except Exception as e:
+            logger.warning(f"Failed to fetch region from API: {e}")
 
 
 def get_stx_url():
@@ -169,7 +192,7 @@ def is_ipv6(address):
         return False
 
 
-def get_stx_access_info(region_name=get_region_name(),
+def get_stx_access_info(region_name=None,
                         subcloud_hostname: str = "",
                         sub_is_https: bool = False):
     try:
@@ -184,6 +207,10 @@ def get_stx_access_info(region_name=get_region_name(),
         os_client_args['os_{key}'.format(key=key)] = val
 
     os_client_args['insecure'] = CGTS_INSECURE_SSL
+
+    # Determine region name based on context
+    if region_name is None:
+        region_name = get_region_name()
 
     if "" != subcloud_hostname:
         orig_auth_url = urlparse(get_stx_url())
@@ -208,6 +235,7 @@ def get_stx_access_info(region_name=get_region_name(),
     os_client_args['api_version'] = 1
     # os_client_args['user_domain_name'] = 'Default'
     # os_client_args['project_domain_name'] = 'Default'
+    #logger.info(f"STX access info: {os_client_args}")
     return os_client_args
 
 
@@ -231,6 +259,7 @@ def get_dc_access_info():
     os_client_args['username'] = os_client_args.pop('os_username')
     os_client_args['api_key'] = os_client_args.pop('os_api_key')
     os_client_args['project_name'] = os_client_args.pop('os_project_name')
+
     os_client_args['user_domain_name'] = 'Default'
     os_client_args['project_domain_name'] = 'Default'
     os_client_args['insecure'] = CGTS_INSECURE_SSL

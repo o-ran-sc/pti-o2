@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cc36e5e_4d1be15f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-07-14T14:21:15Z",
+      "side": 1,
+      "message": "copyrights",
+      "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b447ddcb_4713761e",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-07-14T14:21:15Z",
+      "side": 1,
+      "message": "nit: Make var name more generic",
+      "range": {
+        "startLine": 70,
+        "startChar": 3,
+        "endLine": 72,
+        "endChar": 35
+      },
+      "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "331eba6b_cfa3c5de",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-07-14T14:21:15Z",
+      "side": 1,
+      "message": "region_name must be in data or error",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 46
+      },
+      "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "366463db_ef50c34a",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-07-14T14:21:15Z",
+      "side": 1,
+      "message": "region_name \u003d get_region_name(region_name)",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 39
+      },
+      "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2a76644_77d13ca9",
+        "filename": "o2common/config/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-07-14T14:21:15Z",
+      "side": 1,
+      "message": "nit: newline",
+      "revId": "d87be29971eaf1f84235fd82cba8af75de940c32",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

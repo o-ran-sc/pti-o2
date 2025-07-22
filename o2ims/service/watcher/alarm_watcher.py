@@ -37,7 +37,34 @@ class AlarmWatcher(BaseWatcher):
     def _targetname(self):
         return "alarm"
 
+    def _prune_stale_alarms(self):
+        """Prune alarms from DB that no longer exist in FM."""
+        try:
+            current_alarms = self._client.list()
+            # Build set of current alarm IDs from FM
+            current_ids = set([a.id for a in current_alarms])
+            logger.info(f'Current alarm IDs from FM: {current_ids}')
+            with self._bus.uow as uow:
+                db_alarms = list(uow.alarm_event_records.list().all())
+                db_ids = set(a.alarmEventRecordId for a in db_alarms)
+                deleted_ids = db_ids - current_ids
+
+                # TODO: When an alarm is deleted, the SMO must be notified.
+
+                for del_id in deleted_ids:
+                    alarm_obj = uow.alarm_event_records.get(del_id)
+                    if alarm_obj:
+                        uow.alarm_event_records.delete(alarm_obj)
+                if deleted_ids:
+                    logger.info(f'Committing pruning of {deleted_ids} alarms \
+                                from DB')
+                    uow.commit()
+        except Exception as e:
+            logger.error(f'Error pruning stale alarms: {str(e)}')
+
     def _probe(self, parent: StxGenericModel, tags: object = None):
+        self._prune_stale_alarms()
+
         # Set a tag for children resource
         self._tags.pool = parent.res_pool_id
         self._set_respool_client()

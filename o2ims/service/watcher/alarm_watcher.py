@@ -37,8 +37,42 @@ class AlarmWatcher(BaseWatcher):
     def _targetname(self):
         return "alarm"
 
+    def _check_and_delete_deleted_alarms(self):
+        """Prune alarms from DB that no longer exist in FM."""
+        try:
+            current_alarms = self._client.list()
+            current_ids = set(
+                getattr(a, "alarmEventRecordId", getattr(a, "id", None))
+                for a in current_alarms
+                if getattr(a, "alarmEventRecordId", getattr(a, "id", None)) is not None
+            )
+            with self._bus.uow as uow:
+                db_alarms = uow.alarm_event_records.list()
+                # If db_alarms is a tuple (count, list), get the list part
+                if isinstance(db_alarms, tuple):
+                    db_alarms = db_alarms[1]
+                # If db_alarms is a query, call .all()
+                elif hasattr(db_alarms, 'all'):
+                    db_alarms = db_alarms.all()
+                db_alarms = list(db_alarms)
+                db_ids = set(
+                    getattr(a, "alarmEventRecordId", getattr(a, "id", None))
+                    for a in db_alarms
+                    if getattr(a, "alarmEventRecordId", getattr(a, "id", None)) is not None
+                )
+                deleted_ids = db_ids - current_ids
+                for del_id in deleted_ids:
+                    alarm_obj = uow.alarm_event_records.get(del_id)
+                    if alarm_obj:
+                        uow.alarm_event_records.delete(alarm_obj)
+                if deleted_ids:
+                    uow.commit()
+        except Exception as e:
+            logger.error(f'Error checking deleted alarms: {str(e)}')
+
     def _probe(self, parent: StxGenericModel, tags: object = None):
         # Set a tag for children resource
+        self._check_and_delete_deleted_alarms()
         self._tags.pool = parent.res_pool_id
         self._set_respool_client()
 

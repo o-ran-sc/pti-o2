@@ -32,8 +32,40 @@ class ResourcePoolWatcher(BaseWatcher):
     def _targetname(self):
         return "resourcepool"
 
+    def _prune_stale_resourcepools_and_resources(self, ocloudid):
+        """Prune resource pools (subclouds) and their related resources from DB if they no longer exist in the authoritative source."""
+        try:
+            with self._bus.uow as uow:
+                # 1. Get current resource pool IDs from authoritative source (client)
+                current_resourcepools = self._client.list(ocloudid=ocloudid)
+                current_ids = set(r.resourcePoolId for r in current_resourcepools)
+
+                # 2. Get all resource pool IDs from DB
+                db_resourcepools = uow.resource_pools.list()
+                db_ids = set(r.resourcePoolId for r in db_resourcepools)
+
+                # 3. Delete any in DB not in current
+                deleted_ids = db_ids - current_ids
+
+                # TODO: When an resource and resource pool is deleted, the SMO must be notified.
+
+                for del_id in deleted_ids:
+                    # Delete all related resources first
+                    if hasattr(uow, 'resources'):
+                        db_resources = uow.resources.list(del_id)
+                        db_resources = db_resources.all()
+                        for res in db_resources:
+                            uow.resources.delete(res.resourceId)
+                    uow.resource_pools.delete(del_id)
+                if deleted_ids:
+                    logger.info(f'Pruned resource pools and related resources: {deleted_ids}')
+                    uow.commit()
+        except Exception as e:
+            logger.error(f'Error pruning stale resource pools/resources: {str(e)}')
+
     def _probe(self, parent: StxGenericModel, tags: object = None):
         ocloudid = parent.id
+        self._prune_stale_resourcepools_and_resources(ocloudid)
         newmodels = self._client.list(ocloudid=ocloudid)
         # for newmodel in newmodels:
         #     logger.info("detect ocloudmodel:" + newmodel.name)

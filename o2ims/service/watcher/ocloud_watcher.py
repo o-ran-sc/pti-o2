@@ -64,6 +64,33 @@ class OcloudWatcher(BaseWatcher):
 #                 self._uow.stxobjects.update(localmodel)
 #         self._uow.commit()
 
+    def _prune_stale_dms(self, ocloudid):
+        """Prune DMS (deployment managers) from DB if they no longer exist in the authoritative source."""
+        try:
+            with self._bus.uow as uow:
+                # 1. Get current DMS IDs from authoritative source (client)
+                current_dms = self._client.list(ocloudid=ocloudid)
+                current_ids = set([d.id for d in current_dms])
+
+                # 2. Get all DMS IDs from DB
+                if hasattr(uow, 'deployment_managers'):
+                    db_dms = uow.deployment_managers.list()
+
+                    db_dms = db_dms.all()
+                    db_ids = set(d.deploymentManagerId for d in db_dms)
+
+                    deleted_ids = db_ids - current_ids
+
+                    # TODO: When an dms is deleted, the SMO must be notified.
+
+                    for del_id in deleted_ids:
+                        uow.deployment_managers.delete(del_id)
+                    if deleted_ids:
+                        logger.info(f'Pruned DMS: {deleted_ids}')
+                        uow.commit()
+        except Exception as e:
+            logger.error(f'Error pruning stale DMS: {str(e)}')
+
 
 class DmsWatcher(BaseWatcher):
     def __init__(self, client: BaseClient,
@@ -75,6 +102,7 @@ class DmsWatcher(BaseWatcher):
 
     def _probe(self, parent: StxGenericModel, tags: object = None):
         ocloudid = parent.id
+        self._prune_stale_dms(ocloudid)
         newmodels = self._client.list(ocloudid=ocloudid)
         # for newmodel in newmodels:
         #     super()._compare_and_update(newmodel)

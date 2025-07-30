@@ -97,8 +97,12 @@ class ResourcePoolSqlAlchemyRepository(ResourcePoolRepository):
             return (count, result.limit(size).offset(offset))
         return (count, result)
 
-    def _update(self, resourcePool: ocloud.ResourcePool):
-        self.session.add(resourcePool)
+    def _update(self, resource_pool: ocloud.ResourcePool):
+        self.session.add(resource_pool)
+
+    def _delete(self, resource_pool_id):
+        self.session.query(ocloud.ResourcePool).filter_by(
+            resourcePoolId=resource_pool_id).delete()
 
 
 class ResourceSqlAlchemyRepository(ResourceRepository):
@@ -150,6 +154,10 @@ class ResourceSqlAlchemyRepository(ResourceRepository):
     def _update(self, resource: ocloud.Resource):
         self.session.add(resource)
 
+    def _delete(self, resource_id):
+        self.session.query(ocloud.Resource).filter_by(
+            resourceId=resource_id).delete()
+
 
 class DeploymentManagerSqlAlchemyRepository(DeploymentManagerRepository):
     def __init__(self, session):
@@ -177,6 +185,10 @@ class DeploymentManagerSqlAlchemyRepository(DeploymentManagerRepository):
 
     def _update(self, deployment_manager: ocloud.DeploymentManager):
         self.session.add(deployment_manager)
+
+    def _delete(self, deployment_manager_id):
+        self.session.query(ocloud.DeploymentManager).filter_by(
+            deploymentManagerId=deployment_manager_id).delete()
 
 
 class SubscriptionSqlAlchemyRepository(SubscriptionRepository):

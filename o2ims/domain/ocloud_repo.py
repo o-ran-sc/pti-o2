@@ -135,6 +135,9 @@ class ResourcePoolRepository(abc.ABC):
         self._update(resource_pool)
         self.seen.add(resource_pool)
 
+    def delete(self, resource_pool_id):
+        self._delete(resource_pool_id)
+
     @abc.abstractmethod
     def _add(self, resource_pool: ocloud.ResourcePool):
         raise NotImplementedError
@@ -149,6 +152,10 @@ class ResourcePoolRepository(abc.ABC):
 
     @abc.abstractmethod
     def _update(self, resource_pool: ocloud.ResourcePool):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _delete(self, resource_pool_id):
         raise NotImplementedError
 
 
@@ -177,6 +184,9 @@ class ResourceRepository(abc.ABC):
         self._update(resource)
         self.seen.add(resource)
 
+    def delete(self, resource_id):
+        self._delete(resource_id)
+
     @abc.abstractmethod
     def _add(self, resource: ocloud.Resource):
         raise NotImplementedError
@@ -192,6 +202,10 @@ class ResourceRepository(abc.ABC):
 
     @abc.abstractmethod
     def _update(self, resource: ocloud.Resource):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _delete(self, resource_id):
         raise NotImplementedError
 
 
@@ -219,6 +233,9 @@ class DeploymentManagerRepository(abc.ABC):
     def update(self, deployment_manager: ocloud.DeploymentManager):
         self._update(deployment_manager)
 
+    def delete(self, deployment_manager_id):
+        self._delete(deployment_manager_id)
+
     @abc.abstractmethod
     def _add(self, deployment_manager: ocloud.DeploymentManager):
         raise NotImplementedError
@@ -233,4 +250,8 @@ class DeploymentManagerRepository(abc.ABC):
 
     @abc.abstractmethod
     def _update(self, deployment_manager: ocloud.DeploymentManager):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _delete(self, deployment_manager_id):
         raise NotImplementedError

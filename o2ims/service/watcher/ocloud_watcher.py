@@ -78,18 +78,17 @@ class DmsWatcher(BaseWatcher):
         exist in the authoritative source."""
         try:
             with self._bus.uow as uow:
-                # 1. Get current DMS IDs from authoritative source (client)
+                # 1. Get current DMS IDs from client
                 current_dms = self._client.list(ocloudid=ocloudid)
                 current_ids = set([d.id for d in current_dms])
 
                 # 2. Get all DMS IDs from DB
                 if hasattr(uow, 'deployment_managers'):
-                    db_dms = list(uow.deployment_managers.list().all())
-
+                    # The list() method returns a SQLAlchemy query object
+                    db_dms = uow.deployment_managers.list().all()
                     db_ids = set(d.deploymentManagerId for d in db_dms)
 
                     deleted_ids = db_ids - current_ids
-
                     # TODO: When an dms is deleted, the SMO must be notified.
 
                     for del_id in deleted_ids:

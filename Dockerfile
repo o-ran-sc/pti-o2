@@ -40,7 +40,7 @@ ENV PATH="/.venv/bin:${PATH}"
 
 RUN mkdir -p /.venv && \
     python -m venv /.venv \
-    && pip install --no-cache-dir --upgrade pip setuptools==78.1.1 \
+    && pip install --no-cache-dir --upgrade pip setuptools wheel \
     && pip install --no-cache-dir -r /tmp/requirements.txt -r /tmp/requirements-stx.txt -c /tmp/constraints.txt \
     && pip install --no-cache-dir -e /src
 
@@ -52,10 +52,12 @@ ARG group=orano2
 USER root
 
 # Upgrade packages to latest versions to mitigate CVEs
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
-    apk update \
-    && apk add --upgrade expat busybox krb5 ncurses ncurses-dev sqlite sqlite-dev \
-    && apk info expat busybox krb5 ncurses sqlite
+#RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+#    apk update \
+#    && apk add --upgrade expat busybox krb5 ncurses ncurses-dev sqlite sqlite-dev \
+#    && apk info expat busybox krb5 ncurses sqlite
+RUN apk update && apk upgrade --no-cache
+
 
 RUN apk add --no-cache bash
 

@@ -16,6 +16,7 @@ from o2common.domain import tags
 from o2common.service.messagebus import MessageBus
 from o2common.service.watcher.base import BaseWatcher
 from o2common.service.client.base_client import BaseClient
+import time
 
 from o2ims.domain import commands
 from o2ims.domain.stx_object import StxGenericModel
@@ -38,27 +39,54 @@ class AlarmWatcher(BaseWatcher):
         return "alarm"
 
     def _prune_stale_alarms(self):
-        """Prune alarms from DB that no longer exist in FM."""
+        """Prune DB alarms that don't exist in FM for the current respool.
+
+        Algorithm:
+        - Get FM alarm IDs for the configured resource pool
+        - Get DB alarm IDs for alarms whose resources belong to this pool
+        - Compute DB-only IDs and delete them
+        """
         try:
-            current_alarms = self._client.list()
-            # Build set of current alarm IDs from FM
-            current_ids = set([a.id for a in current_alarms])
-            logger.info(f'Current alarm IDs from FM: {current_ids}')
+            pool_id = getattr(self._client, '_pool_id', None)
+            if not pool_id:
+                return
+
+            # FM alarm IDs for this pool with one quick retry on empty
+            try:
+                fm_list = self._client.list()
+                if not fm_list:
+                    time.sleep(0.4)
+                    fm_list = self._client.list()
+                fm_ids = {a.id for a in fm_list}
+            except Exception:
+                # Treat FM errors as transient; skip pruning this cycle
+                return
+
+            # DB alarm IDs for this pool via join
             with self._bus.uow as uow:
-                db_alarms = list(uow.alarm_event_records.list().all())
-                db_ids = set(a.alarmEventRecordId for a in db_alarms)
-                deleted_ids = db_ids - current_ids
+                rs = uow.session.execute(
+                    '''
+                    SELECT a."alarmEventRecordId"
+                    FROM "alarmEventRecord" a
+                    JOIN "resource" r ON a."resourceId" = r."resourceId"
+                    WHERE r."resourcePoolId" = :pool_id
+                    ''',
+                    dict(pool_id=pool_id)
+                )
+                db_ids = {row[0] for row in rs}
 
-                # TODO: When an alarm is deleted, the SMO must be notified.
+                # Delete DB-only alarms
+                to_delete = db_ids - fm_ids
 
-                for del_id in deleted_ids:
-                    alarm_obj = uow.alarm_event_records.get(del_id)
-                    if alarm_obj:
-                        uow.alarm_event_records.delete(alarm_obj)
-                if deleted_ids:
-                    logger.info(f'Committing pruning of {deleted_ids} alarms \
-                                from DB')
-                    uow.commit()
+                if not to_delete:
+                    return
+
+                for alarm_id in to_delete:
+                    obj = uow.alarm_event_records.get(alarm_id)
+                    if obj:
+                        uow.alarm_event_records.delete(obj)
+                        logger.info(f'Pruning alarm: {alarm_id}')
+                uow.commit()
         except Exception as e:
             logger.error(f'Error pruning stale alarms: {str(e)}')
 

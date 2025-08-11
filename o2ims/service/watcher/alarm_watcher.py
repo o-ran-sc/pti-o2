@@ -16,6 +16,7 @@ from o2common.domain import tags
 from o2common.service.messagebus import MessageBus
 from o2common.service.watcher.base import BaseWatcher
 from o2common.service.client.base_client import BaseClient
+import time
 
 from o2ims.domain import commands
 from o2ims.domain.stx_object import StxGenericModel
@@ -38,29 +39,53 @@ class AlarmWatcher(BaseWatcher):
         return "alarm"
 
     def _prune_stale_alarms(self):
-        """Prune alarms from DB that no longer exist in FM."""
-        try:
-            current_alarms = self._client.list()
-            # Build set of current alarm IDs from FM
-            current_ids = set([a.id for a in current_alarms])
-            logger.info(f'Current alarm IDs from FM: {current_ids}')
-            with self._bus.uow as uow:
-                db_alarms = list(uow.alarm_event_records.list().all())
-                db_ids = set(a.alarmEventRecordId for a in db_alarms)
-                deleted_ids = db_ids - current_ids
+        """Prune DB alarms that don't exist in FM for the current respool.
 
-                # TODO: When an alarm is deleted, the SMO must be notified.
+        Steps:
+        - Get FM alarm IDs for the configured resource pool(subcloud)
+        - Get DB alarm IDs for alarms whose resources belong to this res pool
+        - Find stale DB alarms that are not present in the source(fm alarms)
+          and delete them
+        """
+        pool_id = getattr(self._client, '_pool_id', None)
+        if not pool_id:
+            return
 
-                for del_id in deleted_ids:
-                    alarm_obj = uow.alarm_event_records.get(del_id)
-                    if alarm_obj:
-                        uow.alarm_event_records.delete(alarm_obj)
-                if deleted_ids:
-                    logger.info(f'Committing pruning of {deleted_ids} alarms \
-                                from DB')
-                    uow.commit()
-        except Exception as e:
-            logger.error(f'Error pruning stale alarms: {str(e)}')
+        # FM alarm IDs for this pool with one quick retry on empty
+        fm_list = self._client.list()
+
+        fm_ids = {a.id for a in fm_list}
+
+        # DB alarm IDs for this pool via join
+        with self._bus.uow as uow:
+            rs = uow.session.execute(
+                '''
+                SELECT a."alarmEventRecordId"
+                FROM "alarmEventRecord" a
+                JOIN "resource" r ON a."resourceId" = r."resourceId"
+                WHERE r."resourcePoolId" = :pool_id
+                ''',
+                dict(pool_id=pool_id)
+            )
+            rows = rs.fetchall()
+            if not rows:
+                return  # No results, exit early
+
+            db_ids = {row[0] for row in rs}
+
+            # Delete stale DB alarms that are not present in the source
+            to_delete = db_ids - fm_ids
+            # No pruning of alarms required
+            if not to_delete:
+                return
+
+            # TODO: When an alarm is deleted, the SMO must be notified.
+            for alarm_id in to_delete:
+                obj = uow.alarm_event_records.get(alarm_id)
+                if obj:
+                    uow.alarm_event_records.delete(obj)
+                    logger.info(f'Pruning alarm: {alarm_id}')
+            uow.commit()
 
     def _probe(self, parent: StxGenericModel, tags: object = None):
 

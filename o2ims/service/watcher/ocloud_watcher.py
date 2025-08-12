@@ -79,7 +79,7 @@ class DmsWatcher(BaseWatcher):
         try:
             with self._bus.uow as uow:
                 # 1. Get current DMS IDs from client
-                current_dms = self._client.list(ocloudid=ocloudid)
+                current_dms = self._client.list()
                 current_ids = set([d.id for d in current_dms])
 
                 # 2. Get all DMS IDs from DB

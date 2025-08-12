@@ -73,13 +73,14 @@ class DmsWatcher(BaseWatcher):
     def _targetname(self):
         return "dms"
 
-    def _prune_stale_dms(self, ocloudid):
+    def _prune_stale_dms(self):
         """Prune DMS (deployment managers) from DB if they no longer
         exist in the authoritative source."""
         try:
             with self._bus.uow as uow:
                 # 1. Get current DMS IDs from client
-                current_dms = self._client.list(ocloudid=ocloudid)
+                # No support for multi ocloud
+                current_dms = self._client.list()
                 current_ids = set([d.id for d in current_dms])
 
                 # 2. Get all DMS IDs from DB
@@ -101,7 +102,7 @@ class DmsWatcher(BaseWatcher):
 
     def _probe(self, parent: StxGenericModel, tags: object = None):
         ocloudid = parent.id
-        self._prune_stale_dms(ocloudid)
+        self._prune_stale_dms()
         newmodels = self._client.list(ocloudid=ocloudid)
         # for newmodel in newmodels:
         #     super()._compare_and_update(newmodel)

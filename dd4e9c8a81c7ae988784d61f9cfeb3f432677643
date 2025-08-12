@@ -1,0 +1,233 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "341724f0_cbb33089",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "few comments",
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a93a9f9a_3ec1c43d",
+        "filename": "o2ims/service/watcher/alarm_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "this is not algo , this is steps",
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c4452df_526d0788",
+        "filename": "o2ims/service/watcher/alarm_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "(sub cloud)",
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ae1a043_29ea115b",
+        "filename": "o2ims/service/watcher/alarm_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "Please re phrase something like compute or find DB ids need to be deleted and perform operation",
+      "range": {
+        "startLine": 47,
+        "startChar": 9,
+        "endLine": 47,
+        "endChar": 45
+      },
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca51d3ae_3eb0465f",
+        "filename": "o2ims/service/watcher/alarm_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "no hard coded values",
+      "range": {
+        "startLine": 58,
+        "startChar": 20,
+        "endLine": 58,
+        "endChar": 35
+      },
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0adb878b_37b6ef73",
+        "filename": "o2ims/service/watcher/alarm_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "fm_ids \u003d {a.id for a in self._client.list()}",
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53671a03_9b7a66c9",
+        "filename": "o2ims/service/watcher/alarm_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "broad exception please remove",
+      "range": {
+        "startLine": 61,
+        "startChar": 12,
+        "endLine": 63,
+        "endChar": 22
+      },
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cae6125c_1656ffae",
+        "filename": "o2ims/service/watcher/alarm_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "give some commets",
+      "range": {
+        "startLine": 66,
+        "startChar": 12,
+        "endLine": 66,
+        "endChar": 38
+      },
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f695237a_e3d4eafb",
+        "filename": "o2ims/service/watcher/alarm_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "just check if result set is empty or not",
+      "range": {
+        "startLine": 76,
+        "startChar": 16,
+        "endLine": 76,
+        "endChar": 47
+      },
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d816f1f_a4d8b61c",
+        "filename": "o2ims/service/watcher/alarm_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "re write , something delete alarms whic was posted from fm client to db , but is solved not in fault management and now we have to remove from o2",
+      "range": {
+        "startLine": 78,
+        "startChar": 18,
+        "endLine": 78,
+        "endChar": 39
+      },
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "632a2daf_73b04fec",
+        "filename": "o2ims/service/watcher/alarm_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1002679
+      },
+      "writtenOn": "2025-08-12T05:37:23Z",
+      "side": 1,
+      "message": "Please remove this too generic exception ,",
+      "range": {
+        "startLine": 90,
+        "startChar": 8,
+        "endLine": 90,
+        "endChar": 30
+      },
+      "revId": "dd4e9c8a81c7ae988784d61f9cfeb3f432677643",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

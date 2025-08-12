@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9206f1cf_2d7d9d20",
+        "filename": "o2ims/service/watcher/resourcepool_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2025-08-12T18:16:07Z",
+      "side": 1,
+      "message": "Why are raw queries required?",
+      "range": {
+        "startLine": 55,
+        "startChar": 20,
+        "endLine": 55,
+        "endChar": 65
+      },
+      "revId": "8d195661238dc8e238b3a6c5ec0dda8863f3f5eb",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

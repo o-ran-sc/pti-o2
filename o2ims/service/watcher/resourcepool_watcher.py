@@ -33,68 +33,80 @@ class ResourcePoolWatcher(BaseWatcher):
         return "resourcepool"
 
     def _prune_stale_resourcepools_and_resources(self, ocloudid):
-        """Prune resource pools (subclouds) and their related resources from
-            DB if they no longer exist in the authoritative source."""
+        """Prune DB resource pools that don't exist in the authoritative source.
+
+        Steps per prune cycle:
+        - Get current pool IDs from client for the given ocloud
+        - Get pool IDs from DB
+        - For each DB-only pool ID:
+          - Delete alarms whose resources belong to that pool
+          - Delete resources in that pool
+          - Delete the resource pool
+        """
         try:
             with self._bus.uow as uow:
-                # 1. Get current resource pool IDs from the client
-                current_resourcepools = self._client.list(ocloudid=ocloudid)
-                current_ids = set(r.id for r in current_resourcepools)
+                # Current pools from authoritative client
+                current = self._client.list()
+                current_ids = {m.id for m in current}
 
-                # 2. Get all resource pool IDs from DB
-                db_resourcepools_query = uow.resource_pools.list()
-                db_resourcepools = db_resourcepools_query.all()
+                # DB pools
+                rs = uow.session.execute(
+                    'SELECT "resourcePoolId" FROM "resourcePool"'
+                )
+                db_ids = {row[0] for row in rs}
 
-                db_ids = set(r.resourcePoolId for r in db_resourcepools)
+                # Pools present in DB but not in current authoritative list
+                stale_ids = db_ids - current_ids
 
-                # 3. Delete any in DB not in current
-                deleted_ids = db_ids - current_ids
+                if not stale_ids:
+                    return
 
                 # TODO: When an resource, resource pool is deleted,
                 #  the SMO must be notified.
-                for del_id in deleted_ids:
-                    # Delete all related resources first
-                    if hasattr(uow, 'resources'):
-                        db_resources = uow.resources.list(del_id).all()
+                for pool_id in stale_ids:
+                    # 1) Delete alarms for resources in this pool
+                    alarms_del_result = uow.session.execute(
+                        '''
+                        DELETE FROM "alarmEventRecord" a
+                        USING "resource" r
+                        WHERE a."resourceId" = r."resourceId"
+                          AND r."resourcePoolId" = :pool_id
+                        ''',
+                        dict(pool_id=pool_id)
+                    )
+                    alarms_deleted = getattr(alarms_del_result, 'rowcount', None)
 
-                        for res in db_resources:
-                            # First, delete all alarm event records that
-                            # reference this resource
-                            if hasattr(uow, 'alarm_event_records'):
-                                alarm_rec = (
-                                    uow.alarm_event_records.list().all()
-                                )
+                    # 2) Delete resources in this pool
+                    resources_del_result = uow.session.execute(
+                        'DELETE FROM "resource" WHERE "resourcePoolId" = :pool_id',
+                        dict(pool_id=pool_id)
+                    )
+                    resources_deleted = getattr(resources_del_result, 'rowcount', None)
 
-                                # Find and delete alarm records that reference
-                                #  this resource
-                                for alarm_rec in alarm_rec:
-                                    if alarm_rec.resourceId == res.resourceId:
-                                        logger.info(
-                                            f'Deleting alarm record \
-                                            {alarm_rec.alarmEventRecordId} \
-                                            that references \
-                                            resource {res.resourceId}'
-                                        )
-                                        uow.alarm_event_records.delete(
-                                            alarm_rec
-                                        )
+                    # 3) Delete the resource pool
+                    pool_del_result = uow.session.execute(
+                        'DELETE FROM "resourcePool" WHERE "resourcePoolId" = :pool_id',
+                        dict(pool_id=pool_id)
+                    )
 
-                            # Now delete the resource
-                            logger.info(f'Deleting resource {res.resourceId}')
-                            uow.resources.delete(res.resourceId)
+                    # Log per-pool pruning completion with counts
+                    logger.info(
+                        f'Pruned pool {pool_id}: '
+                        f'alarms={alarms_deleted}, resources={resources_deleted}'
+                    )
+                    logger.info(f'Pruned resource pool {pool_id} and \
+                                related resources/alarms')
 
-                    # Finally delete the resource pool
-                    uow.resource_pools.delete(del_id)
-                if deleted_ids:
-                    logger.info(f'Pruned resource pools and related resources\
-                                 :{deleted_ids}')
-                    uow.commit()
+                uow.commit()
+                # Summary log after pruning batch
+                logger.info(f'Pruned resource pools batch: {list(stale_ids)}')
         except Exception as e:
-            logger.error(f'Error pruning stale resource \
-                          pools/resources:{str(e)}')
+            logger.error(f'Error pruning stale res pools/resources: {str(e)}')
 
     def _probe(self, parent: StxGenericModel, tags: object = None):
         ocloudid = parent.id
+        # Ensure we prune stale pools/resources before syncing
+        #
         self._prune_stale_resourcepools_and_resources(ocloudid)
         newmodels = self._client.list(ocloudid=ocloudid)
         # for newmodel in newmodels:

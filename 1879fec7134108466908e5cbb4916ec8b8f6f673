@@ -22,6 +22,30 @@
       },
       "revId": "1879fec7134108466908e5cbb4916ec8b8f6f673",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00f0d790_b622454f",
+        "filename": "o2ims/service/watcher/resourcepool_watcher.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-08-13T12:16:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d0cd846_72d42c0b",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 45,
+        "endChar": 39
+      },
+      "revId": "1879fec7134108466908e5cbb4916ec8b8f6f673",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

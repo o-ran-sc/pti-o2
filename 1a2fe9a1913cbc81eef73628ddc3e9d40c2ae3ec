@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d168ed9_3a9f599c",
+        "filename": "o2ims/service/watcher/ocloud_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1001571
+      },
+      "writtenOn": "2025-08-13T06:37:48Z",
+      "side": 0,
+      "message": "Do we support the scenario that multi ocloud? Prune dms only limited in one specific ocloud.\n\nIf not supported, leave comment or delete this \"ocloudid\" as input.",
+      "range": {
+        "startLine": 76,
+        "startChar": 31,
+        "endLine": 76,
+        "endChar": 39
+      },
+      "revId": "1a2fe9a1913cbc81eef73628ddc3e9d40c2ae3ec",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

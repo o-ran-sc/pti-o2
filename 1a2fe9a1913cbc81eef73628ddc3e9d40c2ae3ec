@@ -22,6 +22,30 @@
       },
       "revId": "1a2fe9a1913cbc81eef73628ddc3e9d40c2ae3ec",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c69fe598_13b23346",
+        "filename": "o2ims/service/watcher/ocloud_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-08-13T10:02:23Z",
+      "side": 0,
+      "message": "No we dont support multi ocloud",
+      "parentUuid": "2d168ed9_3a9f599c",
+      "range": {
+        "startLine": 76,
+        "startChar": 31,
+        "endLine": 76,
+        "endChar": 39
+      },
+      "revId": "1a2fe9a1913cbc81eef73628ddc3e9d40c2ae3ec",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }

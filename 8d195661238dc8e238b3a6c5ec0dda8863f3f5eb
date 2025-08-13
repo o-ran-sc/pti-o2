@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "92e4de44_a8fcd97b",
+        "filename": "o2ims/service/watcher/resourcepool_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-08-13T10:02:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37f3a161_a94ec5ff",
+      "range": {
+        "startLine": 36,
+        "startChar": 11,
+        "endLine": 45,
+        "endChar": 36
+      },
+      "revId": "8d195661238dc8e238b3a6c5ec0dda8863f3f5eb",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9206f1cf_2d7d9d20",
@@ -47,6 +71,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "12aa7233_10eb68f1",
+        "filename": "o2ims/service/watcher/resourcepool_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-08-13T10:02:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9206f1cf_2d7d9d20",
+      "range": {
+        "startLine": 55,
+        "startChar": 20,
+        "endLine": 55,
+        "endChar": 65
+      },
+      "revId": "8d195661238dc8e238b3a6c5ec0dda8863f3f5eb",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0fc6a2ea_d8af48ce",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-08-13T06:37:48Z",
       "side": 1,
       "message": "Can you confirm **uow.resource_pools.delete(pool_id)** doesn\u0027t work here?",
+      "range": {
+        "startLine": 91,
+        "startChar": 20,
+        "endLine": 96,
+        "endChar": 0
+      },
+      "revId": "8d195661238dc8e238b3a6c5ec0dda8863f3f5eb",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29dc459f_a8c3a06b",
+        "filename": "o2ims/service/watcher/resourcepool_watcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1002676
+      },
+      "writtenOn": "2025-08-13T10:02:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fc6a2ea_d8af48ce",
       "range": {
         "startLine": 91,
         "startChar": 20,

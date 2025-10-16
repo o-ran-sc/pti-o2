@@ -33,7 +33,7 @@ redoc = [
     }
 ]
 
-redoc_uri = 'https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js'
+redoc_uri = 'https://cdn.jsdelivr.net/npm/redoc@2.1.3/bundles/redoc.standalone.js'
 
 # intershpinx mapping with other projects
 # intersphinx_mapping = {}

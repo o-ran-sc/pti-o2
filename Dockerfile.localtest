@@ -118,6 +118,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositor
 RUN set -ex \
     && echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     apk update && \
+    apk upgrade sqlite sqlite-dev --no-cache && \
     apk add --no-cache bash && \
     apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main expat=2.7.0-r0 && \
     apk add --no-cache --virtual .fetch2-deps && \

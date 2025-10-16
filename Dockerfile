@@ -31,6 +31,51 @@ COPY o2common/ /src/o2common/
 COPY o2app/ /src/o2app/
 COPY setup.py /src/
 
+<<<<<<< HEAD   (5dc7ba Merge "Fix the fault client returns 500 instend of 404" into)
+=======
+ENV PATH="/.venv/bin:${PATH}"
+
+RUN mkdir -p /.venv && \
+    python -m venv /.venv \
+    && pip install --no-cache-dir --upgrade pip setuptools==78.1.1 \
+    && pip install --no-cache-dir -r /tmp/requirements.txt -r /tmp/requirements-stx.txt -c /tmp/constraints.txt \
+    && pip install --no-cache-dir -e /src
+
+FROM nexus3.onap.org:10001/onap/integration-python:12.0.0
+
+ARG user=orano2
+ARG group=orano2
+
+USER root
+
+# Upgrade packages to latest versions to mitigate CVEs
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update \
+    && apk add --upgrade expat busybox krb5 ncurses ncurses-dev sqlite sqlite-dev \
+    && apk upgrade sqlite sqlite-dev --no-cache \
+    && apk info expat busybox krb5 ncurses sqlite
+
+RUN apk add --no-cache bash
+
+COPY --from=build /.venv /.venv
+COPY --from=build /src /src
+
+# Create a group and user
+RUN addgroup -S $group \
+    && adduser -S -D -h /home/$user $user $group \
+    && chown -R $user:$group /home/$user \
+    && mkdir /var/log/$user \
+    && mkdir -p /src \
+    && mkdir -p /configs/ \
+    && mkdir -p /src/o2app/ \
+    && mkdir -p /src/helm_sdk/ \
+    && mkdir -p /etc/o2/ \
+    && chown -R $user:$group /var/log/$user \
+    && chown -R $user:$group /src \
+    && chown -R $user:$group /configs \
+    && chown -R $user:$group /etc/o2/
+
+>>>>>>> CHANGE (61595c Critical CVE resolution)
 COPY helm_sdk/ /src/helm_sdk/
 
 COPY configs/ /etc/o2/

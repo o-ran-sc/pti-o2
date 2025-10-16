@@ -40,7 +40,76 @@ COPY configs/ /etc/o2/
 # # RUN git clone --depth 1 --branch master https://github.com/cloudify-incubator/cloudify-helm-plugin.git helmsdk
 # COPY /helmsdk/helm_sdk /src/helm_sdk
 
+<<<<<<< HEAD   (5dc7ba Merge "Fix the fault client returns 500 instend of 404" into)
 # RUN pip install -e /src
+=======
+# Then add edge main repository and install dependencies
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    # Install ncurses packages first from edge repository
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main \
+        ncurses-dev \
+        ncurses-terminfo-base \
+        ncurses-libs && \
+    # Install other build dependencies
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main \
+        python3-dev \
+        gcc \
+        musl-dev \
+        libffi-dev \
+        openssl-dev \
+        bzip2-dev \
+        zlib-dev \
+        readline-dev \
+        sqlite-dev \
+        tcl-dev \
+        tk-dev \
+        make \
+        linux-headers && \
+    # Install expat and fontconfig-dev
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main expat=2.7.0-r0 expat-dev=2.7.0-r0 fontconfig-dev && \
+    # Download and build Python from source
+    cd /tmp && \
+    curl -O https://www.python.org/ftp/python/3.12.2/Python-3.12.2.tgz && \
+    tar xzf Python-3.12.2.tgz && \
+    cd Python-3.12.2 && \
+    ./configure --with-system-expat --without-readline && \
+    make && \
+    make install && \
+    cd /tmp && \
+    rm -rf Python-3.12.2 Python-3.12.2.tgz && \
+    # Clean up build dependencies
+    apk del --no-cache \
+        python3-dev \
+        gcc \
+        musl-dev \
+        libffi-dev \
+        openssl-dev \
+        bzip2-dev \
+        zlib-dev \
+        readline-dev \
+        sqlite-dev \
+        tcl-dev \
+        tk-dev \
+        make \
+        linux-headers
+
+RUN set -ex \
+    && echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    apk upgrade sqlite sqlite-dev --no-cache && \
+    apk add --no-cache bash && \
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/main expat=2.7.0-r0 && \
+    apk add --no-cache --virtual .fetch2-deps && \
+    pip install -r /tmp/requirements.txt -c /tmp/constraints.txt && \
+    pip install -r /tmp/requirements-test.txt && \
+    pip install -e /cgtsclient/sysinv/cgts-client/cgts-client/ && \
+    pip install -e /distcloud-client/distributedcloud-client && \
+    pip install -e /faultclient/python-fmclient/fmclient/ && \
+    pip install -e /src && \
+    apk del --no-network .fetch2-deps
+
+>>>>>>> CHANGE (61595c Critical CVE resolution)
 COPY tests/ /tests/
 
 #RUN apt-get install -y procps vim

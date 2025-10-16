@@ -55,7 +55,8 @@ USER root
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     apk update \
     && apk add --upgrade expat busybox krb5 ncurses ncurses-dev sqlite sqlite-dev \
-    && apk info expat busybox krb5 ncurses sqlite
+    && apk upgrade xz xz-libs --no-cache \
+    && apk info expat busybox krb5 ncurses sqlite xz xz-libs
 
 RUN apk add --no-cache bash
 

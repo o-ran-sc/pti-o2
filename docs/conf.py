@@ -34,6 +34,7 @@ redoc = [
 ]
 
 redoc_uri = 'https://cdn.jsdelivr.net/npm/redoc@2.1.3/bundles/redoc.standalone.js'
+# some test comments to check tox issue on master branch
 
 # intershpinx mapping with other projects
 # intersphinx_mapping = {}

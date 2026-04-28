@@ -29,7 +29,7 @@ O2 API v1
 The O2 API v1 provides API includes O2ims_InfrastructureInventory, O2ims_InfrastructureMonitoring and
 Kubernetes native API based O2dms interfaces.
 
-See `O-RAN O2 API v1 <./oran-o2-api.html>`_ for full details of the API.
+See :doc:`oran-o2-api` for full details of the API.
 
 The API is also described in Swagger-JSON and YAML:
 

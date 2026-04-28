@@ -18,5 +18,6 @@ Welcome to INF O2 documentation
    user-guide.rst
    api-docs.rst
    api.rst
+   oran-o2-api
 
 * :ref:`search`

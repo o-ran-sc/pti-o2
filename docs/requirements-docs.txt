@@ -1,12 +1,6 @@
-sphinx
-sphinx-rtd-theme>=1.0.0
-docutils<0.17
+sphinx>=7,<10
+sphinx-rtd-theme
 sphinxcontrib-httpdomain
-sphinxcontrib-redoc
-sphinxcontrib-needs
-sphinxcontrib-swaggerdoc
-sphinx_bootstrap_theme
-sphinx_rtd_theme
-recommonmark
 lfdocs-conf
-urllib3~=1.26.15
+sphinxcontrib-redoc
+setuptools<81

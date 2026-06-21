@@ -295,8 +295,8 @@ You can install O-RAN O2 application on INF from the command line.
               images:
                 tags:
                   o2service: ${O2SERVICE_IMAGE_REG}/docker.io/oranscinf/pti-o2imsdms:2.2.0
-                  postgres: ${O2SERVICE_IMAGE_REG}/docker.io/library/postgres:9.6
-                  redis: ${O2SERVICE_IMAGE_REG}/docker.io/library/redis:alpine
+                  postgres: ${O2SERVICE_IMAGE_REG}/docker.io/library/postgres:18
+                  redis: ${O2SERVICE_IMAGE_REG}/docker.io/valkey/valkey:8.0-alpine
                 pullPolicy: IfNotPresent
               logginglevel: "DEBUG"
               useHostCert: true

@@ -46,9 +46,6 @@ if [ -f "$PGDATA/PG_VERSION" ]; then
     fi
 fi
 
-# Resolve entrypoint path for pg:18+
-ENTRYPOINT=/usr/local/bin/docker-entrypoint.sh
-
 if [ -f "$DUMP_FILE" ] && [ "$WIPED" = "true" ]; then
     # Dump file exists from a prior pg_dump (lifecycle plugin runs this
     # before upgrade/downgrade). Start postgres in the background and wait
@@ -56,7 +53,7 @@ if [ -f "$DUMP_FILE" ] && [ "$WIPED" = "true" ]; then
     # We must wait for TCP (not unix socket) because the entrypoint starts
     # a temporary socket-only postgres during initialization; TCP readiness
     # means the entrypoint has fully completed and postgres is ready for use.
-    $ENTRYPOINT postgres &
+    /docker-entrypoint.sh postgres &
     PG_PID=$!
     READY=false
     for i in $(seq 1 60); do
@@ -80,7 +77,7 @@ else
     # Normal startup — no dump to restore (or no wipe happened).
     # Clean up stale dump file if version didn't change.
     rm -f "$DUMP_FILE"
-    exec $ENTRYPOINT postgres
+    exec /docker-entrypoint.sh postgres
 fi
 
 sleep infinity

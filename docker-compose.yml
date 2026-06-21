@@ -112,7 +112,7 @@ services:
       - /tests/o2app-watcher-entry.sh
 
   postgres:
-    image: postgres:9.6
+    image: postgres:18
     environment:
       - POSTGRES_USER=o2ims
       - POSTGRES_PASSWORD=o2ims123
@@ -120,6 +120,6 @@ services:
       - "54321:5432"
 
   redis:
-    image: redis:alpine
+    image: valkey/valkey:8.0-alpine
     ports:
       - "63791:6379"

@@ -72,8 +72,8 @@ o2ims:
   images:
     tags:
       o2service: registry.local:9001/o-ran-sc/pti-o2imsdms:2.0.0
-      postgres: docker.io/library/postgres:9.6
-      redis: docker.io/library/redis:alpine
+      postgres: docker.io/library/postgres:18
+      redis: docker.io/valkey/valkey:8.0-alpine
     pullPolicy: IfNotPresent
   logginglevel: "DEBUG"
 

@@ -21,7 +21,7 @@ ruamel.yaml==0.17.17
 # Workaround for this issue
 #werkzeug<=2.1.2
 
-pyOpenSSL
+pyOpenSSL>=26.0.0
 
 gunicorn
 

@@ -54,9 +54,9 @@ USER root
 # Upgrade packages to latest versions to mitigate CVEs
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     apk update \
-    && apk add --upgrade expat busybox krb5 ncurses ncurses-dev sqlite sqlite-dev \
+    && apk add --upgrade expat busybox krb5 ncurses ncurses-dev sqlite sqlite-dev openssl \
     && apk upgrade sqlite sqlite-dev --no-cache \
-    && apk info expat busybox krb5 ncurses sqlite
+    && apk info expat busybox krb5 ncurses sqlite openssl
 
 RUN apk add --no-cache bash
 

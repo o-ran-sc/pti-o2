@@ -1,5 +1,5 @@
 # -e git+https://opendev.org/starlingx/distcloud-client.git@master#egg=distributedcloud-client&subdirectory=distributedcloud-client
 # -e git+https://opendev.org/starlingx/config.git@master#egg=cgtsclient&subdirectory=sysinv/cgts-client/cgts-client
 # https://github.com/JoinMarket-Org/joinmarket-clientserver/issues/1452
-cryptography>=35
+cryptography>=46.0.7
 python-keystoneclient==3.21.0

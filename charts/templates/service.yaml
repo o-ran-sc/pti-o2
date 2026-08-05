@@ -23,7 +23,7 @@ spec:
   ports:
   - name: o2api
     port: 5005
-    targetPort: 80
+    targetPort: 8080
     nodePort: 30205
     protocol: TCP
   selector:

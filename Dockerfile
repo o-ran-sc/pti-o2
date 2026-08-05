@@ -76,7 +76,8 @@ RUN addgroup -S $group \
     && chown -R $user:$group /var/log/$user \
     && chown -R $user:$group /src \
     && chown -R $user:$group /configs \
-    && chown -R $user:$group /etc/o2/
+    && chown -R $user:$group /etc/o2/ \
+    && chown -R $user:$group /.venv
 
 COPY helm_sdk/ /src/helm_sdk/
 
@@ -90,7 +91,8 @@ COPY o2ims/ /src/o2ims/
 
 WORKDIR /src
 
-# USER $user
+# Create non-root user for security compliance (CIS Docker v1.5.0 - 4.1)
+USER $user
 ENV PYTHONHASHSEED=0
 ENV PATH="/.venv/bin:${PATH}"
 ENV PYTHONPATH="/src"

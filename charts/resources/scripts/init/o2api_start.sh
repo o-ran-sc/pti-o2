@@ -14,8 +14,10 @@
 
 #!/bin/bash
 
-# The gunicorn start with [::] to listen on both IPv4 and IPv6
-gunicorn -b [::]:80 o2app.entrypoints.flask_application:app \
+# The gunicorn start with [::] to listen on both IPv4 and IPv6.
+# Port 8080 is unprivileged so the container can run as a non-root user
+# (CIS Docker v1.5.0 - 4.1).
+gunicorn -b [::]:8080 o2app.entrypoints.flask_application:app \
 --certfile /configs/server.crt \
 --keyfile /configs/server.key \
 --ca-certs /configs/smoca.crt \

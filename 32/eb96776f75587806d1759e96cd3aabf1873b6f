@@ -1,0 +1,9 @@
+Verified+1: ORAN Bypass GHA <releng+oran.bypass.gha@linuxfoundation.org>
+Verified+1: o-ran-sc release <collab-it+o-ran-sc-release@linuxfoundation.org>
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Code-Review+2: Jon Zhang <rong.zhang@windriver.com>
+Submitted-by: Jon Zhang <rong.zhang@windriver.com>
+Submitted-at: Mon, 10 Aug 2026 03:41:04 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/pti/o2/+/15758
+Project: pti/o2
+Branch: refs/heads/master

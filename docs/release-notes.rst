@@ -7,7 +7,7 @@ Release-notes
 =============
 
 
-This document provides the release notes for 2.2.0 of INF O2 service.
+This document provides the release notes for 2.3.0 of INF O2 service.
 
 .. contents::
    :depth: 3
@@ -19,6 +19,8 @@ Version History
 
 +------------+----------+------------------------------------------------+-------------+
 | **Date**   | **Ver.** | **Author**                                     | **Comment** |
++------------+----------+------------------------------------------------+-------------+
+| 2026-07-01 | 2.3.0    | Vineela Pachchipulusu, Jon Zhang               | N Release   |
 +------------+----------+------------------------------------------------+-------------+
 | 2025-06-15 | 2.2.0    | Jon Zhang, Jackie Huang, Vineela Pachchipulusu | L Release   |
 +------------+----------+------------------------------------------------+-------------+
@@ -36,6 +38,50 @@ Version History
 +------------+----------+------------------------------------------------+-------------+
 | 2021-12-15 | 1.0.0    | Bin Yang, Jon Zhang                            | E Release   |
 +------------+----------+------------------------------------------------+-------------+
+
+Version 2.3.0, 2026-07-01
+-------------------------
+
+-  Database and cache upgrade
+
+   -  Upgrade postgres from 9.6 to 18, with pg_dump/restore support for
+      the major version upgrade and rollback
+   -  Replace redis with valkey (valkey/valkey:8.0-alpine)
+
+-  CVE fixed
+
+   -  Fixed critical CVE-2025-6965
+   -  Fixed critical CVE-2026-39892 (cryptography), CVE-2026-27459
+      (pyOpenSSL) and CVE-2026-31789 (openssl)
+
+-  Alarm and resource pruning
+
+   -  Prune stale resource pools, resources, DMS entries and alarms
+      that no longer exist in the authoritative source
+   -  Handle pruning of stale subcloud alarms
+   -  Clear pruned subclouds so they no longer display
+   -  Remove alarm event records that reference deleted resources
+   -  Fix deleted FM alarms still showing up in O2ims infrastructure
+      Monitoring alarms
+
+-  Bug fixes
+
+   -  Duplicate Alarm subscription now returns 409 Conflict instead of
+      400
+   -  Retrieve the Region name from the API instead of relying on a
+      hardcoded value
+   -  Make the WRA configuration optional so the watcher skips the
+      performance measurement (PM) portion when Elasticsearch is not
+      available
+
+-  Other updates
+
+   -  Modernize docs build infrastructure and migrate API rendering
+      from redoc to openapi
+   -  Hoist project dependencies out of shared tox testenv
+   -  CI: Add .github/dependabot.yml configuration
+   -  INFO.yaml: Add Joshua as the committer
+   -  Bugs fixed
 
 Version 2.2.0, 2025-06-15
 -------------------------
